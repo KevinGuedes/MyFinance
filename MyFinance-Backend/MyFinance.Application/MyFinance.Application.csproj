@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Folder Include="BusinessUnits\Commands\" />
+    <Folder Include="BusinessUnits\Services\" />
+    <Folder Include="BusinessUnits\Queries\" />
+    <Folder Include="Pipelines\" />
+    <Folder Include="Transfers\Commands\" />
+    <Folder Include="Transfers\Queries\" />
+    <Folder Include="Transfers\Services\" />
+  </ItemGroup>
+
+</Project>
