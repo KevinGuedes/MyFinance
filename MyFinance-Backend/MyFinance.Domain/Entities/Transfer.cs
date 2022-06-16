@@ -5,41 +5,51 @@ namespace MyFinance.Domain.Entities
     public class Transfer : Entity
     {
         public Transfer(
-            Guid businessUnitId, 
             string relatedTo, 
             string description, 
-            double value, 
+            double absoluteValue, 
             DateTime settlementDate,
             TransferType tranferType)
         {
-            BusinessUnitId = businessUnitId;
+            _absoluteValue = absoluteValue;
             RelatedTo = relatedTo;
             Description = description;
-            Value = value;
             SettlementDate = settlementDate;
             Type = tranferType;
         }
 
-        public Guid BusinessUnitId { get; private set; }
+        private double _absoluteValue { get; set; }
         public string RelatedTo { get; private set; }
         public string Description { get; private set; }
-        public double Value { get; private set; }
         public DateTime SettlementDate { get; private set; }
         public TransferType Type { get; private set; }
+        public double FormattedValue { 
+            get
+            {
+                if (Type == TransferType.Profit) return _absoluteValue;
+                else return -_absoluteValue;
+            }
+        }
 
         public void Update(
             string relatedTo, 
             string description, 
-            double value, 
+            double absoluteValue, 
             DateTime settlementDate,
             TransferType tranferType) 
         {
             SetUpdateDate();
+            _absoluteValue = absoluteValue;
             RelatedTo = relatedTo;
             Description = description;
-            Value = value;
             SettlementDate = settlementDate;
             Type = tranferType;
         }
+
+        public bool ShoudlGoToAnotherMonthlyBalance(DateTime newSettlementDate)
+            => newSettlementDate.Month != SettlementDate.Month || newSettlementDate.Year != SettlementDate.Year;
+
+        public bool ShouldUpdateBusinessUnitBalance(double newFormattedValue)
+            => FormattedValue != newFormattedValue;
     }
 }
