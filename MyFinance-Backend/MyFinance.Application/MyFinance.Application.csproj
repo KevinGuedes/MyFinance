@@ -10,7 +10,6 @@
     <Folder Include="MonthlyBalances\ApiService\" />
     <Folder Include="MonthlyBalances\Commands\" />
     <Folder Include="MonthlyBalances\Queries\" />
-    <Folder Include="Services\" />
     <Folder Include="Transfers\Commands\" />
     <Folder Include="Transfers\ApiService\" />
     <Folder Include="Transfers\Queries\" />

@@ -18,9 +18,6 @@ namespace MyFinance.Presentation.Controllers
             BusinessUnitViewModel businessUnitViewModel, 
             CancellationToken cancellationToken)
         {
-            if(!ModelState.IsValid)
-                return FailureResponse(ModelState);
-
             var result = await _businessUnitApiService.CreateBusinessUnitAsync(businessUnitViewModel, cancellationToken);
             return SuccessResponse(result);
         }

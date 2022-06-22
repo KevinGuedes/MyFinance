@@ -1,6 +1,4 @@
-﻿using FluentValidation.Results;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
+﻿using Microsoft.AspNetCore.Mvc;
 
 namespace MyFinance.Presentation.Controllers
 {
@@ -13,18 +11,6 @@ namespace MyFinance.Presentation.Controllers
                 return NoContent();
 
             return Ok(result);
-        }
-
-        protected ActionResult FailureResponse(ModelStateDictionary modelState)
-        {
-            var errors = modelState.Values
-                .SelectMany(error => error.Errors)
-                .Select(error => error.ErrorMessage);
-
-            return BadRequest(new ValidationProblemDetails(new Dictionary<string, string[]>
-            {
-                { "Messages", errors.ToArray() }
-            }));
         }
     }
 }
