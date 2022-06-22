@@ -7,13 +7,25 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="BusinessUnits\Commands\" />
-    <Folder Include="BusinessUnits\Services\" />
-    <Folder Include="BusinessUnits\Queries\" />
-    <Folder Include="Pipelines\" />
+    <Folder Include="MonthlyBalances\ApiService\" />
+    <Folder Include="MonthlyBalances\Commands\" />
+    <Folder Include="MonthlyBalances\Queries\" />
+    <Folder Include="Services\" />
     <Folder Include="Transfers\Commands\" />
+    <Folder Include="Transfers\ApiService\" />
     <Folder Include="Transfers\Queries\" />
-    <Folder Include="Transfers\Services\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="11.0.1" />
+    <PackageReference Include="FluentValidation" Version="11.0.3" />
+    <PackageReference Include="MediatR" Version="10.0.1" />
+    <PackageReference Include="Microsoft.Extensions.Logging" Version="6.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\MyFinance.Domain\MyFinance.Domain.csproj" />
+    <ProjectReference Include="..\MyFinance.Infra.Data\MyFinance.Infra.Data.csproj" />
   </ItemGroup>
 
 </Project>
