@@ -33,11 +33,10 @@ namespace MyFinance.Presentation.Middlewares
             context.Response.ContentType = "application/json";
             context.Response.StatusCode = status;
 
-            var serializerOptions = new JsonSerializerOptions()
+            await context.Response.WriteAsync(JsonSerializer.Serialize(response, new JsonSerializerOptions()
             {
                 DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
-            };
-            await context.Response.WriteAsync(JsonSerializer.Serialize(response, serializerOptions));
+            }));
         }
 
         private static (string, int) GetResponseInfoAccordingToException(Exception exception)
