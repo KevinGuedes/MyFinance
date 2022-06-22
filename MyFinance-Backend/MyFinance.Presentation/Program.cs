@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Mvc;
 using MyFinance.Infra.IoC;
 
 var builder = WebApplication.CreateBuilder(args);

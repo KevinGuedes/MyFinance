@@ -2,7 +2,7 @@
 
 namespace MyFinance.Domain.Interfaces
 {
-    public interface ITransferRepository : IEntityRepository<Transfer>
+    public interface IMonthlyBalanceRepository : IEntityRepository<MonthlyBalance>
     {
     }
 }

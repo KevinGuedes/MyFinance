@@ -5,9 +5,9 @@ namespace MyFinance.Domain.Entities
     public class Transfer : Entity
     {
         public Transfer(
-            string relatedTo, 
-            string description, 
-            double absoluteValue, 
+            string relatedTo,
+            string description,
+            double absoluteValue,
             DateTime settlementDate,
             TransferType tranferType)
         {
@@ -23,7 +23,8 @@ namespace MyFinance.Domain.Entities
         public string Description { get; private set; }
         public DateTime SettlementDate { get; private set; }
         public TransferType Type { get; private set; }
-        public double FormattedValue { 
+        public double FormattedValue
+        {
             get
             {
                 if (Type == TransferType.Profit) return _absoluteValue;
@@ -32,11 +33,11 @@ namespace MyFinance.Domain.Entities
         }
 
         public void Update(
-            string relatedTo, 
-            string description, 
-            double absoluteValue, 
+            string relatedTo,
+            string description,
+            double absoluteValue,
             DateTime settlementDate,
-            TransferType tranferType) 
+            TransferType tranferType)
         {
             SetUpdateDate();
             _absoluteValue = absoluteValue;

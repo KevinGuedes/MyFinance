@@ -37,7 +37,7 @@
         {
             SetUpdateDate();
             var index = _transfers.FindIndex(transfer => transfer.Id == updatedTransfer.Id);
-            if(index == -1) throw new InvalidOperationException("Transfer not found in this Monthly Balance");
+            if (index == -1) throw new InvalidOperationException("Transfer not found in this Monthly Balance");
             _transfers[index] = updatedTransfer;
         }
 
