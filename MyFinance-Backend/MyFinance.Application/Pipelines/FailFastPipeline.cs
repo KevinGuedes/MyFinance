@@ -1,6 +1,7 @@
 ﻿using FluentValidation;
 using MediatR;
 using Microsoft.Extensions.Logging;
+using MyFinance.Application.Exceptions;
 
 namespace MyFinance.Application.Pipelines
 {
@@ -32,21 +33,21 @@ namespace MyFinance.Application.Pipelines
             var errors = validationResults
                 .SelectMany(validationResult => validationResult.Errors)
                 .Where(validationResult => validationResult is not null)
-                .ToList();
-            //.GroupBy(
-            //    validationResult => validationResult.PropertyName,
-            //    validationResult => validationResult.ErrorMessage,
-            //    (propertyName, errorMessages) => new
-            //    {
-            //        Key = propertyName,
-            //        Values = errorMessages.Distinct().ToArray()
-            //    })
-            //.ToDictionary(dictionaryData => dictionaryData.Key, dictionaryData => dictionaryData.Values);
+                .ToList()
+                .GroupBy(
+                    validationResult => validationResult.PropertyName,
+                    validationResult => validationResult.ErrorMessage,
+                    (propertyName, errorMessages) => new
+                    {
+                        Key = propertyName,
+                        Values = errorMessages.Distinct().ToArray()
+                    })
+                .ToDictionary(dictionaryData => dictionaryData.Key, dictionaryData => dictionaryData.Values);
 
             if (errors.Any())
             {
                 _logger.LogError("Invalid {RequestName} data", requestName);
-                throw new ValidationException("Invalid  data", errors);
+                throw new InvalidRequestException(errors);
             }
 
             return await next();

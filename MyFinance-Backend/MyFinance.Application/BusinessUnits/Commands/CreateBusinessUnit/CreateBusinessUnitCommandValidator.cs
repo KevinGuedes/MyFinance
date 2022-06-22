@@ -20,7 +20,7 @@ namespace MyFinance.Application.BusinessUnits.Commands.CreateBusinessUnit
                {
                    var exists = await _businessUnitRepository.ExistsByNameAsync(id, cancellationToken);
                    return !exists;
-               }).WithMessage("A Business Unit with that {PropertyName} already exists");
+               }).WithMessage("This {PropertyName} has already been taken");
         }
     }
 }
