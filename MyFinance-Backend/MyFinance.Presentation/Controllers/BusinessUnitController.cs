@@ -15,7 +15,7 @@ namespace MyFinance.Presentation.Controllers
 
         [HttpPost]
         public async Task<IActionResult> CreateBusinessUnitAsync(
-            BusinessUnitViewModel businessUnitViewModel, 
+            BusinessUnitViewModel businessUnitViewModel,
             CancellationToken cancellationToken)
         {
             var result = await _businessUnitApiService.CreateBusinessUnitAsync(businessUnitViewModel, cancellationToken);

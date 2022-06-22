@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using MyFinance.Application.Exceptions;
+﻿using MyFinance.Application.Exceptions;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
