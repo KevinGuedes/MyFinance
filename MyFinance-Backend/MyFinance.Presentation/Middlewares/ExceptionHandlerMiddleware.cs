@@ -1,5 +1,4 @@
-﻿using MyFinance.Application.Exceptions;
-using System.Text.Json;
+﻿using System.Text.Json;
 using System.Text.Json.Serialization;
 
 namespace MyFinance.Presentation.Middlewares
@@ -20,7 +19,7 @@ namespace MyFinance.Presentation.Middlewares
             }
             catch (Exception exception)
             {
-                _logger.LogCritical(exception, exception.Message);
+                _logger.LogCritical(exception, "Backend went rogue!");
                 await HandleExceptionAsync(context, exception);
             }
         }
@@ -41,25 +40,11 @@ namespace MyFinance.Presentation.Middlewares
         private static (string, int) GetResponseInfoAccordingToException(Exception exception)
             => exception switch
             {
-                InvalidRequestException invalidRequestException
-                    => (invalidRequestException.Title, StatusCodes.Status422UnprocessableEntity),
                 _
                     => ("Unexpected server behavior", StatusCodes.Status500InternalServerError)
             };
 
         private static object BuildResponseObject(string title, int status, Exception exception)
-        {
-            var errors = GetErrors(exception);
-            var message = exception.Message;
-            return new { title, status, message, errors };
-        }
-
-        private static IReadOnlyDictionary<string, string[]>? GetErrors(Exception exception)
-        {
-            if (exception is InvalidRequestException invalidRequestException)
-                return new Dictionary<string, string[]>(invalidRequestException.Errors);
-
-            return null;
-        }
+            => new { title, status, message = exception.Message };
     }
 }

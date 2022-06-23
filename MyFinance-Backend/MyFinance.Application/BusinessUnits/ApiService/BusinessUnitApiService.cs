@@ -16,10 +16,9 @@ namespace MyFinance.Application.BusinessUnits.ApiService
              => (_mediator, _mapper) = (mediator, mapper);
 
         public async Task<BusinessUnitViewModel> CreateBusinessUnitAsync(
-            BusinessUnitViewModel businessUnitViewModel,
+            CreateBusinessUnitCommand command,
             CancellationToken cancellationToken)
         {
-            var command = _mapper.Map<CreateBusinessUnitCommand>(businessUnitViewModel);
             var result = await _mediator.Send(command, cancellationToken);
             return _mapper.Map<BusinessUnitViewModel>(result);
         }

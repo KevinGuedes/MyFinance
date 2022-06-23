@@ -1,6 +1,6 @@
 ﻿namespace MyFinance.Application.Interfaces
 {
-    public interface IQuery : IValidatable
+    public interface IValidatable
     {
     }
 }

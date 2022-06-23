@@ -4,9 +4,9 @@ using MyFinance.Domain.Entities;
 
 namespace MyFinance.Application.Profiles
 {
-    public class DomainToViewModelProfile : Profile
+    public class DomainToViewModelProfiles : Profile
     {
-        public DomainToViewModelProfile()
+        public DomainToViewModelProfiles()
         {
             CreateMap<BusinessUnit, BusinessUnitViewModel>();
         }

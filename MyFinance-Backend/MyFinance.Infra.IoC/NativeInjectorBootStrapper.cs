@@ -7,6 +7,7 @@ using Microsoft.Extensions.Options;
 using MongoDB.Driver;
 using MyFinance.Application.BusinessUnits.ApiService;
 using MyFinance.Application.Pipelines;
+using MyFinance.Application.Services.RequestValidation;
 using MyFinance.Domain.Interfaces;
 using MyFinance.Infra.Data.Context;
 using MyFinance.Infra.Data.Mappers;
@@ -32,6 +33,7 @@ namespace MyFinance.Infra.IoC
 
         private static void RegisterApiServices(IServiceCollection services)
             => services
+                .AddScoped<IRequestValidationService, RequestValidationService>()
                 .AddScoped<IBusinessUnitApiService, BusinessUnitApiService>();
 
         private static void RegisterData(IServiceCollection services, IConfiguration configuration)
@@ -52,7 +54,11 @@ namespace MyFinance.Infra.IoC
 
         public static void RegisterAutoMapper(IServiceCollection services, Assembly applicationLayerAssembly)
             => services
-                .AddFluentValidation(fv => fv.RegisterValidatorsFromAssembly(applicationLayerAssembly))
+                .AddFluentValidation(fv =>
+                {
+                    fv.AutomaticValidationEnabled = false;
+                    fv.RegisterValidatorsFromAssembly(applicationLayerAssembly);
+                })
                 .Configure<ApiBehaviorOptions>(options => options.SuppressModelStateInvalidFilter = true);
 
         private static void RegisterValidators(IServiceCollection services, Assembly applicationLayerAssembly)
@@ -61,7 +67,6 @@ namespace MyFinance.Infra.IoC
         private static void RegisterMediatR(IServiceCollection services, Assembly applicationLayerAssembly)
            => services
                 .AddMediatR(applicationLayerAssembly)
-                .AddScoped(typeof(IPipelineBehavior<,>), typeof(RequestLoggerPipeline<,>))
-                .AddScoped(typeof(IPipelineBehavior<,>), typeof(FailFastPipeline<,>));
+                .AddScoped(typeof(IPipelineBehavior<,>), typeof(RequestLoggerPipeline<,>));
     }
 }

@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MyFinance.Application.BusinessUnits.ApiService;
-using MyFinance.Application.BusinessUnits.ViewModels;
+using MyFinance.Application.BusinessUnits.Commands.CreateBusinessUnit;
 
 namespace MyFinance.Presentation.Controllers
 {
@@ -14,26 +14,18 @@ namespace MyFinance.Presentation.Controllers
             => _businessUnitApiService = businessUnitApiService;
 
         [HttpPost]
-        public async Task<IActionResult> CreateBusinessUnitAsync(
-            BusinessUnitViewModel businessUnitViewModel,
-            CancellationToken cancellationToken)
-        {
-            var result = await _businessUnitApiService.CreateBusinessUnitAsync(businessUnitViewModel, cancellationToken);
-            return SuccessResponse(result);
-        }
+        public async Task<IActionResult> CreateBusinessUnitAsync(CreateBusinessUnitCommand command, CancellationToken cancellationToken)
+            => Ok(await _businessUnitApiService.CreateBusinessUnitAsync(command, cancellationToken));
 
         [HttpGet]
         public async Task<IActionResult> GetBusinessUnits(CancellationToken cancellationToken)
-        {
-            var result = await _businessUnitApiService.GetBusinessUnitsAsync(cancellationToken);
-            return SuccessResponse(result);
-        }
+            => Ok(await _businessUnitApiService.GetBusinessUnitsAsync(cancellationToken));
 
         [HttpDelete("{businessUnitId:guid}")]
         public async Task<IActionResult> RemoveBusinessUnitbyId(Guid businessUnitId, CancellationToken cancellationToken)
         {
             await _businessUnitApiService.RemoveBusinessUnitByIdAsync(businessUnitId, cancellationToken);
-            return SuccessResponse();
+            return NoContent();
         }
     }
 }
