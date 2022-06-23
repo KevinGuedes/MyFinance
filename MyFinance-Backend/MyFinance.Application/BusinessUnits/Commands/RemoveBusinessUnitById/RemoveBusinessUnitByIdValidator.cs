@@ -3,11 +3,11 @@ using MyFinance.Domain.Interfaces;
 
 namespace MyFinance.Application.BusinessUnits.Commands.RemoveBusinessUnitById
 {
-    public sealed class RemoveBusinessUnitByIdCommandValidator : AbstractValidator<RemoveBusinessUnitByIdCommand>
+    public sealed class RemoveBusinessUnitByIdValidator : AbstractValidator<RemoveBusinessUnitByIdCommand>
     {
         private readonly IBusinessUnitRepository _businessUnitRepository;
 
-        public RemoveBusinessUnitByIdCommandValidator(IBusinessUnitRepository businessUnitRepository)
+        public RemoveBusinessUnitByIdValidator(IBusinessUnitRepository businessUnitRepository)
         {
             _businessUnitRepository = businessUnitRepository;
 
@@ -16,7 +16,7 @@ namespace MyFinance.Application.BusinessUnits.Commands.RemoveBusinessUnitById
                 {
                     var exists = await _businessUnitRepository.ExistsByIdAsync(businessUnitId, cancellationToken);
                     return exists;
-                }).WithMessage("Business Unit with {PropertyName} doesn´t exist");
+                }).WithMessage("Business Unit with {PropertyName} doesn't exist");
         }
     }
 }

@@ -3,11 +3,11 @@ using MyFinance.Domain.Interfaces;
 
 namespace MyFinance.Application.BusinessUnits.Commands.CreateBusinessUnit
 {
-    public sealed class CreateBusinessUnitCommandValidator : AbstractValidator<CreateBusinessUnitCommand>
+    public sealed class CreateBusinessUnitValidator : AbstractValidator<CreateBusinessUnitCommand>
     {
         private readonly IBusinessUnitRepository _businessUnitRepository;
 
-        public CreateBusinessUnitCommandValidator(IBusinessUnitRepository businessUnitRepository)
+        public CreateBusinessUnitValidator(IBusinessUnitRepository businessUnitRepository)
         {
             _businessUnitRepository = businessUnitRepository;
 
