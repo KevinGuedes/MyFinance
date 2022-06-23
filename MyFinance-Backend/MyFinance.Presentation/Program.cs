@@ -1,8 +1,13 @@
+using MyFinance.Infra.IoC;
+using MyFinance.Presentation.Filters;
+using MyFinance.Presentation.Middlewares;
+
 var builder = WebApplication.CreateBuilder(args);
 {
-    builder.Services.AddControllers();
+    builder.Services.AddControllers(options => options.Filters.Add<ModelStateValidationFilter>());
     builder.Services.AddEndpointsApiExplorer();
     builder.Services.AddSwaggerGen();
+    builder.Services.RegisterServices(builder.Configuration);
 }
 
 var app = builder.Build();
@@ -16,5 +21,6 @@ var app = builder.Build();
     app.UseHttpsRedirection();
     app.UseAuthorization();
     app.MapControllers();
+    app.UseMiddleware<ExceptionHandlerMiddleware>();
     app.Run();
 }
