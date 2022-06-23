@@ -6,7 +6,7 @@ namespace MyFinance.Presentation.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class BusinessUnitController : ApiController
+    public class BusinessUnitController : ControllerBase
     {
         private readonly IBusinessUnitApiService _businessUnitApiService;
 
@@ -22,9 +22,9 @@ namespace MyFinance.Presentation.Controllers
             => Ok(await _businessUnitApiService.GetBusinessUnitsAsync(cancellationToken));
 
         [HttpDelete("{businessUnitId:guid}")]
-        public async Task<IActionResult> RemoveBusinessUnitbyId(Guid businessUnitId, CancellationToken cancellationToken)
+        public async Task<IActionResult> DeleteBusinessUnitbyId(Guid businessUnitId, CancellationToken cancellationToken)
         {
-            await _businessUnitApiService.RemoveBusinessUnitByIdAsync(businessUnitId, cancellationToken);
+            await _businessUnitApiService.DeleteBusinessUnitByIdAsync(businessUnitId, cancellationToken);
             return NoContent();
         }
     }

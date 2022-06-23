@@ -1,17 +1,19 @@
 ﻿using FluentValidation;
 using MyFinance.Domain.Interfaces;
 
-namespace MyFinance.Application.BusinessUnits.Commands.RemoveBusinessUnitById
+namespace MyFinance.Application.BusinessUnits.Commands.DeleteBusinessUnitById
 {
-    public sealed class RemoveBusinessUnitByIdValidator : AbstractValidator<RemoveBusinessUnitByIdCommand>
+    public sealed class DeleteBusinessUnitByIdValidator : AbstractValidator<DeleteBusinessUnitByIdCommand>
     {
         private readonly IBusinessUnitRepository _businessUnitRepository;
 
-        public RemoveBusinessUnitByIdValidator(IBusinessUnitRepository businessUnitRepository)
+        public DeleteBusinessUnitByIdValidator(IBusinessUnitRepository businessUnitRepository)
         {
             _businessUnitRepository = businessUnitRepository;
 
             RuleFor(command => command.BusinessUnitId)
+                .Cascade(CascadeMode.Stop)
+                .NotEqual(Guid.Empty)
                 .MustAsync(async (businessUnitId, cancellationToken) =>
                 {
                     var exists = await _businessUnitRepository.ExistsByIdAsync(businessUnitId, cancellationToken);

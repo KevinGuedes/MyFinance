@@ -9,6 +9,6 @@ namespace MyFinance.Domain.Interfaces
         Task<bool> ExistsByIdAsync(Guid id, CancellationToken cancellationToken);
         TEntity Insert(TEntity entity);
         TEntity Update(TEntity entity);
-        void RemoveById(Guid id);
+        void DeleteById(Guid id);
     }
 }
