@@ -6,8 +6,10 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
 using MyFinance.Application.BusinessUnits.ApiService;
+using MyFinance.Application.MonthlyBalances.ApiService;
 using MyFinance.Application.Pipelines;
 using MyFinance.Application.Services.RequestValidation;
+using MyFinance.Application.Transfers.ApiService;
 using MyFinance.Domain.Interfaces;
 using MyFinance.Infra.Data.Context;
 using MyFinance.Infra.Data.Mappers;
@@ -34,7 +36,9 @@ namespace MyFinance.Infra.IoC
         private static void RegisterApiServices(IServiceCollection services)
             => services
                 .AddScoped<IRequestValidationService, RequestValidationService>()
-                .AddScoped<IBusinessUnitApiService, BusinessUnitApiService>();
+                .AddScoped<IBusinessUnitApiService, BusinessUnitApiService>()
+                .AddScoped<IMonthlyBalanceApiService, MonthlyBalanceApiService>()
+                .AddScoped<ITransferApiService, TransferApiService>();
 
         private static void RegisterData(IServiceCollection services, IConfiguration configuration)
         {
@@ -49,7 +53,8 @@ namespace MyFinance.Infra.IoC
                 .AddScoped<IUnitOfWork, UnitOfWork>();
 
             services
-                .AddScoped<IBusinessUnitRepository, BusinessUnitRepository>();
+                .AddScoped<IBusinessUnitRepository, BusinessUnitRepository>()
+                .AddScoped<IMonthlyBalanceRepository, MonthlyBalanceRepository>();
         }
 
         public static void RegisterAutoMapper(IServiceCollection services, Assembly applicationLayerAssembly)

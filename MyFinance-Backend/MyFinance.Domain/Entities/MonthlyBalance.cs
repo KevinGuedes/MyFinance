@@ -2,16 +2,16 @@
 {
     public class MonthlyBalance : Entity
     {
+        private List<Transfer> _transfers;
+        public IReadOnlyCollection<Transfer> Transfers { get => _transfers; }
+        public double CurrentBalance { get => Transfers.Select(transfer => transfer.FormattedValue).Sum(); }
+        public Guid BusinessUnitId { get; private set; }
+        public int Month { get; private set; }
+        public int Year { get; private set; }
+
         public MonthlyBalance(Guid businessUnitId, int month, int year)
             => (BusinessUnitId, Month, Year, _transfers) = (businessUnitId, month, year, new List<Transfer>());
-
-        private List<Transfer> _transfers { get; set; }
-        public IEnumerable<Transfer> Transfers { get => _transfers; }
-        public double CurrentBalance { get => Transfers.Select(transfer => transfer.FormattedValue).Sum(); }
-        public Guid BusinessUnitId { get; set; }
-        public int Month { get; set; }
-        public int Year { get; set; }
-
+        
         public void AddTransfer(Transfer transfer)
         {
             SetUpdateDate();

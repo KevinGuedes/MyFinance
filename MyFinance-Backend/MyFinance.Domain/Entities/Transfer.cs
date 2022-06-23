@@ -4,21 +4,7 @@ namespace MyFinance.Domain.Entities
 {
     public class Transfer : Entity
     {
-        public Transfer(
-            string relatedTo,
-            string description,
-            double absoluteValue,
-            DateTime settlementDate,
-            TransferType tranferType)
-        {
-            _absoluteValue = absoluteValue;
-            RelatedTo = relatedTo;
-            Description = description;
-            SettlementDate = settlementDate;
-            Type = tranferType;
-        }
-
-        private double _absoluteValue { get; set; }
+        private double _absoluteValue;
         public string RelatedTo { get; private set; }
         public string Description { get; private set; }
         public DateTime SettlementDate { get; private set; }
@@ -31,6 +17,21 @@ namespace MyFinance.Domain.Entities
                 else return -_absoluteValue;
             }
         }
+
+        public Transfer(
+           string relatedTo,
+           string description,
+           double absoluteValue,
+           DateTime settlementDate,
+           TransferType tranferType)
+        {
+            _absoluteValue = absoluteValue;
+            RelatedTo = relatedTo;
+            Description = description;
+            SettlementDate = settlementDate;
+            Type = tranferType;
+        }
+
 
         public void Update(
             string relatedTo,
