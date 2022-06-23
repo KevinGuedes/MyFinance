@@ -4,7 +4,7 @@ using MyFinance.Domain.Entities;
 
 namespace MyFinance.Application.BusinessUnits.Queries.GetBusinessUnits
 {
-    public class GetBusinessUnitsQuery : IRequest<IEnumerable<BusinessUnit>>, IQuery
+    public sealed class GetBusinessUnitsQuery : IRequest<IEnumerable<BusinessUnit>>, IQuery
     {
     }
 }

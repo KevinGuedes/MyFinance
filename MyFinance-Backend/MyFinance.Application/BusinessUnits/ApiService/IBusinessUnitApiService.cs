@@ -6,5 +6,6 @@ namespace MyFinance.Application.BusinessUnits.ApiService
     {
         Task<BusinessUnitViewModel> CreateBusinessUnitAsync(BusinessUnitViewModel businessUnitViewModel, CancellationToken cancellationToken);
         Task<IEnumerable<BusinessUnitViewModel>> GetBusinessUnitsAsync(CancellationToken cancellationToken);
+        Task RemoveBusinessUnitByIdAsync(Guid businessUnitId, CancellationToken cancellationToken);
     }
 }

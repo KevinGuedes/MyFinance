@@ -28,5 +28,12 @@ namespace MyFinance.Presentation.Controllers
             var result = await _businessUnitApiService.GetBusinessUnitsAsync(cancellationToken);
             return SuccessResponse(result);
         }
+
+        [HttpDelete("{businessUnitId:guid}")]
+        public async Task<IActionResult> RemoveBusinessUnitbyId(Guid businessUnitId, CancellationToken cancellationToken)
+        {
+            await _businessUnitApiService.RemoveBusinessUnitByIdAsync(businessUnitId, cancellationToken);
+            return SuccessResponse();
+        }
     }
 }

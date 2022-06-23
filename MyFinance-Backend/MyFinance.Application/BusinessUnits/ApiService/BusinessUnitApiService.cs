@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using MediatR;
 using MyFinance.Application.BusinessUnits.Commands.CreateBusinessUnit;
+using MyFinance.Application.BusinessUnits.Commands.RemoveBusinessUnitById;
 using MyFinance.Application.BusinessUnits.Queries.GetBusinessUnits;
 using MyFinance.Application.BusinessUnits.ViewModels;
 
@@ -28,6 +29,12 @@ namespace MyFinance.Application.BusinessUnits.ApiService
             var query = new GetBusinessUnitsQuery();
             var result = await _mediator.Send(query, cancellationToken);
             return _mapper.Map<IEnumerable<BusinessUnitViewModel>>(result);
+        }
+
+        public async Task RemoveBusinessUnitByIdAsync(Guid businessUnitId, CancellationToken cancellationToken)
+        {
+            var command = new RemoveBusinessUnitByIdCommand(businessUnitId);
+            await _mediator.Send(command, cancellationToken);
         }
     }
 }

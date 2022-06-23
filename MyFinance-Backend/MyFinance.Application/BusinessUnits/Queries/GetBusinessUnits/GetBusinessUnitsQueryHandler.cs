@@ -5,7 +5,7 @@ using MyFinance.Domain.Interfaces;
 
 namespace MyFinance.Application.BusinessUnits.Queries.GetBusinessUnits
 {
-    internal class GetBusinessUnitsQueryHandler : IRequestHandler<GetBusinessUnitsQuery, IEnumerable<BusinessUnit>>
+    internal sealed class GetBusinessUnitsQueryHandler : IRequestHandler<GetBusinessUnitsQuery, IEnumerable<BusinessUnit>>
     {
         private readonly ILogger<GetBusinessUnitsQueryHandler> _logger;
         private readonly IBusinessUnitRepository _businessUnitRepository;
