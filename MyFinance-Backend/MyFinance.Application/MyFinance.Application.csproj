@@ -7,8 +7,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Transfers\Commands\" />
-    <Folder Include="Transfers\Queries\" />
+    <Compile Remove="Transfers\Queries\**" />
+    <EmbeddedResource Remove="Transfers\Queries\**" />
+    <None Remove="Transfers\Queries\**" />
   </ItemGroup>
 
   <ItemGroup>

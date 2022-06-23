@@ -4,16 +4,16 @@ using MyFinance.Application.BusinessUnits.Commands.CreateBusinessUnit;
 using MyFinance.Application.BusinessUnits.Commands.DeleteBusinessUnitById;
 using MyFinance.Application.BusinessUnits.Queries.GetBusinessUnits;
 using MyFinance.Application.BusinessUnits.ViewModels;
+using MyFinance.Application.Generics;
 
 namespace MyFinance.Application.BusinessUnits.ApiService
 {
-    public class BusinessUnitApiService : IBusinessUnitApiService
+    public class BusinessUnitApiService : EntityApiService, IBusinessUnitApiService
     {
-        private protected readonly IMediator _mediator;
-        private protected readonly IMapper _mapper;
-
         public BusinessUnitApiService(IMediator mediator, IMapper mapper)
-             => (_mediator, _mapper) = (mediator, mapper);
+             : base(mediator, mapper)
+        {
+        }
 
         public async Task<BusinessUnitViewModel> CreateBusinessUnitAsync(
             CreateBusinessUnitCommand command,
