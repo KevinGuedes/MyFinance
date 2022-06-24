@@ -13,12 +13,12 @@ namespace MyFinance.Application.BusinessUnits.Commands.DeleteBusinessUnitById
 
             RuleFor(command => command.BusinessUnitId)
                 .Cascade(CascadeMode.Stop)
-                .NotEqual(Guid.Empty)
+                .NotEqual(Guid.Empty).WithMessage("{PropertyName} invalid")
                 .MustAsync(async (businessUnitId, cancellationToken) =>
                 {
                     var exists = await _businessUnitRepository.ExistsByIdAsync(businessUnitId, cancellationToken);
                     return exists;
-                }).WithMessage("Business Unit with {PropertyName} doesn't exist");
+                }).WithMessage("{PropertyName} doesn't exist");
         }
     }
 }

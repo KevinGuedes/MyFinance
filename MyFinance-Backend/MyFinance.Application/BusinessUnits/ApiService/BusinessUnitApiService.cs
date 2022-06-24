@@ -18,22 +18,16 @@ namespace MyFinance.Application.BusinessUnits.ApiService
         public async Task<BusinessUnitViewModel> CreateBusinessUnitAsync(
             CreateBusinessUnitCommand command,
             CancellationToken cancellationToken)
-        {
-            var result = await _mediator.Send(command, cancellationToken);
-            return _mapper.Map<BusinessUnitViewModel>(result);
-        }
+            => _mapper.Map<BusinessUnitViewModel>(await _mediator.Send(command, cancellationToken));
 
         public async Task<IEnumerable<BusinessUnitViewModel>> GetBusinessUnitsAsync(CancellationToken cancellationToken)
         {
-            var query = new GetBusinessUnitsQuery();
+            var query = new GetBusinessUnitsQuery(); //oque vai dar se for na controller?
             var result = await _mediator.Send(query, cancellationToken);
             return _mapper.Map<IEnumerable<BusinessUnitViewModel>>(result);
         }
 
-        public async Task DeleteBusinessUnitByIdAsync(Guid businessUnitId, CancellationToken cancellationToken)
-        {
-            var command = new DeleteBusinessUnitByIdCommand(businessUnitId);
-            await _mediator.Send(command, cancellationToken);
-        }
+        public Task DeleteBusinessUnitByIdAsync(DeleteBusinessUnitByIdCommand command, CancellationToken cancellationToken)
+            => _mediator.Send(command, cancellationToken);
     }
 }

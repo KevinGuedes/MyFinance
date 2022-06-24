@@ -13,11 +13,8 @@ namespace MyFinance.Infra.Data.Mappers
             BsonClassMap.RegisterClassMap<Entity>(map =>
             {
                 map.AutoMap();
-
                 map.SetIsRootClass(true);
-
                 map.MapIdMember(entity => entity.Id)
-                    .SetIdGenerator(GuidGenerator.Instance)
                     .SetSerializer(new GuidSerializer(BsonType.String));
             });
         }

@@ -5,6 +5,6 @@ namespace MyFinance.Application.MonthlyBalances.ApiService
 {
     public interface IMonthlyBalanceApiService
     {
-        Task<IEnumerable<MonthlyBalanceViewModel>> GetMonthlyBalances(GetMonthlyBalancesQuery query, CancellationToken cancellationToken);
+        Task<IEnumerable<MonthlyBalanceViewModel>> GetMonthlyBalancesAsync(GetMonthlyBalancesQuery query, CancellationToken cancellationToken);
     }
 }

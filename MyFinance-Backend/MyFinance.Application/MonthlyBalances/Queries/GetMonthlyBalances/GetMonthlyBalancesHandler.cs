@@ -18,7 +18,7 @@ namespace MyFinance.Application.MonthlyBalances.Queries.GetRecentMonthlyBalances
         public async Task<IEnumerable<MonthlyBalance>> Handle(GetMonthlyBalancesQuery query, CancellationToken cancellationToken)
         {
             _logger.LogInformation("Retrieving top {Count} recent Monthly Balances", query.Count);
-            var topRecentMonthlybalances = await _monthlyBalanceRepository.GetMonthlyBalances(query.Count, query.Skip, cancellationToken);
+            var topRecentMonthlybalances = await _monthlyBalanceRepository.GetAllAsync(query.Count, query.Skip, cancellationToken);
             _logger.LogInformation("Top {Count} recent Monthly Balances retrieved", query.Count);
 
             return topRecentMonthlybalances;

@@ -13,7 +13,6 @@ namespace MyFinance.Infra.Data.Mappers
             BsonClassMap.RegisterClassMap<Transfer>(map =>
             {
                 map.AutoMap();
-
                 map.MapMember(transfer => transfer.Type)
                     .SetSerializer(new EnumSerializer<TransferType>(BsonType.String))
                     .SetIsRequired(true);

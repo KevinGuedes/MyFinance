@@ -9,14 +9,29 @@ namespace MyFinance.Infra.Data.Repositories
 {
     public class MonthlyBalanceRepository : EntityRepository<MonthlyBalance>, IMonthlyBalanceRepository
     {
-        public MonthlyBalanceRepository(IMongoContext mongoContext, IUnitOfWork unitOfWork) 
+        public MonthlyBalanceRepository(IMongoContext mongoContext, IUnitOfWork unitOfWork)
             : base(mongoContext, unitOfWork)
         {
         }
 
-        public async Task<IEnumerable<MonthlyBalance>> GetMonthlyBalances(
-            int count, 
-            int skip, 
+        public Task<bool> ExistsByMonthAndYearAsync(
+            int month,
+            int year,
+            CancellationToken cancellationToken)
+            => _collection.AsQueryable()
+                .AnyAsync(montlyBalance => montlyBalance.Month == month && montlyBalance.Year == year, cancellationToken);
+
+        public Task<MonthlyBalance> GetByMonthAndYearAsync(
+            int month,
+            int year,
+            CancellationToken cancellationToken)
+            => _collection.AsQueryable()
+                .Where(montlyBalance => montlyBalance.Month == month && montlyBalance.Year == year)
+                .FirstAsync(cancellationToken);
+
+        public async Task<IEnumerable<MonthlyBalance>> GetAllAsync(
+            int count,
+            int skip,
             CancellationToken cancellationToken)
             => await _collection.AsQueryable()
                 .OrderByDescending(monthlyBalance => monthlyBalance.CreationDate)

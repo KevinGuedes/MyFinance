@@ -7,10 +7,10 @@ namespace MyFinance.Application.MonthlyBalances.Queries.GetRecentMonthlyBalances
         public GetMonthlyBalancesValidator()
         {
             RuleFor(query => query.Count)
-                .GreaterThan(0).WithMessage("{PropertyName} must be greater than zero");
+                .GreaterThan(0).WithMessage("{PropertyName} must be greater than 0");
 
             RuleFor(query => query.Skip)
-               .GreaterThanOrEqualTo(0).WithMessage("{PropertyName} must be zero or greater");
+               .GreaterThanOrEqualTo(0).WithMessage("{PropertyName} must be 0 or greater");
         }
     }
 }
