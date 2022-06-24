@@ -21,7 +21,7 @@ namespace MyFinance.Application.Transfers.ApiService
         public async Task<TransferViewModel> UpdateTransferAsync(UpdateTransferCommand command, CancellationToken cancellationToken)
             => _mapper.Map<TransferViewModel>(await _mediator.Send(command, cancellationToken));
 
-        public Task DeleteTransferByIdAsync(DeleteTransferCommand command, CancellationToken cancellationToken)
+        public Task DeleteTransferAsync(DeleteTransferCommand command, CancellationToken cancellationToken)
              => _mediator.Send(command, cancellationToken);
     }
 }

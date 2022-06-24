@@ -14,13 +14,13 @@ namespace MyFinance.Presentation.Controllers
         public BusinessUnitController(IBusinessUnitApiService businessUnitApiService)
             => _businessUnitApiService = businessUnitApiService;
 
-        [HttpPost]
-        public async Task<IActionResult> CreateBusinessUnitAsync(CreateBusinessUnitCommand command, CancellationToken cancellationToken)
-            => Ok(await _businessUnitApiService.CreateBusinessUnitAsync(command, cancellationToken));
-
         [HttpGet]
         public async Task<IActionResult> GetBusinessUnitsAsync(CancellationToken cancellationToken)
             => Ok(await _businessUnitApiService.GetBusinessUnitsAsync(cancellationToken));
+
+        [HttpPost]
+        public async Task<IActionResult> CreateBusinessUnitAsync(CreateBusinessUnitCommand command, CancellationToken cancellationToken)
+            => Ok(await _businessUnitApiService.CreateBusinessUnitAsync(command, cancellationToken));
 
         [HttpPut]
         public async Task<IActionResult> UpdateBusinessUnitAsync(

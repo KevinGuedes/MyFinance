@@ -9,6 +9,6 @@ namespace MyFinance.Application.Transfers.ApiService
     {
         Task RegisterTransfersAsync(RegisterTransfersCommand command, CancellationToken cancellationToken);
         Task<TransferViewModel> UpdateTransferAsync(UpdateTransferCommand command, CancellationToken cancellationToken);
-        Task DeleteTransferByIdAsync(DeleteTransferCommand command, CancellationToken cancellationToken);
+        Task DeleteTransferAsync(DeleteTransferCommand command, CancellationToken cancellationToken);
     }
 }

@@ -2,6 +2,7 @@
 using MyFinance.Application.Transfers.ApiService;
 using MyFinance.Application.Transfers.Commands.RegisterTransfers;
 using MyFinance.Application.Transfers.Commands.DeleteTransfer;
+using MyFinance.Application.Transfers.Commands.UpdateTransfer;
 
 namespace MyFinance.Presentation.Controllers
 {
@@ -21,17 +22,14 @@ namespace MyFinance.Presentation.Controllers
             return NoContent();
         }
 
-        //[HttpDelete]
-        //public async Task<IActionResult> DeleteTransferIdAsync(DeleteTransferByIdCommand command, CancellationToken cancellationToken)
-        //{
-        //    await _transferApiService.DeleteTransferByIdAsync(command, cancellationToken);
-        //    return NoContent();
-        //}
+        [HttpPut]
+        public async Task<IActionResult> UpdateTransferAsync(UpdateTransferCommand command, CancellationToken cancellationToken)
+            => Ok(await _transferApiService.UpdateTransferAsync(command, cancellationToken));
 
         [HttpDelete]
-        public async Task<IActionResult> UpdateTransferById(DeleteTransferCommand command, CancellationToken cancellationToken)
+        public async Task<IActionResult> DeleteTransferAsync(DeleteTransferCommand command, CancellationToken cancellationToken)
         {
-            await _transferApiService.DeleteTransferByIdAsync(command, cancellationToken);
+            await _transferApiService.DeleteTransferAsync(command, cancellationToken);
             return NoContent();
         }
     }
