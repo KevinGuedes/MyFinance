@@ -20,7 +20,7 @@ namespace MyFinance.Application.Transfers.Commands.RegisterTransfers
                 {
                     var exists = await _businessUnitRepository.ExistsByIdAsync(businessUnitId, cancellationToken);
                     return exists;
-                }).WithMessage("{PropertyName} doesn't exist");
+                }).WithMessage("Business Unit not found");
         }
     }
 
@@ -28,8 +28,6 @@ namespace MyFinance.Application.Transfers.Commands.RegisterTransfers
     {
         public TransferDataValidator()
         {
-            ClassLevelCascadeMode = CascadeMode.Stop;
-
             RuleFor(transferData => transferData.AbsoluteValue)
                 .GreaterThan(0).WithMessage("{PropertyName} must be greater than 0");
 

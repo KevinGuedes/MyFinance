@@ -27,7 +27,7 @@ namespace MyFinance.Application.BusinessUnits.Commands.UpdateBusinessUnit
                 {
                     var exists = await _businessUnitRepository.ExistsByIdAsync(businessUnitId, cancellationToken);
                     return exists;
-                }).WithMessage("{PropertyName} doesn't exist");
+                }).WithMessage("Business Unit not found");
         }
     }
 }

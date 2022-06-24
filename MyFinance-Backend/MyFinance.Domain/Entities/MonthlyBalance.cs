@@ -34,7 +34,7 @@
             return transfer;
         }
 
-        public void RemoveTransferById(Guid transferId)
+        public void DeleteTransferById(Guid transferId)
         {
             SetUpdateDate();
             var transfer = GetTransferById(transferId);
