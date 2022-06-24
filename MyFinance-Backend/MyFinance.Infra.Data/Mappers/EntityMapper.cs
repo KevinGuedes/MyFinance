@@ -9,14 +9,12 @@ namespace MyFinance.Infra.Data.Mappers
     internal static class EntityMapper
     {
         internal static void Map()
-        {
-            BsonClassMap.RegisterClassMap<Entity>(map =>
+            => BsonClassMap.RegisterClassMap<Entity>(map =>
             {
                 map.AutoMap();
                 map.SetIsRootClass(true);
                 map.MapIdMember(entity => entity.Id)
                     .SetSerializer(new GuidSerializer(BsonType.String));
             });
-        }
     }
 }

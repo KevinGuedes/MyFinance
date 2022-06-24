@@ -2,26 +2,34 @@
 {
     public class MonthlyBalance : Entity
     {
-        private List<Transfer> _transfers;
-        public IReadOnlyCollection<Transfer> Transfers { get => _transfers; }
+        public List<Transfer> Transfers { get; private set; }
         public double CurrentBalance { get => Transfers.Select(transfer => transfer.FormattedValue).Sum(); }
         public Guid BusinessUnitId { get; private set; }
         public int Month { get; private set; }
         public int Year { get; private set; }
 
         public MonthlyBalance(Guid businessUnitId, int month, int year)
-            => (BusinessUnitId, Month, Year, _transfers) = (businessUnitId, month, year, new List<Transfer>());
+            => (BusinessUnitId, Month, Year, Transfers) = (businessUnitId, month, year, new List<Transfer>());
         
         public void AddTransfer(Transfer transfer)
         {
             SetUpdateDate();
             VerifyTransferSettlementDateCompatibility(transfer.SettlementDate);
-            _transfers.Add(transfer);
+            Transfers.Add(transfer);
+        }
+
+        public void AddTransfers(IEnumerable<Transfer> transfers)
+        {
+            SetUpdateDate();
+            foreach (var transfer in transfers)
+                VerifyTransferSettlementDateCompatibility(transfer.SettlementDate);
+
+            Transfers.AddRange(transfers);
         }
 
         public Transfer GetTransferById(Guid transferId)
         {
-            var transfer = _transfers.FirstOrDefault(transfer => transfer.Id == transferId);
+            var transfer = Transfers.FirstOrDefault(transfer => transfer.Id == transferId);
             if (transfer is null) throw new InvalidOperationException("Transfer not found in this Monthly Balance");
             return transfer;
         }
@@ -30,15 +38,15 @@
         {
             SetUpdateDate();
             var transfer = GetTransferById(transferId);
-            _transfers.Remove(transfer);
+            Transfers.Remove(transfer);
         }
 
         public void UpdateTransfer(Transfer updatedTransfer)
         {
             SetUpdateDate();
-            var index = _transfers.FindIndex(transfer => transfer.Id == updatedTransfer.Id);
+            var index = Transfers.FindIndex(transfer => transfer.Id == updatedTransfer.Id);
             if (index == -1) throw new InvalidOperationException("Transfer not found in this Monthly Balance");
-            _transfers[index] = updatedTransfer;
+            Transfers[index] = updatedTransfer;
         }
 
         private void VerifyTransferSettlementDateCompatibility(DateTime settlementDate)

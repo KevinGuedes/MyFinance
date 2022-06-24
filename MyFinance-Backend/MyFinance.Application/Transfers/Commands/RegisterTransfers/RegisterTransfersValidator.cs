@@ -1,12 +1,12 @@
 ﻿using FluentValidation;
 using MyFinance.Domain.Interfaces;
 
-namespace MyFinance.Application.Transfers.Commands.CreateTransfer
+namespace MyFinance.Application.Transfers.Commands.RegisterTransfers
 {
-    public sealed class CreateTransferValidator : AbstractValidator<CreateTransferCommand>
+    public sealed class RegisterTransfersValidator : AbstractValidator<RegisterTransfersCommand>
     {
         private readonly IBusinessUnitRepository _businessUnitRepository;
-        public CreateTransferValidator(IBusinessUnitRepository businessUnitRepository)
+        public RegisterTransfersValidator(IBusinessUnitRepository businessUnitRepository)
         {
             _businessUnitRepository = businessUnitRepository;
             ClassLevelCascadeMode = CascadeMode.Stop;

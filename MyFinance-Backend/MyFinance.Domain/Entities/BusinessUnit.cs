@@ -14,10 +14,10 @@
             Name = name;
         }
 
-        public void UpdateBalance(double value)
+        public void AddRevenue(double value)
         {
             SetUpdateDate();
-            CurrentBalance = +value;
+            CurrentBalance += value;
         }
     }
 }

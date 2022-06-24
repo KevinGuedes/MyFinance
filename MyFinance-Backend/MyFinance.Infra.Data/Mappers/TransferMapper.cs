@@ -9,14 +9,12 @@ namespace MyFinance.Infra.Data.Mappers
     internal static class TransferMapper
     {
         internal static void Map()
-        {
-            BsonClassMap.RegisterClassMap<Transfer>(map =>
+            => BsonClassMap.RegisterClassMap<Transfer>(map =>
             {
                 map.AutoMap();
                 map.MapMember(transfer => transfer.Type)
                     .SetSerializer(new EnumSerializer<TransferType>(BsonType.String))
                     .SetIsRequired(true);
             });
-        }
     }
 }

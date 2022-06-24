@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MyFinance.Application.Transfers.ApiService;
-using MyFinance.Application.Transfers.Commands.CreateTransfer;
+using MyFinance.Application.Transfers.Commands.RegisterTransfers;
 using MyFinance.Application.Transfers.Commands.DeleteTransfer;
 
 namespace MyFinance.Presentation.Controllers
@@ -15,8 +15,11 @@ namespace MyFinance.Presentation.Controllers
             => _transferApiService = transferApiService;
 
         [HttpPost]
-        public async Task<IActionResult> CreateTransferAsync(CreateTransferCommand command, CancellationToken cancellationToken)
-          => Ok(await _transferApiService.CreateTransferAsync(command, cancellationToken));
+        public async Task<IActionResult> CreateTransferAsync(RegisterTransfersCommand command, CancellationToken cancellationToken)
+        {
+            await _transferApiService.RegisterTransfersAsync(command, cancellationToken);
+            return NoContent();
+        }
 
         //[HttpDelete]
         //public async Task<IActionResult> DeleteTransferIdAsync(DeleteTransferByIdCommand command, CancellationToken cancellationToken)

@@ -1,16 +1,15 @@
 ﻿using MediatR;
 using MyFinance.Application.Interfaces;
-using MyFinance.Domain.Entities;
 using MyFinance.Domain.Enums;
 
-namespace MyFinance.Application.Transfers.Commands.CreateTransfer
+namespace MyFinance.Application.Transfers.Commands.RegisterTransfers
 {
-    public sealed class CreateTransferCommand : IRequest<IEnumerable<Transfer>>, ICommand
+    public sealed class RegisterTransfersCommand : IRequest, ICommand
     {
         public Guid BusinessUnitId { get; set; }
         public IEnumerable<TransferData> Transfers { get; set; }
 
-        public CreateTransferCommand(Guid businessUnitId, IEnumerable<TransferData> transfers)
+        public RegisterTransfersCommand(Guid businessUnitId, IEnumerable<TransferData> transfers)
             => (BusinessUnitId, Transfers) = (businessUnitId, transfers);
     }
 
