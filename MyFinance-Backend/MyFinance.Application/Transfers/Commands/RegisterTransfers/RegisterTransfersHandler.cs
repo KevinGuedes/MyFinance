@@ -24,9 +24,12 @@ namespace MyFinance.Application.Transfers.Commands.RegisterTransfers
         public async Task<Unit> Handle(RegisterTransfersCommand command, CancellationToken cancellationToken)
         {
             _logger.LogInformation("Registering new transfer(s)");
-            double businessUnitRevenue = 0;
+            var businessUnitRevenue = 0D;
             var transfersGroupedByReferenceDate = command.Transfers
-                .GroupBy(transferData => new { transferData.SettlementDate.Month, transferData.SettlementDate.Year });
+                .GroupBy(transferData => new { 
+                    transferData.SettlementDate.Month, 
+                    transferData.SettlementDate.Year 
+                });
 
             foreach(var transferGroup in transfersGroupedByReferenceDate)
             {
@@ -34,6 +37,7 @@ namespace MyFinance.Application.Transfers.Commands.RegisterTransfers
                 var year = transferGroup.Key.Year;
                 var newTransfers = new List<Transfer>();
 
+                _logger.LogInformation("Registering transfers for {Month}/{Year}", month, year);
                 foreach(var transferData in transferGroup)
                 {
                     var transfer = new Transfer(
@@ -48,23 +52,31 @@ namespace MyFinance.Application.Transfers.Commands.RegisterTransfers
                 }
 
                 //retorna nulo mesmo?
+                _logger.LogInformation("Verifying if the is an existing Monthly Balance related to the transfer(s)");
                 var monthlyBalance = await _monthlyBalanceRepository.GetByMonthAndYearAsync(month, year, cancellationToken);
                 if (monthlyBalance is not null)
                 {
+                    _logger.LogInformation("Adding new Transfer(s) to Monthly Balance with Id {MonthlyBalanceId}", monthlyBalance.Id);
                     monthlyBalance.AddTransfers(newTransfers);
                     _monthlyBalanceRepository.Update(monthlyBalance);
+                    _logger.LogInformation("Monthly Balance with Id {MonthlyBalanceId} updated", monthlyBalance.Id);
                 }
                 else
                 {
+                    _logger.LogInformation("Creating new Monthly Balance");
                     monthlyBalance = new MonthlyBalance(command.BusinessUnitId, month, year);
+                    _logger.LogInformation("Adding new Transfer(s) to Monthly Balance with Id {MonthlyBalanceId}", monthlyBalance.Id);
                     monthlyBalance.AddTransfers(newTransfers);
                     _monthlyBalanceRepository.Insert(monthlyBalance);
+                    _logger.LogInformation("New Monthly Balance created with Id {MonthlyBalanceId}", monthlyBalance.Id);
                 }
             }
 
+            _logger.LogInformation("Updating balance of Business Unit with Id {BusinessUnitId}", command.BusinessUnitId);
             var businessUnit = await _businessUnitRepository.GetByIdAsync(command.BusinessUnitId, cancellationToken);
-            businessUnit.AddRevenue(businessUnitRevenue);
+            businessUnit.AddBalance(businessUnitRevenue);
             _businessUnitRepository.Update(businessUnit);
+            _logger.LogInformation("Balance of Business Unit with Id {BusinessUnitId} updated", command.BusinessUnitId);
 
             return Unit.Value;
         }
