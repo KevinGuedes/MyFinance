@@ -18,21 +18,24 @@ namespace MyFinance.Presentation.Filters
         {
             var controllername = context.RouteData.Values["controller"];
             var actionName = context.RouteData.Values["action"];
+            var controllerInfo = string.Format("{0}[{1}]", controllername, actionName);
 
             foreach (var (_, value) in context.ActionArguments)
             {
                 if (value is null || !_requestValidationService.IsValidatableRequest(value)) continue;
 
                 var requestName = value.GetType().Name;
-                _logger.LogInformation("Validating {RequestName} data", requestName);
+                _logger.LogInformation("{ControllerInfo} Validating {RequestName} data", controllerInfo, requestName);
 
                 var (isSuccess, errors) = await _requestValidationService.ValidateRequest(value);
                 if(!isSuccess)
                 {
-                    _logger.LogWarning("{ControllerName}[{Action}] Invalid {RequestName} data received", controllername, actionName, requestName);
+                    _logger.LogWarning("{ControllerInfo} Invalid {RequestName} data received", controllerInfo, requestName);
                     context.Result = new BadRequestObjectResult(new ValidationProblemDetails(errors!));
                     return;
                 }
+
+                _logger.LogInformation("{ControllerInfo} {RequestName} successfully validated", controllerInfo, requestName);
             }
 
             await next();
