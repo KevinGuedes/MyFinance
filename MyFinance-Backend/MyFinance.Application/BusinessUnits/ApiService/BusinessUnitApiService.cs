@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using MediatR;
 using MyFinance.Application.BusinessUnits.Commands.CreateBusinessUnit;
-using MyFinance.Application.BusinessUnits.Commands.DeleteBusinessUnitById;
+using MyFinance.Application.BusinessUnits.Commands.UpdateBusinessUnit;
 using MyFinance.Application.BusinessUnits.Queries.GetBusinessUnits;
 using MyFinance.Application.BusinessUnits.ViewModels;
 using MyFinance.Application.Generics;
@@ -27,7 +27,7 @@ namespace MyFinance.Application.BusinessUnits.ApiService
             return _mapper.Map<IEnumerable<BusinessUnitViewModel>>(result);
         }
 
-        public Task DeleteBusinessUnitByIdAsync(DeleteBusinessUnitByIdCommand command, CancellationToken cancellationToken)
-            => _mediator.Send(command, cancellationToken);
+        public async Task<BusinessUnitViewModel> UpdateBusinessUnitAsync(UpdateBusinessUnitCommand command, CancellationToken cancellationToken)
+            => _mapper.Map<BusinessUnitViewModel>(await _mediator.Send(command, cancellationToken));
     }
 }

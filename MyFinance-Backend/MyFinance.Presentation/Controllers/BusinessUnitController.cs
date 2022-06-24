@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MyFinance.Application.BusinessUnits.ApiService;
 using MyFinance.Application.BusinessUnits.Commands.CreateBusinessUnit;
-using MyFinance.Application.BusinessUnits.Commands.DeleteBusinessUnitById;
+using MyFinance.Application.BusinessUnits.Commands.UpdateBusinessUnit;
 
 namespace MyFinance.Presentation.Controllers
 {
@@ -22,13 +22,10 @@ namespace MyFinance.Presentation.Controllers
         public async Task<IActionResult> GetBusinessUnitsAsync(CancellationToken cancellationToken)
             => Ok(await _businessUnitApiService.GetBusinessUnitsAsync(cancellationToken));
 
-        [HttpDelete]
-        public async Task<IActionResult> DeleteBusinessUnitbyIdAsync(
-            DeleteBusinessUnitByIdCommand command, 
+        [HttpPut]
+        public async Task<IActionResult> UpdateBusinessUnitAsync(
+            UpdateBusinessUnitCommand command, 
             CancellationToken cancellationToken)
-        {
-            await _businessUnitApiService.DeleteBusinessUnitByIdAsync(command, cancellationToken);
-            return NoContent();
-        }
+            => Ok(await _businessUnitApiService.UpdateBusinessUnitAsync(command, cancellationToken));
     }
 }

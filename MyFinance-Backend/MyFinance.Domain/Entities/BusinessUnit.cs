@@ -3,18 +3,20 @@
     public class BusinessUnit : Entity
     {
         public string Name { get; private set; }
+        public bool IsArchived { get; private set; }
         public double CurrentBalance { get; private set; }
 
         public BusinessUnit(string name)
-            => (Name, CurrentBalance) = (name, 0);
+            => (Name, IsArchived, CurrentBalance) = (name, false, 0);
 
-        public void Update(string name)
+        public void Update(string name, bool isArchived)
         {
             SetUpdateDate();
             Name = name;
+            IsArchived = isArchived;
         }
 
-        public void AddRevenue(double value)
+        public void AddBalance(double value)
         {
             SetUpdateDate();
             CurrentBalance += value;
