@@ -13,8 +13,8 @@ namespace MyFinance.Application.BusinessUnits.Commands.CreateBusinessUnit
 
             RuleFor(command => command.Name)
                .Cascade(CascadeMode.Stop)
-               .NotNull().WithMessage("{PropertyName} can not be null")
-               .NotEmpty().WithMessage("{PropertyName} can not be empty")
+               .NotNull().WithMessage("{PropertyName} must not be null")
+               .NotEmpty().WithMessage("{PropertyName} must not be empty")
                .Length(2, 50).WithMessage("{PropertyName} must have between 2 and 50 characters")
                .MustAsync(async (businessUnitName, cancellationToken) =>
                {

@@ -1,6 +1,9 @@
-﻿namespace MyFinance.Application.Transfers.Commands.DeleteTransfer
+﻿using MediatR;
+using MyFinance.Application.Interfaces;
+
+namespace MyFinance.Application.Transfers.Commands.DeleteTransfer
 {
-    public sealed class DeleteTransferCommand
+    public sealed class DeleteTransferCommand : IRequest, ICommand
     {
         public Guid TransferId { get; set; }
         public int Month { get; set; }

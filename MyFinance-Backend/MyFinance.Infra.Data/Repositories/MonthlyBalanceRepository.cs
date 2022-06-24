@@ -27,7 +27,7 @@ namespace MyFinance.Infra.Data.Repositories
             CancellationToken cancellationToken)
             => _collection.AsQueryable()
                 .Where(montlyBalance => montlyBalance.Month == month && montlyBalance.Year == year)
-                .FirstAsync(cancellationToken);
+                .FirstOrDefaultAsync(cancellationToken);
 
         public async Task<IEnumerable<MonthlyBalance>> GetAllAsync(
             int count,

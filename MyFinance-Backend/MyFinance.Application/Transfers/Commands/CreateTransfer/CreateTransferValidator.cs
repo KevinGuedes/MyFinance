@@ -1,0 +1,50 @@
+﻿using FluentValidation;
+using MyFinance.Domain.Interfaces;
+
+namespace MyFinance.Application.Transfers.Commands.CreateTransfer
+{
+    public sealed class CreateTransferValidator : AbstractValidator<CreateTransferCommand>
+    {
+        private readonly IBusinessUnitRepository _businessUnitRepository;
+        public CreateTransferValidator(IBusinessUnitRepository businessUnitRepository)
+        {
+            _businessUnitRepository = businessUnitRepository;
+            ClassLevelCascadeMode = CascadeMode.Stop;
+
+            RuleForEach(command => command.Transfers).SetValidator(new TransferDataValidator());
+
+            RuleFor(command => command.BusinessUnitId)
+                .Cascade(CascadeMode.Stop)
+                .NotEqual(Guid.Empty).WithMessage("{PropertyName} invalid")
+                .MustAsync(async (businessUnitId, cancellationToken) =>
+                {
+                    var exists = await _businessUnitRepository.ExistsByIdAsync(businessUnitId, cancellationToken);
+                    return exists;
+                }).WithMessage("{PropertyName} doesn't exist");
+        }
+    }
+
+    public sealed class TransferDataValidator : AbstractValidator<TransferData>
+    {
+        public TransferDataValidator()
+        {
+            ClassLevelCascadeMode = CascadeMode.Stop;
+
+            RuleFor(transferData => transferData.AbsoluteValue)
+                .GreaterThan(0).WithMessage("{PropertyName} must be greater than 0");
+
+            RuleFor(transferData => transferData.RelatedTo)
+                .NotEmpty().WithMessage("{PropertyName} must not be empty")
+                .NotNull().WithMessage("{PropertyName} must not be null")
+                .Length(2, 50).WithMessage("{PropertyName} must have between 2 and 50 characters");
+
+            RuleFor(transferData => transferData.Description)
+                .NotEmpty().WithMessage("{PropertyName} must not be empty")
+                .NotNull().WithMessage("{PropertyName} must not be null")
+                .Length(5, 140).WithMessage("{PropertyName} must have between 5 and 140 characters");
+
+            RuleFor(transferData => transferData.Type)
+                .IsInEnum().WithMessage("Invalid {PropertyName}");
+        }
+    }
+}

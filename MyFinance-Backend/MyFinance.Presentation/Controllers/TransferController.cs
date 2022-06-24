@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MyFinance.Application.Transfers.ApiService;
-using MyFinance.Application.Transfers.Commands.AddTransfer;
+using MyFinance.Application.Transfers.Commands.CreateTransfer;
 using MyFinance.Application.Transfers.Commands.DeleteTransfer;
 
 namespace MyFinance.Presentation.Controllers
