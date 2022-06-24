@@ -28,7 +28,7 @@ namespace MyFinance.Application.Transfers.Commands.DeleteTransfer
                     return exists;
                 }).WithMessage("Business Unit not found");
 
-            RuleFor(command => command.MonhlyBalanceId)
+            RuleFor(command => command.MonthlyBalanceId)
                 .Cascade(CascadeMode.Stop)
                 .NotEqual(Guid.Empty).WithMessage("{PropertyName} invalid")
                 .MustAsync(async (monthlyBalanceId, cancellationToken) =>

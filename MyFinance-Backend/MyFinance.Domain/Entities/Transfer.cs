@@ -48,7 +48,7 @@ namespace MyFinance.Domain.Entities
             Type = tranferType;
         }
 
-        public bool ShoudlGoToAnotherMonthlyBalance(DateTime newSettlementDate)
+        public bool ShouldGoToAnotherMonthlyBalance(DateTime newSettlementDate)
             => newSettlementDate.Month != SettlementDate.Month || newSettlementDate.Year != SettlementDate.Year;
 
         public bool ShouldUpdateBusinessUnitBalance(double newFormattedValue)

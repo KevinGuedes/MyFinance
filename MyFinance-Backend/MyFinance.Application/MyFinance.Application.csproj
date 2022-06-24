@@ -24,4 +24,8 @@
     <ProjectReference Include="..\MyFinance.Infra.Data\MyFinance.Infra.Data.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Services\Transfer\" />
+  </ItemGroup>
+
 </Project>
