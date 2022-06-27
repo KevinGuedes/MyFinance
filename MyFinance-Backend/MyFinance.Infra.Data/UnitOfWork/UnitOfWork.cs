@@ -9,10 +9,7 @@ namespace MyFinance.Infra.Data.UnitOfWork
         public UnitOfWork(IMongoContext mongoContext)
             => _mongoContext = mongoContext;
 
-        public async Task<bool> CommitAsync(CancellationToken cancellationToken)
-        {
-            var changesCount = await _mongoContext.SaveChangesAsync(cancellationToken);
-            return changesCount > 0;
-        }
+        public Task<bool> CommitAsync(CancellationToken cancellationToken)
+            => _mongoContext.SaveChangesAsync(cancellationToken);
     }
 }

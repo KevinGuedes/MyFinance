@@ -17,9 +17,17 @@ namespace MyFinance.Application.Pipelines
 
         public async Task Process(TRequest request, TResponse response, CancellationToken cancellationToken)
         {
-            _logger.LogInformation("Committing database changes");
-            await _unitOfWork.CommitAsync(cancellationToken);
-            _logger.LogInformation("Database changes commited");
+            try
+            {
+                _logger.LogInformation("Committing database changes");
+                await _unitOfWork.CommitAsync(cancellationToken);
+                _logger.LogInformation("Database changes commited");
+            }
+            catch(Exception exception)
+            {
+                _logger.LogCritical(exception, "Failed to commit changes on database");
+                throw;
+            };
         }
     }
 }
