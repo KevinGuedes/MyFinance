@@ -14,7 +14,9 @@ namespace MyFinance.Presentation.Controllers
             => _monthlyBalanceApiService = monthlyBalanceApiService;
 
         [HttpGet]
-        public async Task<IActionResult> GetBusinessUnitsAsync(GetMonthlyBalancesQuery query, CancellationToken cancellationToken)
+        public async Task<IActionResult> GetBusinessUnitsAsync(
+            [FromQuery] GetMonthlyBalancesQuery query, 
+            CancellationToken cancellationToken)
             => Ok(await _monthlyBalanceApiService.GetMonthlyBalancesAsync(query, cancellationToken));
     }
 }

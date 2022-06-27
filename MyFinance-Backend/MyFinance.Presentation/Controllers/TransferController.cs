@@ -16,18 +16,24 @@ namespace MyFinance.Presentation.Controllers
             => _transferApiService = transferApiService;
 
         [HttpPost]
-        public async Task<IActionResult> CreateTransferAsync(RegisterTransfersCommand command, CancellationToken cancellationToken)
+        public async Task<IActionResult> CreateTransferAsync(
+            [FromBody] RegisterTransfersCommand command, 
+            CancellationToken cancellationToken)
         {
             await _transferApiService.RegisterTransfersAsync(command, cancellationToken);
             return NoContent();
         }
 
         [HttpPut]
-        public async Task<IActionResult> UpdateTransferAsync(UpdateTransferCommand command, CancellationToken cancellationToken)
+        public async Task<IActionResult> UpdateTransferAsync(
+            [FromBody] UpdateTransferCommand command, 
+            CancellationToken cancellationToken)
             => Ok(await _transferApiService.UpdateTransferAsync(command, cancellationToken));
 
         [HttpDelete]
-        public async Task<IActionResult> DeleteTransferAsync(DeleteTransferCommand command, CancellationToken cancellationToken)
+        public async Task<IActionResult> DeleteTransferAsync(
+            [FromBody] DeleteTransferCommand command, 
+            CancellationToken cancellationToken)
         {
             await _transferApiService.DeleteTransferAsync(command, cancellationToken);
             return NoContent();
