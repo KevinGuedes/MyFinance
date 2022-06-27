@@ -11,5 +11,8 @@ namespace MyFinance.Application.MonthlyBalances.Queries.GetRecentMonthlyBalances
 
         public GetMonthlyBalancesQuery(int count, int skip)
             => (Count, Skip) = (count, skip);
+
+        public GetMonthlyBalancesQuery()
+          => (Count, Skip) = (3, 0);
     }
 }
