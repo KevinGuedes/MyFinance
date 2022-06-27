@@ -1,4 +1,5 @@
 ﻿using FluentValidation;
+using MyFinance.Domain.Enums;
 using MyFinance.Domain.Interfaces;
 
 namespace MyFinance.Application.Transfers.Commands.RegisterTransfers
@@ -28,8 +29,21 @@ namespace MyFinance.Application.Transfers.Commands.RegisterTransfers
     {
         public TransferDataValidator()
         {
-            RuleFor(transferData => transferData.AbsoluteValue)
-                .GreaterThan(0).WithMessage("{PropertyName} must be greater than 0");
+            RuleFor(command => command.Value)
+              .NotEqual(0).WithMessage("{PropertyName} must not be equal to 0");
+
+            When(transferData => transferData.Value > 0, () =>
+            {
+                RuleFor(transferData => transferData.Type)
+                    .Equal(TransferType.Profit)
+                    .WithMessage("Type not assignable for this Value");
+            }).Otherwise(() =>
+            {
+                RuleFor(transferData => transferData.Type)
+                    .Equal(TransferType.Expense)
+                    .WithMessage("Type not assignable for this Value");
+            });
+
 
             RuleFor(transferData => transferData.RelatedTo)
                 .NotEmpty().WithMessage("{PropertyName} must not be empty")

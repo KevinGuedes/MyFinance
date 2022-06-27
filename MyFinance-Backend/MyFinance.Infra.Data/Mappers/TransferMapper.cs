@@ -13,8 +13,7 @@ namespace MyFinance.Infra.Data.Mappers
             {
                 map.AutoMap();
                 map.MapMember(transfer => transfer.Type)
-                    .SetSerializer(new EnumSerializer<TransferType>(BsonType.String))
-                    .SetIsRequired(true);
+                    .SetSerializer(new EnumSerializer<TransferType>(BsonType.String));
             });
     }
 }

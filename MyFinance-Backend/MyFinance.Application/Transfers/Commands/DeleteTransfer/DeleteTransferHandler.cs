@@ -22,21 +22,21 @@ namespace MyFinance.Application.Transfers.Commands.DeleteTransfer
 
         public async Task<Unit> Handle(DeleteTransferCommand command, CancellationToken cancellationToken)
         {
-            _logger.LogInformation("Removing Transfer with Id {TransferId}", command.TransferId);
-            var businessUnit = await _businessUnitRepository.GetByIdAsync(command.BusinessUnitId, cancellationToken);
+            _logger.LogInformation("Deleting Transfer with Id {TransferId}", command.TransferId);
             var monthlyBalance = await _monthlyBalanceRepository.GetByIdAsync(command.MonthlyBalanceId, cancellationToken);
+            var businessUnit = await _businessUnitRepository.GetByIdAsync(monthlyBalance.BusinessUnitId, cancellationToken);
             
-            var transferValue = monthlyBalance.GetTransferById(command.TransferId).FormattedValue;
+            var transferValue = monthlyBalance.GetTransferById(command.TransferId).Value;
             monthlyBalance.DeleteTransferById(command.TransferId);
 
-            _logger.LogInformation("Updating Balance of Business Unit with Id {BusinessUnitId}", command.BusinessUnitId);
+            _logger.LogInformation("Updating Balance of Business Unit with Id {BusinessUnitId}", monthlyBalance.BusinessUnitId);
             businessUnit.AddBalance(-transferValue);
             _businessUnitRepository.Update(businessUnit);
 
             _logger.LogInformation("Updating Monthly Balance with Id {MonthlyBalanceId}", command.MonthlyBalanceId);
             _monthlyBalanceRepository.Update(monthlyBalance);
 
-            _logger.LogInformation("Transfer with Id {TransferId} sucessfully removed", command.TransferId);
+            _logger.LogInformation("Transfer with Id {TransferId} sucessfully deleted", command.TransferId);
             return Unit.Value;
         }
     }

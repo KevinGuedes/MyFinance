@@ -19,15 +19,6 @@ namespace MyFinance.Application.Transfers.Commands.DeleteTransfer
             RuleFor(command => command.TransferId)
                 .NotEqual(Guid.Empty).WithMessage("{PropertyName} invalid");
 
-            RuleFor(command => command.BusinessUnitId)
-                .Cascade(CascadeMode.Stop)
-                .NotEqual(Guid.Empty).WithMessage("{PropertyName} invalid")
-                .MustAsync(async (businessUnitId, cancellationToken) =>
-                {
-                    var exists = await _businessUnitRepository.ExistsByIdAsync(businessUnitId, cancellationToken);
-                    return exists;
-                }).WithMessage("Business Unit not found");
-
             RuleFor(command => command.MonthlyBalanceId)
                 .Cascade(CascadeMode.Stop)
                 .NotEqual(Guid.Empty).WithMessage("{PropertyName} invalid")

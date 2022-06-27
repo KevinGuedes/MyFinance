@@ -15,20 +15,20 @@ namespace MyFinance.Application.Transfers.Commands.RegisterTransfers
 
     public sealed class TransferData
     {
-        public double AbsoluteValue { get; set; }
+        public double Value { get; set; }
         public string RelatedTo { get; set; }
         public string Description { get; set; }
         public DateTime SettlementDate { get; set; }
         public TransferType Type { get; set; }
 
         public TransferData(
-            double absoluteValue,
+            double value,
             string relatedTo,
             string description,
             DateTime settlementDate,
             TransferType type)
         {
-            AbsoluteValue = absoluteValue;
+            Value = value;
             RelatedTo = relatedTo;
             Description = description;
             SettlementDate = settlementDate;

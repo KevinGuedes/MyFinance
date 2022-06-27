@@ -33,21 +33,24 @@ namespace MyFinance.Application.Transfers.Commands.UpdateTransfer
             var currentMonthlyBalance = await _monthlyBalanceRepository.GetByIdAsync(command.CurrentMonthlyBalanceId, cancellationToken);
             var transfer = currentMonthlyBalance.GetTransferById(command.TransferId);
 
-            var newFormattedValue = command.TransferType == TransferType.Profit ? command.AbsoluteValue : -command.AbsoluteValue;
-            var shouldUpdateBusinessUnitBalance = transfer.FormattedValue != newFormattedValue;
+            var shouldUpdateBusinessUnitBalance = transfer.Value != command.Value;
             if (shouldUpdateBusinessUnitBalance)
             {
                 var businessUnit = await _businessUnitRepository.GetByIdAsync(currentMonthlyBalance.BusinessUnitId, cancellationToken);
-                businessUnit.AddBalance(-transfer.FormattedValue);
+                businessUnit.AddBalance(-transfer.Value);
+                businessUnit.AddBalance(command.Value);
                 _businessUnitRepository.Update(businessUnit);
             }
 
             var shouldGoToAnotherMonthlyBalance = command.SettlementDate.Month != transfer.SettlementDate.Month || 
                 command.SettlementDate.Year != transfer.SettlementDate.Year;
-            transfer.Update(command.RelatedTo, command.Description, command.AbsoluteValue, command.SettlementDate, command.TransferType);
+            transfer.Update(command.RelatedTo, command.Description, command.Value, command.SettlementDate, command.TransferType);
             
             if (shouldGoToAnotherMonthlyBalance)
             {
+                currentMonthlyBalance.DeleteTransferById(transfer.Id);
+                _monthlyBalanceRepository.Update(currentMonthlyBalance);
+
                 var (month, year) = (command.SettlementDate.Month, command.SettlementDate.Year);
                 var monthlyBalance = await _monthlyBalanceRepository.GetByMonthAndYearAsync(month, year, cancellationToken);
 

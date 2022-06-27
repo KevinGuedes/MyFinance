@@ -11,6 +11,7 @@ namespace MyFinance.Infra.Data.Mappers
             => BsonClassMap.RegisterClassMap<MonthlyBalance>(map =>
             {
                 map.AutoMap();
+                map.MapProperty(monthlyBalance => monthlyBalance.CurrentBalance);
                 map.MapMember(entity => entity.BusinessUnitId)
                     .SetSerializer(new GuidSerializer(BsonType.String));
             });

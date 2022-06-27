@@ -9,7 +9,7 @@ namespace MyFinance.Application.Transfers.Commands.UpdateTransfer
     {
         public Guid TransferId { get; set; }
         public Guid CurrentMonthlyBalanceId { get; set; }
-        public double AbsoluteValue { get; set; }
+        public double Value { get; set; }
         public string RelatedTo { get; set; }
         public string Description { get; set; }
         public DateTime SettlementDate { get; set; }
@@ -18,7 +18,7 @@ namespace MyFinance.Application.Transfers.Commands.UpdateTransfer
         public UpdateTransferCommand(
             Guid transferId,
             Guid currentMonthlyBalanceId,
-            double absoluteValue,
+            double value,
             string relatedTo,
             string description,
             DateTime settlementDate,
@@ -26,7 +26,7 @@ namespace MyFinance.Application.Transfers.Commands.UpdateTransfer
         {
             TransferId = transferId;
             CurrentMonthlyBalanceId = currentMonthlyBalanceId;
-            AbsoluteValue = absoluteValue;
+            Value = value;
             RelatedTo = relatedTo;
             Description = description;
             SettlementDate = settlementDate;

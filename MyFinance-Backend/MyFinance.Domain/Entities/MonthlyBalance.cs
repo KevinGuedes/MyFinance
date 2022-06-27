@@ -3,7 +3,7 @@
     public class MonthlyBalance : Entity
     {
         public List<Transfer> Transfers { get; private set; }
-        public double CurrentBalance { get => Transfers.Select(transfer => transfer.FormattedValue).Sum(); }
+        public double CurrentBalance { get => Transfers.Select(transfer => transfer.Value).Sum(); }
         public Guid BusinessUnitId { get; private set; }
         public int Month { get; private set; }
         public int Year { get; private set; }

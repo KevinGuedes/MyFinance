@@ -1,4 +1,5 @@
 ﻿using FluentValidation;
+using MyFinance.Domain.Enums;
 using MyFinance.Domain.Interfaces;
 
 namespace MyFinance.Application.Transfers.Commands.UpdateTransfer
@@ -12,8 +13,20 @@ namespace MyFinance.Application.Transfers.Commands.UpdateTransfer
             _monthlyBalanceRepository = monthlyBalanceRepository;
             ClassLevelCascadeMode = CascadeMode.Stop;
 
-            RuleFor(command => command.AbsoluteValue)
-                .GreaterThan(0).WithMessage("{PropertyName} must be greater than 0");
+            RuleFor(command => command.Value)
+             .NotEqual(0).WithMessage("{PropertyName} must not be equal to 0");
+
+            When(transferData => transferData.Value > 0, () =>
+            {
+                RuleFor(transferData => transferData.TransferType)
+                    .Equal(TransferType.Profit)
+                    .WithMessage("Type not assignable for this Value");
+            }).Otherwise(() =>
+            {
+                RuleFor(transferData => transferData.TransferType)
+                    .Equal(TransferType.Expense)
+                    .WithMessage("Type not assignable for this Value");
+            });
 
             RuleFor(command => command.RelatedTo)
                 .NotEmpty().WithMessage("{PropertyName} must not be empty")

@@ -55,11 +55,11 @@ namespace MyFinance.Application.Transfers.Commands.RegisterTransfers
                         var transfer = new Transfer(
                             transferData.RelatedTo,
                             transferData.Description,
-                            transferData.AbsoluteValue,
+                            transferData.Value,
                             transferData.SettlementDate,
                             transferData.Type);
 
-                        businessUnitRevenue += transfer.FormattedValue;
+                        businessUnitRevenue += transfer.Value;
                         newTransfers.Add(transfer);
                     }
 
@@ -77,7 +77,6 @@ namespace MyFinance.Application.Transfers.Commands.RegisterTransfers
             CancellationToken cancellationToken)
         {
             _logger.LogInformation("Verifying if the is an existing Monthly Balance related to the transfer(s)");
-            //retorna nulo mesmo?
             var monthlyBalance = await _monthlyBalanceRepository.GetByMonthAndYearAsync(month, year, cancellationToken);
 
             if (monthlyBalance is not null)
