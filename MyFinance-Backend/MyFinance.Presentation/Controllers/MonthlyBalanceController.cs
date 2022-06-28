@@ -20,7 +20,7 @@ namespace MyFinance.Presentation.Controllers
         [SwaggerOperation(Summary = "Lists all existing Monthly Balances according to query parameters.")]
         [SwaggerResponse(StatusCodes.Status200OK, "List of Monthly Balances", typeof(IEnumerable<MonthlyBalanceViewModel>))]
         public async Task<IActionResult> GetBusinessUnitsAsync(
-            [FromQuery, SwaggerParameter("Query parameters", Required = true)] GetMonthlyBalancesQuery query, 
+            [FromQuery, SwaggerParameter("Query parameters", Required = true)] GetMonthlyBalancesQuery query,
             CancellationToken cancellationToken)
             => Ok(await _monthlyBalanceApiService.GetMonthlyBalancesAsync(query, cancellationToken));
     }

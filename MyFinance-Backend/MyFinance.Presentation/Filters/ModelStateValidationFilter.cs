@@ -28,7 +28,7 @@ namespace MyFinance.Presentation.Filters
                 _logger.LogInformation("{ControllerInfo} Validating {RequestName} data", controllerInfo, requestName);
 
                 var (isSuccess, errors) = await _requestValidationService.ValidateRequest(value);
-                if(!isSuccess)
+                if (!isSuccess)
                 {
                     _logger.LogWarning("{ControllerInfo} Invalid {RequestName} data received", controllerInfo, requestName);
                     context.Result = new BadRequestObjectResult(new ValidationProblemDetails(errors!));

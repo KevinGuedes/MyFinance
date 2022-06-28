@@ -14,7 +14,7 @@ namespace MyFinance.Application.MonthlyBalances.ApiService
         }
 
         public async Task<IEnumerable<MonthlyBalanceViewModel>> GetMonthlyBalancesAsync(
-            GetMonthlyBalancesQuery query, 
+            GetMonthlyBalancesQuery query,
             CancellationToken cancellationToken)
             => _mapper.Map<IEnumerable<MonthlyBalanceViewModel>>(await _mediator.Send(query, cancellationToken));
     }

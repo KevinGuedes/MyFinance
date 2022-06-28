@@ -13,10 +13,10 @@ namespace MyFinance.Application.Transfers.ViewModels
 
         public TransferViewModel(
             Guid id,
-            string relatedTo, 
-            string description, 
-            DateTime settlementDate, 
-            TransferType type, 
+            string relatedTo,
+            string description,
+            DateTime settlementDate,
+            TransferType type,
             double value)
         {
             Id = id;

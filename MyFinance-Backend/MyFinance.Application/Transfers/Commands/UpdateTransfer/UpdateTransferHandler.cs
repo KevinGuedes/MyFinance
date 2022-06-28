@@ -1,13 +1,7 @@
 ﻿using MediatR;
 using Microsoft.Extensions.Logging;
 using MyFinance.Domain.Entities;
-using MyFinance.Domain.Enums;
 using MyFinance.Domain.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MyFinance.Application.Transfers.Commands.UpdateTransfer
 {
@@ -42,10 +36,10 @@ namespace MyFinance.Application.Transfers.Commands.UpdateTransfer
                 _businessUnitRepository.Update(businessUnit);
             }
 
-            var shouldGoToAnotherMonthlyBalance = command.SettlementDate.Month != transfer.SettlementDate.Month || 
+            var shouldGoToAnotherMonthlyBalance = command.SettlementDate.Month != transfer.SettlementDate.Month ||
                 command.SettlementDate.Year != transfer.SettlementDate.Year;
             transfer.Update(command.RelatedTo, command.Description, command.Value, command.SettlementDate, command.TransferType);
-            
+
             if (shouldGoToAnotherMonthlyBalance)
             {
                 currentMonthlyBalance.DeleteTransferById(transfer.Id);

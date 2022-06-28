@@ -1,5 +1,5 @@
-﻿using MyFinance.Application.Transfers.Commands.RegisterTransfers;
-using MyFinance.Application.Transfers.Commands.DeleteTransfer;
+﻿using MyFinance.Application.Transfers.Commands.DeleteTransfer;
+using MyFinance.Application.Transfers.Commands.RegisterTransfers;
 using MyFinance.Application.Transfers.Commands.UpdateTransfer;
 using MyFinance.Application.Transfers.ViewModels;
 

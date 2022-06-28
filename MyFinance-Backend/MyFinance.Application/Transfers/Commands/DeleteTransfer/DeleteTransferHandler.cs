@@ -11,8 +11,8 @@ namespace MyFinance.Application.Transfers.Commands.DeleteTransfer
         private readonly IBusinessUnitRepository _businessUnitRepository;
 
         public DeleteTransferHandler(
-            ILogger<DeleteTransferHandler> logger, 
-            IMonthlyBalanceRepository monthlyBalanceRepository, 
+            ILogger<DeleteTransferHandler> logger,
+            IMonthlyBalanceRepository monthlyBalanceRepository,
             IBusinessUnitRepository businessUnitRepository)
         {
             _logger = logger;
@@ -25,7 +25,7 @@ namespace MyFinance.Application.Transfers.Commands.DeleteTransfer
             _logger.LogInformation("Deleting Transfer with Id {TransferId}", command.TransferId);
             var monthlyBalance = await _monthlyBalanceRepository.GetByIdAsync(command.MonthlyBalanceId, cancellationToken);
             var businessUnit = await _businessUnitRepository.GetByIdAsync(monthlyBalance.BusinessUnitId, cancellationToken);
-            
+
             var transferValue = monthlyBalance.GetTransferById(command.TransferId).Value;
             monthlyBalance.DeleteTransferById(command.TransferId);
 

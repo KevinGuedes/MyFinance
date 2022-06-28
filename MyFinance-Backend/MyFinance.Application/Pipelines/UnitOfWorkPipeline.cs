@@ -23,7 +23,7 @@ namespace MyFinance.Application.Pipelines
                 await _unitOfWork.CommitAsync(cancellationToken);
                 _logger.LogInformation("Database changes commited");
             }
-            catch(Exception exception)
+            catch (Exception exception)
             {
                 _logger.LogCritical(exception, "Failed to commit changes on database");
                 throw;

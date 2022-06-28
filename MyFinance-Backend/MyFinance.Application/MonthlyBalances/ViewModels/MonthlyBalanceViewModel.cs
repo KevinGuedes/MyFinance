@@ -13,10 +13,10 @@ namespace MyFinance.Application.MonthlyBalances.ViewModels
 
         public MonthlyBalanceViewModel(
             Guid id,
-            IEnumerable<TransferViewModel> transfers, 
-            double currentBalance, 
-            Guid businessUnitId, 
-            int month, 
+            IEnumerable<TransferViewModel> transfers,
+            double currentBalance,
+            Guid businessUnitId,
+            int month,
             int year)
         {
             Id = id;

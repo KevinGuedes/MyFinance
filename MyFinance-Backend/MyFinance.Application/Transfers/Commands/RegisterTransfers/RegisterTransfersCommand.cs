@@ -3,7 +3,7 @@ using MyFinance.Domain.Enums;
 
 namespace MyFinance.Application.Transfers.Commands.RegisterTransfers
 {
-    public sealed class RegisterTransfersCommand : ICommand 
+    public sealed class RegisterTransfersCommand : ICommand
     {
         public Guid BusinessUnitId { get; set; }
         public IEnumerable<TransferData> Transfers { get; set; }

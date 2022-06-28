@@ -27,7 +27,7 @@ namespace MyFinance.Presentation.Controllers
         [SwaggerOperation(Summary = "Creates a new Business Unit")]
         [SwaggerResponse(StatusCodes.Status200OK, "Created Business Unit", typeof(BusinessUnitViewModel))]
         public async Task<IActionResult> CreateBusinessUnitAsync(
-            [FromBody, SwaggerRequestBody("Business unit payload", Required = true)] CreateBusinessUnitCommand command, 
+            [FromBody, SwaggerRequestBody("Business unit payload", Required = true)] CreateBusinessUnitCommand command,
             CancellationToken cancellationToken)
             => Ok(await _businessUnitApiService.CreateBusinessUnitAsync(command, cancellationToken));
 
@@ -35,7 +35,7 @@ namespace MyFinance.Presentation.Controllers
         [SwaggerOperation(Summary = "Updates an existing Business Unit")]
         [SwaggerResponse(StatusCodes.Status200OK, "Updated Business Unit", typeof(BusinessUnitViewModel))]
         public async Task<IActionResult> UpdateBusinessUnitAsync(
-            [FromBody, SwaggerRequestBody("Business unit payload")] UpdateBusinessUnitCommand command, 
+            [FromBody, SwaggerRequestBody("Business unit payload")] UpdateBusinessUnitCommand command,
             CancellationToken cancellationToken)
             => Ok(await _businessUnitApiService.UpdateBusinessUnitAsync(command, cancellationToken));
     }

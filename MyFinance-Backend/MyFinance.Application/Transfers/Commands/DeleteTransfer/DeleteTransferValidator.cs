@@ -9,7 +9,7 @@ namespace MyFinance.Application.Transfers.Commands.DeleteTransfer
         private readonly IBusinessUnitRepository _businessUnitRepository;
 
         public DeleteTransferByIdValidator(
-            IMonthlyBalanceRepository monthlyBalanceRepository, 
+            IMonthlyBalanceRepository monthlyBalanceRepository,
             IBusinessUnitRepository businessUnitRepository)
         {
             _monthlyBalanceRepository = monthlyBalanceRepository;

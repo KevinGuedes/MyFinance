@@ -21,7 +21,7 @@ namespace MyFinance.Application.Services.RequestValidation
             var context = new ValidationContext<object>(request);
             var validationResults = await validator.ValidateAsync(context);
 
-            if(validationResults.IsValid) return new RequestValidationResult(true);
+            if (validationResults.IsValid) return new RequestValidationResult(true);
             var errors = validationResults.Errors
                 .ToList()
                 .GroupBy(
@@ -34,7 +34,7 @@ namespace MyFinance.Application.Services.RequestValidation
                     })
                 .ToDictionary(dictionaryData => dictionaryData.Key, dictionaryData => dictionaryData.Values);
 
-             return new RequestValidationResult(errors);
+            return new RequestValidationResult(errors);
         }
     }
 }

@@ -10,7 +10,7 @@
 
         public MonthlyBalance(Guid businessUnitId, int month, int year)
             => (BusinessUnitId, Month, Year, Transfers) = (businessUnitId, month, year, new List<Transfer>());
-        
+
         public void AddTransfer(Transfer transfer)
         {
             SetUpdateDate();
