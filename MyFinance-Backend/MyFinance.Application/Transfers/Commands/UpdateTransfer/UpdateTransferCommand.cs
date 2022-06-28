@@ -1,11 +1,10 @@
-﻿using MediatR;
-using MyFinance.Application.Interfaces;
+﻿using MyFinance.Application.Interfaces;
 using MyFinance.Domain.Entities;
 using MyFinance.Domain.Enums;
 
 namespace MyFinance.Application.Transfers.Commands.UpdateTransfer
 {
-    public sealed class UpdateTransferCommand : IRequest<Transfer>, ICommand
+    public sealed class UpdateTransferCommand : ICommand<Transfer>
     {
         public Guid TransferId { get; set; }
         public Guid CurrentMonthlyBalanceId { get; set; }

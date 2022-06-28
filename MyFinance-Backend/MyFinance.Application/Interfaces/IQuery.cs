@@ -1,6 +1,8 @@
-﻿namespace MyFinance.Application.Interfaces
+﻿using MediatR;
+
+namespace MyFinance.Application.Interfaces
 {
-    public interface IQuery : IValidatable
+    public interface IQuery<TResponse> : IRequest<TResponse>, IValidatable
     {
     }
 }
