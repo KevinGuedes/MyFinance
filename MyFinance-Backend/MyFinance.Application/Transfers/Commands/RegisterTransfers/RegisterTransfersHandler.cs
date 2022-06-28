@@ -47,7 +47,7 @@ namespace MyFinance.Application.Transfers.Commands.RegisterTransfers
                 {
                     var month = transferGroup.Key.Month;
                     var year = transferGroup.Key.Year;
-                    _logger.LogInformation("Registering transfers for {Month}/{Year}", month, year);
+                    _logger.LogInformation("Registering transfers for {Month}/{Year} reference date", month, year);
 
                     var newTransfers = new List<Transfer>();
                     foreach (var transferData in transferGroup)
@@ -66,7 +66,7 @@ namespace MyFinance.Application.Transfers.Commands.RegisterTransfers
                     await AddTransfersToMonthlyBalance(command.BusinessUnitId, month, year, newTransfers, cancellationToken);
                 });
 
-            await UpdateBusinessUnitWithNewIncoming(command.BusinessUnitId, businessUnitRevenue, cancellationToken);
+            await UpdateBusinessUnitBalance(command.BusinessUnitId, businessUnitRevenue, cancellationToken);
         }
 
         private async Task AddTransfersToMonthlyBalance(
@@ -76,7 +76,7 @@ namespace MyFinance.Application.Transfers.Commands.RegisterTransfers
             List<Transfer> newTransfers,
             CancellationToken cancellationToken)
         {
-            _logger.LogInformation("Verifying if the is an existing Monthly Balance related to the transfer(s)");
+            _logger.LogInformation("Verifying if there is an existing Monthly Balance related to the transfer(s)");
             var monthlyBalance = await _monthlyBalanceRepository.GetByMonthAndYearAsync(month, year, cancellationToken);
 
             if (monthlyBalance is not null)
@@ -98,7 +98,7 @@ namespace MyFinance.Application.Transfers.Commands.RegisterTransfers
             }
         }
 
-        private async Task UpdateBusinessUnitWithNewIncoming(Guid businessUnitId, double businessUnitRevenue, CancellationToken cancellationToken)
+        private async Task UpdateBusinessUnitBalance(Guid businessUnitId, double businessUnitRevenue, CancellationToken cancellationToken)
         {
             _logger.LogInformation("Updating balance of Business Unit with Id {BusinessUnitId}", businessUnitId);
             var businessUnit = await _businessUnitRepository.GetByIdAsync(businessUnitId, cancellationToken);
