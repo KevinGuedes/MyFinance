@@ -47,9 +47,9 @@ namespace MyFinance.Application.Transfers.Commands.RegisterTransfers
                 {
                     var month = transferGroup.Key.Month;
                     var year = transferGroup.Key.Year;
-                    var newTransfers = new List<Transfer>();
-
                     _logger.LogInformation("Registering transfers for {Month}/{Year}", month, year);
+
+                    var newTransfers = new List<Transfer>();
                     foreach (var transferData in transferGroup)
                     {
                         var transfer = new Transfer(
