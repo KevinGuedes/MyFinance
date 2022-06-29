@@ -7,7 +7,7 @@ using MyFinance.Infra.Data.UnitOfWork;
 namespace MyFinance.Application.Pipelines
 {
     public class UnitOfWorkPipeline<TRequest, TResponse> : IRequestPostProcessor<TRequest, TResponse>
-        where TRequest : IRequest<TResponse>, ICommand
+        where TRequest : IRequest<TResponse>, ICommandRequest
     {
         private readonly ILogger<UnitOfWorkPipeline<TRequest, TResponse>> _logger;
         private readonly IUnitOfWork _unitOfWork;
