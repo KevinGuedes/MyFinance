@@ -26,12 +26,16 @@ namespace MyFinance.Infra.Data.Context
         public async Task<int> SaveChangesAsync(CancellationToken cancellationToken)
         {
             using var session = await _mongoClient.StartSessionAsync(cancellationToken: cancellationToken);
-            session.StartTransaction();
-            var commandsTasks = _commands.Select(command => command(session, cancellationToken));
-            await Task.WhenAll(commandsTasks);
-            await session.CommitTransactionAsync(cancellationToken);
+            var changesCount = await session.WithTransactionAsync(
+                async (session, cancellationToken) =>
+                {
+                    var commandsTasks = _commands.Select(command => command(session, cancellationToken));
+                    await Task.WhenAll(commandsTasks);
+                    return _commands.Count;
+                },
+                cancellationToken: cancellationToken);
 
-            return _commands.Count;
+            return changesCount;
         }
     }
 }

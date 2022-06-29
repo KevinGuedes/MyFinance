@@ -7,12 +7,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="MonthlyBalances\ApiService\" />
-    <Folder Include="MonthlyBalances\Commands\" />
-    <Folder Include="MonthlyBalances\Queries\" />
-    <Folder Include="Transfers\Commands\" />
-    <Folder Include="Transfers\ApiService\" />
-    <Folder Include="Transfers\Queries\" />
+    <Compile Remove="Transfers\Queries\**" />
+    <EmbeddedResource Remove="Transfers\Queries\**" />
+    <None Remove="Transfers\Queries\**" />
   </ItemGroup>
 
   <ItemGroup>
@@ -25,6 +22,10 @@
   <ItemGroup>
     <ProjectReference Include="..\MyFinance.Domain\MyFinance.Domain.csproj" />
     <ProjectReference Include="..\MyFinance.Infra.Data\MyFinance.Infra.Data.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Services\Transfer\" />
   </ItemGroup>
 
 </Project>

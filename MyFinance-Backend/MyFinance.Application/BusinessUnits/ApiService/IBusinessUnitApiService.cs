@@ -1,4 +1,5 @@
 ﻿using MyFinance.Application.BusinessUnits.Commands.CreateBusinessUnit;
+using MyFinance.Application.BusinessUnits.Commands.UpdateBusinessUnit;
 using MyFinance.Application.BusinessUnits.ViewModels;
 
 namespace MyFinance.Application.BusinessUnits.ApiService
@@ -7,6 +8,6 @@ namespace MyFinance.Application.BusinessUnits.ApiService
     {
         Task<BusinessUnitViewModel> CreateBusinessUnitAsync(CreateBusinessUnitCommand command, CancellationToken cancellationToken);
         Task<IEnumerable<BusinessUnitViewModel>> GetBusinessUnitsAsync(CancellationToken cancellationToken);
-        Task RemoveBusinessUnitByIdAsync(Guid businessUnitId, CancellationToken cancellationToken);
+        Task<BusinessUnitViewModel> UpdateBusinessUnitAsync(UpdateBusinessUnitCommand command, CancellationToken cancellationToken);
     }
 }

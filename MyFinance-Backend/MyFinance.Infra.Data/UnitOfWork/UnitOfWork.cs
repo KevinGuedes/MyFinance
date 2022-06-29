@@ -11,7 +11,7 @@ namespace MyFinance.Infra.Data.UnitOfWork
 
         public async Task<bool> CommitAsync(CancellationToken cancellationToken)
         {
-            var changesCount = await _mongoContext.SaveChangesAsync(cancellationToken);
+            var changesCount= await _mongoContext.SaveChangesAsync(cancellationToken);
             return changesCount > 0;
         }
     }

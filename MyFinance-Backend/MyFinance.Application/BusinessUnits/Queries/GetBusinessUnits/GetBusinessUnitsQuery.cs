@@ -1,10 +1,9 @@
-﻿using MediatR;
-using MyFinance.Application.Interfaces;
+﻿using MyFinance.Application.Interfaces;
 using MyFinance.Domain.Entities;
 
 namespace MyFinance.Application.BusinessUnits.Queries.GetBusinessUnits
 {
-    public sealed class GetBusinessUnitsQuery : IRequest<IEnumerable<BusinessUnit>>, IQuery
+    public sealed class GetBusinessUnitsQuery : IQuery<IEnumerable<BusinessUnit>>
     {
     }
 }

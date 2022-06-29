@@ -27,7 +27,7 @@ namespace MyFinance.Presentation.Middlewares
         private static async Task HandleExceptionAsync(HttpContext context, Exception exception)
         {
             var (title, status) = GetResponseInfoAccordingToException(exception);
-            var response = BuildResponseObject(title, status, exception);
+            var response = BuildResponseObject(title, status, exception.Message);
             context.Response.ContentType = "application/json";
             context.Response.StatusCode = status;
 
@@ -40,11 +40,10 @@ namespace MyFinance.Presentation.Middlewares
         private static (string, int) GetResponseInfoAccordingToException(Exception exception)
             => exception switch
             {
-                _
-                    => ("Unexpected server behavior", StatusCodes.Status500InternalServerError)
+                _ => ("Unexpected server behavior", StatusCodes.Status500InternalServerError)
             };
 
-        private static object BuildResponseObject(string title, int status, Exception exception)
-            => new { title, status, message = exception.Message };
+        private static object BuildResponseObject(string title, int status, string message)
+            => new { title, status, message };
     }
 }

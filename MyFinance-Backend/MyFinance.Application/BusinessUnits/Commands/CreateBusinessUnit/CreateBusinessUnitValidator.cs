@@ -3,19 +3,19 @@ using MyFinance.Domain.Interfaces;
 
 namespace MyFinance.Application.BusinessUnits.Commands.CreateBusinessUnit
 {
-    public sealed class CreateBusinessUnitCommandValidator : AbstractValidator<CreateBusinessUnitCommand>
+    public sealed class CreateBusinessUnitValidator : AbstractValidator<CreateBusinessUnitCommand>
     {
         private readonly IBusinessUnitRepository _businessUnitRepository;
 
-        public CreateBusinessUnitCommandValidator(IBusinessUnitRepository businessUnitRepository)
+        public CreateBusinessUnitValidator(IBusinessUnitRepository businessUnitRepository)
         {
             _businessUnitRepository = businessUnitRepository;
 
             RuleFor(command => command.Name)
                .Cascade(CascadeMode.Stop)
-               .NotNull().WithMessage("{PropertyName} can not be null")
-               .NotEmpty().WithMessage("{PropertyName} can not be empty")
-               .Length(2, 50).WithMessage("{PropertyName} must have between 2 and 50 characters")
+               .NotNull().WithMessage("{PropertyName} must not be null")
+               .NotEmpty().WithMessage("{PropertyName} must not be empty")
+               .Length(3, 50).WithMessage("{PropertyName} must have between 3 and 50 characters")
                .MustAsync(async (businessUnitName, cancellationToken) =>
                {
                    var exists = await _businessUnitRepository.ExistsByNameAsync(businessUnitName, cancellationToken);

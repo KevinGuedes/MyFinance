@@ -48,7 +48,7 @@ namespace MyFinance.Infra.Data.Repositories
             return updatedEntity;
         }
 
-        public void RemoveById(Guid id)
+        public void DeleteById(Guid id)
         {
             _mongoContext.AddCommand((session, cancellationToken) =>
             {
