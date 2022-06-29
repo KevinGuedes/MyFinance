@@ -6,6 +6,6 @@ namespace MyFinance.Infra.Data.Context
     {
         IMongoCollection<TEntity> GetCollection<TEntity>();
         void AddCommand(Func<IClientSessionHandle, CancellationToken, Task> command);
-        Task<bool> SaveChangesAsync(CancellationToken cancellationToken);
+        Task<int> SaveChangesAsync(CancellationToken cancellationToken);
     }
 }

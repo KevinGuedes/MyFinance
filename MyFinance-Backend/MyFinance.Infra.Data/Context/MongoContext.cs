@@ -23,7 +23,7 @@ namespace MyFinance.Infra.Data.Context
         public void AddCommand(Func<IClientSessionHandle, CancellationToken, Task> command)
             => _commands.Add(command);
 
-        public async Task<bool> SaveChangesAsync(CancellationToken cancellationToken)
+        public async Task<int> SaveChangesAsync(CancellationToken cancellationToken)
         {
             using var session = await _mongoClient.StartSessionAsync(cancellationToken: cancellationToken);
             var changesCount = await session.WithTransactionAsync(
@@ -35,7 +35,7 @@ namespace MyFinance.Infra.Data.Context
                 },
                 cancellationToken: cancellationToken);
 
-            return changesCount > 0;
+            return changesCount;
         }
     }
 }
