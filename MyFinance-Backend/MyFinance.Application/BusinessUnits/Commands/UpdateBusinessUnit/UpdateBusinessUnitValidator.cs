@@ -12,13 +12,10 @@ namespace MyFinance.Application.BusinessUnits.Commands.UpdateBusinessUnit
             _businessUnitRepository = businessUnitRepository;
             ClassLevelCascadeMode = CascadeMode.Stop;
 
-            RuleFor(command => command.IsArchived)
-                .NotNull().WithMessage("{PropertyName} must not be null");
-
             RuleFor(command => command.Name)
                 .NotNull().WithMessage("{PropertyName} must not be null")
                 .NotEmpty().WithMessage("{PropertyName} must not be empty")
-                .Length(2, 50).WithMessage("{PropertyName} must have between 2 and 50 characters");
+                .Length(3, 50).WithMessage("{PropertyName} must have between 3 and 50 characters");
 
             RuleFor(command => command.BusinessUnitId)
                 .Cascade(CascadeMode.Stop)
