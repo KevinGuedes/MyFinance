@@ -63,8 +63,7 @@ namespace MyFinance.Infra.IoC
                 {
                     fv.AutomaticValidationEnabled = false;
                     fv.RegisterValidatorsFromAssembly(applicationLayerAssembly);
-                })
-                .Configure<ApiBehaviorOptions>(options => options.SuppressModelStateInvalidFilter = true);
+                });
 
         private static void RegisterValidators(IServiceCollection services, Assembly applicationLayerAssembly)
             => services.AddAutoMapper(applicationLayerAssembly);
