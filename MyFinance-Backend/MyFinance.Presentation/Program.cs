@@ -4,10 +4,7 @@ using MyFinance.Presentation.Middlewares;
 
 var builder = WebApplication.CreateBuilder(args);
 {
-    builder.Services.AddControllers().AddJsonOptions(options =>
-    {
-        options.JsonSerializerOptions.IgnoreNullValues = true;
-    });
+    builder.Services.AddControllers();
     builder.Services.AddEndpointsApiExplorer();
     builder.Services.AddCustomSwaggerConfiguration();
     builder.Services.RegisterServices(builder.Configuration);
