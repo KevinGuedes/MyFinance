@@ -7,10 +7,6 @@
         public List<string> Errors { get; private set; }
 
         public ApiErrorResponse(int status, string title, List<string> errors)
-        {
-            Status = status;
-            Title = title;
-            Errors = errors;
-        }
+            => (Status, Title, Errors) = (status, title, errors);
     }
 }
