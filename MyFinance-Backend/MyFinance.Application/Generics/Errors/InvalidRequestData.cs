@@ -5,10 +5,7 @@
         public Dictionary<string, string[]> ValidationErrors { get; set; }
 
         public InvalidRequestData(string requestName, Dictionary<string, string[]> validationErrors)
-            : base("Invalid request data")
-        {
-            ValidationErrors = validationErrors;
-            Metadata.Add("RequestName", requestName);
-        }
+            : base("Invalid request data", requestName)
+            => ValidationErrors = validationErrors;
     }
 }

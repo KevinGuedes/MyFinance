@@ -18,7 +18,6 @@ namespace MyFinance.Application.BusinessUnits.Queries.GetBusinessUnits
 
         public async override Task<Result<IEnumerable<BusinessUnit>>> Handle(GetBusinessUnitsQuery query, CancellationToken cancellationToken)
         {
-            throw new Exception("Deu ruim");
             _logger.LogInformation("Retrieving Business Units from database");
             var businessUnits = await _businessUnitRepository.GetAllAsync(cancellationToken);
             _logger.LogInformation("Business Units successfully retrived from database");

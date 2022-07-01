@@ -3,9 +3,8 @@
     public class FailedToProcessRequest : BaseError
     {
         public FailedToProcessRequest(string requestName)
-            : base("Failed to process request due to unexpected behavior")
+            : base("Unexpected when handling request", requestName)
         {
-            Metadata.Add("RequestName", requestName);
         }
     }
 }
