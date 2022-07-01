@@ -1,8 +1,8 @@
-﻿using MyFinance.Application.Interfaces;
+﻿using MyFinance.Application.Generics.Requests;
 
 namespace MyFinance.Application.Transfers.Commands.DeleteTransfer
 {
-    public sealed class DeleteTransferCommand : ICommand
+    public sealed class DeleteTransferCommand : Command
     {
         public Guid MonthlyBalanceId { get; set; }
         public Guid TransferId { get; set; }

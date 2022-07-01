@@ -1,10 +1,11 @@
-﻿using MediatR;
+﻿using FluentResults;
 using Microsoft.Extensions.Logging;
+using MyFinance.Application.Generics.Requests;
 using MyFinance.Domain.Interfaces;
 
 namespace MyFinance.Application.Transfers.Commands.DeleteTransfer
 {
-    internal sealed class DeleteTransferHandler : IRequestHandler<DeleteTransferCommand>
+    internal sealed class DeleteTransferHandler : CommandHandler<DeleteTransferCommand>
     {
         private readonly ILogger<DeleteTransferHandler> _logger;
         private readonly IMonthlyBalanceRepository _monthlyBalanceRepository;
@@ -20,7 +21,7 @@ namespace MyFinance.Application.Transfers.Commands.DeleteTransfer
             _businessUnitRepository = businessUnitRepository;
         }
 
-        public async Task<Unit> Handle(DeleteTransferCommand command, CancellationToken cancellationToken)
+        public async override Task<Result> Handle(DeleteTransferCommand command, CancellationToken cancellationToken)
         {
             _logger.LogInformation("Deleting Transfer with Id {TransferId}", command.TransferId);
             var monthlyBalance = await _monthlyBalanceRepository.GetByIdAsync(command.MonthlyBalanceId, cancellationToken);
@@ -37,7 +38,7 @@ namespace MyFinance.Application.Transfers.Commands.DeleteTransfer
             _monthlyBalanceRepository.Update(monthlyBalance);
 
             _logger.LogInformation("Transfer with Id {TransferId} sucessfully deleted", command.TransferId);
-            return Unit.Value;
+            return Result.Ok();
         }
     }
 }

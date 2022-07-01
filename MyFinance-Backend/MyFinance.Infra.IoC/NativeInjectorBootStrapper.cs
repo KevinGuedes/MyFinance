@@ -1,6 +1,5 @@
 ﻿using FluentValidation.AspNetCore;
 using MediatR;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
@@ -8,7 +7,6 @@ using MongoDB.Driver;
 using MyFinance.Application.BusinessUnits.ApiService;
 using MyFinance.Application.MonthlyBalances.ApiService;
 using MyFinance.Application.Pipelines;
-using MyFinance.Application.Services.RequestValidation;
 using MyFinance.Application.Transfers.ApiService;
 using MyFinance.Domain.Interfaces;
 using MyFinance.Infra.Data.Context;
@@ -35,7 +33,6 @@ namespace MyFinance.Infra.IoC
 
         private static void RegisterApiServices(IServiceCollection services)
             => services
-                .AddScoped<IRequestValidationService, RequestValidationService>()
                 .AddScoped<IBusinessUnitApiService, BusinessUnitApiService>()
                 .AddScoped<IMonthlyBalanceApiService, MonthlyBalanceApiService>()
                 .AddScoped<ITransferApiService, TransferApiService>();
@@ -71,6 +68,9 @@ namespace MyFinance.Infra.IoC
         private static void RegisterMediatR(IServiceCollection services, Assembly applicationLayerAssembly)
            => services
                 .AddMediatR(applicationLayerAssembly)
-                .AddScoped(typeof(IPipelineBehavior<,>), typeof(RequestLoggerPipeline<,>));
+                .AddScoped(typeof(IPipelineBehavior<,>), typeof(ExceptionHandlerPipeline<,>))
+                .AddScoped(typeof(IPipelineBehavior<,>), typeof(RequestValidationPipeline<,>))
+                .AddScoped(typeof(IPipelineBehavior<,>), typeof(LoggingPipeline<,>))
+                .AddScoped(typeof(IPipelineBehavior<,>), typeof(UnitOfWorkPipeline<,>));
     }
 }

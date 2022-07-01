@@ -2,15 +2,7 @@
 
 namespace MyFinance.Application.Interfaces
 {
-    public interface ICommand<TResponse> : IRequest<TResponse>, ICommandRequest, IValidatable
-    {
-    }
-
-    public interface ICommand : IRequest, ICommandRequest, IValidatable
-    {
-    }
-
-    public interface ICommandRequest
+    public interface ICommand<TResponse> : IRequest<TResponse>, IValidatable
     {
     }
 }

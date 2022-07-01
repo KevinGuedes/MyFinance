@@ -1,11 +1,12 @@
-﻿using MediatR;
+﻿using FluentResults;
 using Microsoft.Extensions.Logging;
+using MyFinance.Application.Generics.Requests;
 using MyFinance.Domain.Entities;
 using MyFinance.Domain.Interfaces;
 
 namespace MyFinance.Application.Transfers.Commands.RegisterTransfers
 {
-    internal sealed class RegisterTransfersHandler : IRequestHandler<RegisterTransfersCommand>
+    internal sealed class RegisterTransfersHandler : CommandHandler<RegisterTransfersCommand>
     {
         private readonly ILogger<RegisterTransfersHandler> _logger;
         private readonly IMonthlyBalanceRepository _monthlyBalanceRepository;
@@ -21,13 +22,13 @@ namespace MyFinance.Application.Transfers.Commands.RegisterTransfers
             _businessUnitRepository = businessUnitRepository;
         }
 
-        public async Task<Unit> Handle(RegisterTransfersCommand command, CancellationToken cancellationToken)
+        public async override Task<Result> Handle(RegisterTransfersCommand command, CancellationToken cancellationToken)
         {
             _logger.LogInformation("Registering new transfer(s)");
             await RegisterNewTransfers(command, cancellationToken);
             _logger.LogInformation("New transfer(s) successfully registered");
 
-            return Unit.Value;
+            return Result.Ok();
         }
 
         private async Task RegisterNewTransfers(RegisterTransfersCommand command, CancellationToken cancellationToken)

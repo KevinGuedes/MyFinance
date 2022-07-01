@@ -1,13 +1,14 @@
-﻿using MediatR;
-using MediatR.Pipeline;
+﻿using FluentResults;
+using MediatR;
 using Microsoft.Extensions.Logging;
 using MyFinance.Application.Interfaces;
 using MyFinance.Infra.Data.UnitOfWork;
 
 namespace MyFinance.Application.Pipelines
 {
-    public class UnitOfWorkPipeline<TRequest, TResponse> : IRequestPostProcessor<TRequest, TResponse>
-        where TRequest : IRequest<TResponse>, ICommandRequest
+    public class UnitOfWorkPipeline<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
+        where TRequest : IRequest<TResponse>, ICommand<TResponse>
+        where TResponse : ResultBase
     {
         private readonly ILogger<UnitOfWorkPipeline<TRequest, TResponse>> _logger;
         private readonly IUnitOfWork _unitOfWork;
@@ -15,19 +16,23 @@ namespace MyFinance.Application.Pipelines
         public UnitOfWorkPipeline(ILogger<UnitOfWorkPipeline<TRequest, TResponse>> logger, IUnitOfWork unitOfWork)
             => (_logger, _unitOfWork) = (logger, unitOfWork);
 
-        public async Task Process(TRequest request, TResponse response, CancellationToken cancellationToken)
+        public async Task<TResponse> Handle(TRequest request, CancellationToken cancellationToken, RequestHandlerDelegate<TResponse> next)
         {
-            try
+            var requestName = request.GetType();
+
+            _logger.LogInformation("[{RequestName}] Listening to database changes", requestName);
+            var response = await next();
+
+            if (response.IsSuccess)
             {
-                _logger.LogInformation("Committing database changes");
+                _logger.LogInformation("[{RequestName}] Committing database changes", requestName);
                 await _unitOfWork.CommitAsync(cancellationToken);
-                _logger.LogInformation("Database changes commited");
+                _logger.LogInformation("[{RequestName}] Database changes commited", requestName);
             }
-            catch (Exception exception)
-            {
-                _logger.LogCritical(exception, "Failed to commit changes on database");
-                throw;
-            };
+            else
+                _logger.LogWarning("[{RequestName}] Changes not commited due to failure response", requestName);
+
+            return response;
         }
     }
 }

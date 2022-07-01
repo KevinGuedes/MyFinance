@@ -1,11 +1,12 @@
-﻿using MediatR;
+﻿using FluentResults;
 using Microsoft.Extensions.Logging;
+using MyFinance.Application.Generics.Requests;
 using MyFinance.Domain.Entities;
 using MyFinance.Domain.Interfaces;
 
 namespace MyFinance.Application.Transfers.Commands.UpdateTransfer
 {
-    internal sealed class UpdateTransferHandler : IRequestHandler<UpdateTransferCommand, Transfer>
+    internal sealed class UpdateTransferHandler : CommandHandler<UpdateTransferCommand, Transfer>
     {
         private readonly ILogger<UpdateTransferHandler> _logger;
         private readonly IMonthlyBalanceRepository _monthlyBalanceRepository;
@@ -21,7 +22,7 @@ namespace MyFinance.Application.Transfers.Commands.UpdateTransfer
             _businessUnitRepository = businessUnitRepository;
         }
 
-        public async Task<Transfer> Handle(UpdateTransferCommand command, CancellationToken cancellationToken)
+        public async override Task<Result<Transfer>> Handle(UpdateTransferCommand command, CancellationToken cancellationToken)
         {
             _logger.LogInformation("Retrieving previous Monthly Balance with Id {PreviousMonthlyBalanceId}", command.CurrentMonthlyBalanceId);
             var currentMonthlyBalance = await _monthlyBalanceRepository.GetByIdAsync(command.CurrentMonthlyBalanceId, cancellationToken);
@@ -32,7 +33,7 @@ namespace MyFinance.Application.Transfers.Commands.UpdateTransfer
             await ProcessMonthlyBalanceAccordingToNewTransferData(command, currentMonthlyBalance, businessUnitId, transfer, cancellationToken);
 
             _logger.LogInformation("Transfer with Id {TransferId} successfully updated", command.TransferId);
-            return transfer;
+            return Result.Ok(transfer);
         }
 
         private async Task UpdateBusinessUnitBalanceIfNeeded(

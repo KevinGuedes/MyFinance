@@ -1,9 +1,9 @@
-﻿using MyFinance.Application.Interfaces;
+﻿using MyFinance.Application.Generics.Requests;
 using MyFinance.Domain.Enums;
 
 namespace MyFinance.Application.Transfers.Commands.RegisterTransfers
 {
-    public sealed class RegisterTransfersCommand : ICommand
+    public sealed class RegisterTransfersCommand : Command
     {
         public Guid BusinessUnitId { get; set; }
         public IEnumerable<TransferData> Transfers { get; set; }
