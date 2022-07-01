@@ -2,10 +2,12 @@
 using Microsoft.AspNetCore.Mvc;
 using MyFinance.Application.Generics.ApiService;
 using MyFinance.Application.Generics.Errors;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace MyFinance.Presentation.Controllers
 {
     [Produces("application/json")]
+    [SwaggerResponse(StatusCodes.Status500InternalServerError, "Backend went rogue", typeof(ApiErrorResponse))]
     public abstract class BaseApiController : ControllerBase
     {
         protected IActionResult ProcessResult<TResponse>(Result<TResponse> result)

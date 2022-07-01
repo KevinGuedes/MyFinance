@@ -21,7 +21,6 @@ namespace MyFinance.Presentation.Controllers
         [SwaggerOperation(Summary = "Lists all existing Monthly Balances according to query parameters.")]
         [SwaggerResponse(StatusCodes.Status200OK, "List of Monthly Balances", typeof(IEnumerable<MonthlyBalanceViewModel>))]
         [SwaggerResponse(StatusCodes.Status400BadRequest, "Invalid payload", typeof(ApiInvalidDataResponse))]
-        [SwaggerResponse(StatusCodes.Status500InternalServerError, "Backend went rogue", typeof(ApiErrorResponse))]
         public async Task<IActionResult> GetBusinessUnitsAsync(
             [FromQuery, SwaggerParameter("Query parameters", Required = true)] GetMonthlyBalancesQuery query,
             CancellationToken cancellationToken)
