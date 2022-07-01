@@ -1,9 +1,9 @@
-﻿using MyFinance.Application.Interfaces;
+﻿using MyFinance.Application.Generics.Requests;
 using MyFinance.Domain.Entities;
 
 namespace MyFinance.Application.BusinessUnits.Commands.UpdateBusinessUnit
 {
-    public sealed class UpdateBusinessUnitCommand : ICommand<BusinessUnit>
+    public sealed class UpdateBusinessUnitCommand : Command<BusinessUnit>
     {
         public Guid BusinessUnitId { get; set; }
         public string Name { get; set; }

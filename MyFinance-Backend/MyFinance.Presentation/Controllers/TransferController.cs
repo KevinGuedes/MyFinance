@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using MyFinance.Application.Generics.ApiService;
 using MyFinance.Application.Transfers.ApiService;
 using MyFinance.Application.Transfers.Commands.DeleteTransfer;
 using MyFinance.Application.Transfers.Commands.RegisterTransfers;
@@ -11,7 +12,7 @@ namespace MyFinance.Presentation.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [SwaggerTag("Register, update and delete Transfers")]
-    public class TransferController : ControllerBase
+    public class TransferController : BaseApiController
     {
         private readonly ITransferApiService _transferApiService;
 
@@ -21,31 +22,28 @@ namespace MyFinance.Presentation.Controllers
         [HttpPost]
         [SwaggerOperation(Summary = "Registers a set of new Transfers")]
         [SwaggerResponse(StatusCodes.Status204NoContent)]
+        [SwaggerResponse(StatusCodes.Status400BadRequest, "Invalid payload", typeof(ApiInvalidDataResponse))]
         public async Task<IActionResult> RegisterTransfersAsync(
             [FromBody, SwaggerRequestBody("Transfers' payload", Required = true)] RegisterTransfersCommand command,
             CancellationToken cancellationToken)
-        {
-            await _transferApiService.RegisterTransfersAsync(command, cancellationToken);
-            return NoContent();
-        }
+            => ProcessResult(await _transferApiService.RegisterTransfersAsync(command, cancellationToken));
 
         [HttpPut]
         [SwaggerOperation(Summary = "Updates an existing Transfer")]
         [SwaggerResponse(StatusCodes.Status200OK, "Updated Transfer", typeof(TransferViewModel))]
+        [SwaggerResponse(StatusCodes.Status400BadRequest, "Invalid payload", typeof(ApiInvalidDataResponse))]
         public async Task<IActionResult> UpdateTransferAsync(
             [FromBody, SwaggerRequestBody("Transfers' payload", Required = true)] UpdateTransferCommand command,
             CancellationToken cancellationToken)
-            => Ok(await _transferApiService.UpdateTransferAsync(command, cancellationToken));
+            => ProcessResult(await _transferApiService.UpdateTransferAsync(command, cancellationToken));
 
         [HttpDelete]
         [SwaggerOperation(Summary = "Deletes an existing Transfer")]
-        [SwaggerResponse(StatusCodes.Status204NoContent)]
+        [SwaggerResponse(StatusCodes.Status204NoContent, "Transfer successfully deleted")]
+        [SwaggerResponse(StatusCodes.Status400BadRequest, "Invalid payload", typeof(ApiInvalidDataResponse))]
         public async Task<IActionResult> DeleteTransferAsync(
             [FromBody, SwaggerRequestBody("Transfer data", Required = true)] DeleteTransferCommand command,
             CancellationToken cancellationToken)
-        {
-            await _transferApiService.DeleteTransferAsync(command, cancellationToken);
-            return NoContent();
-        }
+            => ProcessResult(await _transferApiService.DeleteTransferAsync(command, cancellationToken));
     }
 }

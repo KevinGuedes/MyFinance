@@ -1,10 +1,10 @@
-﻿using MyFinance.Application.Interfaces;
+﻿using MyFinance.Application.Generics.Requests;
 using MyFinance.Domain.Entities;
 using MyFinance.Domain.Enums;
 
 namespace MyFinance.Application.Transfers.Commands.UpdateTransfer
 {
-    public sealed class UpdateTransferCommand : ICommand<Transfer>
+    public sealed class UpdateTransferCommand : Command<Transfer>
     {
         public Guid TransferId { get; set; }
         public Guid CurrentMonthlyBalanceId { get; set; }

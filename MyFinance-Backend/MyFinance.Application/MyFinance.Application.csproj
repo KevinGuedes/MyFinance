@@ -7,13 +7,14 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Transfers\Queries\**" />
-    <EmbeddedResource Remove="Transfers\Queries\**" />
-    <None Remove="Transfers\Queries\**" />
+    <Compile Remove="EntitiesFlow\Transfers\Queries\**" />
+    <EmbeddedResource Remove="EntitiesFlow\Transfers\Queries\**" />
+    <None Remove="EntitiesFlow\Transfers\Queries\**" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="11.0.1" />
+    <PackageReference Include="FluentResults" Version="3.8.0" />
     <PackageReference Include="FluentValidation" Version="11.0.3" />
     <PackageReference Include="MediatR" Version="10.0.1" />
     <PackageReference Include="Microsoft.Extensions.Logging" Version="6.0.0" />
