@@ -17,16 +17,22 @@ namespace MyFinance.Application.Transfers.ApiService
         {
         }
 
-        public async Task<Result> RegisterTransfersAsync(RegisterTransfersCommand command, CancellationToken cancellationToken)
-            => ProcessResult(await _mediator.Send(command, cancellationToken));
+        public Task<Result> RegisterTransfersAsync(
+            RegisterTransfersCommand command, 
+            CancellationToken cancellationToken)
+            => _mediator.Send(command, cancellationToken);
 
-        public async Task<Result<TransferViewModel>> UpdateTransferAsync(UpdateTransferCommand command, CancellationToken cancellationToken)
+        public async Task<Result<TransferViewModel>> UpdateTransferAsync(
+            UpdateTransferCommand command, 
+            CancellationToken cancellationToken)
         {
             var result = await _mediator.Send(command, cancellationToken);
             return ProcessResultAndMapIfSuccess<Transfer, TransferViewModel>(result);
         }
 
-        public async Task<Result> DeleteTransferAsync(DeleteTransferCommand command, CancellationToken cancellationToken)
-            => ProcessResult(await _mediator.Send(command, cancellationToken));
+        public Task<Result> DeleteTransferAsync(
+            DeleteTransferCommand command, 
+            CancellationToken cancellationToken)
+            =>_mediator.Send(command, cancellationToken);
     }
 }

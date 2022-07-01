@@ -34,18 +34,13 @@ namespace MyFinance.Presentation.Controllers
         }
 
         private IActionResult BuildBadRequestResponse(Dictionary<string, string[]> validationErrors)
-        {
-            var status = StatusCodes.Status400BadRequest;
-            var title = "One or more validation errors occurred.";
-            return BadRequest(new ApiInvalidDataResponse(status, title, validationErrors));
-        }
+            => BadRequest(new ApiInvalidDataResponse("One or more validation errors occurred.", validationErrors));
 
         private IActionResult BuildInternalServerErrorResponse(List<IError> errors)
         {
-            var status = StatusCodes.Status500InternalServerError;
-            var title = "MyFinance API went rogue! Sorry.";
             var errorMessages = errors.Select(error => error.Message).ToList();
-            return StatusCode(status, new ApiErrorResponse(status, title, errorMessages));
+            var apiErrorResponserrorResponse = new ApiErrorResponse("MyFinance API went rogue! Sorry.", errorMessages);
+            return StatusCode(StatusCodes.Status500InternalServerError, apiErrorResponserrorResponse);
         }
     }
 }
