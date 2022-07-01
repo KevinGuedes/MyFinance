@@ -1,6 +1,5 @@
 using MyFinance.Infra.IoC;
 using MyFinance.Presentation.Configurations;
-using MyFinance.Presentation.Middlewares;
 
 var builder = WebApplication.CreateBuilder(args);
 {
@@ -15,10 +14,10 @@ var app = builder.Build();
     if (app.Environment.IsDevelopment())
         app.UseDeveloperExceptionPage();
 
+    app.UseExceptionHandler("/error");
     app.UseCustomSwaggerConfiguration();
     app.UseHttpsRedirection();
     app.UseAuthorization();
     app.MapControllers();
-    app.UseMiddleware<ExceptionHandlerMiddleware>();
     app.Run();
 }

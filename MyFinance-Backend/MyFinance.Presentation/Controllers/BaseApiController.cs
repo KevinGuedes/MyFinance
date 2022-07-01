@@ -39,8 +39,8 @@ namespace MyFinance.Presentation.Controllers
         private IActionResult BuildInternalServerErrorResponse(List<IError> errors)
         {
             var errorMessages = errors.Select(error => error.Message).ToList();
-            var apiErrorResponserrorResponse = new ApiErrorResponse("MyFinance API went rogue! Sorry.", errorMessages);
-            return StatusCode(StatusCodes.Status500InternalServerError, apiErrorResponserrorResponse);
+            var apiErrorResponse = new ApiErrorResponse("MyFinance API went rogue! Sorry.", errorMessages);
+            return StatusCode(StatusCodes.Status500InternalServerError, apiErrorResponse);
         }
     }
 }

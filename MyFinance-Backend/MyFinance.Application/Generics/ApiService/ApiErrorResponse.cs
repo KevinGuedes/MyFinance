@@ -7,5 +7,8 @@
 
         public ApiErrorResponse(string title, List<string> errors)
             => (Title, Errors) = (title, errors);
+
+        public ApiErrorResponse(string title, string error)
+            => (Title, Errors) = (title, new List<string> { error });
     }
 }
