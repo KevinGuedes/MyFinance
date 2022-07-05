@@ -3,7 +3,7 @@ using Microsoft.Extensions.Logging;
 
 namespace MyFinance.Application.Pipelines
 {
-    public class LoggingPipeline<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
+    public sealed class LoggingPipeline<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
         where TRequest : IRequest<TResponse>
     {
         private readonly ILogger<LoggingPipeline<TRequest, TResponse>> _logger;

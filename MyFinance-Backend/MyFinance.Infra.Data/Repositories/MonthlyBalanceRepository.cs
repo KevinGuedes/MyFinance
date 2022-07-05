@@ -3,14 +3,12 @@ using MongoDB.Driver.Linq;
 using MyFinance.Domain.Entities;
 using MyFinance.Domain.Interfaces;
 using MyFinance.Infra.Data.Context;
-using MyFinance.Infra.Data.UnitOfWork;
 
 namespace MyFinance.Infra.Data.Repositories
 {
     public class MonthlyBalanceRepository : EntityRepository<MonthlyBalance>, IMonthlyBalanceRepository
     {
-        public MonthlyBalanceRepository(IMongoContext mongoContext, IUnitOfWork unitOfWork)
-            : base(mongoContext, unitOfWork)
+        public MonthlyBalanceRepository(IMongoContext mongoContext) : base(mongoContext)
         {
         }
 

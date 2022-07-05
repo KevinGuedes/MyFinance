@@ -2,7 +2,7 @@
 
 namespace MyFinance.Application.Generics.Errors
 {
-    public class BaseError : Error
+    public abstract class BaseError : Error
     {
         public BaseError(string message, string requestName) : base(message)
         {

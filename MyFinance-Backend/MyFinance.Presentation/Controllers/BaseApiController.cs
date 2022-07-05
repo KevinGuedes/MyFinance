@@ -7,26 +7,26 @@ using Swashbuckle.AspNetCore.Annotations;
 namespace MyFinance.Presentation.Controllers
 {
     [Produces("application/json")]
-    [SwaggerResponse(StatusCodes.Status500InternalServerError, "Backend went rogue", typeof(ApiErrorResponse))]
+    [SwaggerResponse(StatusCodes.Status500InternalServerError, "Backend went rogue", typeof(ErrorResponse))]
     public abstract class BaseApiController : ControllerBase
     {
         protected IActionResult ProcessResult<TResponse>(Result<TResponse> result)
         {
             if (result.IsSuccess) return Ok(result.Value);
-            return BuildApiErrorResponse(result.Errors);
+            return BuildFailureResultResponse(result.Errors);
         }
 
         protected IActionResult ProcessResult(Result result)
         {
             if (result.IsSuccess) return NoContent();
-            return BuildApiErrorResponse(result.Errors);
+            return BuildFailureResultResponse(result.Errors);
         }
 
-        private IActionResult BuildApiErrorResponse(List<IError> errors)
+        private IActionResult BuildFailureResultResponse(List<IError> errors)
         {
             var invalidRequestDataError = errors
-                .Where(error => error is InvalidRequestData)
-                .FirstOrDefault() as InvalidRequestData;
+                .Where(error => error is InvalidRequest)
+                .FirstOrDefault() as InvalidRequest;
 
             return invalidRequestDataError is not null ?
                 BuildBadRequestResponse(invalidRequestDataError.ValidationErrors) :
@@ -34,12 +34,12 @@ namespace MyFinance.Presentation.Controllers
         }
 
         private IActionResult BuildBadRequestResponse(Dictionary<string, string[]> validationErrors)
-            => BadRequest(new ApiInvalidDataResponse("One or more validation errors occurred.", validationErrors));
+            => BadRequest(new InvalidRequestResponse("One or more validation errors occurred.", validationErrors));
 
         private IActionResult BuildInternalServerErrorResponse(List<IError> errors)
         {
             var errorMessages = errors.Select(error => error.Message).ToList();
-            var apiErrorResponse = new ApiErrorResponse("MyFinance API went rogue! Sorry.", errorMessages);
+            var apiErrorResponse = new ErrorResponse("MyFinance API went rogue! Sorry.", errorMessages);
             return StatusCode(StatusCodes.Status500InternalServerError, apiErrorResponse);
         }
     }

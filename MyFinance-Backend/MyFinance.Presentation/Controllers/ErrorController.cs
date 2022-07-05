@@ -9,11 +9,11 @@ namespace MyFinance.Presentation.Controllers
     public class ErrorController : ControllerBase
     {
         [Route("/error")]
-        public IActionResult Error()
+        public IActionResult BuildErrorResponse()
         {
             var exception = HttpContext.Features.Get<IExceptionHandlerFeature>();
-            var message = exception is not null? exception.Error.Message : "Unexpected server behavior";
-            var apiErrorResponse = new ApiErrorResponse("MyFinance API went rogue! Sorry.", message);
+            var message = exception is not null ? exception.Error.Message : "Unexpected server behavior";
+            var apiErrorResponse = new ErrorResponse("MyFinance API went rogue! Sorry.", message);
 
             return StatusCode(StatusCodes.Status500InternalServerError, apiErrorResponse);
         }

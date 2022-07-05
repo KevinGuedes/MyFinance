@@ -22,7 +22,7 @@ namespace MyFinance.Presentation.Controllers
         [HttpPost]
         [SwaggerOperation(Summary = "Registers a set of new Transfers")]
         [SwaggerResponse(StatusCodes.Status204NoContent)]
-        [SwaggerResponse(StatusCodes.Status400BadRequest, "Invalid payload", typeof(ApiInvalidDataResponse))]
+        [SwaggerResponse(StatusCodes.Status400BadRequest, "Invalid payload", typeof(InvalidRequestResponse))]
         public async Task<IActionResult> RegisterTransfersAsync(
             [FromBody, SwaggerRequestBody("Transfers' payload", Required = true)] RegisterTransfersCommand command,
             CancellationToken cancellationToken)
@@ -31,7 +31,7 @@ namespace MyFinance.Presentation.Controllers
         [HttpPut]
         [SwaggerOperation(Summary = "Updates an existing Transfer")]
         [SwaggerResponse(StatusCodes.Status200OK, "Updated Transfer", typeof(TransferViewModel))]
-        [SwaggerResponse(StatusCodes.Status400BadRequest, "Invalid payload", typeof(ApiInvalidDataResponse))]
+        [SwaggerResponse(StatusCodes.Status400BadRequest, "Invalid payload", typeof(InvalidRequestResponse))]
         public async Task<IActionResult> UpdateTransferAsync(
             [FromBody, SwaggerRequestBody("Transfers' payload", Required = true)] UpdateTransferCommand command,
             CancellationToken cancellationToken)
@@ -40,7 +40,7 @@ namespace MyFinance.Presentation.Controllers
         [HttpDelete]
         [SwaggerOperation(Summary = "Deletes an existing Transfer")]
         [SwaggerResponse(StatusCodes.Status204NoContent, "Transfer successfully deleted")]
-        [SwaggerResponse(StatusCodes.Status400BadRequest, "Invalid payload", typeof(ApiInvalidDataResponse))]
+        [SwaggerResponse(StatusCodes.Status400BadRequest, "Invalid payload", typeof(InvalidRequestResponse))]
         public async Task<IActionResult> DeleteTransferAsync(
             [FromBody, SwaggerRequestBody("Transfer data", Required = true)] DeleteTransferCommand command,
             CancellationToken cancellationToken)

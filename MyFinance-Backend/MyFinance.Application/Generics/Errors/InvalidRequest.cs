@@ -1,10 +1,10 @@
 ﻿namespace MyFinance.Application.Generics.Errors
 {
-    public class InvalidRequestData : BaseError
+    public sealed class InvalidRequest : BaseError
     {
         public Dictionary<string, string[]> ValidationErrors { get; set; }
 
-        public InvalidRequestData(string requestName, Dictionary<string, string[]> validationErrors)
+        public InvalidRequest(string requestName, Dictionary<string, string[]> validationErrors)
             : base("Invalid request data", requestName)
             => ValidationErrors = validationErrors;
     }
