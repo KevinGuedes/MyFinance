@@ -12,13 +12,6 @@ namespace MyFinance.Infra.Data.Repositories
         {
         }
 
-        public Task<bool> ExistsByMonthAndYearAsync(
-            int month,
-            int year,
-            CancellationToken cancellationToken)
-            => _collection.AsQueryable()
-                .AnyAsync(montlyBalance => montlyBalance.Month == month && montlyBalance.Year == year, cancellationToken);
-
         public Task<MonthlyBalance> GetByMonthAndYearAsync(
             int month,
             int year,
@@ -27,11 +20,13 @@ namespace MyFinance.Infra.Data.Repositories
                 .Where(montlyBalance => montlyBalance.Month == month && montlyBalance.Year == year)
                 .FirstOrDefaultAsync(cancellationToken);
 
-        public async Task<IEnumerable<MonthlyBalance>> GetAllAsync(
+        public async Task<IEnumerable<MonthlyBalance>> GetByBusinessUnitId(
+            Guid businessUnitId,
             int count,
             int skip,
             CancellationToken cancellationToken)
             => await _collection.AsQueryable()
+                .Where(monthlyBalance => monthlyBalance.BusinessUnitId == businessUnitId)
                 .OrderByDescending(monthlyBalance => monthlyBalance.CreationDate)
                 .Skip(skip)
                 .Take(count)
