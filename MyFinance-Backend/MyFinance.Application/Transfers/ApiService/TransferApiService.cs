@@ -18,12 +18,12 @@ namespace MyFinance.Application.Transfers.ApiService
         }
 
         public Task<Result> RegisterTransfersAsync(
-            RegisterTransfersCommand command, 
+            RegisterTransfersCommand command,
             CancellationToken cancellationToken)
             => _mediator.Send(command, cancellationToken);
 
         public async Task<Result<TransferViewModel>> UpdateTransferAsync(
-            UpdateTransferCommand command, 
+            UpdateTransferCommand command,
             CancellationToken cancellationToken)
         {
             var result = await _mediator.Send(command, cancellationToken);
@@ -31,8 +31,8 @@ namespace MyFinance.Application.Transfers.ApiService
         }
 
         public Task<Result> DeleteTransferAsync(
-            DeleteTransferCommand command, 
+            DeleteTransferCommand command,
             CancellationToken cancellationToken)
-            =>_mediator.Send(command, cancellationToken);
+            => _mediator.Send(command, cancellationToken);
     }
 }

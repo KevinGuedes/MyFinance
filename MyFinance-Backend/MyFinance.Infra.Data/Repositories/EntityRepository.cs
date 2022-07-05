@@ -12,7 +12,7 @@ namespace MyFinance.Infra.Data.Repositories
         private protected readonly IMongoContext _mongoContext;
         private protected readonly IMongoCollection<TEntity> _collection;
 
-        protected EntityRepository(IMongoContext mongoContext, IUnitOfWork unitOfWork)
+        protected EntityRepository(IMongoContext mongoContext)
             => (_mongoContext, _collection) = (mongoContext, mongoContext.GetCollection<TEntity>());
 
         public Task<bool> ExistsByIdAsync(Guid id, CancellationToken cancellationToken)
@@ -31,7 +31,10 @@ namespace MyFinance.Infra.Data.Repositories
         {
             _mongoContext.AddCommand((session, cancellationToken) =>
             {
-                return _collection.InsertOneAsync(session, entity, cancellationToken: cancellationToken);
+                return _collection.InsertOneAsync(
+                    session, 
+                    entity,
+                    cancellationToken: cancellationToken);
             });
 
             return entity;
@@ -41,8 +44,12 @@ namespace MyFinance.Infra.Data.Repositories
         {
             _mongoContext.AddCommand((session, cancellationToken) =>
             {
-                var filter = Builders<TEntity>.Filter.Eq(entity => entity.Id, updatedEntity.Id);
-                return _collection.ReplaceOneAsync(session, filter, updatedEntity, cancellationToken: cancellationToken);
+                return _collection.ReplaceOneAsync(
+                    session, 
+                    entity => entity.Id == updatedEntity.Id, 
+                    updatedEntity, 
+                    new ReplaceOptions { IsUpsert = false }, 
+                    cancellationToken);
             });
 
             return updatedEntity;
@@ -52,8 +59,10 @@ namespace MyFinance.Infra.Data.Repositories
         {
             _mongoContext.AddCommand((session, cancellationToken) =>
             {
-                var filter = Builders<TEntity>.Filter.Eq(entity => entity.Id, id);
-                return _collection.DeleteOneAsync(session, filter, cancellationToken: cancellationToken);
+                return _collection.DeleteOneAsync(
+                    session, 
+                    entity => entity.Id == id,
+                    cancellationToken: cancellationToken);
             });
         }
     }

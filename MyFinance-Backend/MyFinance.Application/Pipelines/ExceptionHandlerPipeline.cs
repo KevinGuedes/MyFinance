@@ -5,7 +5,7 @@ using MyFinance.Application.Generics.Errors;
 
 namespace MyFinance.Application.Pipelines
 {
-    public class ExceptionHandlerPipeline<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
+    public sealed class ExceptionHandlerPipeline<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
         where TRequest : IRequest<TResponse>
         where TResponse : ResultBase, new()
     {

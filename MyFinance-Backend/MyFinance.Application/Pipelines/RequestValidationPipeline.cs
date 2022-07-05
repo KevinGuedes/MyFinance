@@ -6,7 +6,7 @@ using MyFinance.Application.Generics.Errors;
 
 namespace MyFinance.Application.Pipelines
 {
-    public class RequestValidationPipeline<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
+    public sealed class RequestValidationPipeline<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
         where TRequest : IRequest<TResponse>
         where TResponse : ResultBase, new()
     {
@@ -34,7 +34,6 @@ namespace MyFinance.Application.Pipelines
             var errors = validationResults
                 .SelectMany(validationResult => validationResult.Errors)
                 .Where(validationResult => validationResult is not null)
-                .ToList()
                 .GroupBy(
                     validationResult => validationResult.PropertyName,
                     validationResult => validationResult.ErrorMessage,
@@ -49,7 +48,7 @@ namespace MyFinance.Application.Pipelines
             {
                 _logger.LogError("[{RequestName}] Invalid request data", requestName);
                 var response = new TResponse();
-                var error = Result.Fail(new InvalidRequestData(requestName, errors));
+                var error = Result.Fail(new InvalidRequest(requestName, errors));
                 response.Reasons.AddRange(error.Reasons);
                 return response;
             }

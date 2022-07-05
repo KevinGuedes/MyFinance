@@ -6,7 +6,7 @@ using MyFinance.Infra.Data.UnitOfWork;
 
 namespace MyFinance.Application.Pipelines
 {
-    public class UnitOfWorkPipeline<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
+    public sealed class UnitOfWorkPipeline<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
         where TRequest : IRequest<TResponse>, ICommand<TResponse>
         where TResponse : ResultBase
     {

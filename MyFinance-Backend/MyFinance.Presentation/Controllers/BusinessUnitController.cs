@@ -27,7 +27,7 @@ namespace MyFinance.Presentation.Controllers
         [HttpPost]
         [SwaggerOperation(Summary = "Creates a new Business Unit")]
         [SwaggerResponse(StatusCodes.Status200OK, "Created Business Unit", typeof(BusinessUnitViewModel))]
-        [SwaggerResponse(StatusCodes.Status400BadRequest, "Invalid payload", typeof(ApiInvalidDataResponse))]
+        [SwaggerResponse(StatusCodes.Status400BadRequest, "Invalid payload", typeof(InvalidRequestResponse))]
         public async Task<IActionResult> CreateBusinessUnitAsync(
             [FromBody, SwaggerRequestBody("Business unit payload", Required = true)] CreateBusinessUnitCommand command,
             CancellationToken cancellationToken)
@@ -36,7 +36,7 @@ namespace MyFinance.Presentation.Controllers
         [HttpPut]
         [SwaggerOperation(Summary = "Updates an existing Business Unit")]
         [SwaggerResponse(StatusCodes.Status200OK, "Updated Business Unit", typeof(BusinessUnitViewModel))]
-        [SwaggerResponse(StatusCodes.Status400BadRequest, "Invalid payload", typeof(ApiInvalidDataResponse))]
+        [SwaggerResponse(StatusCodes.Status400BadRequest, "Invalid payload", typeof(InvalidRequestResponse))]
         public async Task<IActionResult> UpdateBusinessUnitAsync(
             [FromBody, SwaggerRequestBody("Business unit payload", Required = true)] UpdateBusinessUnitCommand command,
             CancellationToken cancellationToken)

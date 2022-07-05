@@ -3,14 +3,12 @@ using MongoDB.Driver.Linq;
 using MyFinance.Domain.Entities;
 using MyFinance.Domain.Interfaces;
 using MyFinance.Infra.Data.Context;
-using MyFinance.Infra.Data.UnitOfWork;
 
 namespace MyFinance.Infra.Data.Repositories
 {
     public class BusinessUnitRepository : EntityRepository<BusinessUnit>, IBusinessUnitRepository
     {
-        public BusinessUnitRepository(IMongoContext mongoDbContext, IUnitOfWork unitOfWork)
-            : base(mongoDbContext, unitOfWork)
+        public BusinessUnitRepository(IMongoContext mongoDbContext) : base(mongoDbContext)
         {
         }
 
