@@ -1,6 +1,8 @@
-﻿namespace MyFinance.Domain.Entities
+﻿using MyFinance.Domain.Interfaces;
+
+namespace MyFinance.Domain.Entities
 {
-    public class BusinessUnit : Entity
+    public class BusinessUnit : Entity, IAggregateRoot
     {
         public string Name { get; private set; }
         public bool IsArchived { get; private set; }

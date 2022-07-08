@@ -3,11 +3,11 @@ using MongoDB.Driver.Linq;
 using MyFinance.Domain.Entities;
 using MyFinance.Domain.Interfaces;
 using MyFinance.Infra.Data.Context;
-using MyFinance.Infra.Data.UnitOfWork;
 
 namespace MyFinance.Infra.Data.Repositories
 {
-    public abstract class EntityRepository<TEntity> : IEntityRepository<TEntity> where TEntity : Entity
+    public abstract class EntityRepository<TEntity> : IEntityRepository<TEntity> 
+        where TEntity : Entity, IAggregateRoot
     {
         private protected readonly IMongoContext _mongoContext;
         private protected readonly IMongoCollection<TEntity> _collection;

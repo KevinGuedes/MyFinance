@@ -1,6 +1,8 @@
-﻿namespace MyFinance.Domain.Entities
+﻿using MyFinance.Domain.Interfaces;
+
+namespace MyFinance.Domain.Entities
 {
-    public class MonthlyBalance : Entity
+    public class MonthlyBalance : Entity, IAggregateRoot
     {
         public List<Transfer> Transfers { get; private set; }
         public double CurrentBalance { get => Transfers.Select(transfer => transfer.Value).Sum(); }
