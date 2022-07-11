@@ -1,7 +1,7 @@
 ﻿using FluentResults;
 using MediatR;
 using Microsoft.Extensions.Logging;
-using MyFinance.Application.Interfaces;
+using MyFinance.Application.Generics.Requests;
 using MyFinance.Infra.Data.UnitOfWork;
 
 namespace MyFinance.Application.Pipelines

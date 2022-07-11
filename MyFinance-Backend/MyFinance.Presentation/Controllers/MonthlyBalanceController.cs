@@ -20,7 +20,7 @@ namespace MyFinance.Presentation.Controllers
         [HttpGet("{businessUnitId:guid}")]
         [SwaggerOperation(Summary = "Lists all existing Monthly Balances according to query parameters.")]
         [SwaggerResponse(StatusCodes.Status200OK, "List of Monthly Balances", typeof(IEnumerable<MonthlyBalanceViewModel>))]
-        [SwaggerResponse(StatusCodes.Status400BadRequest, "Invalid payload", typeof(InvalidRequestResponse))]
+        [SwaggerResponse(StatusCodes.Status400BadRequest, "Invalid payload", typeof(BadRequestResponse))]
         public async Task<IActionResult> GetBusinessUnitsAsync(
             [FromRoute, SwaggerParameter("Business Unit Id", Required = true)] Guid businessUnitId,
             [FromQuery, SwaggerParameter("Requested results count", Required = true)] int count,

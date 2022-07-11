@@ -95,7 +95,7 @@ namespace MyFinance.Application.Transfers.Commands.RegisterTransfers
                 _logger.LogInformation("Adding new Transfer(s) to Monthly Balance with Id {MonthlyBalanceId}", monthlyBalance.Id);
                 monthlyBalance.AddTransfers(newTransfers);
                 _monthlyBalanceRepository.Insert(monthlyBalance);
-                _logger.LogInformation("New Monthly Balance created with Id {MonthlyBalanceId}", monthlyBalance.Id);
+                _logger.LogInformation("New Monthly Balance with Id {MonthlyBalanceId} created", monthlyBalance.Id);
             }
         }
 

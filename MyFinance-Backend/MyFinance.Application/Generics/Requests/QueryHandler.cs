@@ -1,6 +1,5 @@
 ﻿using FluentResults;
 using MediatR;
-using MyFinance.Application.Interfaces;
 
 namespace MyFinance.Application.Generics.Requests
 {

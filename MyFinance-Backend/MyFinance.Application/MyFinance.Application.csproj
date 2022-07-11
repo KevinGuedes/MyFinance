@@ -8,11 +8,8 @@
 
   <ItemGroup>
     <Compile Remove="EntitiesFlow\Transfers\Queries\**" />
-    <Compile Remove="Services\**" />
     <EmbeddedResource Remove="EntitiesFlow\Transfers\Queries\**" />
-    <EmbeddedResource Remove="Services\**" />
     <None Remove="EntitiesFlow\Transfers\Queries\**" />
-    <None Remove="Services\**" />
   </ItemGroup>
 
   <ItemGroup>
