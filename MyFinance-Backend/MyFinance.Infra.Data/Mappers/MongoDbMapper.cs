@@ -8,6 +8,7 @@
             BusinessUnitMapper.Map();
             TransferMapper.Map();
             MonthlyBalanceMapper.Map();
+            ReferenceDataMapper.Map();
         }
     }
 }

@@ -3,6 +3,7 @@ using Microsoft.Extensions.Logging;
 using MyFinance.Application.Generics.Requests;
 using MyFinance.Domain.Entities;
 using MyFinance.Domain.Interfaces;
+using MyFinance.Domain.ValueObjects;
 
 namespace MyFinance.Application.Transfers.Commands.RegisterTransfers
 {
@@ -48,6 +49,7 @@ namespace MyFinance.Application.Transfers.Commands.RegisterTransfers
                 {
                     var month = transferGroup.Key.Month;
                     var year = transferGroup.Key.Year;
+                    var reference = new ReferenceData(command.BusinessUnitId, month, year);
                     _logger.LogInformation("Registering transfers for {Month}/{Year} reference date", month, year);
 
                     var newTransfers = new List<Transfer>();
@@ -64,7 +66,7 @@ namespace MyFinance.Application.Transfers.Commands.RegisterTransfers
                         newTransfers.Add(transfer);
                     }
 
-                    await AddTransfersToMonthlyBalance(command.BusinessUnitId, month, year, newTransfers, cancellationToken);
+                    await AddTransfersToMonthlyBalance(command.BusinessUnitId, reference, newTransfers, cancellationToken);
                 });
 
             await UpdateBusinessUnitBalance(command.BusinessUnitId, businessUnitRevenue, cancellationToken);
@@ -72,13 +74,12 @@ namespace MyFinance.Application.Transfers.Commands.RegisterTransfers
 
         private async Task AddTransfersToMonthlyBalance(
             Guid businessUnitId,
-            int month,
-            int year,
+            ReferenceData reference,
             List<Transfer> newTransfers,
             CancellationToken cancellationToken)
         {
             _logger.LogInformation("Verifying if there is an existing Monthly Balance related to the transfer(s)");
-            var monthlyBalance = await _monthlyBalanceRepository.GetByMonthAndYearAsync(month, year, cancellationToken);
+            var monthlyBalance = await _monthlyBalanceRepository.GetByMonthAndYearAsync(reference, cancellationToken);
 
             if (monthlyBalance is not null)
             {
@@ -90,7 +91,7 @@ namespace MyFinance.Application.Transfers.Commands.RegisterTransfers
             else
             {
                 _logger.LogInformation("Creating new Monthly Balance");
-                monthlyBalance = new MonthlyBalance(businessUnitId, month, year);
+                monthlyBalance = new MonthlyBalance(reference);
 
                 _logger.LogInformation("Adding new Transfer(s) to Monthly Balance with Id {MonthlyBalanceId}", monthlyBalance.Id);
                 monthlyBalance.AddTransfers(newTransfers);

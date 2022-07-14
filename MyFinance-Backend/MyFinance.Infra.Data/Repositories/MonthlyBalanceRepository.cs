@@ -2,6 +2,7 @@
 using MongoDB.Driver.Linq;
 using MyFinance.Domain.Entities;
 using MyFinance.Domain.Interfaces;
+using MyFinance.Domain.ValueObjects;
 using MyFinance.Infra.Data.Context;
 
 namespace MyFinance.Infra.Data.Repositories
@@ -13,11 +14,10 @@ namespace MyFinance.Infra.Data.Repositories
         }
 
         public Task<MonthlyBalance> GetByMonthAndYearAsync(
-            int month,
-            int year,
+            ReferenceData referenceData,
             CancellationToken cancellationToken)
             => _collection.AsQueryable()
-                .Where(montlyBalance => montlyBalance.Month == month && montlyBalance.Year == year)
+                .Where(montlyBalance => montlyBalance.ReferenceData == referenceData)
                 .FirstOrDefaultAsync(cancellationToken);
 
         public async Task<IEnumerable<MonthlyBalance>> GetByBusinessUnitId(
@@ -26,7 +26,7 @@ namespace MyFinance.Infra.Data.Repositories
             int skip,
             CancellationToken cancellationToken)
             => await _collection.AsQueryable()
-                .Where(monthlyBalance => monthlyBalance.BusinessUnitId == businessUnitId)
+                .Where(monthlyBalance => monthlyBalance.ReferenceData.BusinessUnitId == businessUnitId)
                 .OrderByDescending(monthlyBalance => monthlyBalance.CreationDate)
                 .Skip(skip)
                 .Take(count)

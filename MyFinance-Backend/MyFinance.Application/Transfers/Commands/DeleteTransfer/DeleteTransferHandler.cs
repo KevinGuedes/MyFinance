@@ -25,7 +25,7 @@ namespace MyFinance.Application.Transfers.Commands.DeleteTransfer
         {
             _logger.LogInformation("Deleting Transfer with Id {TransferId}", command.TransferId);
             var monthlyBalance = await _monthlyBalanceRepository.GetByIdAsync(command.MonthlyBalanceId, cancellationToken);
-            var businessUnit = await _businessUnitRepository.GetByIdAsync(monthlyBalance.BusinessUnitId, cancellationToken);
+            var businessUnit = await _businessUnitRepository.GetByIdAsync(monthlyBalance.ReferenceData.BusinessUnitId, cancellationToken);
 
             var transferValue = monthlyBalance.GetTransferById(command.TransferId).Value;
             monthlyBalance.DeleteTransferById(command.TransferId);
@@ -33,7 +33,7 @@ namespace MyFinance.Application.Transfers.Commands.DeleteTransfer
             _logger.LogInformation("Updating Monthly Balance with Id {MonthlyBalanceId}", command.MonthlyBalanceId);
             _monthlyBalanceRepository.Update(monthlyBalance);
 
-            _logger.LogInformation("Updating Balance of Business Unit with Id {BusinessUnitId}", monthlyBalance.BusinessUnitId);
+            _logger.LogInformation("Updating Balance of Business Unit with Id {BusinessUnitId}", monthlyBalance.ReferenceData.BusinessUnitId);
             businessUnit.AddBalance(-transferValue);
             _businessUnitRepository.Update(businessUnit);
 

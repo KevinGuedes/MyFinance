@@ -23,7 +23,8 @@ namespace MyFinance.Application.MonthlyBalances.ApiService
         {
             var query = new GetMonthlyBalancesQuery(businessUnitId, count, skip);
             var result = await _mediator.Send(query, cancellationToken);
-            return ProcessResultAndMapIfSuccess<MonthlyBalance, MonthlyBalanceViewModel>(result);
+            var x =  ProcessResultAndMapIfSuccess<MonthlyBalance, MonthlyBalanceViewModel>(result);
+            return x;
         }
     }
 }

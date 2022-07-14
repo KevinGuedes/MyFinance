@@ -1,5 +1,6 @@
 ﻿using MyFinance.Domain.Enums;
 using MyFinance.Domain.Interfaces;
+using MyFinance.Domain.ValueObjects;
 
 namespace MyFinance.Domain.Entities
 {
@@ -7,17 +8,13 @@ namespace MyFinance.Domain.Entities
     {
         public List<Transfer> Transfers { get; private set; }
         public double CurrentBalance { get; private set; }
-        public Guid BusinessUnitId { get; private set; }
-        public int Month { get; private set; }
-        public int Year { get; private set; }
+        public ReferenceData ReferenceData { get; private set; }
 
-        public MonthlyBalance(Guid businessUnitId, int month, int year)
+        public MonthlyBalance(ReferenceData referenceData)
         {
             Transfers = new List<Transfer>();
             CurrentBalance = 0;
-            BusinessUnitId = businessUnitId;
-            Month = month;
-            Year = year;
+            ReferenceData = referenceData;
         }
 
         public void AddTransfer(Transfer transfer)
