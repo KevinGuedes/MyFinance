@@ -30,12 +30,12 @@ namespace MyFinance.Application.Transfers.Commands.DeleteTransfer
             var transferValue = monthlyBalance.GetTransferById(command.TransferId).Value;
             monthlyBalance.DeleteTransferById(command.TransferId);
 
+            _logger.LogInformation("Updating Monthly Balance with Id {MonthlyBalanceId}", command.MonthlyBalanceId);
+            _monthlyBalanceRepository.Update(monthlyBalance);
+
             _logger.LogInformation("Updating Balance of Business Unit with Id {BusinessUnitId}", monthlyBalance.BusinessUnitId);
             businessUnit.AddBalance(-transferValue);
             _businessUnitRepository.Update(businessUnit);
-
-            _logger.LogInformation("Updating Monthly Balance with Id {MonthlyBalanceId}", command.MonthlyBalanceId);
-            _monthlyBalanceRepository.Update(monthlyBalance);
 
             _logger.LogInformation("Transfer with Id {TransferId} sucessfully deleted", command.TransferId);
             return Result.Ok();

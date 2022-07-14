@@ -1,4 +1,5 @@
-﻿using MyFinance.Domain.Interfaces;
+﻿using MyFinance.Domain.Enums;
+using MyFinance.Domain.Interfaces;
 
 namespace MyFinance.Domain.Entities
 {
@@ -36,29 +37,21 @@ namespace MyFinance.Domain.Entities
         public Transfer GetTransferById(Guid transferId)
             => Transfers.Single(transfer => transfer.Id == transferId);
 
-        public (DateTime, double) GetTransferProcessingDataById(Guid transferId)
-        {
-            var transfer = GetTransferById(transferId);
-            return (transfer.SettlementDate, transfer.Value);
-        }
-
-        public void UpdateTransfer(Transfer updatedTransfer)
-        {
-            SetUpdateDate();
-            var index = Transfers.FindIndex(transfer => transfer.Id == updatedTransfer.Id);
-            if (index == -1) throw new InvalidOperationException("Transfer not found in this Monthly Balance");
-            Transfers[index] = updatedTransfer;
-
-            //var transfer = GetTransferById(transfer.Id);
-            //transfer.Update();
-        }
-
         public void DeleteTransferById(Guid transferId)
         {
             SetUpdateDate();
             var transferToRemove = GetTransferById(transferId);
             CurrentBalance -= transferToRemove.Value;
             Transfers.Remove(transferToRemove);
+        }
+
+        public Transfer PopTransferById(Guid transferId)
+        {
+            SetUpdateDate();
+            var transferToPop = GetTransferById(transferId);
+            CurrentBalance -= transferToPop.Value;
+            Transfers.Remove(transferToPop);
+            return transferToPop;
         }
     }
 }
