@@ -34,14 +34,6 @@ namespace MyFinance.Domain.Entities
         public Transfer GetTransferById(Guid transferId)
             => Transfers.Single(transfer => transfer.Id == transferId);
 
-        public void DeleteTransferById(Guid transferId)
-        {
-            SetUpdateDate();
-            var transferToRemove = GetTransferById(transferId);
-            CurrentBalance -= transferToRemove.Value;
-            Transfers.Remove(transferToRemove);
-        }
-
         public Transfer PopTransferById(Guid transferId)
         {
             SetUpdateDate();

@@ -1,5 +1,4 @@
 ﻿using FluentResults;
-using MyFinance.Application.MonthlyBalances.Queries.GetMonthlyBalances;
 using MyFinance.Application.MonthlyBalances.ViewModels;
 
 namespace MyFinance.Application.MonthlyBalances.ApiService

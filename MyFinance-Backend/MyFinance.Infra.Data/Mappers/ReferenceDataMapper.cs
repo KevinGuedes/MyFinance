@@ -10,9 +10,7 @@ namespace MyFinance.Infra.Data.Mappers
         internal static void Map()
            => BsonClassMap.RegisterClassMap<ReferenceData>(map =>
            {
-               map.AutoMap();
-               map.MapProperty(reference => reference.Month);
-               map.MapProperty(reference => reference.Year);
+               map.MapMember(referenceData => referenceData.Date);
                map.MapMember(reference => reference.BusinessUnitId)
                    .SetSerializer(new GuidSerializer(BsonType.String));
            });

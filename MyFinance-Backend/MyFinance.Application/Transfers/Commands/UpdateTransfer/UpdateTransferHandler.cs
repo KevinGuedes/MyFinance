@@ -1,7 +1,6 @@
 ﻿using FluentResults;
 using Microsoft.Extensions.Logging;
 using MyFinance.Application.Generics.Requests;
-using MyFinance.Application.Services.TransferProcessing;
 using MyFinance.Domain.Entities;
 using MyFinance.Domain.Interfaces;
 using MyFinance.Domain.ValueObjects;
@@ -31,7 +30,7 @@ namespace MyFinance.Application.Transfers.Commands.UpdateTransfer
             var transfer = currentMonthlyBalance.PopTransferById(command.TransferId);
 
             await Task.WhenAll(
-                UpdateBusinessUnitBalanceIfNeeded(currentMonthlyBalance.ReferenceData.BusinessUnitId, command.Value, transfer.Value, cancellationToken),
+                UpdateBusinessUnitBalance(currentMonthlyBalance.ReferenceData.BusinessUnitId, command.Value, transfer.Value, cancellationToken),
                 ProcessMonthlyBalanceAccordingToUpdateData(command, currentMonthlyBalance, transfer, cancellationToken)
             );
 
@@ -39,18 +38,20 @@ namespace MyFinance.Application.Transfers.Commands.UpdateTransfer
             return Result.Ok(transfer);
         }
 
-        private async Task UpdateBusinessUnitBalanceIfNeeded(
+        private async Task UpdateBusinessUnitBalance(
             Guid businessUnitId,
-            double newValue,
-            double currentValue,
+            double transferNewValue,
+            double transferCurrentValue,
             CancellationToken cancellationToken)
         {
             _logger.LogInformation("Checking if Business Unit with Id {BusinessUnitId} needs to update its balance", businessUnitId);
-            if (TransferProcessingHelper.ShouldUpdateBusinessUnitBalance(currentValue, newValue))
+
+            var shouldUpdateBusinessUnitBalance = transferCurrentValue != transferNewValue;
+            if (shouldUpdateBusinessUnitBalance)
             {
                 _logger.LogInformation("Updating balance of Business Unit with Id {BusinessUnitId}", businessUnitId);
                 var businessUnit = await _businessUnitRepository.GetByIdAsync(businessUnitId, cancellationToken);
-                businessUnit.AddBalance(newValue - currentValue);
+                businessUnit.AddBalance(transferNewValue - transferCurrentValue);
                 _businessUnitRepository.Update(businessUnit);
                 _logger.LogInformation("Business Unit with Id {BusinessUnitId} updated", businessUnitId);
             }
@@ -62,16 +63,17 @@ namespace MyFinance.Application.Transfers.Commands.UpdateTransfer
             Transfer transfer, 
             CancellationToken cancellationToken)
         {
-            _logger.LogInformation("Checking if Transfer with Id {TransferId} needs to go to another Monthly Balance", transfer.Id);
-            var (month, year) = (command.SettlementDate.Month, command.SettlementDate.Year);
-            var shouldGoToAnotherMonthlyBalance = TransferProcessingHelper.ShouldGoToAnotherMonthlyBalance(transfer.SettlementDate, command.SettlementDate);
-            
             _logger.LogInformation("Updating Transfer with Id {TransferId}", transfer.Id);
             transfer.Update(command.RelatedTo, command.Description, command.Value, command.SettlementDate, command.TransferType);
 
+            _logger.LogInformation("Checking if Transfer with Id {TransferId} needs to go to another Monthly Balance", transfer.Id);
+            var currentReferenceData = currentMonthlyBalance.ReferenceData;
+            var newReferenceData = new ReferenceData(currentMonthlyBalance.ReferenceData.BusinessUnitId, command.SettlementDate.Month, command.SettlementDate.Year);
+            var shouldGoToAnotherMonthlyBalance = currentReferenceData != newReferenceData;
+            
             _logger.LogInformation("Sending Transfer with Id {TransferId} to its corresponding Monthly Balance", transfer.Id);
             if (shouldGoToAnotherMonthlyBalance)
-                await AddTransferToAnotherMonthlyBalance(currentMonthlyBalance.ReferenceData.BusinessUnitId, transfer, month, year, cancellationToken);
+                await AddTransferToAnotherMonthlyBalance(newReferenceData, transfer, cancellationToken);
             else
             {
                 _logger.LogInformation("Re-adding Transfer to existing Monthly Balance with Id {MonthlyBalanceId}", currentMonthlyBalance.Id);
@@ -83,32 +85,30 @@ namespace MyFinance.Application.Transfers.Commands.UpdateTransfer
         }
 
         private async Task AddTransferToAnotherMonthlyBalance(
-            Guid businessUnitId, 
+            ReferenceData newReferenceData,
             Transfer transfer, 
-            int month, 
-            int year, 
             CancellationToken cancellationToken)
         {
-            _logger.LogInformation("Verifying if there is an existing Monthly Balance for {Month}/{Year} reference date", month, year);
-            var referenceData = new ReferenceData(businessUnitId, month, year);
-            var monthlyBalance = await _monthlyBalanceRepository.GetByMonthAndYearAsync(referenceData, cancellationToken);
+            _logger.LogInformation("Verifying if there is an existing Monthly Balance for {ReferenceData}", newReferenceData);
+            var monthlyBalance = await _monthlyBalanceRepository.GetByReferenceData(newReferenceData, cancellationToken);
+            var shouldAddToExistingMonthlyBalance = monthlyBalance is null;
 
-            if (monthlyBalance is not null)
-            {
-                _logger.LogInformation("Adding Transfer to Monthly Balance with Id {MonthlyBalanceId}", monthlyBalance.Id);
-                monthlyBalance.AddTransfer(transfer);
-                _monthlyBalanceRepository.Update(monthlyBalance);
-                _logger.LogInformation("Monthly Balance with Id {MonthlyBalanceId} updated", monthlyBalance.Id);
-            }
-            else
+            if (shouldAddToExistingMonthlyBalance)
             {
                 _logger.LogInformation("Creating new Monthly Balance");
-                monthlyBalance = new MonthlyBalance(new ReferenceData(businessUnitId, month, year));
+                monthlyBalance = new MonthlyBalance(newReferenceData);
 
                 _logger.LogInformation("Adding Transfer to Monthly Balance with Id {MonthlyBalanceId}", monthlyBalance.Id);
                 monthlyBalance.AddTransfer(transfer);
                 _monthlyBalanceRepository.Insert(monthlyBalance);
                 _logger.LogInformation("New Monthly Balance created with Id {MonthlyBalanceId}", monthlyBalance.Id);
+            }
+            else
+            {
+                _logger.LogInformation("Adding Transfer to Monthly Balance with Id {MonthlyBalanceId}", monthlyBalance!.Id);
+                monthlyBalance.AddTransfer(transfer);
+                _monthlyBalanceRepository.Update(monthlyBalance);
+                _logger.LogInformation("Monthly Balance with Id {MonthlyBalanceId} updated", monthlyBalance.Id);
             }
         }
     }

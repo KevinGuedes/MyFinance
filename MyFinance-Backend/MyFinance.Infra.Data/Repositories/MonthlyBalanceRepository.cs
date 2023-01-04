@@ -13,7 +13,7 @@ namespace MyFinance.Infra.Data.Repositories
         {
         }
 
-        public Task<MonthlyBalance> GetByMonthAndYearAsync(
+        public Task<MonthlyBalance> GetByReferenceData(
             ReferenceData referenceData,
             CancellationToken cancellationToken)
             => _collection.AsQueryable()
@@ -27,7 +27,7 @@ namespace MyFinance.Infra.Data.Repositories
             CancellationToken cancellationToken)
             => await _collection.AsQueryable()
                 .Where(monthlyBalance => monthlyBalance.ReferenceData.BusinessUnitId == businessUnitId)
-                .OrderByDescending(monthlyBalance => monthlyBalance.CreationDate)
+                .OrderByDescending(monthlyBalance => monthlyBalance.ReferenceData)
                 .Skip(skip)
                 .Take(count)
                 .ToListAsync(cancellationToken);
