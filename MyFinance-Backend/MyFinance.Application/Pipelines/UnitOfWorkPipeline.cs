@@ -16,7 +16,7 @@ namespace MyFinance.Application.Pipelines
         public UnitOfWorkPipeline(ILogger<UnitOfWorkPipeline<TRequest, TResponse>> logger, IUnitOfWork unitOfWork)
             => (_logger, _unitOfWork) = (logger, unitOfWork);
 
-        public async Task<TResponse> Handle(TRequest request, CancellationToken cancellationToken, RequestHandlerDelegate<TResponse> next)
+        public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
         {
             var requestName = request.GetType();
 

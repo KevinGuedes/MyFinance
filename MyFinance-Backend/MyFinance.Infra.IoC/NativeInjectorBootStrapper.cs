@@ -1,4 +1,5 @@
-﻿using FluentValidation.AspNetCore;
+﻿using FluentValidation;
+using FluentValidation.AspNetCore;
 using MediatR;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -55,12 +56,10 @@ namespace MyFinance.Infra.IoC
         }
 
         public static void RegisterAutoMapper(IServiceCollection services, Assembly applicationLayerAssembly)
-            => services
-                .AddFluentValidation(fv =>
-                {
-                    fv.AutomaticValidationEnabled = false;
-                    fv.RegisterValidatorsFromAssembly(applicationLayerAssembly);
-                });
+        {
+            services.AddFluentValidationClientsideAdapters();
+            services.AddValidatorsFromAssembly(applicationLayerAssembly);
+        }
 
         private static void RegisterValidators(IServiceCollection services, Assembly applicationLayerAssembly)
             => services.AddAutoMapper(applicationLayerAssembly);

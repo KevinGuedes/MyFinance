@@ -18,7 +18,7 @@ namespace MyFinance.Application.Pipelines
             IEnumerable<IValidator<TRequest>> validators)
             => (_logger, _validators) = (logger, validators);
 
-        public async Task<TResponse> Handle(TRequest request, CancellationToken cancellationToken, RequestHandlerDelegate<TResponse> next)
+        public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
         {
             var requestName = request.GetType().Name;
 

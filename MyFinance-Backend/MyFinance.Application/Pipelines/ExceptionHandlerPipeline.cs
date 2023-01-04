@@ -14,7 +14,7 @@ namespace MyFinance.Application.Pipelines
         public ExceptionHandlerPipeline(ILogger<ExceptionHandlerPipeline<TRequest, TResponse>> logger)
             => _logger = logger;
 
-        public async Task<TResponse> Handle(TRequest request, CancellationToken cancellationToken, RequestHandlerDelegate<TResponse> next)
+        public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
         {
             try
             {
