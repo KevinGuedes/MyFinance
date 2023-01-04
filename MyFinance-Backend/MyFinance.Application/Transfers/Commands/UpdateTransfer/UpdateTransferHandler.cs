@@ -91,21 +91,21 @@ namespace MyFinance.Application.Transfers.Commands.UpdateTransfer
         {
             _logger.LogInformation("Verifying if there is an existing Monthly Balance for {ReferenceData}", newReferenceData);
             var monthlyBalance = await _monthlyBalanceRepository.GetByReferenceData(newReferenceData, cancellationToken);
-            var shouldAddToExistingMonthlyBalance = monthlyBalance is null;
+            var shouldCreateNewMonthlyBalance = monthlyBalance is null;
 
-            if (shouldAddToExistingMonthlyBalance)
+            if (shouldCreateNewMonthlyBalance)
             {
                 _logger.LogInformation("Creating new Monthly Balance");
                 monthlyBalance = new MonthlyBalance(newReferenceData);
 
-                _logger.LogInformation("Adding Transfer to Monthly Balance with Id {MonthlyBalanceId}", monthlyBalance.Id);
+                _logger.LogInformation("Adding Transfer to new Monthly Balance with Id {MonthlyBalanceId}", monthlyBalance.Id);
                 monthlyBalance.AddTransfer(transfer);
                 _monthlyBalanceRepository.Insert(monthlyBalance);
                 _logger.LogInformation("New Monthly Balance created with Id {MonthlyBalanceId}", monthlyBalance.Id);
             }
             else
             {
-                _logger.LogInformation("Adding Transfer to Monthly Balance with Id {MonthlyBalanceId}", monthlyBalance!.Id);
+                _logger.LogInformation("Adding Transfer to existing Monthly Balance with Id {MonthlyBalanceId}", monthlyBalance!.Id);
                 monthlyBalance.AddTransfer(transfer);
                 _monthlyBalanceRepository.Update(monthlyBalance);
                 _logger.LogInformation("Monthly Balance with Id {MonthlyBalanceId} updated", monthlyBalance.Id);
