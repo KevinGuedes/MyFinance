@@ -1,7 +1,7 @@
 ﻿using FluentResults;
 using MediatR;
 using Microsoft.Extensions.Logging;
-using MyFinance.Application.Interfaces;
+using MyFinance.Application.Generics.Requests;
 using MyFinance.Infra.Data.UnitOfWork;
 
 namespace MyFinance.Application.Pipelines
@@ -16,7 +16,7 @@ namespace MyFinance.Application.Pipelines
         public UnitOfWorkPipeline(ILogger<UnitOfWorkPipeline<TRequest, TResponse>> logger, IUnitOfWork unitOfWork)
             => (_logger, _unitOfWork) = (logger, unitOfWork);
 
-        public async Task<TResponse> Handle(TRequest request, CancellationToken cancellationToken, RequestHandlerDelegate<TResponse> next)
+        public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
         {
             var requestName = request.GetType();
 
@@ -27,7 +27,7 @@ namespace MyFinance.Application.Pipelines
             {
                 _logger.LogInformation("[{RequestName}] Committing database changes", requestName);
                 await _unitOfWork.CommitAsync(cancellationToken);
-                _logger.LogInformation("[{RequestName}] Database changes commited", requestName);
+                _logger.LogInformation("[{RequestName}] Database changes successfully commited", requestName);
             }
             else
                 _logger.LogWarning("[{RequestName}] Changes not commited due to failure response", requestName);

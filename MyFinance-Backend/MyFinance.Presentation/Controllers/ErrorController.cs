@@ -12,8 +12,8 @@ namespace MyFinance.Presentation.Controllers
         public IActionResult BuildErrorResponse()
         {
             var exception = HttpContext.Features.Get<IExceptionHandlerFeature>();
-            var message = exception is not null ? exception.Error.Message : "Unexpected server behavior";
-            var apiErrorResponse = new ErrorResponse("MyFinance API went rogue! Sorry.", message);
+            var message = exception is null ? "Unexpected server behavior" : exception.Error.Message;
+            var apiErrorResponse = new InternalServerErrorResponse("MyFinance API went rogue! Sorry.", message);
 
             return StatusCode(StatusCodes.Status500InternalServerError, apiErrorResponse);
         }

@@ -7,7 +7,7 @@ using Swashbuckle.AspNetCore.Annotations;
 namespace MyFinance.Presentation.Controllers
 {
     [Produces("application/json")]
-    [SwaggerResponse(StatusCodes.Status500InternalServerError, "Backend went rogue", typeof(ErrorResponse))]
+    [SwaggerResponse(StatusCodes.Status500InternalServerError, "Backend went rogue", typeof(InternalServerErrorResponse))]
     public abstract class BaseApiController : ControllerBase
     {
         protected IActionResult ProcessResult<TResponse>(Result<TResponse> result)
@@ -34,12 +34,12 @@ namespace MyFinance.Presentation.Controllers
         }
 
         private IActionResult BuildBadRequestResponse(Dictionary<string, string[]> validationErrors)
-            => BadRequest(new InvalidRequestResponse("One or more validation errors occurred.", validationErrors));
+            => BadRequest(new BadRequestResponse("One or more validation errors occurred.", validationErrors));
 
         private IActionResult BuildInternalServerErrorResponse(List<IError> errors)
         {
             var errorMessages = errors.Select(error => error.Message).ToList();
-            var apiErrorResponse = new ErrorResponse("MyFinance API went rogue! Sorry.", errorMessages);
+            var apiErrorResponse = new InternalServerErrorResponse("MyFinance API went rogue! Sorry.", errorMessages);
             return StatusCode(StatusCodes.Status500InternalServerError, apiErrorResponse);
         }
     }

@@ -8,12 +8,6 @@ namespace MyFinance.Infra.Data.Mappers
     internal static class MonthlyBalanceMapper
     {
         internal static void Map()
-            => BsonClassMap.RegisterClassMap<MonthlyBalance>(map =>
-            {
-                map.AutoMap();
-                map.MapProperty(monthlyBalance => monthlyBalance.CurrentBalance);
-                map.MapMember(entity => entity.BusinessUnitId)
-                    .SetSerializer(new GuidSerializer(BsonType.String));
-            });
+            => BsonClassMap.RegisterClassMap<MonthlyBalance>(map => map.AutoMap());
     }
 }

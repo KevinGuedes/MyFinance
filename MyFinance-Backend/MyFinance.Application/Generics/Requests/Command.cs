@@ -1,5 +1,4 @@
 ﻿using FluentResults;
-using MyFinance.Application.Interfaces;
 
 namespace MyFinance.Application.Generics.Requests
 {

@@ -3,6 +3,7 @@ using Microsoft.Extensions.Logging;
 using MyFinance.Application.Generics.Requests;
 using MyFinance.Domain.Entities;
 using MyFinance.Domain.Interfaces;
+using MyFinance.Domain.ValueObjects;
 
 namespace MyFinance.Application.Transfers.Commands.RegisterTransfers
 {
@@ -34,21 +35,20 @@ namespace MyFinance.Application.Transfers.Commands.RegisterTransfers
         private async Task RegisterNewTransfers(RegisterTransfersCommand command, CancellationToken cancellationToken)
         {
             var businessUnitRevenue = 0d;
-            var transfersGroupedByReferenceDate = command.Transfers
-                .GroupBy(transferData => new
-                {
-                    transferData.SettlementDate.Month,
-                    transferData.SettlementDate.Year
-                });
+            var transfersGroupedByReferenceData = command.Transfers
+                .GroupBy(transferData => new ReferenceData(
+                    command.BusinessUnitId,
+                    transferData.SettlementDate.Year,
+                    transferData.SettlementDate.Month
+                ));
 
             await Parallel.ForEachAsync(
-                transfersGroupedByReferenceDate,
+                transfersGroupedByReferenceData,
                 cancellationToken,
                 async (transferGroup, cancellationToken) =>
                 {
-                    var month = transferGroup.Key.Month;
-                    var year = transferGroup.Key.Year;
-                    _logger.LogInformation("Registering transfers for {Month}/{Year} reference date", month, year);
+                    var reference = transferGroup.Key;
+                    _logger.LogInformation("Registering transfers for {ReferenceData}", reference);
 
                     var newTransfers = new List<Transfer>();
                     foreach (var transferData in transferGroup)
@@ -64,21 +64,19 @@ namespace MyFinance.Application.Transfers.Commands.RegisterTransfers
                         newTransfers.Add(transfer);
                     }
 
-                    await AddTransfersToMonthlyBalance(command.BusinessUnitId, month, year, newTransfers, cancellationToken);
+                    await AddTransfersToMonthlyBalance(reference, newTransfers, cancellationToken);
                 });
 
             await UpdateBusinessUnitBalance(command.BusinessUnitId, businessUnitRevenue, cancellationToken);
         }
 
         private async Task AddTransfersToMonthlyBalance(
-            Guid businessUnitId,
-            int month,
-            int year,
+            ReferenceData reference,
             List<Transfer> newTransfers,
             CancellationToken cancellationToken)
         {
             _logger.LogInformation("Verifying if there is an existing Monthly Balance related to the transfer(s)");
-            var monthlyBalance = await _monthlyBalanceRepository.GetByMonthAndYearAsync(month, year, cancellationToken);
+            var monthlyBalance = await _monthlyBalanceRepository.GetByReferenceData(reference, cancellationToken);
 
             if (monthlyBalance is not null)
             {
@@ -90,12 +88,12 @@ namespace MyFinance.Application.Transfers.Commands.RegisterTransfers
             else
             {
                 _logger.LogInformation("Creating new Monthly Balance");
-                monthlyBalance = new MonthlyBalance(businessUnitId, month, year);
+                monthlyBalance = new MonthlyBalance(reference);
 
                 _logger.LogInformation("Adding new Transfer(s) to Monthly Balance with Id {MonthlyBalanceId}", monthlyBalance.Id);
                 monthlyBalance.AddTransfers(newTransfers);
                 _monthlyBalanceRepository.Insert(monthlyBalance);
-                _logger.LogInformation("New Monthly Balance created with Id {MonthlyBalanceId}", monthlyBalance.Id);
+                _logger.LogInformation("New Monthly Balance with Id {MonthlyBalanceId} created", monthlyBalance.Id);
             }
         }
 

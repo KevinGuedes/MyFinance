@@ -24,7 +24,6 @@ namespace MyFinance.Domain.Entities
             Type = tranferType;
         }
 
-
         public void Update(
             string relatedTo,
             string description,

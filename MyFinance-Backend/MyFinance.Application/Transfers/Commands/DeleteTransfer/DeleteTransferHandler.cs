@@ -25,19 +25,17 @@ namespace MyFinance.Application.Transfers.Commands.DeleteTransfer
         {
             _logger.LogInformation("Deleting Transfer with Id {TransferId}", command.TransferId);
             var monthlyBalance = await _monthlyBalanceRepository.GetByIdAsync(command.MonthlyBalanceId, cancellationToken);
-            var businessUnit = await _businessUnitRepository.GetByIdAsync(monthlyBalance.BusinessUnitId, cancellationToken);
+            var businessUnit = await _businessUnitRepository.GetByIdAsync(monthlyBalance.ReferenceData.BusinessUnitId, cancellationToken);
+            var transfer = monthlyBalance.PopTransferById(command.TransferId);
 
-            var transferValue = monthlyBalance.GetTransferById(command.TransferId).Value;
-            monthlyBalance.DeleteTransferById(command.TransferId);
-
-            _logger.LogInformation("Updating Balance of Business Unit with Id {BusinessUnitId}", monthlyBalance.BusinessUnitId);
-            businessUnit.AddBalance(-transferValue);
-            _businessUnitRepository.Update(businessUnit);
-
-            _logger.LogInformation("Updating Monthly Balance with Id {MonthlyBalanceId}", command.MonthlyBalanceId);
+            _logger.LogInformation("Updating Monthly Balance with Id {MonthlyBalanceId}", monthlyBalance.Id);
             _monthlyBalanceRepository.Update(monthlyBalance);
 
-            _logger.LogInformation("Transfer with Id {TransferId} sucessfully deleted", command.TransferId);
+            _logger.LogInformation("Updating Balance of Business Unit with Id {BusinessUnitId}", businessUnit.Id);
+            businessUnit.AddBalance(-transfer.Value);
+            _businessUnitRepository.Update(businessUnit);
+
+            _logger.LogInformation("Transfer with Id {TransferId} sucessfully deleted", transfer.Id);
             return Result.Ok();
         }
     }

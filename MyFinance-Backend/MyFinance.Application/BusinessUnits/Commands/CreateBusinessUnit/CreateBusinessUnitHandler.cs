@@ -19,7 +19,7 @@ namespace MyFinance.Application.BusinessUnits.Commands.CreateBusinessUnit
         public override Task<Result<BusinessUnit>> Handle(CreateBusinessUnitCommand command, CancellationToken cancellationToken)
         {
             _logger.LogInformation("Creating new Business Unit with Name: {Name}", command.Name);
-            var businessUnit = new BusinessUnit(command.Name);
+            var businessUnit = new BusinessUnit(command.Name, command.Description);
             _businessUnitRepository.Insert(businessUnit);
             _logger.LogInformation("Business Unit successfully created");
 

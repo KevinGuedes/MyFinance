@@ -1,14 +1,14 @@
 ﻿namespace MyFinance.Application.Generics.ApiService
 {
-    public sealed class ErrorResponse
+    public sealed class InternalServerErrorResponse
     {
         public string Title { get; private set; }
         public List<string> Errors { get; private set; }
 
-        public ErrorResponse(string title, List<string> errors)
+        public InternalServerErrorResponse(string title, List<string> errors)
             => (Title, Errors) = (title, errors);
 
-        public ErrorResponse(string title, string error)
+        public InternalServerErrorResponse(string title, string error)
             => (Title, Errors) = (title, new List<string> { error });
     }
 }

@@ -18,7 +18,7 @@ namespace MyFinance.Application.Pipelines
             IEnumerable<IValidator<TRequest>> validators)
             => (_logger, _validators) = (logger, validators);
 
-        public async Task<TResponse> Handle(TRequest request, CancellationToken cancellationToken, RequestHandlerDelegate<TResponse> next)
+        public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
         {
             var requestName = request.GetType().Name;
 
@@ -46,7 +46,7 @@ namespace MyFinance.Application.Pipelines
 
             if (errors.Any())
             {
-                _logger.LogError("[{RequestName}] Invalid request data", requestName);
+                _logger.LogWarning("[{RequestName}] Invalid request data", requestName);
                 var response = new TResponse();
                 var error = Result.Fail(new InvalidRequest(requestName, errors));
                 response.Reasons.AddRange(error.Reasons);

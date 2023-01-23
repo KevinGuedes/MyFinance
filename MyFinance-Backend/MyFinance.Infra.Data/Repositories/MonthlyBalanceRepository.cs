@@ -2,6 +2,7 @@
 using MongoDB.Driver.Linq;
 using MyFinance.Domain.Entities;
 using MyFinance.Domain.Interfaces;
+using MyFinance.Domain.ValueObjects;
 using MyFinance.Infra.Data.Context;
 
 namespace MyFinance.Infra.Data.Repositories
@@ -12,27 +13,21 @@ namespace MyFinance.Infra.Data.Repositories
         {
         }
 
-        public Task<bool> ExistsByMonthAndYearAsync(
-            int month,
-            int year,
+        public Task<MonthlyBalance> GetByReferenceData(
+            ReferenceData referenceData,
             CancellationToken cancellationToken)
             => _collection.AsQueryable()
-                .AnyAsync(montlyBalance => montlyBalance.Month == month && montlyBalance.Year == year, cancellationToken);
-
-        public Task<MonthlyBalance> GetByMonthAndYearAsync(
-            int month,
-            int year,
-            CancellationToken cancellationToken)
-            => _collection.AsQueryable()
-                .Where(montlyBalance => montlyBalance.Month == month && montlyBalance.Year == year)
+                .Where(montlyBalance => montlyBalance.ReferenceData == referenceData)
                 .FirstOrDefaultAsync(cancellationToken);
 
-        public async Task<IEnumerable<MonthlyBalance>> GetAllAsync(
+        public async Task<IEnumerable<MonthlyBalance>> GetByBusinessUnitId(
+            Guid businessUnitId,
             int count,
             int skip,
             CancellationToken cancellationToken)
             => await _collection.AsQueryable()
-                .OrderByDescending(monthlyBalance => monthlyBalance.CreationDate)
+                .Where(monthlyBalance => monthlyBalance.ReferenceData.BusinessUnitId == businessUnitId)
+                .OrderByDescending(monthlyBalance => monthlyBalance.ReferenceData)
                 .Skip(skip)
                 .Take(count)
                 .ToListAsync(cancellationToken);
