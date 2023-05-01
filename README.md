@@ -1,10 +1,9 @@
 # MyFinance
 ## Technologies
 ### Frontend
-1. Angular 13+
-2. NgRx for state management
-3. PrimeNg as main UI Kit
-4. SCSS for styling (BEM pattern will be applied)
+1. Vue.Js 3
+2. Pinia for state management
+3. Elements Plus as main UI Kit
 
 ### Backend
 1. .NET 6
