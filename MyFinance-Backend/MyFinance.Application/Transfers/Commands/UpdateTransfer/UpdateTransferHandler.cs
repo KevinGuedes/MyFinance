@@ -64,7 +64,7 @@ namespace MyFinance.Application.Transfers.Commands.UpdateTransfer
             CancellationToken cancellationToken)
         {
             _logger.LogInformation("Updating Transfer with Id {TransferId}", transfer.Id);
-            transfer.Update(command.RelatedTo, command.Description, command.Value, command.SettlementDate, command.TransferType);
+            //transfer.Update(command.RelatedTo, command.Description, command.Value, command.SettlementDate, command.TransferType);
 
             _logger.LogInformation("Checking if Transfer with Id {TransferId} needs to go to another Monthly Balance", transfer.Id);
             var currentReferenceData = currentMonthlyBalance.ReferenceData;
@@ -96,7 +96,7 @@ namespace MyFinance.Application.Transfers.Commands.UpdateTransfer
             if (shouldCreateNewMonthlyBalance)
             {
                 _logger.LogInformation("Creating new Monthly Balance");
-                monthlyBalance = new MonthlyBalance(newReferenceData);
+                //monthlyBalance = new MonthlyBalance(newReferenceData);
 
                 _logger.LogInformation("Adding Transfer to new Monthly Balance with Id {MonthlyBalanceId}", monthlyBalance.Id);
                 monthlyBalance.AddTransfer(transfer);

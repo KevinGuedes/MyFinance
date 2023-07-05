@@ -18,13 +18,13 @@ namespace MyFinance.Application.BusinessUnits.Commands.UpdateBusinessUnit
 
         public async override Task<Result<BusinessUnit>> Handle(UpdateBusinessUnitCommand command, CancellationToken cancellationToken)
         {
-            _logger.LogInformation("Retrieving Business Unit with Id {} from databse", command.BusinessUnitId);
+            _logger.LogInformation("Retrieving Business Unit with Id {BusinessUnitId} from database", command.BusinessUnitId);
             var businessUnit = await _businessUnitRepository.GetByIdAsync(command.BusinessUnitId, cancellationToken);
 
-            _logger.LogInformation("Updating Business Unit with id {BusinessUnitId}", command.BusinessUnitId);
-            businessUnit.Update(command.Name, command.IsArchived);
+            _logger.LogInformation("Updating Business Unit with Id {BusinessUnitId}", command.BusinessUnitId);
+            businessUnit.Update(command.Name, command.Description);
             _businessUnitRepository.Update(businessUnit);
-            _logger.LogInformation("Business Unit with id {BusinessUnitId} updated", command.BusinessUnitId);
+            _logger.LogInformation("Business Unit with Id {BusinessUnitId} successfully updated", command.BusinessUnitId);
 
             return Result.Ok(businessUnit);
         }

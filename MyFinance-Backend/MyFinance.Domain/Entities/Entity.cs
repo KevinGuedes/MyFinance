@@ -9,7 +9,7 @@
         private protected Entity()
            => (Id, CreationDate) = (Guid.NewGuid(), DateTime.UtcNow);
 
-        private protected void SetUpdateDate()
+        private protected void SetUpdateDateToNow()
             => UpdateDate = DateTime.UtcNow;
     }
 }

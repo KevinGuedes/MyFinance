@@ -9,34 +9,43 @@ namespace MyFinance.Domain.Entities
         public string Description { get; private set; }
         public DateTime SettlementDate { get; private set; }
         public TransferType Type { get; private set; }
+        public MonthlyBalance MonthlyBalance { get; private set; }
+        public Guid MonthlyBalanceId { get; private set; }
+
+        protected Transfer() { }
 
         public Transfer(
-           string relatedTo,
-           string description,
-           double value,
-           DateTime settlementDate,
-           TransferType tranferType)
+            double value,
+            string relatedTo,
+            string description,
+            DateTime settlementDate,
+            TransferType transferType,
+            MonthlyBalance monthlyBalance)
         {
             Value = value;
             RelatedTo = relatedTo;
             Description = description;
             SettlementDate = settlementDate;
-            Type = tranferType;
+            Type = transferType;
+            MonthlyBalance = monthlyBalance;
+            MonthlyBalanceId = monthlyBalance.Id;
         }
 
         public void Update(
+            double value,
             string relatedTo,
             string description,
-            double value,
             DateTime settlementDate,
-            TransferType tranferType)
+            TransferType transferType,
+            MonthlyBalance monthlyBalance)
         {
-            SetUpdateDate();
+            SetUpdateDateToNow();
             Value = value;
             RelatedTo = relatedTo;
             Description = description;
             SettlementDate = settlementDate;
-            Type = tranferType;
+            Type = transferType;
+            MonthlyBalance = monthlyBalance;
         }
     }
 }

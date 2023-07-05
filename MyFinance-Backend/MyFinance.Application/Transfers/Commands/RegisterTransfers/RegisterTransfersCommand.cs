@@ -25,13 +25,13 @@ namespace MyFinance.Application.Transfers.Commands.RegisterTransfers
             string relatedTo,
             string description,
             DateTime settlementDate,
-            TransferType type)
+            TransferType transferType)
         {
             Value = value;
             RelatedTo = relatedTo;
             Description = description;
             SettlementDate = settlementDate;
-            Type = type;
+            Type = transferType;
         }
     }
 }

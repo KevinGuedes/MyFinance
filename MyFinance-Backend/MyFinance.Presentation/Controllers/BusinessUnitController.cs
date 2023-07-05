@@ -19,7 +19,7 @@ namespace MyFinance.Presentation.Controllers
             => _businessUnitApiService = businessUnitApiService;
 
         [HttpGet]
-        [SwaggerOperation(Summary = "Lists all existing Business Units")]
+        [SwaggerOperation(Summary = "Lists all Business Units")]
         [SwaggerResponse(StatusCodes.Status200OK, "List of all existing Business Units", typeof(IEnumerable<BusinessUnitViewModel>))]
         public async Task<IActionResult> GetBusinessUnitsAsync(CancellationToken cancellationToken)
             => ProcessResult(await _businessUnitApiService.GetBusinessUnitsAsync(cancellationToken));

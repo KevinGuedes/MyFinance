@@ -26,7 +26,7 @@ namespace MyFinance.Application.Pipelines
             if (response.IsSuccess)
             {
                 _logger.LogInformation("[{RequestName}] Committing database changes", requestName);
-                await _unitOfWork.CommitAsync(cancellationToken);
+                await _unitOfWork.SaveChangesAsync(cancellationToken);
                 _logger.LogInformation("[{RequestName}] Database changes successfully commited", requestName);
             }
             else

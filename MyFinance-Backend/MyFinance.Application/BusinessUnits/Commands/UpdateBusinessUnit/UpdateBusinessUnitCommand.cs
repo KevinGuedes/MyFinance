@@ -7,9 +7,9 @@ namespace MyFinance.Application.BusinessUnits.Commands.UpdateBusinessUnit
     {
         public Guid BusinessUnitId { get; set; }
         public string Name { get; set; }
-        public bool IsArchived { get; set; }
+        public string? Description { get; set; }
 
-        public UpdateBusinessUnitCommand(Guid businessUnitId, string name, bool isArchived)
-            => (BusinessUnitId, Name, IsArchived) = (businessUnitId, name, isArchived);
+        public UpdateBusinessUnitCommand(Guid businessUnitId, string name, string? description)
+            => (BusinessUnitId, Name, Description) = (businessUnitId, name, description);
     }
 }

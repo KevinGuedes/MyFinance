@@ -53,24 +53,25 @@ namespace MyFinance.Application.Transfers.Commands.RegisterTransfers
                     var newTransfers = new List<Transfer>();
                     foreach (var transferData in transferGroup)
                     {
-                        var transfer = new Transfer(
-                            transferData.RelatedTo,
-                            transferData.Description,
-                            transferData.Value,
-                            transferData.SettlementDate,
-                            transferData.Type);
+                        //var transfer = new Transfer(
+                        //    transferData.RelatedTo,
+                        //    transferData.Description,
+                        //    transferData.Value,
+                        //    transferData.SettlementDate,
+                        //    transferData.Type);
 
-                        businessUnitRevenue += transfer.Value;
-                        newTransfers.Add(transfer);
+                        //businessUnitRevenue += transfer.Value;
+                        //newTransfers.Add(transfer);
                     }
 
-                    await AddTransfersToMonthlyBalance(reference, newTransfers, cancellationToken);
+                    //await AddTransfersToMonthlyBalance(reference, newTransfers, cancellationToken);
                 });
 
             await UpdateBusinessUnitBalance(command.BusinessUnitId, businessUnitRevenue, cancellationToken);
         }
 
         private async Task AddTransfersToMonthlyBalance(
+            BusinessUnit businessUnit,
             ReferenceData reference,
             List<Transfer> newTransfers,
             CancellationToken cancellationToken)
@@ -88,7 +89,7 @@ namespace MyFinance.Application.Transfers.Commands.RegisterTransfers
             else
             {
                 _logger.LogInformation("Creating new Monthly Balance");
-                monthlyBalance = new MonthlyBalance(reference);
+                //monthlyBalance = new MonthlyBalance(reference);
 
                 _logger.LogInformation("Adding new Transfer(s) to Monthly Balance with Id {MonthlyBalanceId}", monthlyBalance.Id);
                 monthlyBalance.AddTransfers(newTransfers);

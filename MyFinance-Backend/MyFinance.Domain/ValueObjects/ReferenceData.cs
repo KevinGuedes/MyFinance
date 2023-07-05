@@ -9,6 +9,8 @@ namespace MyFinance.Domain.ValueObjects
         public int Year { get => Date.Year; }
         public int Month { get => Date.Month; }
 
+        protected ReferenceData () { }
+
         public ReferenceData(Guid businessUnitId, int year, int month)
         {
             BusinessUnitId = businessUnitId;

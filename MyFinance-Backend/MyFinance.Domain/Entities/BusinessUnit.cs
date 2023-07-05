@@ -1,27 +1,44 @@
-﻿using MyFinance.Domain.Interfaces;
-
-namespace MyFinance.Domain.Entities
+﻿namespace MyFinance.Domain.Entities
 {
-    public class BusinessUnit : Entity, IAggregateRoot
+    public class BusinessUnit : Entity
     {
         public string Name { get; private set; }
-        public bool IsArchived { get; private set; }
         public double CurrentBalance { get; private set; }
-        public string? Description { get; set; }
+        public string? Description { get; private set; }
+        public bool IsArchived { get; private set; }
+        public string? ReasonToArchive { get; private set; }
+        public DateTime ArchiveDate { get; private set; }
+        public List<MonthlyBalance> MonthlyBalances { get; private set; }
+
+        public BusinessUnit() { }
 
         public BusinessUnit(string name, string? description)
-            => (Name, IsArchived, CurrentBalance, Description) = (name, false, 0, description);
-
-        public void Update(string name, bool isArchived)
         {
-            SetUpdateDate();
             Name = name;
-            IsArchived = isArchived;
+            IsArchived = false;
+            CurrentBalance = 0;
+            Description = description;
+            MonthlyBalances = new List<MonthlyBalance>();
+        }
+
+        public void Update(string name, string? description)
+        {
+            SetUpdateDateToNow();
+            Name = name;
+            Description = description;
+        }
+
+        public void Archive(string reasonToArchive)
+        {
+            SetUpdateDateToNow();
+            ArchiveDate = DateTime.UtcNow;
+            IsArchived = true;
+            ReasonToArchive = reasonToArchive;
         }
 
         public void AddBalance(double value)
         {
-            SetUpdateDate();
+            SetUpdateDateToNow();
             CurrentBalance += value;
         }
     }

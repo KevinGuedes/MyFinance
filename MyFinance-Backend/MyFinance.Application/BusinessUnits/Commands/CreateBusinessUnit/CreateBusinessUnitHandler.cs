@@ -21,7 +21,7 @@ namespace MyFinance.Application.BusinessUnits.Commands.CreateBusinessUnit
             _logger.LogInformation("Creating new Business Unit with Name: {Name}", command.Name);
             var businessUnit = new BusinessUnit(command.Name, command.Description);
             _businessUnitRepository.Insert(businessUnit);
-            _logger.LogInformation("Business Unit successfully created");
+            _logger.LogInformation("{Name} Business Unit successfully created", command.Name);
 
             return Task.FromResult(Result.Ok(businessUnit));
         }

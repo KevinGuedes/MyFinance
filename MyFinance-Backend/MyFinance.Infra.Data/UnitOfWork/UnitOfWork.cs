@@ -4,15 +4,12 @@ namespace MyFinance.Infra.Data.UnitOfWork
 {
     public class UnitOfWork : IUnitOfWork
     {
-        private readonly IMongoContext _mongoContext;
+        private readonly MyFinanceDbContext _myFinanceDbContext;
 
-        public UnitOfWork(IMongoContext mongoContext)
-            => _mongoContext = mongoContext;
+        public UnitOfWork(MyFinanceDbContext myFinanceDbContext)
+            => _myFinanceDbContext = myFinanceDbContext;
 
-        public async Task<bool> CommitAsync(CancellationToken cancellationToken)
-        {
-            var changesCount = await _mongoContext.SaveChangesAsync(cancellationToken);
-            return changesCount > 0;
-        }
+        public Task SaveChangesAsync(CancellationToken cancellationToken)
+            => _myFinanceDbContext.SaveChangesAsync(cancellationToken);
     }
 }
