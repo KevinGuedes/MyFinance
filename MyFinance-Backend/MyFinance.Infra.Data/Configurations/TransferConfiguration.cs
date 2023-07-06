@@ -12,7 +12,7 @@ namespace MyFinance.Infra.Data.Configurations
             builder.Property(transfer => transfer.SettlementDate).IsRequired();
             builder.Property(transfer => transfer.Description).IsRequired();
             builder.Property(transfer => transfer.RelatedTo).IsRequired();
-            builder.Property(transfer => transfer.Type).IsRequired();
+            builder.Property(transfer => transfer.Type).HasConversion<string>().IsRequired();
             builder.Property(transfer => transfer.Value).IsRequired();
         }
     }

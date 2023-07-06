@@ -40,7 +40,7 @@ namespace MyFinance.Infra.IoC
             services.AddDbContext<MyFinanceDbContext>(
                 options => options.UseSqlServer(configuration.GetConnectionString("MyFinanceDb"),
                 sqlServerOptions => sqlServerOptions
-                    .EnableRetryOnFailure(10, TimeSpan.FromSeconds(5), null)
+                    //.EnableRetryOnFailure(10, TimeSpan.FromSeconds(5), null)
                     .MigrationsAssembly(typeof(MyFinanceDbContext).Assembly.FullName)));
 
             services
@@ -64,9 +64,9 @@ namespace MyFinance.Infra.IoC
                 {
                     cfg.RegisterServicesFromAssembly(applicationLayerAssembly);
                 })
+                .AddScoped(typeof(IPipelineBehavior<,>), typeof(LoggingPipeline<,>))
                 .AddScoped(typeof(IPipelineBehavior<,>), typeof(ExceptionHandlerPipeline<,>))
                 .AddScoped(typeof(IPipelineBehavior<,>), typeof(RequestValidationPipeline<,>))
-                .AddScoped(typeof(IPipelineBehavior<,>), typeof(LoggingPipeline<,>))
                 .AddScoped(typeof(IPipelineBehavior<,>), typeof(UnitOfWorkPipeline<,>));
     }
 }

@@ -12,7 +12,7 @@ using MyFinance.Infra.Data.Context;
 namespace MyFinance.Infra.Data.Migrations
 {
     [DbContext(typeof(MyFinanceDbContext))]
-    [Migration("20230704190554_FirstMigration")]
+    [Migration("20230706003733_FirstMigration")]
     partial class FirstMigration
     {
         /// <inheritdoc />
@@ -30,7 +30,7 @@ namespace MyFinance.Infra.Data.Migrations
                     b.Property<Guid>("Id")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTime>("ArchiveDate")
+                    b.Property<DateTime?>("ArchiveDate")
                         .HasColumnType("datetime2");
 
                     b.Property<DateTime>("CreationDate")
@@ -110,8 +110,9 @@ namespace MyFinance.Infra.Data.Migrations
                     b.Property<DateTime>("SettlementDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("Type")
-                        .HasColumnType("int");
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("UpdateDate")
                         .HasColumnType("datetime2");

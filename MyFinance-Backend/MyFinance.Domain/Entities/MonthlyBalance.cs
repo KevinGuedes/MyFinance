@@ -5,11 +5,11 @@ namespace MyFinance.Domain.Entities
 {
     public class MonthlyBalance : Entity
     {
-        public List<Transfer> Transfers { get; private set; }
         public double CurrentBalance { get; private set; }
         public ReferenceData ReferenceData { get; private set; }
-        public BusinessUnit BusinessUnit { get; private set; }
         public Guid BusinessUnitId { get; private set; }
+        public virtual BusinessUnit BusinessUnit { get; private set; }
+        public virtual List<Transfer> Transfers { get; private set; }
         
         protected MonthlyBalance() { }
 

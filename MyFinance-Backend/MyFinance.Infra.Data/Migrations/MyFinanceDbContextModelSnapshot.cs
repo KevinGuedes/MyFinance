@@ -27,7 +27,7 @@ namespace MyFinance.Infra.Data.Migrations
                     b.Property<Guid>("Id")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTime>("ArchiveDate")
+                    b.Property<DateTime?>("ArchiveDate")
                         .HasColumnType("datetime2");
 
                     b.Property<DateTime>("CreationDate")
@@ -107,8 +107,9 @@ namespace MyFinance.Infra.Data.Migrations
                     b.Property<DateTime>("SettlementDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("Type")
-                        .HasColumnType("int");
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("UpdateDate")
                         .HasColumnType("datetime2");

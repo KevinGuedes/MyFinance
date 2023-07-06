@@ -9,8 +9,8 @@ namespace MyFinance.Domain.Entities
         public string Description { get; private set; }
         public DateTime SettlementDate { get; private set; }
         public TransferType Type { get; private set; }
-        public MonthlyBalance MonthlyBalance { get; private set; }
         public Guid MonthlyBalanceId { get; private set; }
+        public virtual MonthlyBalance MonthlyBalance { get; private set; }
 
         protected Transfer() { }
 

@@ -16,13 +16,16 @@ namespace MyFinance.Application.Pipelines
 
         public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
         {
+            var requestName = request.GetType();
+
             try
             {
-                return await next();
+                var result = await next();
+                _logger.LogInformation("[{RequestName}] Request successfully handled", requestName);
+                return result;
             }
             catch (Exception exception)
             {
-                var requestName = request.GetType();
                 _logger.LogError(exception, "[{RequestName}] Failed to handle request", requestName);
 
                 var error = Result.Fail(new FailedToProcessRequest(requestName.ToString()).CausedBy(exception));

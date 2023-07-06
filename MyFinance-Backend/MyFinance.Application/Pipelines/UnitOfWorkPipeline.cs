@@ -20,19 +20,35 @@ namespace MyFinance.Application.Pipelines
         {
             var requestName = request.GetType();
 
-            _logger.LogInformation("[{RequestName}] Listening to database changes", requestName);
-            var response = await next();
 
-            if (response.IsSuccess)
+            try
             {
-                _logger.LogInformation("[{RequestName}] Committing database changes", requestName);
-                await _unitOfWork.SaveChangesAsync(cancellationToken);
-                _logger.LogInformation("[{RequestName}] Database changes successfully commited", requestName);
-            }
-            else
-                _logger.LogWarning("[{RequestName}] Changes not commited due to failure response", requestName);
+                await _unitOfWork.BeginTrasactionAsync(cancellationToken);
+                _logger.LogInformation("[{RequestName}] Listening to database changes", requestName);
+                var response = await next();
 
-            return response;
+                if (response.IsSuccess)
+                {
+
+                    _logger.LogInformation("[{RequestName}] Committing database changes", requestName);
+                    await _unitOfWork.SaveChangesAsync(cancellationToken);
+                    _unitOfWork.CommitTransaction();
+                    _logger.LogInformation("[{RequestName}] Database changes successfully commited", requestName);
+                }
+                else
+                {
+                    _unitOfWork.RollbackTransaction();
+                    _logger.LogWarning("[{RequestName}] Changes not commited due to failure response", requestName);
+                }
+
+                return response;
+            }
+            catch
+            {
+                //await _unitOfWork.RollbackTransactionAsync(cancellationToken);
+                _unitOfWork.RollbackTransaction();
+                throw;
+            }
         }
     }
 }

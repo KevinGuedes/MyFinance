@@ -14,12 +14,8 @@ namespace MyFinance.Application.Pipelines
         public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
         {
             var requestName = request.GetType().Name;
-
             _logger.LogInformation("[{RequestName}] Handling request", requestName);
-            var response = await next();
-
-            _logger.LogInformation("[{RequestName}] Request successfully handled", requestName);
-            return response;
+            return await next();
         }
     }
 }

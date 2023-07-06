@@ -21,7 +21,7 @@ namespace MyFinance.Infra.Data.Migrations
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     IsArchived = table.Column<bool>(type: "bit", nullable: false),
                     ReasonToArchive = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    ArchiveDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    ArchiveDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     CreationDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UpdateDate = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
@@ -62,7 +62,7 @@ namespace MyFinance.Infra.Data.Migrations
                     RelatedTo = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     SettlementDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Type = table.Column<int>(type: "int", nullable: false),
+                    Type = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     MonthlyBalanceId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     CreationDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UpdateDate = table.Column<DateTime>(type: "datetime2", nullable: true)
