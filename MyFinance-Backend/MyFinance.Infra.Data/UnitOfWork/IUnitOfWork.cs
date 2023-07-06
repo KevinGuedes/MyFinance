@@ -6,7 +6,7 @@ namespace MyFinance.Infra.Data.UnitOfWork
     {
         Task SaveChangesAsync(CancellationToken cancellationToken);
         Task BeginTrasactionAsync(CancellationToken cancellationToken);
-        void CommitTransaction();
-        void RollbackTransaction();
+        Task CommitTransactionAsync(CancellationToken cancellationToken);
+        Task RollbackTransactionAsync(CancellationToken cancellationToken);
     }
 }

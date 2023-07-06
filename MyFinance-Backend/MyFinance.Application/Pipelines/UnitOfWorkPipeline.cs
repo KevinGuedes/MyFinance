@@ -20,7 +20,6 @@ namespace MyFinance.Application.Pipelines
         {
             var requestName = request.GetType();
 
-
             try
             {
                 await _unitOfWork.BeginTrasactionAsync(cancellationToken);
@@ -29,15 +28,15 @@ namespace MyFinance.Application.Pipelines
 
                 if (response.IsSuccess)
                 {
-
                     _logger.LogInformation("[{RequestName}] Committing database changes", requestName);
                     await _unitOfWork.SaveChangesAsync(cancellationToken);
-                    _unitOfWork.CommitTransaction();
+                    await _unitOfWork.CommitTransactionAsync(cancellationToken);
+
                     _logger.LogInformation("[{RequestName}] Database changes successfully commited", requestName);
                 }
                 else
                 {
-                    _unitOfWork.RollbackTransaction();
+                    await _unitOfWork.RollbackTransactionAsync(cancellationToken);
                     _logger.LogWarning("[{RequestName}] Changes not commited due to failure response", requestName);
                 }
 
@@ -45,8 +44,7 @@ namespace MyFinance.Application.Pipelines
             }
             catch
             {
-                //await _unitOfWork.RollbackTransactionAsync(cancellationToken);
-                _unitOfWork.RollbackTransaction();
+                await _unitOfWork.RollbackTransactionAsync(cancellationToken);
                 throw;
             }
         }
