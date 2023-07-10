@@ -20,8 +20,14 @@ namespace MyFinance.Application.Pipelines
 
             try
             {
+                _logger.LogInformation("[{RequestName}] Starting to handle request", requestName);
                 var result = await next();
-                _logger.LogInformation("[{RequestName}] Request successfully handled", requestName);
+
+                if (result.IsSuccess)
+                    _logger.LogInformation("[{RequestName}] Request handled with a success result", requestName);
+                else
+                    _logger.LogWarning("[{RequestName}] Request handled with a failure result", requestName);
+                
                 return result;
             }
             catch (Exception exception)

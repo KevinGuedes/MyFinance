@@ -31,7 +31,6 @@ namespace MyFinance.Application.Pipelines
                     _logger.LogInformation("[{RequestName}] Committing database changes", requestName);
                     await _unitOfWork.SaveChangesAsync(cancellationToken);
                     await _unitOfWork.CommitTransactionAsync(cancellationToken);
-
                     _logger.LogInformation("[{RequestName}] Database changes successfully commited", requestName);
                 }
                 else
@@ -45,6 +44,7 @@ namespace MyFinance.Application.Pipelines
             catch
             {
                 await _unitOfWork.RollbackTransactionAsync(cancellationToken);
+                _logger.LogWarning("[{RequestName}] Changes not commited due to exception throwed", requestName);
                 throw;
             }
         }
