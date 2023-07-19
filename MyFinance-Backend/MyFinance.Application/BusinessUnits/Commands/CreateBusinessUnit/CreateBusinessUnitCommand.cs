@@ -1,4 +1,4 @@
-﻿using MyFinance.Application.Generics.Requests;
+﻿using MyFinance.Application.Common.RequestHandling;
 using MyFinance.Domain.Entities;
 
 namespace MyFinance.Application.BusinessUnits.Commands.CreateBusinessUnit

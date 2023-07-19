@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using MyFinance.Application.Generics.ApiService;
+using MyFinance.Application.Common.ApiService;
 using MyFinance.Application.MonthlyBalances.ApiService;
 using MyFinance.Application.MonthlyBalances.Queries.GetMonthlyBalances;
 using MyFinance.Application.MonthlyBalances.ViewModels;
@@ -10,7 +10,7 @@ namespace MyFinance.Presentation.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [SwaggerTag("Read Monthly Balances")]
-    public class MonthlyBalanceController : BaseApiController
+    public class MonthlyBalanceController : BaseController
     {
         private readonly IMonthlyBalanceApiService _monthlyBalanceApiService;
 
@@ -23,12 +23,12 @@ namespace MyFinance.Presentation.Controllers
         [SwaggerResponse(StatusCodes.Status400BadRequest, "Invalid query parameters", typeof(BadRequestResponse))]
         public async Task<IActionResult> GetBusinessUnitsAsync(
             [FromQuery, SwaggerParameter("Business Unit Id", Required = true)] Guid businessUnitId,
-            [FromQuery, SwaggerParameter("Requested results count", Required = true)] int count,
+            [FromQuery, SwaggerParameter("Amount of Monthly Balancers to take", Required = true)] int take,
             [FromQuery, SwaggerParameter("Skip amount", Required = true)] int skip,
             CancellationToken cancellationToken)
             => ProcessResult(await _monthlyBalanceApiService.GetMonthlyBalancesAsync(
                 businessUnitId,
-                count,
+                take,
                 skip,
                 cancellationToken));
     }

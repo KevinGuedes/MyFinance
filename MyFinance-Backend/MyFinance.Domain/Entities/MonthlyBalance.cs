@@ -1,51 +1,43 @@
-﻿using MyFinance.Domain.Interfaces;
-using MyFinance.Domain.ValueObjects;
+﻿using MyFinance.Domain.Enums;
 
-namespace MyFinance.Domain.Entities
+namespace MyFinance.Domain.Entities;
+
+public class MonthlyBalance : Entity
 {
-    public class MonthlyBalance : Entity
+    public double Income { get; private set; }
+    public double Outcome { get; private set; }
+    public DateTime ReferenceDate { get; private set; }
+    public int ReferenceMonth { get => ReferenceDate.Month; }
+    public int ReferenceYear { get => ReferenceDate.Year; }
+    public Guid BusinessUnitId { get; private set; }
+    public virtual BusinessUnit BusinessUnit { get; private set; }
+    public virtual List<Transfer> Transfers { get; private set; }
+    
+    protected MonthlyBalance() { }
+
+    public MonthlyBalance(DateTime referenceDate, BusinessUnit businessUnit)
     {
-        public double CurrentBalance { get; private set; }
-        public ReferenceData ReferenceData { get; private set; }
-        public Guid BusinessUnitId { get; private set; }
-        public virtual BusinessUnit BusinessUnit { get; private set; }
-        public virtual List<Transfer> Transfers { get; private set; }
-        
-        protected MonthlyBalance() { }
+        Transfers = new List<Transfer>();
+        Income = 0;
+        Outcome = 0;
+        ReferenceDate = referenceDate;
+        BusinessUnit = businessUnit;
+        BusinessUnitId = businessUnit.Id;
+    }
 
-        public MonthlyBalance(ReferenceData referenceData, BusinessUnit businessUnit)
-        {
-            Transfers = new List<Transfer>();
-            CurrentBalance = 0;
-            ReferenceData = referenceData;
-            BusinessUnit = businessUnit;
-            BusinessUnitId = businessUnit.Id;
-        }
+    public void UpdateBalanceWithNewTransfer(double transferValue, TransferType transferType)
+    {
+        if (transferType == TransferType.Profit) Income += transferValue;
+        else Outcome += transferValue;
 
-        public void AddTransfer(Transfer transfer)
-        {
-            SetUpdateDateToNow();
-            CurrentBalance += transfer.Value;
-            Transfers.Add(transfer);
-        }
+        SetUpdateDateToNow();
+    }
 
-        public void AddTransfers(IEnumerable<Transfer> transfers)
-        {
-            SetUpdateDateToNow();
-            CurrentBalance += transfers.Sum(transfer => transfer.Value);
-            Transfers.AddRange(transfers);
-        }
+    public void UpdateBalanceWithTransferDeletion(double transferValue, TransferType transferType)
+    {
+        if (transferType == TransferType.Profit) Income -= transferValue;
+        else Outcome -= transferValue;
 
-        public Transfer GetTransferById(Guid transferId)
-            => Transfers.Single(transfer => transfer.Id == transferId);
-
-        public Transfer PopTransferById(Guid transferId)
-        {
-            SetUpdateDateToNow();
-            var transferToPop = GetTransferById(transferId);
-            CurrentBalance -= transferToPop.Value;
-            Transfers.Remove(transferToPop);
-            return transferToPop;
-        }
+        SetUpdateDateToNow();
     }
 }

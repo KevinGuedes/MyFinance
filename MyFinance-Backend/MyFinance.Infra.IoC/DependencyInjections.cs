@@ -1,6 +1,5 @@
 ﻿using FluentValidation;
 using FluentValidation.AspNetCore;
-using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -20,7 +19,7 @@ namespace MyFinance.Infra.IoC
     {
         public static void AddDependencies(this IServiceCollection services, IConfiguration configuration)
         {
-            AddData(services, configuration);
+            AddPersistence(services, configuration);
             AddApiServices(services);
 
             var applicationLayerAssembly = Assembly.Load("MyFinance.Application");
@@ -35,38 +34,37 @@ namespace MyFinance.Infra.IoC
                 .AddScoped<IMonthlyBalanceApiService, MonthlyBalanceApiService>()
                 .AddScoped<ITransferApiService, TransferApiService>();
 
-        private static void AddData(IServiceCollection services, IConfiguration configuration)
+        private static void AddPersistence(IServiceCollection services, IConfiguration configuration)
         {
             services.AddDbContext<MyFinanceDbContext>(
                 options => options.UseSqlServer(configuration.GetConnectionString("MyFinanceDb"),
                 sqlServerOptions => sqlServerOptions
-                    //.EnableRetryOnFailure(10, TimeSpan.FromSeconds(5), null)
                     .MigrationsAssembly(typeof(MyFinanceDbContext).Assembly.FullName)));
 
             services
                 .AddScoped<IUnitOfWork, UnitOfWork>()
+                .AddScoped<IBusinessUnitRepository, BusinessUnitRepository>()
                 .AddScoped<IMonthlyBalanceRepository, MonthlyBalanceRepository>()
-                .AddScoped<IBusinessUnitRepository, BusinessUnitRepository>();
+                .AddScoped<ITransferRepository, TransferRepository>();
         }
 
         public static void AddAutoMapper(IServiceCollection services, Assembly applicationLayerAssembly)
-        {
-            services.AddFluentValidationClientsideAdapters();
-            services.AddValidatorsFromAssembly(applicationLayerAssembly);
-        }
+            => services
+                .AddFluentValidationClientsideAdapters()
+                .AddValidatorsFromAssembly(applicationLayerAssembly);
 
         private static void AddValidators(IServiceCollection services, Assembly applicationLayerAssembly)
-            => services.AddAutoMapper(applicationLayerAssembly);
+           => services.AddAutoMapper(applicationLayerAssembly);
 
         private static void AddMediatR(IServiceCollection services, Assembly applicationLayerAssembly)
            => services
                 .AddMediatR(cfg =>
                 {
                     cfg.RegisterServicesFromAssembly(applicationLayerAssembly);
-                })
-                .AddScoped(typeof(IPipelineBehavior<,>), typeof(LoggingPipeline<,>))
-                .AddScoped(typeof(IPipelineBehavior<,>), typeof(ExceptionHandlerPipeline<,>))
-                .AddScoped(typeof(IPipelineBehavior<,>), typeof(RequestValidationPipeline<,>))
-                .AddScoped(typeof(IPipelineBehavior<,>), typeof(UnitOfWorkPipeline<,>));
+                    cfg
+                        .AddOpenBehavior(typeof(ExceptionHandlerPipeline<,>))
+                        .AddOpenBehavior(typeof(RequestValidationPipeline<,>))
+                        .AddOpenBehavior(typeof(UnitOfWorkPipeline<,>));
+                });
     }
 }

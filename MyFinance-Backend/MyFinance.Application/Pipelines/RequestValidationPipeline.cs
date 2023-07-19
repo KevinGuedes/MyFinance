@@ -2,7 +2,7 @@
 using FluentValidation;
 using MediatR;
 using Microsoft.Extensions.Logging;
-using MyFinance.Application.Generics.Errors;
+using MyFinance.Application.Common.Errors;
 
 namespace MyFinance.Application.Pipelines
 {

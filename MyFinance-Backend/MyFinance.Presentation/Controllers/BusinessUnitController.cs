@@ -3,7 +3,7 @@ using MyFinance.Application.BusinessUnits.ApiService;
 using MyFinance.Application.BusinessUnits.Commands.CreateBusinessUnit;
 using MyFinance.Application.BusinessUnits.Commands.UpdateBusinessUnit;
 using MyFinance.Application.BusinessUnits.ViewModels;
-using MyFinance.Application.Generics.ApiService;
+using MyFinance.Application.Common.ApiService;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace MyFinance.Presentation.Controllers
@@ -11,7 +11,7 @@ namespace MyFinance.Presentation.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [SwaggerTag("Create, read and update Business Units")]
-    public class BusinessUnitController : BaseApiController
+    public class BusinessUnitController : BaseController
     {
         private readonly IBusinessUnitApiService _businessUnitApiService;
 

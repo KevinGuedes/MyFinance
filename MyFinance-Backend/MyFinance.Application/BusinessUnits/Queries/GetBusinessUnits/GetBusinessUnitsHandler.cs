@@ -1,6 +1,6 @@
 ﻿using FluentResults;
 using Microsoft.Extensions.Logging;
-using MyFinance.Application.Generics.Requests;
+using MyFinance.Application.Common.RequestHandling;
 using MyFinance.Domain.Entities;
 using MyFinance.Domain.Interfaces;
 

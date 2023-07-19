@@ -5,7 +5,7 @@ using MyFinance.Application.BusinessUnits.Commands.CreateBusinessUnit;
 using MyFinance.Application.BusinessUnits.Commands.UpdateBusinessUnit;
 using MyFinance.Application.BusinessUnits.Queries.GetBusinessUnits;
 using MyFinance.Application.BusinessUnits.ViewModels;
-using MyFinance.Application.Generics.ApiService;
+using MyFinance.Application.Common.ApiService;
 using MyFinance.Domain.Entities;
 
 namespace MyFinance.Application.BusinessUnits.ApiService
@@ -21,7 +21,7 @@ namespace MyFinance.Application.BusinessUnits.ApiService
             CancellationToken cancellationToken)
         {
             var result = await _mediator.Send(new GetBusinessUnitsQuery(), cancellationToken);
-            return ProcessResultAndMapIfSuccess<BusinessUnit, BusinessUnitViewModel>(result);
+            return MapResult<BusinessUnit, BusinessUnitViewModel>(result);
         }
 
         public async Task<Result<BusinessUnitViewModel>> CreateBusinessUnitAsync(
@@ -29,7 +29,7 @@ namespace MyFinance.Application.BusinessUnits.ApiService
             CancellationToken cancellationToken)
         {
             var result = await _mediator.Send(command, cancellationToken);
-            return ProcessResultAndMapIfSuccess<BusinessUnit, BusinessUnitViewModel>(result);
+            return MapResult<BusinessUnit, BusinessUnitViewModel>(result);
         }
 
         public async Task<Result<BusinessUnitViewModel>> UpdateBusinessUnitAsync(
@@ -37,7 +37,7 @@ namespace MyFinance.Application.BusinessUnits.ApiService
             CancellationToken cancellationToken)
         {
             var result = await _mediator.Send(command, cancellationToken);
-            return ProcessResultAndMapIfSuccess<BusinessUnit, BusinessUnitViewModel>(result);
+            return MapResult<BusinessUnit, BusinessUnitViewModel>(result);
         }
     }
 }

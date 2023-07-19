@@ -1,27 +1,29 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using MyFinance.Domain.Entities;
 using MyFinance.Domain.Interfaces;
-using MyFinance.Domain.ValueObjects;
 using MyFinance.Infra.Data.Context;
 
-namespace MyFinance.Infra.Data.Repositories
+namespace MyFinance.Infra.Data.Repositories;
+
+public class MonthlyBalanceRepository : EntityRepository<MonthlyBalance>, IMonthlyBalanceRepository
 {
-    public class MonthlyBalanceRepository : EntityRepository<MonthlyBalance>, IMonthlyBalanceRepository
-    {
-        public MonthlyBalanceRepository(MyFinanceDbContext myFinanceDbContext)
-            : base(myFinanceDbContext) { }
+    public MonthlyBalanceRepository(MyFinanceDbContext myFinanceDbContext)
+        : base(myFinanceDbContext) { }
 
-        public async Task<IEnumerable<MonthlyBalance>> GetByBusinessUnitId(Guid businessUnitId, int count, int skip, CancellationToken cancellationToken)
-            => await _myFinanceDbContext.MonthlyBalances
-                .Where(mb => mb.BusinessUnitId == businessUnitId)
-                .Skip(skip)
-                .Take(count)
-                .AsNoTracking()
-                .ToListAsync(cancellationToken);
+    public async Task<IEnumerable<MonthlyBalance>> GetByBusinessUnitId(Guid businessUnitId, int take, int skip, CancellationToken cancellationToken)
+        => await _myFinanceDbContext.MonthlyBalances
+            .Where(mb => mb.BusinessUnitId == businessUnitId)
+            .OrderByDescending(mb => mb.ReferenceDate)
+            .Skip(skip)
+            .Take(take)
+            .AsNoTracking()
+            .ToListAsync(cancellationToken);
 
-        public async Task<MonthlyBalance?> GetByReferenceData(ReferenceData referenceData, CancellationToken cancellationToken)
-           => await _myFinanceDbContext.MonthlyBalances
-                .AsNoTracking()
-                .FirstOrDefaultAsync(mb => mb.ReferenceData == referenceData, cancellationToken);
-    }
+    public Task<MonthlyBalance?> GetByReferenceDateAndBusinessUnitId(DateTime referenceDate, Guid businessUnitId, CancellationToken cancellationToken)
+        => _myFinanceDbContext.MonthlyBalances
+            .AsNoTracking()
+            .FirstOrDefaultAsync(
+                mb => mb.ReferenceYear == referenceDate.Year && mb.ReferenceMonth == referenceDate.Month && mb.BusinessUnitId == businessUnitId, 
+                cancellationToken);
+       
 }

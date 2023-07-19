@@ -1,9 +1,8 @@
 ﻿using MyFinance.Domain.Entities;
 
-namespace MyFinance.Domain.Interfaces
+namespace MyFinance.Domain.Interfaces;
+
+public interface IBusinessUnitRepository : IEntityRepository<BusinessUnit>
 {
-    public interface IBusinessUnitRepository : IEntityRepository<BusinessUnit>
-    {
-        Task<bool> ExistsByNameAsync(string name, CancellationToken cancellationToken);
-    }
+    Task<bool> ExistsByNameAsync(string name, CancellationToken cancellationToken);
 }

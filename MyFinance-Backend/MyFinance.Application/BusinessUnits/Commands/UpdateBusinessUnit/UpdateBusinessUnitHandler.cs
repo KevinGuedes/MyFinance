@@ -1,6 +1,6 @@
 ﻿using FluentResults;
 using Microsoft.Extensions.Logging;
-using MyFinance.Application.Generics.Requests;
+using MyFinance.Application.Common.RequestHandling;
 using MyFinance.Domain.Entities;
 using MyFinance.Domain.Interfaces;
 
@@ -22,7 +22,7 @@ namespace MyFinance.Application.BusinessUnits.Commands.UpdateBusinessUnit
             var businessUnit = await _businessUnitRepository.GetByIdAsync(command.BusinessUnitId, cancellationToken);
 
             _logger.LogInformation("Updating Business Unit with Id {BusinessUnitId}", command.BusinessUnitId);
-            businessUnit.Update(command.Name, command.Description);
+            businessUnit!.Update(command.Name, command.Description);
             _businessUnitRepository.Update(businessUnit);
             _logger.LogInformation("Business Unit with Id {BusinessUnitId} successfully updated", command.BusinessUnitId);
 

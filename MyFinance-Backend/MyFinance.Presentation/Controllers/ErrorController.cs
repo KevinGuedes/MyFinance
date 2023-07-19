@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
-using MyFinance.Application.Generics.ApiService;
+using MyFinance.Application.Common.ApiService;
 
 namespace MyFinance.Presentation.Controllers
 {

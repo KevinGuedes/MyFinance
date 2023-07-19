@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using FluentResults;
 using MediatR;
-using MyFinance.Application.Generics.ApiService;
+using MyFinance.Application.Common.ApiService;
 using MyFinance.Application.Transfers.Commands.DeleteTransfer;
 using MyFinance.Application.Transfers.Commands.RegisterTransfers;
 using MyFinance.Application.Transfers.Commands.UpdateTransfer;
@@ -27,7 +27,7 @@ namespace MyFinance.Application.Transfers.ApiService
             CancellationToken cancellationToken)
         {
             var result = await _mediator.Send(command, cancellationToken);
-            return ProcessResultAndMapIfSuccess<Transfer, TransferViewModel>(result);
+            return MapResult<Transfer, TransferViewModel>(result);
         }
 
         public Task<Result> DeleteTransferAsync(

@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using MyFinance.Application.Generics.ApiService;
+using MyFinance.Application.Common.ApiService;
 using MyFinance.Application.Transfers.ApiService;
 using MyFinance.Application.Transfers.Commands.DeleteTransfer;
 using MyFinance.Application.Transfers.Commands.RegisterTransfers;
@@ -11,8 +11,8 @@ namespace MyFinance.Presentation.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [SwaggerTag("Register, update and delete Transfers")]
-    public class TransferController : BaseApiController
+    [SwaggerTag("Create, update and delete Transfers")]
+    public class TransferController : BaseController
     {
         private readonly ITransferApiService _transferApiService;
 
