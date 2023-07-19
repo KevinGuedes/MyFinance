@@ -35,9 +35,9 @@ namespace MyFinance.Infra.Data.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    CurrentBalance = table.Column<double>(type: "float(17)", precision: 17, scale: 2, nullable: false),
-                    ReferenceData_BusinessUnitId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    ReferenceData_Date = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Income = table.Column<double>(type: "float(17)", precision: 17, scale: 2, nullable: false),
+                    Outcome = table.Column<double>(type: "float(17)", precision: 17, scale: 2, nullable: false),
+                    ReferenceDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     BusinessUnitId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     CreationDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UpdateDate = table.Column<DateTime>(type: "datetime2", nullable: true)

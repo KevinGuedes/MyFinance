@@ -10,7 +10,7 @@ public class Transfer : Entity
     public DateTime SettlementDate { get; private set; }
     public TransferType Type { get; private set; }
     public Guid MonthlyBalanceId { get; private set; }
-    public virtual MonthlyBalance MonthlyBalance { get; private set; }
+    public MonthlyBalance MonthlyBalance { get; private set; }
 
     protected Transfer() { }
 
@@ -46,5 +46,6 @@ public class Transfer : Entity
         SettlementDate = settlementDate;
         Type = transferType;
         MonthlyBalance = monthlyBalance;
+        MonthlyBalanceId = monthlyBalance.Id;
     }
 }

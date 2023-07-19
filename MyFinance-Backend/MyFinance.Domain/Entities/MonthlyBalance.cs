@@ -10,8 +10,8 @@ public class MonthlyBalance : Entity
     public int ReferenceMonth { get => ReferenceDate.Month; }
     public int ReferenceYear { get => ReferenceDate.Year; }
     public Guid BusinessUnitId { get; private set; }
-    public virtual BusinessUnit BusinessUnit { get; private set; }
-    public virtual List<Transfer> Transfers { get; private set; }
+    public BusinessUnit BusinessUnit { get; private set; }
+    public List<Transfer> Transfers { get; private set; }
     
     protected MonthlyBalance() { }
 

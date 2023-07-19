@@ -17,13 +17,14 @@ public class MonthlyBalanceRepository : EntityRepository<MonthlyBalance>, IMonth
             .Skip(skip)
             .Take(take)
             .AsNoTracking()
+            .Include(mb => mb.Transfers)
             .ToListAsync(cancellationToken);
 
     public Task<MonthlyBalance?> GetByReferenceDateAndBusinessUnitId(DateTime referenceDate, Guid businessUnitId, CancellationToken cancellationToken)
         => _myFinanceDbContext.MonthlyBalances
             .AsNoTracking()
             .FirstOrDefaultAsync(
-                mb => mb.ReferenceYear == referenceDate.Year && mb.ReferenceMonth == referenceDate.Month && mb.BusinessUnitId == businessUnitId, 
+                mb => mb.ReferenceDate.Year == referenceDate.Year && mb.ReferenceDate.Month == referenceDate.Month && mb.BusinessUnitId == businessUnitId, 
                 cancellationToken);
        
 }

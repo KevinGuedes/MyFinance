@@ -32,8 +32,7 @@ internal sealed class UpdateTransferHandler : CommandHandler<UpdateTransferComma
         var currentMonthlyBalance = transfer!.MonthlyBalance;
         var businessUnit = currentMonthlyBalance.BusinessUnit;
 
-
-        var shouldGoToAnotherMonthlyBalance = 
+        var shouldGoToAnotherMonthlyBalance =
             currentMonthlyBalance.ReferenceYear != command.SettlementDate.Year ||
             currentMonthlyBalance.ReferenceMonth != command.SettlementDate.Month;
 
@@ -49,97 +48,63 @@ internal sealed class UpdateTransferHandler : CommandHandler<UpdateTransferComma
                 command.SettlementDate,
                 command.TransferType,
                 currentMonthlyBalance);
-            //tem coisa aqui com o id do mb
 
             currentMonthlyBalance.UpdateBalanceWithNewTransfer(transfer.Value, transfer.Type);
             businessUnit.UpdateBalanceWithNewTransfer(transfer.Value, transfer.Type);
 
             _monthlyBalanceRepository.Update(currentMonthlyBalance);
             _transferRepository.Update(transfer);
+
+            return Result.Ok(transfer);
         }
+        else
+        {
+            var existingMonthlyBalance = await _monthlyBalanceRepository.GetByReferenceDateAndBusinessUnitId(command.SettlementDate, businessUnit.Id, cancellationToken);
+            if (existingMonthlyBalance is null)
+            {
+                var newMonthlyBalance = new MonthlyBalance(command.SettlementDate, businessUnit);
+                businessUnit.UpdateBalanceWithTransferDeletion(transfer.Value, transfer.Type);
+                currentMonthlyBalance.UpdateBalanceWithTransferDeletion(transfer.Value, transfer.Type);
 
-        //va
-        //await Task.WhenAll(
-        //    UpdateBusinessUnitBalance(currentMonthlyBalance.ReferenceData.BusinessUnitId, command.Value, transfer.Value, cancellationToken),
-        //    ProcessMonthlyBalanceAccordingToUpdateData(command, currentMonthlyBalance, transfer, cancellationToken)
-        //);
+                transfer.Update(
+                   command.Value,
+                   command.RelatedTo,
+                   command.Description,
+                   command.SettlementDate,
+                   command.TransferType,
+                   newMonthlyBalance);
 
-        _logger.LogInformation("Transfer with Id {TransferId} successfully updated", command.TransferId);
-        
-        return Result.Ok(transfer);
+                newMonthlyBalance.UpdateBalanceWithNewTransfer(transfer.Value, transfer.Type);
+                businessUnit.UpdateBalanceWithNewTransfer(transfer.Value, transfer.Type);
+
+                _monthlyBalanceRepository.Update(currentMonthlyBalance);
+                _monthlyBalanceRepository.Insert(newMonthlyBalance);
+                _transferRepository.Update(transfer);
+
+                return Result.Ok(transfer);
+            }
+            else
+            {
+                businessUnit.UpdateBalanceWithTransferDeletion(transfer.Value, transfer.Type);
+                currentMonthlyBalance.UpdateBalanceWithTransferDeletion(transfer.Value, transfer.Type);
+
+                transfer.Update(
+                   command.Value,
+                   command.RelatedTo,
+                   command.Description,
+                   command.SettlementDate,
+                   command.TransferType,
+                   existingMonthlyBalance);
+
+                existingMonthlyBalance.UpdateBalanceWithNewTransfer(transfer.Value, transfer.Type);
+                businessUnit.UpdateBalanceWithNewTransfer(transfer.Value, transfer.Type);
+
+                _monthlyBalanceRepository.Update(currentMonthlyBalance);
+                _monthlyBalanceRepository.Update(existingMonthlyBalance);
+                _transferRepository.Update(transfer);
+
+                return Result.Ok(transfer);
+            }
+        }
     }
-
-    //private async Task UpdateBusinessUnitBalance(
-    //    Guid businessUnitId,
-    //    double transferNewValue,
-    //    double transferCurrentValue,
-    //    CancellationToken cancellationToken)
-    //{
-    //    _logger.LogInformation("Checking if Business Unit with Id {BusinessUnitId} needs to update its balance", businessUnitId);
-
-    //    var shouldUpdateBusinessUnitBalance = transferCurrentValue != transferNewValue;
-    //    if (shouldUpdateBusinessUnitBalance)
-    //    {
-    //        _logger.LogInformation("Updating balance of Business Unit with Id {BusinessUnitId}", businessUnitId);
-    //        var businessUnit = await _businessUnitRepository.GetByIdAsync(businessUnitId, cancellationToken);
-    //        businessUnit.AddBalance(transferNewValue - transferCurrentValue);
-    //        _businessUnitRepository.Update(businessUnit);
-    //        _logger.LogInformation("Business Unit with Id {BusinessUnitId} updated", businessUnitId);
-    //    }
-    //}
-
-    //private async Task ProcessMonthlyBalanceAccordingToUpdateData(
-    //    UpdateTransferCommand command, 
-    //    MonthlyBalance currentMonthlyBalance, 
-    //    Transfer transfer, 
-    //    CancellationToken cancellationToken)
-    //{
-    //    _logger.LogInformation("Updating Transfer with Id {TransferId}", transfer.Id);
-    //    //transfer.Update(command.RelatedTo, command.Description, command.Value, command.SettlementDate, command.TransferType);
-
-    //    _logger.LogInformation("Checking if Transfer with Id {TransferId} needs to go to another Monthly Balance", transfer.Id);
-    //    var currentReferenceData = currentMonthlyBalance.ReferenceData;
-    //    var newReferenceData = new ReferenceData(currentMonthlyBalance.ReferenceData.BusinessUnitId, command.SettlementDate.Month, command.SettlementDate.Year);
-    //    var shouldGoToAnotherMonthlyBalance = currentReferenceData != newReferenceData;
-        
-    //    _logger.LogInformation("Sending Transfer with Id {TransferId} to its corresponding Monthly Balance", transfer.Id);
-    //    if (shouldGoToAnotherMonthlyBalance)
-    //        await AddTransferToAnotherMonthlyBalance(newReferenceData, transfer, cancellationToken);
-    //    else
-    //    {
-    //        _logger.LogInformation("Re-adding Transfer to existing Monthly Balance with Id {MonthlyBalanceId}", currentMonthlyBalance.Id);
-    //        currentMonthlyBalance.AddTransfer(transfer);
-    //    }
-
-    //    _logger.LogInformation("Updating existing Monthly Balance with Id {MonthlyBalanceId}", currentMonthlyBalance.Id);
-    //    _monthlyBalanceRepository.Update(currentMonthlyBalance);
-    //}
-
-    //private async Task AddTransferToAnotherMonthlyBalance(
-    //    ReferenceData newReferenceData,
-    //    Transfer transfer, 
-    //    CancellationToken cancellationToken)
-    //{
-    //    _logger.LogInformation("Verifying if there is an existing Monthly Balance for {ReferenceData}", newReferenceData);
-    //    var monthlyBalance = await _monthlyBalanceRepository.GetByReferenceData(newReferenceData, cancellationToken);
-    //    var shouldCreateNewMonthlyBalance = monthlyBalance is null;
-
-    //    if (shouldCreateNewMonthlyBalance)
-    //    {
-    //        _logger.LogInformation("Creating new Monthly Balance");
-    //        //monthlyBalance = new MonthlyBalance(newReferenceData);
-
-    //        _logger.LogInformation("Adding Transfer to new Monthly Balance with Id {MonthlyBalanceId}", monthlyBalance.Id);
-    //        monthlyBalance.AddTransfer(transfer);
-    //        _monthlyBalanceRepository.Insert(monthlyBalance);
-    //        _logger.LogInformation("New Monthly Balance created with Id {MonthlyBalanceId}", monthlyBalance.Id);
-    //    }
-    //    else
-    //    {
-    //        _logger.LogInformation("Adding Transfer to existing Monthly Balance with Id {MonthlyBalanceId}", monthlyBalance!.Id);
-    //        monthlyBalance.AddTransfer(transfer);
-    //        _monthlyBalanceRepository.Update(monthlyBalance);
-    //        _logger.LogInformation("Monthly Balance with Id {MonthlyBalanceId} updated", monthlyBalance.Id);
-    //    }
-    //}
 }

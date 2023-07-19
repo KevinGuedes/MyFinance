@@ -18,8 +18,8 @@ public abstract class EntityRepository<TEntity> : IEntityRepository<TEntity> whe
     public async Task<IEnumerable<TEntity>> GetAllAsync(CancellationToken cancellationToken)
        => await _myFinanceDbContext.Set<TEntity>().AsNoTracking().ToListAsync(cancellationToken);
 
-    public async Task<TEntity?> GetByIdAsync(Guid id, CancellationToken cancellationToken)
-        => await _myFinanceDbContext.Set<TEntity>().FindAsync(new object[] { id }, cancellationToken);
+    public virtual async Task<TEntity?> GetByIdAsync(Guid id, CancellationToken cancellationToken)
+        => await _myFinanceDbContext.Set<TEntity>().FindAsync(id, cancellationToken);
 
     public void Insert(TEntity entity)
         => _myFinanceDbContext.Set<TEntity>().Add(entity);

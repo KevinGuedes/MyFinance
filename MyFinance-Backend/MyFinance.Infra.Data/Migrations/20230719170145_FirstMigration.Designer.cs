@@ -12,7 +12,7 @@ using MyFinance.Infra.Data.Context;
 namespace MyFinance.Infra.Data.Migrations
 {
     [DbContext(typeof(MyFinanceDbContext))]
-    [Migration("20230706003733_FirstMigration")]
+    [Migration("20230719170145_FirstMigration")]
     partial class FirstMigration
     {
         /// <inheritdoc />
@@ -74,9 +74,16 @@ namespace MyFinance.Infra.Data.Migrations
                     b.Property<DateTime>("CreationDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<double>("CurrentBalance")
+                    b.Property<double>("Income")
                         .HasPrecision(17, 2)
                         .HasColumnType("float(17)");
+
+                    b.Property<double>("Outcome")
+                        .HasPrecision(17, 2)
+                        .HasColumnType("float(17)");
+
+                    b.Property<DateTime>("ReferenceDate")
+                        .HasColumnType("datetime2");
 
                     b.Property<DateTime?>("UpdateDate")
                         .HasColumnType("datetime2");
@@ -135,29 +142,7 @@ namespace MyFinance.Infra.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.OwnsOne("MyFinance.Domain.ValueObjects.ReferenceData", "ReferenceData", b1 =>
-                        {
-                            b1.Property<Guid>("MonthlyBalanceId")
-                                .HasColumnType("uniqueidentifier");
-
-                            b1.Property<Guid>("BusinessUnitId")
-                                .HasColumnType("uniqueidentifier");
-
-                            b1.Property<DateTime>("Date")
-                                .HasColumnType("datetime2");
-
-                            b1.HasKey("MonthlyBalanceId");
-
-                            b1.ToTable("MonthlyBalances");
-
-                            b1.WithOwner()
-                                .HasForeignKey("MonthlyBalanceId");
-                        });
-
                     b.Navigation("BusinessUnit");
-
-                    b.Navigation("ReferenceData")
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("MyFinance.Domain.Entities.Transfer", b =>

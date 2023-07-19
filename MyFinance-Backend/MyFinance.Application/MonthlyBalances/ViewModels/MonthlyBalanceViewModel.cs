@@ -12,8 +12,7 @@ public class MonthlyBalanceViewModel
     public int ReferenceMonth { get; set; }
     public int ReferenceYear { get; set; }
     public Guid BusinessUnitId { get; set; }
-    public virtual BusinessUnit BusinessUnit { get; set; }
-    public virtual List<TransferViewModel> Transfers { get; set; }
+    public List<TransferViewModel> Transfers { get; set; }
 
     public MonthlyBalanceViewModel(
         Guid id,
@@ -23,7 +22,6 @@ public class MonthlyBalanceViewModel
         int referenceMonth,
         int referenceYear,
         Guid businessUnitId,
-        BusinessUnit businessUnit,
         List<TransferViewModel> transfers)
     {
         Id = id;
@@ -33,7 +31,6 @@ public class MonthlyBalanceViewModel
         ReferenceMonth = referenceMonth;
         ReferenceYear = referenceYear;
         BusinessUnitId = businessUnitId;
-        BusinessUnit = businessUnit;
         Transfers = transfers;
     }
 }

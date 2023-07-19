@@ -27,12 +27,9 @@ internal sealed class DeleteTransferHandler : CommandHandler<DeleteTransferComma
     public async override Task<Result> Handle(DeleteTransferCommand command, CancellationToken cancellationToken)
     {
         _logger.LogInformation("Retrieving data required to delete Transfer with Id {TransferId}", command.TransferId);
-        var monthlyBalance = await _monthlyBalanceRepository.GetByIdAsync(command.MonthlyBalanceId, cancellationToken);
-        var getBusinessUnitTask = _businessUnitRepository.GetByIdAsync(monthlyBalance!.BusinessUnitId, cancellationToken);
-        var getTransferTask = _transferRepository.GetByIdAsync(command.TransferId, cancellationToken);
-        await Task.WhenAll(getBusinessUnitTask, getTransferTask);
-        var businessUnit = await getBusinessUnitTask;
-        var transfer = await getTransferTask;
+        var transfer = await _transferRepository.GetByIdAsync(command.TransferId, cancellationToken);
+        var monthlyBalance = transfer!.MonthlyBalance;
+        var businessUnit = monthlyBalance.BusinessUnit;
 
         _logger.LogInformation("Deleting Transfer with Id {TransferId}", command.TransferId);
         _transferRepository.Delete(transfer!);   
