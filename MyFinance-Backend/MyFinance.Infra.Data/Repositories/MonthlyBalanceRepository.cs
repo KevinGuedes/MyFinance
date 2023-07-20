@@ -13,18 +13,19 @@ public class MonthlyBalanceRepository : EntityRepository<MonthlyBalance>, IMonth
     public async Task<IEnumerable<MonthlyBalance>> GetByBusinessUnitId(Guid businessUnitId, int take, int skip, CancellationToken cancellationToken)
         => await _myFinanceDbContext.MonthlyBalances
             .Where(mb => mb.BusinessUnitId == businessUnitId)
-            .OrderByDescending(mb => mb.ReferenceDate)
+            .OrderByDescending(mb => mb.ReferenceYear)
+            .ThenByDescending(mb => mb.ReferenceMonth)
             .Skip(skip)
             .Take(take)
-            .AsNoTracking()
             .Include(mb => mb.Transfers)
+            .AsNoTracking()
             .ToListAsync(cancellationToken);
 
     public Task<MonthlyBalance?> GetByReferenceDateAndBusinessUnitId(DateTime referenceDate, Guid businessUnitId, CancellationToken cancellationToken)
         => _myFinanceDbContext.MonthlyBalances
             .AsNoTracking()
             .FirstOrDefaultAsync(
-                mb => mb.ReferenceDate.Year == referenceDate.Year && mb.ReferenceDate.Month == referenceDate.Month && mb.BusinessUnitId == businessUnitId, 
+                mb => mb.ReferenceYear == referenceDate.Year && mb.ReferenceMonth == referenceDate.Month && mb.BusinessUnitId == businessUnitId, 
                 cancellationToken);
        
 }

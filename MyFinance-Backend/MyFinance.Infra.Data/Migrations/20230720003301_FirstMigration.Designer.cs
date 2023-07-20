@@ -12,7 +12,7 @@ using MyFinance.Infra.Data.Context;
 namespace MyFinance.Infra.Data.Migrations
 {
     [DbContext(typeof(MyFinanceDbContext))]
-    [Migration("20230719170145_FirstMigration")]
+    [Migration("20230720003301_FirstMigration")]
     partial class FirstMigration
     {
         /// <inheritdoc />
@@ -37,7 +37,8 @@ namespace MyFinance.Infra.Data.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<double>("CurrentBalance")
-                        .HasColumnType("float");
+                        .HasPrecision(17, 4)
+                        .HasColumnType("float(17)");
 
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
@@ -75,15 +76,18 @@ namespace MyFinance.Infra.Data.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<double>("Income")
-                        .HasPrecision(17, 2)
+                        .HasPrecision(17, 4)
                         .HasColumnType("float(17)");
 
                     b.Property<double>("Outcome")
-                        .HasPrecision(17, 2)
+                        .HasPrecision(17, 4)
                         .HasColumnType("float(17)");
 
-                    b.Property<DateTime>("ReferenceDate")
-                        .HasColumnType("datetime2");
+                    b.Property<int>("ReferenceMonth")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ReferenceYear")
+                        .HasColumnType("int");
 
                     b.Property<DateTime?>("UpdateDate")
                         .HasColumnType("datetime2");
@@ -125,7 +129,8 @@ namespace MyFinance.Infra.Data.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<double>("Value")
-                        .HasColumnType("float");
+                        .HasPrecision(17, 4)
+                        .HasColumnType("float(17)");
 
                     b.HasKey("Id");
 

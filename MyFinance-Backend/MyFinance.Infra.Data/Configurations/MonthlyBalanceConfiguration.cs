@@ -10,19 +10,10 @@ public class MonthlyBalanceConfiguration : EntityConfiguration<MonthlyBalance>
     {
         base.Configure(builder);
 
-        builder.Property(mb => mb.Income).IsRequired().HasPrecision(17, 2);
-        builder.Property(mb => mb.Outcome).IsRequired().HasPrecision(17, 2);
-        builder.Property(mb => mb.ReferenceDate).IsRequired();
-        
-        //builder
-        //    .Property(mb => mb.ReferenceYear)
-        //    .UsePropertyAccessMode(PropertyAccessMode.Property)
-        //    .IsRequired();
-
-        //builder
-        //    .Property(mb => mb.ReferenceMonth)
-        //    .UsePropertyAccessMode(PropertyAccessMode.Property)
-        //    .IsRequired();
+        builder.Property(mb => mb.Income).IsRequired().HasPrecision(17, 4);
+        builder.Property(mb => mb.Outcome).IsRequired().HasPrecision(17, 4);
+        builder.Property(mb => mb.ReferenceYear).IsRequired();
+        builder.Property(mb => mb.ReferenceMonth).IsRequired();
 
         builder.HasMany(mb => mb.Transfers)
             .WithOne(t => t.MonthlyBalance)

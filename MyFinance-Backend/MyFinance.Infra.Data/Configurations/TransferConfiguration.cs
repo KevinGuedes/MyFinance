@@ -13,6 +13,6 @@ public class TransferConfiguration : EntityConfiguration<Transfer>
         builder.Property(transfer => transfer.Description).IsRequired();
         builder.Property(transfer => transfer.RelatedTo).IsRequired();
         builder.Property(transfer => transfer.Type).HasConversion<string>().IsRequired();
-        builder.Property(transfer => transfer.Value).IsRequired();
+        builder.Property(transfer => transfer.Value).IsRequired().HasPrecision(17, 4);
     }
 }
