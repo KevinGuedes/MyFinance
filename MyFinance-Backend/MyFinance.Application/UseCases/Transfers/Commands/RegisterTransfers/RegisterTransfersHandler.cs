@@ -30,7 +30,7 @@ internal sealed class RegisterTransfersHandler : CommandHandler<RegisterTransfer
         _logger.LogInformation("Retriving Business Unit with Id {BusinessUnitId}", command.BusinessUnitId);
         var businessUnit = await _businessUnitRepository.GetByIdAsync(command.BusinessUnitId, cancellationToken);
         _logger.LogInformation("Updating balance of Business Unit with Id {BusinessUnitId}", command.BusinessUnitId);
-        businessUnit!.UpdateBalanceWithNewTransfer(command.Value, command.TransferType);
+        businessUnit!.UpdateBalanceWithNewTransfer(command.Value, command.Type);
 
         _logger.LogInformation("Checking if there is an existing Monthly Balance to register new Transfer");
         var monthlyBalance = await _monthlyBalanceRepository.GetByReferenceDateAndBusinessUnitId(
@@ -42,13 +42,13 @@ internal sealed class RegisterTransfersHandler : CommandHandler<RegisterTransfer
         {
             _logger.LogInformation("Creating new Monthly Balance");
             monthlyBalance = new MonthlyBalance(command.SettlementDate, businessUnit!);
-            monthlyBalance.UpdateBalanceWithNewTransfer(command.Value, command.TransferType);
+            monthlyBalance.UpdateBalanceWithNewTransfer(command.Value, command.Type);
             _monthlyBalanceRepository.Insert(monthlyBalance);
         }
         else
         {
             _logger.LogInformation("Updating balance of Monthly Balance with Id {MonthlyBalanceId}", monthlyBalance.Id);
-            monthlyBalance.UpdateBalanceWithNewTransfer(command.Value, command.TransferType);
+            monthlyBalance.UpdateBalanceWithNewTransfer(command.Value, command.Type);
             _monthlyBalanceRepository.Update(monthlyBalance);
         }
 
@@ -58,7 +58,7 @@ internal sealed class RegisterTransfersHandler : CommandHandler<RegisterTransfer
             command.RelatedTo,
             command.Description,
             command.SettlementDate,
-            command.TransferType,
+            command.Type,
             monthlyBalance!);
         _transferRepository.Insert(transfer);
 

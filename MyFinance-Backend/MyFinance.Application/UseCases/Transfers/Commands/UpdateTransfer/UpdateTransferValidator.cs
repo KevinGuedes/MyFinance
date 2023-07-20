@@ -26,10 +26,10 @@ public sealed class UpdateTransferValidator : AbstractValidator<UpdateTransferCo
             .NotNull().WithMessage("{PropertyName} must not be null")
             .Length(10, 140).WithMessage("{PropertyName} must have between 10 and 140 characters");
 
-        RuleFor(transferData => transferData.TransferType)
+        RuleFor(transferData => transferData.Type)
             .IsInEnum().WithMessage("Invalid {PropertyName}");
 
-        RuleFor(command => command.TransferId)
+        RuleFor(command => command.Id)
              .Cascade(CascadeMode.Stop)
              .NotEqual(Guid.Empty).WithMessage("{PropertyName} invalid")
              .MustAsync(async (transferId, cancellationToken) =>

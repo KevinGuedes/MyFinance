@@ -10,7 +10,7 @@ public sealed class RegisterTransfersCommand : Command
     public string RelatedTo { get; set; }
     public string Description { get; set; }
     public DateTime SettlementDate { get; set; }
-    public TransferType TransferType { get; set; }
+    public TransferType Type { get; set; }
 
     public RegisterTransfersCommand(
         Guid businessUnitId,
@@ -18,13 +18,13 @@ public sealed class RegisterTransfersCommand : Command
         string relatedTo,
         string description,
         DateTime settlementDate,
-        TransferType transferType)
+        TransferType type)
     {
         BusinessUnitId = businessUnitId;
         Value = value;
         RelatedTo = relatedTo;
         Description = description;
         SettlementDate = settlementDate;
-        TransferType = transferType;
+        Type = type;
     }
 }
