@@ -1,9 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using MyFinance.Application.BusinessUnits.ApiService;
-using MyFinance.Application.BusinessUnits.Commands.CreateBusinessUnit;
-using MyFinance.Application.BusinessUnits.Commands.UpdateBusinessUnit;
-using MyFinance.Application.BusinessUnits.ViewModels;
 using MyFinance.Application.Common.ApiService;
+using MyFinance.Application.UseCases.BusinessUnits.ApiService;
+using MyFinance.Application.UseCases.BusinessUnits.Commands.CreateBusinessUnit;
+using MyFinance.Application.UseCases.BusinessUnits.Commands.UpdateBusinessUnit;
+using MyFinance.Application.UseCases.BusinessUnits.ViewModels;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace MyFinance.Presentation.Controllers;

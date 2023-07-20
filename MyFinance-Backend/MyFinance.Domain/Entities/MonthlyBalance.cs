@@ -11,7 +11,7 @@ public class MonthlyBalance : Entity
     public Guid BusinessUnitId { get; private set; }
     public BusinessUnit BusinessUnit { get; private set; }
     public List<Transfer> Transfers { get; private set; }
-    
+
     protected MonthlyBalance() { }
 
     public MonthlyBalance(DateTime referenceDate, BusinessUnit businessUnit)

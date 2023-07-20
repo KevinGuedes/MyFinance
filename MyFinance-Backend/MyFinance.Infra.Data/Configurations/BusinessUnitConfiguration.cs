@@ -18,7 +18,7 @@ public class BusinessUnitConfiguration : EntityConfiguration<BusinessUnit>
 
         builder.HasMany(bu => bu.MonthlyBalances)
             .WithOne(mb => mb.BusinessUnit)
-            .HasForeignKey(mb =>  mb.BusinessUnitId)
+            .HasForeignKey(mb => mb.BusinessUnitId)
             .IsRequired();
     }
 }

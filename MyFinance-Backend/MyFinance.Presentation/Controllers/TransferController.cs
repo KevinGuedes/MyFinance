@@ -1,10 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MyFinance.Application.Common.ApiService;
-using MyFinance.Application.Transfers.ApiService;
-using MyFinance.Application.Transfers.Commands.DeleteTransfer;
-using MyFinance.Application.Transfers.Commands.RegisterTransfers;
-using MyFinance.Application.Transfers.Commands.UpdateTransfer;
-using MyFinance.Application.Transfers.ViewModels;
+using MyFinance.Application.UseCases.Transfers.ApiService;
+using MyFinance.Application.UseCases.Transfers.Commands.DeleteTransfer;
+using MyFinance.Application.UseCases.Transfers.Commands.RegisterTransfers;
+using MyFinance.Application.UseCases.Transfers.Commands.UpdateTransfer;
+using MyFinance.Application.UseCases.Transfers.ViewModels;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace MyFinance.Presentation.Controllers;

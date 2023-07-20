@@ -25,7 +25,7 @@ public class MonthlyBalanceRepository : EntityRepository<MonthlyBalance>, IMonth
         => _myFinanceDbContext.MonthlyBalances
             .AsNoTracking()
             .FirstOrDefaultAsync(
-                mb => mb.ReferenceYear == referenceDate.Year && mb.ReferenceMonth == referenceDate.Month && mb.BusinessUnitId == businessUnitId, 
+                mb => mb.ReferenceYear == referenceDate.Year && mb.ReferenceMonth == referenceDate.Month && mb.BusinessUnitId == businessUnitId,
                 cancellationToken);
-       
+
 }

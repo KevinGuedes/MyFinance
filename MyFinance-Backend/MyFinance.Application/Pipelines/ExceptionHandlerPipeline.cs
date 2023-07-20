@@ -27,7 +27,7 @@ public sealed class ExceptionHandlerPipeline<TRequest, TResponse> : IPipelineBeh
                 _logger.LogInformation("[{RequestName}] Request handled with a success result", requestName);
             else
                 _logger.LogWarning("[{RequestName}] Request handled with a failure result", requestName);
-            
+
             return result;
         }
         catch (Exception exception)

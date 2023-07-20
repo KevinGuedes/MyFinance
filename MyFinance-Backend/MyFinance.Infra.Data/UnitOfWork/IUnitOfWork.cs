@@ -1,6 +1,4 @@
-﻿using System.Data;
-
-namespace MyFinance.Infra.Data.UnitOfWork;
+﻿namespace MyFinance.Infra.Data.UnitOfWork;
 
 public interface IUnitOfWork
 {

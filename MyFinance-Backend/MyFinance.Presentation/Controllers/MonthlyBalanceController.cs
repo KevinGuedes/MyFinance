@@ -1,8 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MyFinance.Application.Common.ApiService;
-using MyFinance.Application.MonthlyBalances.ApiService;
-using MyFinance.Application.MonthlyBalances.Queries.GetMonthlyBalances;
-using MyFinance.Application.MonthlyBalances.ViewModels;
+using MyFinance.Application.UseCases.MonthlyBalances.ApiService;
+using MyFinance.Application.UseCases.MonthlyBalances.ViewModels;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace MyFinance.Presentation.Controllers;

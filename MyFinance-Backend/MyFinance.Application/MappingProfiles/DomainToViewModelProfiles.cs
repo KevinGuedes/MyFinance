@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
-using MyFinance.Application.BusinessUnits.ViewModels;
-using MyFinance.Application.MonthlyBalances.ViewModels;
-using MyFinance.Application.Transfers.ViewModels;
+using MyFinance.Application.UseCases.BusinessUnits.ViewModels;
+using MyFinance.Application.UseCases.MonthlyBalances.ViewModels;
+using MyFinance.Application.UseCases.Transfers.ViewModels;
 using MyFinance.Domain.Entities;
 
 namespace MyFinance.Application.MappingProfiles;

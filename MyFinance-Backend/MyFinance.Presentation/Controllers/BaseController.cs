@@ -37,7 +37,7 @@ public abstract class BaseController : ControllerBase
         var badRequestResponse = new BadRequestResponse("One or more validation errors occurred.", validationErrors);
         return BadRequest(badRequestResponse);
     }
-        
+
 
     private IActionResult BuildInternalServerErrorResponse(List<IError> errors)
     {

@@ -10,7 +10,7 @@ public class MyFinanceDbContext : DbContext
     public DbSet<MonthlyBalance> MonthlyBalances { get; set; }
 
     public MyFinanceDbContext(DbContextOptions<MyFinanceDbContext> options)
-        : base (options)
+        : base(options)
     {
     }
 
