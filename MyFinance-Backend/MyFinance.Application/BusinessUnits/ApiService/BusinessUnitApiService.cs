@@ -8,36 +8,35 @@ using MyFinance.Application.BusinessUnits.ViewModels;
 using MyFinance.Application.Common.ApiService;
 using MyFinance.Domain.Entities;
 
-namespace MyFinance.Application.BusinessUnits.ApiService
+namespace MyFinance.Application.BusinessUnits.ApiService;
+
+public class BusinessUnitApiService : EntityApiService, IBusinessUnitApiService
 {
-    public class BusinessUnitApiService : EntityApiService, IBusinessUnitApiService
+    public BusinessUnitApiService(IMediator mediator, IMapper mapper)
+         : base(mediator, mapper)
     {
-        public BusinessUnitApiService(IMediator mediator, IMapper mapper)
-             : base(mediator, mapper)
-        {
-        }
+    }
 
-        public async Task<Result<IEnumerable<BusinessUnitViewModel>>> GetBusinessUnitsAsync(
-            CancellationToken cancellationToken)
-        {
-            var result = await _mediator.Send(new GetBusinessUnitsQuery(), cancellationToken);
-            return MapResult<BusinessUnit, BusinessUnitViewModel>(result);
-        }
+    public async Task<Result<IEnumerable<BusinessUnitViewModel>>> GetBusinessUnitsAsync(
+        CancellationToken cancellationToken)
+    {
+        var result = await _mediator.Send(new GetBusinessUnitsQuery(), cancellationToken);
+        return MapResult<BusinessUnit, BusinessUnitViewModel>(result);
+    }
 
-        public async Task<Result<BusinessUnitViewModel>> CreateBusinessUnitAsync(
-            CreateBusinessUnitCommand command,
-            CancellationToken cancellationToken)
-        {
-            var result = await _mediator.Send(command, cancellationToken);
-            return MapResult<BusinessUnit, BusinessUnitViewModel>(result);
-        }
+    public async Task<Result<BusinessUnitViewModel>> CreateBusinessUnitAsync(
+        CreateBusinessUnitCommand command,
+        CancellationToken cancellationToken)
+    {
+        var result = await _mediator.Send(command, cancellationToken);
+        return MapResult<BusinessUnit, BusinessUnitViewModel>(result);
+    }
 
-        public async Task<Result<BusinessUnitViewModel>> UpdateBusinessUnitAsync(
-            UpdateBusinessUnitCommand command,
-            CancellationToken cancellationToken)
-        {
-            var result = await _mediator.Send(command, cancellationToken);
-            return MapResult<BusinessUnit, BusinessUnitViewModel>(result);
-        }
+    public async Task<Result<BusinessUnitViewModel>> UpdateBusinessUnitAsync(
+        UpdateBusinessUnitCommand command,
+        CancellationToken cancellationToken)
+    {
+        var result = await _mediator.Send(command, cancellationToken);
+        return MapResult<BusinessUnit, BusinessUnitViewModel>(result);
     }
 }

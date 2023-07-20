@@ -6,40 +6,39 @@ using MyFinance.Application.BusinessUnits.ViewModels;
 using MyFinance.Application.Common.ApiService;
 using Swashbuckle.AspNetCore.Annotations;
 
-namespace MyFinance.Presentation.Controllers
+namespace MyFinance.Presentation.Controllers;
+
+[Route("api/[controller]")]
+[ApiController]
+[SwaggerTag("Create, read and update Business Units")]
+public class BusinessUnitController : BaseController
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    [SwaggerTag("Create, read and update Business Units")]
-    public class BusinessUnitController : BaseController
-    {
-        private readonly IBusinessUnitApiService _businessUnitApiService;
+    private readonly IBusinessUnitApiService _businessUnitApiService;
 
-        public BusinessUnitController(IBusinessUnitApiService businessUnitApiService)
-            => _businessUnitApiService = businessUnitApiService;
+    public BusinessUnitController(IBusinessUnitApiService businessUnitApiService)
+        => _businessUnitApiService = businessUnitApiService;
 
-        [HttpGet]
-        [SwaggerOperation(Summary = "Lists all Business Units")]
-        [SwaggerResponse(StatusCodes.Status200OK, "List of all existing Business Units", typeof(IEnumerable<BusinessUnitViewModel>))]
-        public async Task<IActionResult> GetBusinessUnitsAsync(CancellationToken cancellationToken)
-            => ProcessResult(await _businessUnitApiService.GetBusinessUnitsAsync(cancellationToken));
+    [HttpGet]
+    [SwaggerOperation(Summary = "Lists all Business Units")]
+    [SwaggerResponse(StatusCodes.Status200OK, "List of all existing Business Units", typeof(IEnumerable<BusinessUnitViewModel>))]
+    public async Task<IActionResult> GetBusinessUnitsAsync(CancellationToken cancellationToken)
+        => ProcessResult(await _businessUnitApiService.GetBusinessUnitsAsync(cancellationToken));
 
-        [HttpPost]
-        [SwaggerOperation(Summary = "Creates a new Business Unit")]
-        [SwaggerResponse(StatusCodes.Status200OK, "Created Business Unit", typeof(BusinessUnitViewModel))]
-        [SwaggerResponse(StatusCodes.Status400BadRequest, "Invalid payload", typeof(BadRequestResponse))]
-        public async Task<IActionResult> CreateBusinessUnitAsync(
-            [FromBody, SwaggerRequestBody("Business unit payload", Required = true)] CreateBusinessUnitCommand command,
-            CancellationToken cancellationToken)
-            => ProcessResult(await _businessUnitApiService.CreateBusinessUnitAsync(command, cancellationToken));
+    [HttpPost]
+    [SwaggerOperation(Summary = "Creates a new Business Unit")]
+    [SwaggerResponse(StatusCodes.Status200OK, "Created Business Unit", typeof(BusinessUnitViewModel))]
+    [SwaggerResponse(StatusCodes.Status400BadRequest, "Invalid payload", typeof(BadRequestResponse))]
+    public async Task<IActionResult> CreateBusinessUnitAsync(
+        [FromBody, SwaggerRequestBody("Business unit payload", Required = true)] CreateBusinessUnitCommand command,
+        CancellationToken cancellationToken)
+        => ProcessResult(await _businessUnitApiService.CreateBusinessUnitAsync(command, cancellationToken));
 
-        [HttpPut]
-        [SwaggerOperation(Summary = "Updates an existing Business Unit")]
-        [SwaggerResponse(StatusCodes.Status200OK, "Updated Business Unit", typeof(BusinessUnitViewModel))]
-        [SwaggerResponse(StatusCodes.Status400BadRequest, "Invalid payload", typeof(BadRequestResponse))]
-        public async Task<IActionResult> UpdateBusinessUnitAsync(
-            [FromBody, SwaggerRequestBody("Business unit payload", Required = true)] UpdateBusinessUnitCommand command,
-            CancellationToken cancellationToken)
-            => ProcessResult(await _businessUnitApiService.UpdateBusinessUnitAsync(command, cancellationToken));
-    }
+    [HttpPut]
+    [SwaggerOperation(Summary = "Updates an existing Business Unit")]
+    [SwaggerResponse(StatusCodes.Status200OK, "Updated Business Unit", typeof(BusinessUnitViewModel))]
+    [SwaggerResponse(StatusCodes.Status400BadRequest, "Invalid payload", typeof(BadRequestResponse))]
+    public async Task<IActionResult> UpdateBusinessUnitAsync(
+        [FromBody, SwaggerRequestBody("Business unit payload", Required = true)] UpdateBusinessUnitCommand command,
+        CancellationToken cancellationToken)
+        => ProcessResult(await _businessUnitApiService.UpdateBusinessUnitAsync(command, cancellationToken));
 }
