@@ -1,8 +1,7 @@
-﻿namespace MyFinance.Domain.Enums
+﻿namespace MyFinance.Domain.Enums;
+
+public enum TransferType
 {
-    public enum TransferType
-    {
-        Profit,
-        Expense
-    }
+    Profit,
+    Expense
 }

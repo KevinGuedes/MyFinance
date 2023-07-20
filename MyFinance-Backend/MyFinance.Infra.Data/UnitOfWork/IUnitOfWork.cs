@@ -1,7 +1,9 @@
-﻿namespace MyFinance.Infra.Data.UnitOfWork
+﻿namespace MyFinance.Infra.Data.UnitOfWork;
+
+public interface IUnitOfWork
 {
-    public interface IUnitOfWork
-    {
-        Task<bool> CommitAsync(CancellationToken cancellationToken);
-    }
+    Task SaveChangesAsync(CancellationToken cancellationToken);
+    Task BeginTrasactionAsync(CancellationToken cancellationToken);
+    Task CommitTransactionAsync(CancellationToken cancellationToken);
+    Task RollbackTransactionAsync(CancellationToken cancellationToken);
 }

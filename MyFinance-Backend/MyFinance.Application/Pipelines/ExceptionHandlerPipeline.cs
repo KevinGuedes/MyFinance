@@ -1,36 +1,44 @@
 ﻿using FluentResults;
 using MediatR;
 using Microsoft.Extensions.Logging;
-using MyFinance.Application.Generics.Errors;
+using MyFinance.Application.Common.Errors;
 
-namespace MyFinance.Application.Pipelines
+namespace MyFinance.Application.Pipelines;
+
+public sealed class ExceptionHandlerPipeline<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
+    where TRequest : IRequest<TResponse>
+    where TResponse : ResultBase, new()
 {
-    public sealed class ExceptionHandlerPipeline<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
-        where TRequest : IRequest<TResponse>
-        where TResponse : ResultBase, new()
+    private readonly ILogger<ExceptionHandlerPipeline<TRequest, TResponse>> _logger;
+
+    public ExceptionHandlerPipeline(ILogger<ExceptionHandlerPipeline<TRequest, TResponse>> logger)
+        => _logger = logger;
+
+    public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
     {
-        private readonly ILogger<ExceptionHandlerPipeline<TRequest, TResponse>> _logger;
+        var requestName = request.GetType();
 
-        public ExceptionHandlerPipeline(ILogger<ExceptionHandlerPipeline<TRequest, TResponse>> logger)
-            => _logger = logger;
-
-        public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
+        try
         {
-            try
-            {
-                return await next();
-            }
-            catch (Exception exception)
-            {
-                var requestName = request.GetType();
-                _logger.LogError(exception, "[{RequestName}] Failed to handle request", requestName);
+            _logger.LogInformation("[{RequestName}] Starting to handle request", requestName);
+            var result = await next();
 
-                var error = Result.Fail(new FailedToProcessRequest(requestName.ToString()).CausedBy(exception));
-                var response = new TResponse();
-                response.Reasons.AddRange(error.Reasons);
+            if (result.IsSuccess)
+                _logger.LogInformation("[{RequestName}] Request handled with a success result", requestName);
+            else
+                _logger.LogWarning("[{RequestName}] Request handled with a failure result", requestName);
 
-                return response;
-            }
+            return result;
+        }
+        catch (Exception exception)
+        {
+            _logger.LogError(exception, "[{RequestName}] Failed to handle request", requestName);
+
+            var error = Result.Fail(new FailedToProcessRequest(requestName.ToString()).CausedBy(exception));
+            var response = new TResponse();
+            response.Reasons.AddRange(error.Reasons);
+
+            return response;
         }
     }
 }
