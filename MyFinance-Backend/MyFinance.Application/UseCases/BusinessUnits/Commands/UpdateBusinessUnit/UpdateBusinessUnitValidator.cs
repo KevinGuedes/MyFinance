@@ -23,7 +23,7 @@ public sealed class UpdateBusinessUnitValidator : AbstractValidator<UpdateBusine
                return !exists;
            }).WithMessage("This {PropertyName} has already been taken");
 
-        RuleFor(command => command.BusinessUnitId)
+        RuleFor(command => command.Id)
             .Cascade(CascadeMode.Stop)
             .NotEqual(Guid.Empty).WithMessage("{PropertyName} invalid")
             .MustAsync(async (businessUnitId, cancellationToken) =>

@@ -17,7 +17,7 @@ public class MonthlyBalanceController : BaseController
         => _monthlyBalanceApiService = monthlyBalanceApiService;
 
     [HttpGet]
-    [SwaggerOperation(Summary = "Lists all existing Monthly Balances according to query parameters.")]
+    [SwaggerOperation(Summary = "Lists all existing Monthly Balances according to query parameters")]
     [SwaggerResponse(StatusCodes.Status200OK, "List of Monthly Balances", typeof(IEnumerable<MonthlyBalanceDTO>))]
     [SwaggerResponse(StatusCodes.Status400BadRequest, "Invalid query parameters", typeof(BadRequestResponse))]
     public async Task<IActionResult> GetBusinessUnitsAsync(

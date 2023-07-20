@@ -12,7 +12,7 @@ using MyFinance.Infra.Data.Context;
 namespace MyFinance.Infra.Data.Migrations
 {
     [DbContext(typeof(MyFinanceDbContext))]
-    [Migration("20230720003301_FirstMigration")]
+    [Migration("20230720125315_FirstMigration")]
     partial class FirstMigration
     {
         /// <inheritdoc />
@@ -36,12 +36,12 @@ namespace MyFinance.Infra.Data.Migrations
                     b.Property<DateTime>("CreationDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<double>("CurrentBalance")
-                        .HasPrecision(17, 4)
-                        .HasColumnType("float(17)");
-
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<double>("Income")
+                        .HasPrecision(17, 4)
+                        .HasColumnType("float(17)");
 
                     b.Property<bool>("IsArchived")
                         .HasColumnType("bit");
@@ -49,6 +49,10 @@ namespace MyFinance.Infra.Data.Migrations
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
+
+                    b.Property<double>("Outcome")
+                        .HasPrecision(17, 4)
+                        .HasColumnType("float(17)");
 
                     b.Property<string>("ReasonToArchive")
                         .HasColumnType("nvarchar(max)");

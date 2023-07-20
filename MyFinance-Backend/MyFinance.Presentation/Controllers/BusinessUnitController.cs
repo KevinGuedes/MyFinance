@@ -41,4 +41,13 @@ public class BusinessUnitController : BaseController
         [FromBody, SwaggerRequestBody("Business unit payload", Required = true)] UpdateBusinessUnitCommand command,
         CancellationToken cancellationToken)
         => ProcessResult(await _businessUnitApiService.UpdateBusinessUnitAsync(command, cancellationToken));
+
+    [HttpDelete("{id:guid}")]
+    [SwaggerOperation(Summary = "Logically deletes (archives) an existing Business Unit")]
+    [SwaggerResponse(StatusCodes.Status204NoContent, "Business Unit successfully archived")]
+    [SwaggerResponse(StatusCodes.Status400BadRequest, "Invalid Business Unit Id", typeof(BadRequestResponse))]
+    public async Task<IActionResult> DeleteTransferAsync(
+        [FromRoute, SwaggerParameter("Business Unit Id", Required = true)] Guid id,
+        CancellationToken cancellationToken)
+        => ProcessResult(await _businessUnitApiService.ArchiveBusinessUnitAsync(id, cancellationToken));
 }

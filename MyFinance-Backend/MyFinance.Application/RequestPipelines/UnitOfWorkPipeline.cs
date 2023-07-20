@@ -1,13 +1,13 @@
 ﻿using FluentResults;
 using MediatR;
 using Microsoft.Extensions.Logging;
-using MyFinance.Application.Common.RequestHandling;
+using MyFinance.Application.Common.RequestHandling.Commands;
 using MyFinance.Infra.Data.UnitOfWork;
 
-namespace MyFinance.Application.Pipelines;
+namespace MyFinance.Application.RequestPipelines;
 
 public sealed class UnitOfWorkPipeline<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
-    where TRequest : IRequest<TResponse>, ICommand<TResponse>
+    where TRequest : IBaseCommand
     where TResponse : ResultBase
 {
     private readonly ILogger<UnitOfWorkPipeline<TRequest, TResponse>> _logger;

@@ -7,6 +7,7 @@ using MyFinance.Application.UseCases.BusinessUnits.Commands.UpdateBusinessUnit;
 using MyFinance.Application.UseCases.BusinessUnits.Queries.GetBusinessUnits;
 using MyFinance.Application.UseCases.BusinessUnits.DTOs;
 using MyFinance.Domain.Entities;
+using MyFinance.Application.UseCases.BusinessUnits.Commands.ArchiveBusinessUnit;
 
 namespace MyFinance.Application.UseCases.BusinessUnits.ApiService;
 
@@ -39,4 +40,7 @@ public class BusinessUnitApiService : EntityApiService, IBusinessUnitApiService
         var result = await _mediator.Send(command, cancellationToken);
         return MapResult<BusinessUnit, BusinessUnitDTO>(result);
     }
+
+    public Task<Result> ArchiveBusinessUnitAsync(Guid id, CancellationToken cancellationToken)
+        => _mediator.Send(new ArchiveBusinessUnitCommand(id, "dummy text for now"), cancellationToken);
 }

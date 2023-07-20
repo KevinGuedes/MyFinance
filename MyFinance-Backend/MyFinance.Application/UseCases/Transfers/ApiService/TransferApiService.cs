@@ -30,8 +30,6 @@ public class TransferApiService : EntityApiService, ITransferApiService
         return MapResult<Transfer, TransferDTO>(result);
     }
 
-    public Task<Result> DeleteTransferAsync(
-        DeleteTransferCommand command,
-        CancellationToken cancellationToken)
-        => _mediator.Send(command, cancellationToken);
+    public Task<Result> DeleteTransferAsync(Guid id, CancellationToken cancellationToken)
+        => _mediator.Send(new DeleteTransferCommand(id), cancellationToken);
 }
