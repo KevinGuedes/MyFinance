@@ -1,16 +1,17 @@
 ﻿using FluentValidation;
 using MyFinance.Domain.Enums;
 using MyFinance.Domain.Interfaces;
+using MyFinance.Infra.Data.Repositories;
 
 namespace MyFinance.Application.Transfers.Commands.UpdateTransfer;
 
 public sealed class UpdateTransferValidator : AbstractValidator<UpdateTransferCommand>
 {
-    private readonly IMonthlyBalanceRepository _monthlyBalanceRepository;
+    private readonly ITransferRepository _transferRepository;
 
-    public UpdateTransferValidator(IMonthlyBalanceRepository monthlyBalanceRepository)
+    public UpdateTransferValidator(ITransferRepository transferRepository)
     {
-        _monthlyBalanceRepository = monthlyBalanceRepository;
+        _transferRepository = transferRepository;
         ClassLevelCascadeMode = CascadeMode.Stop;
 
         RuleFor(command => command.Value)
@@ -26,17 +27,17 @@ public sealed class UpdateTransferValidator : AbstractValidator<UpdateTransferCo
             .NotEmpty().WithMessage("{PropertyName} must not be empty")
             .NotNull().WithMessage("{PropertyName} must not be null")
             .Length(10, 140).WithMessage("{PropertyName} must have between 10 and 140 characters");
+        
+        RuleFor(transferData => transferData.TransferType)
+            .IsInEnum().WithMessage("Invalid {PropertyName}");
 
         RuleFor(command => command.TransferId)
-            .NotEqual(Guid.Empty).WithMessage("{PropertyName} invalid");
-
-        //RuleFor(command => command.CurrentMonthlyBalanceId)
-        //    .Cascade(CascadeMode.Stop)
-        //    .NotEqual(Guid.Empty).WithMessage("{PropertyName} invalid")
-        //    .MustAsync(async (monthlyBalanceId, cancellationToken) =>
-        //    {
-        //        var exists = await _monthlyBalanceRepository.ExistsByIdAsync(monthlyBalanceId, cancellationToken);
-        //        return exists;
-        //    }).WithMessage("Monthly Balance not found");
+             .Cascade(CascadeMode.Stop)
+             .NotEqual(Guid.Empty).WithMessage("{PropertyName} invalid")
+             .MustAsync(async (transferId, cancellationToken) =>
+             {
+                 var exists = await _transferRepository.ExistsByIdAsync(transferId, cancellationToken);
+                 return exists;
+             }).WithMessage("Transfer not found");
     }
 }

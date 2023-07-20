@@ -7,5 +7,5 @@ public sealed class DeleteTransferCommand : Command
     public Guid TransferId { get; set; }
 
     public DeleteTransferCommand(Guid transferId)
-        => (TransferId) = (transferId);
+        => TransferId = transferId;
 }

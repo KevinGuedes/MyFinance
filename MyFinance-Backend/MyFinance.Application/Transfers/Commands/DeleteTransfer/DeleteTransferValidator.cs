@@ -5,27 +5,19 @@ namespace MyFinance.Application.Transfers.Commands.DeleteTransfer;
 
 public sealed class DeleteTransferByIdValidator : AbstractValidator<DeleteTransferCommand>
 {
-    private readonly IMonthlyBalanceRepository _monthlyBalanceRepository;
-    private readonly IBusinessUnitRepository _businessUnitRepository;
-
-    public DeleteTransferByIdValidator(
-        IMonthlyBalanceRepository monthlyBalanceRepository,
-        IBusinessUnitRepository businessUnitRepository)
+    private readonly ITransferRepository _transferRepository;
+    public DeleteTransferByIdValidator(ITransferRepository transferRepository)
     {
-        _monthlyBalanceRepository = monthlyBalanceRepository;
-        _businessUnitRepository = businessUnitRepository;
+        _transferRepository = transferRepository;
         ClassLevelCascadeMode = CascadeMode.Stop;
 
         RuleFor(command => command.TransferId)
-            .NotEqual(Guid.Empty).WithMessage("{PropertyName} invalid");
-
-        //RuleFor(command => command.MonthlyBalanceId)
-        //    .Cascade(CascadeMode.Stop)
-        //    .NotEqual(Guid.Empty).WithMessage("{PropertyName} invalid")
-        //    .MustAsync(async (monthlyBalanceId, cancellationToken) =>
-        //    {
-        //        var exists = await _monthlyBalanceRepository.ExistsByIdAsync(monthlyBalanceId, cancellationToken);
-        //        return exists;
-        //    }).WithMessage("Monthly Balance not found");
+            .Cascade(CascadeMode.Stop)
+            .NotEqual(Guid.Empty).WithMessage("{PropertyName} invalid")
+            .MustAsync(async (transferId, cancellationToken) =>
+            {
+                var exists = await _transferRepository.ExistsByIdAsync(transferId, cancellationToken);
+                return exists;
+            }).WithMessage("Transfer not found");
     }
 }
