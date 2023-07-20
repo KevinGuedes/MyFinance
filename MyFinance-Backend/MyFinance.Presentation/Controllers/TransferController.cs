@@ -4,7 +4,7 @@ using MyFinance.Application.UseCases.Transfers.ApiService;
 using MyFinance.Application.UseCases.Transfers.Commands.DeleteTransfer;
 using MyFinance.Application.UseCases.Transfers.Commands.RegisterTransfers;
 using MyFinance.Application.UseCases.Transfers.Commands.UpdateTransfer;
-using MyFinance.Application.UseCases.Transfers.ViewModels;
+using MyFinance.Application.UseCases.Transfers.DTOs;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace MyFinance.Presentation.Controllers;
@@ -30,7 +30,7 @@ public class TransferController : BaseController
 
     [HttpPut]
     [SwaggerOperation(Summary = "Updates an existing Transfer")]
-    [SwaggerResponse(StatusCodes.Status200OK, "Updated Transfer", typeof(TransferViewModel))]
+    [SwaggerResponse(StatusCodes.Status200OK, "Updated Transfer", typeof(TransferDTO))]
     [SwaggerResponse(StatusCodes.Status400BadRequest, "Invalid payload", typeof(BadRequestResponse))]
     public async Task<IActionResult> UpdateTransferAsync(
         [FromBody, SwaggerRequestBody("Transfers' payload", Required = true)] UpdateTransferCommand command,

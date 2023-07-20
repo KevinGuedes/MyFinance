@@ -5,7 +5,9 @@ namespace MyFinance.Domain.Entities;
 public class BusinessUnit : Entity
 {
     public string Name { get; private set; }
-    public double CurrentBalance { get; private set; }
+    public double Income { get; private set; }
+    public double Outcome { get; private set; }
+    public double Balance { get => Income - Outcome; }
     public string? Description { get; private set; }
     public bool IsArchived { get; private set; }
     public string? ReasonToArchive { get; private set; }
@@ -17,7 +19,8 @@ public class BusinessUnit : Entity
     public BusinessUnit(string name, string? description)
     {
         Name = name;
-        CurrentBalance = 0;
+        Income = 0;
+        Outcome = 0;
         Description = description;
         IsArchived = false;
         ReasonToArchive = null;
@@ -43,14 +46,14 @@ public class BusinessUnit : Entity
     public void UpdateBalanceWithNewTransfer(double transferValue, TransferType transferType)
     {
         SetUpdateDateToNow();
-        if (transferType == TransferType.Profit) CurrentBalance += transferValue;
-        else CurrentBalance -= transferValue;
+        if (transferType == TransferType.Profit) Income += transferValue;
+        else Outcome += transferValue;
     }
 
     public void UpdateBalanceWithTransferDeletion(double transferValue, TransferType transferType)
     {
         SetUpdateDateToNow();
-        if (transferType == TransferType.Profit) CurrentBalance -= transferValue;
-        else CurrentBalance += transferValue;
+        if (transferType == TransferType.Profit) Income -= transferValue;
+        else Outcome -= transferValue;
     }
 }

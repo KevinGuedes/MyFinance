@@ -3,7 +3,7 @@ using FluentResults;
 using MediatR;
 using MyFinance.Application.Common.ApiService;
 using MyFinance.Application.UseCases.MonthlyBalances.Queries.GetMonthlyBalances;
-using MyFinance.Application.UseCases.MonthlyBalances.ViewModels;
+using MyFinance.Application.UseCases.MonthlyBalances.DTOs;
 using MyFinance.Domain.Entities;
 
 namespace MyFinance.Application.UseCases.MonthlyBalances.ApiService;
@@ -15,7 +15,7 @@ public class MonthlyBalanceApiService : EntityApiService, IMonthlyBalanceApiServ
     {
     }
 
-    public async Task<Result<IEnumerable<MonthlyBalanceViewModel>>> GetMonthlyBalancesAsync(
+    public async Task<Result<IEnumerable<MonthlyBalanceDTO>>> GetMonthlyBalancesAsync(
         Guid businessUnitId,
         int take,
         int skip,
@@ -23,6 +23,6 @@ public class MonthlyBalanceApiService : EntityApiService, IMonthlyBalanceApiServ
     {
         var query = new GetMonthlyBalancesQuery(businessUnitId, take, skip);
         var result = await _mediator.Send(query, cancellationToken);
-        return MapResult<MonthlyBalance, MonthlyBalanceViewModel>(result);
+        return MapResult<MonthlyBalance, MonthlyBalanceDTO>(result);
     }
 }

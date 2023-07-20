@@ -1,11 +1,11 @@
 ﻿using FluentResults;
-using MyFinance.Application.UseCases.MonthlyBalances.ViewModels;
+using MyFinance.Application.UseCases.MonthlyBalances.DTOs;
 
 namespace MyFinance.Application.UseCases.MonthlyBalances.ApiService;
 
 public interface IMonthlyBalanceApiService
 {
-    Task<Result<IEnumerable<MonthlyBalanceViewModel>>> GetMonthlyBalancesAsync(
+    Task<Result<IEnumerable<MonthlyBalanceDTO>>> GetMonthlyBalancesAsync(
         Guid businessUnitId,
         int count,
         int skip,
