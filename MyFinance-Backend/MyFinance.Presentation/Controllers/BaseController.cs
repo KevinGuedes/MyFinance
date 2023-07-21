@@ -1,6 +1,6 @@
 ﻿using FluentResults;
 using Microsoft.AspNetCore.Mvc;
-using MyFinance.Application.Common.ApiService;
+using MyFinance.Application.Common.ApiResponses;
 using MyFinance.Application.Common.Errors;
 using Swashbuckle.AspNetCore.Annotations;
 
@@ -22,27 +22,33 @@ public abstract class BaseController : ControllerBase
         return HandleFailureResult(result.Errors);
     }
 
-    private IActionResult HandleFailureResult(List<IError> errors)
+    protected IActionResult HandleFailureResult(List<IError> errors)
     {
-        var invalidRequestData = errors.OfType<InvalidRequest>().FirstOrDefault();
+        var invalidRequestError = errors.OfType<InvalidRequestError>().FirstOrDefault();
+        if (invalidRequestError is not null) return BuildBadRequestResponse(invalidRequestError);
 
-        return invalidRequestData is null ?
-            BuildInternalServerErrorResponse(errors) :
-            BuildBadRequestResponse(invalidRequestData);
+        var entityNotFoundError = errors.OfType<EntityNotFoundError>().FirstOrDefault();
+        if (entityNotFoundError is not null) return BuildNotFoundResponse(entityNotFoundError); 
+
+        var unprocessableEntityError = errors.OfType<UnprocessableEntityError>().FirstOrDefault();
+        if (unprocessableEntityError is not null) return BuildUnprocessableEntityResponse(unprocessableEntityError);
+
+        var internalServerError = new InternalServerError();
+        return BuildInternalServerErrorResponse(internalServerError);
     }
 
-    private IActionResult BuildBadRequestResponse(InvalidRequest invalidRequestData)
-    {
-        var validationErrors = invalidRequestData.ValidationErrors;
-        var badRequestResponse = new BadRequestResponse("One or more validation errors occurred.", validationErrors);
-        return BadRequest(badRequestResponse);
-    }
+    protected IActionResult BuildBadRequestResponse(InvalidRequestError invalidRequestError)
+        => BadRequest(new BadRequestResponse(invalidRequestError));
 
+    protected IActionResult BuildNotFoundResponse(EntityNotFoundError entityNotFoundError)
+        => NotFound(new EntityNotFoundResponse(entityNotFoundError));
 
-    private IActionResult BuildInternalServerErrorResponse(List<IError> errors)
+    protected IActionResult BuildUnprocessableEntityResponse(UnprocessableEntityError unprocessableEntityError)
+        => UnprocessableEntity(new UnprocessableEntityResponse(unprocessableEntityError));
+
+    protected IActionResult BuildInternalServerErrorResponse(InternalServerError internalServerError)
     {
-        var errorMessages = errors.Select(error => error.Message).ToList();
-        var internalServerErrorResponse = new InternalServerErrorResponse("MyFinance API went rogue! Sorry.", errorMessages);
+        var internalServerErrorResponse = new InternalServerErrorResponse(internalServerError);
         return StatusCode(StatusCodes.Status500InternalServerError, internalServerErrorResponse);
     }
 }

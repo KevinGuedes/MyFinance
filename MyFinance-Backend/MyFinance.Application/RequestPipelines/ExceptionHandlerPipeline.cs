@@ -35,7 +35,7 @@ public sealed class ExceptionHandlerPipeline<TRequest, TResponse> : IPipelineBeh
         {
             _logger.LogError(exception, "[{RequestName}] Failed to handle request", requestName);
 
-            var error = Result.Fail(new UnexpectedBehavior(requestName.ToString()).CausedBy(exception));
+            var error = Result.Fail(new InternalServerError().CausedBy(exception));
             var response = new TResponse();
             response.Reasons.AddRange(error.Reasons);
 

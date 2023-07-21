@@ -49,7 +49,7 @@ public sealed class RequestValidationPipeline<TRequest, TResponse> : IPipelineBe
         {
             _logger.LogWarning("[{RequestName}] Invalid request data", requestName);
             var response = new TResponse();
-            var error = Result.Fail(new InvalidRequest(requestName, errors));
+            var error = Result.Fail(new InvalidRequestError(errors));
             response.Reasons.AddRange(error.Reasons);
             return response;
         }
