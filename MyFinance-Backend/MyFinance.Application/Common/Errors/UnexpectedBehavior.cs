@@ -1,8 +1,8 @@
 ﻿namespace MyFinance.Application.Common.Errors;
 
-public sealed class FailedToProcessRequest : BaseError
+public sealed class UnexpectedBehavior : BaseError
 {
-    public FailedToProcessRequest(string requestName)
+    public UnexpectedBehavior(string requestName)
         : base("Unexpected behavior when trying to handle request", requestName)
     {
     }

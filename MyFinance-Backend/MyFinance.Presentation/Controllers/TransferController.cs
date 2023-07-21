@@ -37,12 +37,12 @@ public class TransferController : BaseController
         CancellationToken cancellationToken)
         => ProcessResult(await _transferApiService.UpdateTransferAsync(command, cancellationToken));
 
-    [HttpDelete("id:guid")]
+    [HttpDelete("{id:guid}")]
     [SwaggerOperation(Summary = "Deletes an existing Transfer")]
     [SwaggerResponse(StatusCodes.Status204NoContent, "Transfer successfully deleted")]
-    [SwaggerResponse(StatusCodes.Status400BadRequest, "Invalid transfer Id", typeof(BadRequestResponse))]
+    [SwaggerResponse(StatusCodes.Status400BadRequest, "Invalid Transfer Id", typeof(BadRequestResponse))]
     public async Task<IActionResult> DeleteTransferAsync(
-        [FromQuery, SwaggerParameter("Transfer Id", Required = true)] Guid id,
+        [FromRoute, SwaggerParameter("Transfer Id", Required = true)] Guid id,
         CancellationToken cancellationToken)
         => ProcessResult(await _transferApiService.DeleteTransferAsync(id, cancellationToken));
 }
