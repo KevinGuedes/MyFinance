@@ -1,12 +1,12 @@
 ﻿using FluentResults;
 using Microsoft.Extensions.Logging;
-using MyFinance.Application.Common.RequestHandling;
+using MyFinance.Application.Common.RequestHandling.Commands;
 using MyFinance.Domain.Entities;
 using MyFinance.Domain.Interfaces;
 
 namespace MyFinance.Application.UseCases.Transfers.Commands.UpdateTransfer;
 
-internal sealed class UpdateTransferHandler : CommandHandler<UpdateTransferCommand, Transfer>
+internal sealed class UpdateTransferHandler : ICommandHandler<UpdateTransferCommand, Transfer>
 {
     private readonly ILogger<UpdateTransferHandler> _logger;
     private readonly IMonthlyBalanceRepository _monthlyBalanceRepository;
@@ -25,7 +25,7 @@ internal sealed class UpdateTransferHandler : CommandHandler<UpdateTransferComma
         _transferRepository = transferRepository;
     }
 
-    public async override Task<Result<Transfer>> Handle(UpdateTransferCommand command, CancellationToken cancellationToken)
+    public async Task<Result<Transfer>> Handle(UpdateTransferCommand command, CancellationToken cancellationToken)
     {
         _logger.LogInformation("Retrieving current Monthly Balance of Transfer with Id {TransferId}", command.Id);
         var transfer = await _transferRepository.GetByIdAsync(command.Id, cancellationToken);
@@ -42,8 +42,8 @@ internal sealed class UpdateTransferHandler : CommandHandler<UpdateTransferComma
             if (existingMonthlyBalance is null)
             {
                 var newMonthlyBalance = new MonthlyBalance(command.SettlementDate, businessUnit);
-                businessUnit.UpdateBalanceWithTransferDeletion(transfer.Value, transfer.Type);
-                currentMonthlyBalance.UpdateBalanceWithTransferDeletion(transfer.Value, transfer.Type);
+                businessUnit.CancelValue(transfer.Value, transfer.Type);
+                currentMonthlyBalance.CancelValue(transfer.Value, transfer.Type);
 
                 transfer.Update(
                    command.Value,
@@ -53,10 +53,11 @@ internal sealed class UpdateTransferHandler : CommandHandler<UpdateTransferComma
                    command.Type,
                    newMonthlyBalance);
 
-                newMonthlyBalance.UpdateBalanceWithNewTransfer(transfer.Value, transfer.Type);
-                businessUnit.UpdateBalanceWithNewTransfer(transfer.Value, transfer.Type);
+                newMonthlyBalance.RegisterValue(transfer.Value, transfer.Type);
+                businessUnit.RegisterValue(transfer.Value, transfer.Type);
 
                 _transferRepository.Update(transfer);
+                _businessUnitRepository.Update(businessUnit);
                 _monthlyBalanceRepository.Update(currentMonthlyBalance);
                 _monthlyBalanceRepository.Insert(newMonthlyBalance);
 
@@ -64,8 +65,8 @@ internal sealed class UpdateTransferHandler : CommandHandler<UpdateTransferComma
             }
             else
             {
-                businessUnit.UpdateBalanceWithTransferDeletion(transfer.Value, transfer.Type);
-                currentMonthlyBalance.UpdateBalanceWithTransferDeletion(transfer.Value, transfer.Type);
+                businessUnit.CancelValue(transfer.Value, transfer.Type);
+                currentMonthlyBalance.CancelValue(transfer.Value, transfer.Type);
 
                 transfer.Update(
                    command.Value,
@@ -75,12 +76,13 @@ internal sealed class UpdateTransferHandler : CommandHandler<UpdateTransferComma
                    command.Type,
                    existingMonthlyBalance);
 
-                existingMonthlyBalance.UpdateBalanceWithNewTransfer(transfer.Value, transfer.Type);
-                businessUnit.UpdateBalanceWithNewTransfer(transfer.Value, transfer.Type);
+                existingMonthlyBalance.RegisterValue(transfer.Value, transfer.Type);
+                businessUnit.RegisterValue(transfer.Value, transfer.Type);
 
+                _transferRepository.Update(transfer);
+                _businessUnitRepository.Update(businessUnit);
                 _monthlyBalanceRepository.Update(currentMonthlyBalance);
                 _monthlyBalanceRepository.Update(existingMonthlyBalance);
-                _transferRepository.Update(transfer);
 
                 return Result.Ok(transfer);
             }
@@ -88,8 +90,8 @@ internal sealed class UpdateTransferHandler : CommandHandler<UpdateTransferComma
         else
         {
             _logger.LogInformation("Updating balance of Business Unit with Id {BusinessUnitId}", businessUnit.Id);
-            businessUnit.UpdateBalanceWithTransferDeletion(transfer.Value, transfer.Type);
-            currentMonthlyBalance.UpdateBalanceWithTransferDeletion(transfer.Value, transfer.Type);
+            businessUnit.CancelValue(transfer.Value, transfer.Type);
+            currentMonthlyBalance.CancelValue(transfer.Value, transfer.Type);
             transfer.Update(
                 command.Value,
                 command.RelatedTo,
@@ -98,9 +100,10 @@ internal sealed class UpdateTransferHandler : CommandHandler<UpdateTransferComma
                 command.Type,
                 currentMonthlyBalance);
 
-            currentMonthlyBalance.UpdateBalanceWithNewTransfer(transfer.Value, transfer.Type);
-            businessUnit.UpdateBalanceWithNewTransfer(transfer.Value, transfer.Type);
+            currentMonthlyBalance.RegisterValue(transfer.Value, transfer.Type);
+            businessUnit.RegisterValue(transfer.Value, transfer.Type);
 
+            _businessUnitRepository.Update(businessUnit);
             _monthlyBalanceRepository.Update(currentMonthlyBalance);
             _transferRepository.Update(transfer);
 

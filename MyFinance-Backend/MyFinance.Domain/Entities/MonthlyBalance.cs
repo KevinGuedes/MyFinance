@@ -25,14 +25,14 @@ public class MonthlyBalance : Entity
         Transfers = new List<Transfer>();
     }
 
-    public void UpdateBalanceWithNewTransfer(double transferValue, TransferType transferType)
+    public void RegisterValue(double transferValue, TransferType transferType)
     {
         SetUpdateDateToNow();
         if (transferType == TransferType.Profit) Income += transferValue;
         else Outcome += transferValue;
     }
 
-    public void UpdateBalanceWithTransferDeletion(double transferValue, TransferType transferType)
+    public void CancelValue(double transferValue, TransferType transferType)
     {
         SetUpdateDateToNow();
         if (transferType == TransferType.Profit) Income -= transferValue;

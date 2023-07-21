@@ -1,10 +1,10 @@
-﻿using MyFinance.Application.Common.RequestHandling;
+﻿using MyFinance.Application.Common.RequestHandling.Commands;
 using MyFinance.Domain.Entities;
 using MyFinance.Domain.Enums;
 
 namespace MyFinance.Application.UseCases.Transfers.Commands.UpdateTransfer;
 
-public sealed class UpdateTransferCommand : Command<Transfer>
+public sealed class UpdateTransferCommand : ICommand<Transfer>
 {
     public Guid Id { get; set; }
     public double Value { get; set; }

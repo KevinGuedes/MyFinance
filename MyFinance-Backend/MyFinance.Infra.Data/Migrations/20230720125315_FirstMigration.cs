@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
@@ -16,7 +17,8 @@ namespace MyFinance.Infra.Data.Migrations
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    CurrentBalance = table.Column<double>(type: "float(17)", precision: 17, scale: 4, nullable: false),
+                    Income = table.Column<double>(type: "float(17)", precision: 17, scale: 4, nullable: false),
+                    Outcome = table.Column<double>(type: "float(17)", precision: 17, scale: 4, nullable: false),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     IsArchived = table.Column<bool>(type: "bit", nullable: false),
                     ReasonToArchive = table.Column<string>(type: "nvarchar(max)", nullable: true),

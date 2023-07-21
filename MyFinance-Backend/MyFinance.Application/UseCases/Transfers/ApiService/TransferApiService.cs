@@ -5,7 +5,7 @@ using MyFinance.Application.Common.ApiService;
 using MyFinance.Application.UseCases.Transfers.Commands.DeleteTransfer;
 using MyFinance.Application.UseCases.Transfers.Commands.RegisterTransfers;
 using MyFinance.Application.UseCases.Transfers.Commands.UpdateTransfer;
-using MyFinance.Application.UseCases.Transfers.ViewModels;
+using MyFinance.Application.UseCases.Transfers.DTOs;
 using MyFinance.Domain.Entities;
 
 namespace MyFinance.Application.UseCases.Transfers.ApiService;
@@ -22,16 +22,14 @@ public class TransferApiService : EntityApiService, ITransferApiService
         CancellationToken cancellationToken)
         => _mediator.Send(command, cancellationToken);
 
-    public async Task<Result<TransferViewModel>> UpdateTransferAsync(
+    public async Task<Result<TransferDTO>> UpdateTransferAsync(
         UpdateTransferCommand command,
         CancellationToken cancellationToken)
     {
         var result = await _mediator.Send(command, cancellationToken);
-        return MapResult<Transfer, TransferViewModel>(result);
+        return MapResult<Transfer, TransferDTO>(result);
     }
 
-    public Task<Result> DeleteTransferAsync(
-        DeleteTransferCommand command,
-        CancellationToken cancellationToken)
-        => _mediator.Send(command, cancellationToken);
+    public Task<Result> DeleteTransferAsync(Guid id, CancellationToken cancellationToken)
+        => _mediator.Send(new DeleteTransferCommand(id), cancellationToken);
 }

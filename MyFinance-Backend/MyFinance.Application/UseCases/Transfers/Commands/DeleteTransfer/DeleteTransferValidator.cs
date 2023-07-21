@@ -11,7 +11,7 @@ public sealed class DeleteTransferByIdValidator : AbstractValidator<DeleteTransf
         _transferRepository = transferRepository;
         ClassLevelCascadeMode = CascadeMode.Stop;
 
-        RuleFor(command => command.TransferId)
+        RuleFor(command => command.Id)
             .Cascade(CascadeMode.Stop)
             .NotEqual(Guid.Empty).WithMessage("{PropertyName} invalid")
             .MustAsync(async (transferId, cancellationToken) =>

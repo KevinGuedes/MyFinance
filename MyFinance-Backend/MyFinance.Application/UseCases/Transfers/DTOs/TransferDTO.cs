@@ -1,17 +1,17 @@
-﻿using MyFinance.Domain.Enums;
+﻿using MyFinance.Application.Common.DTO;
+using MyFinance.Domain.Enums;
 
-namespace MyFinance.Application.UseCases.Transfers.ViewModels;
+namespace MyFinance.Application.UseCases.Transfers.DTOs;
 
-public class TransferViewModel
+public class TransferDTO : BaseDTO
 {
-    public Guid Id { get; set; }
     public string RelatedTo { get; set; }
     public string Description { get; set; }
     public DateTime SettlementDate { get; set; }
     public TransferType Type { get; set; }
     public double Value { get; set; }
 
-    public TransferViewModel(
+    public TransferDTO(
         Guid id,
         string relatedTo,
         string description,

@@ -12,8 +12,9 @@ public class BusinessUnitConfiguration : EntityConfiguration<BusinessUnit>
         builder.HasIndex(bu => bu.Name).IsUnique();
         builder.Property(bu => bu.Name).IsRequired();
 
+        builder.Property(bu => bu.Income).IsRequired().HasPrecision(17, 4);
+        builder.Property(bu => bu.Outcome).IsRequired().HasPrecision(17, 4);
         builder.Property(bu => bu.IsArchived).IsRequired();
-        builder.Property(bu => bu.CurrentBalance).IsRequired().HasPrecision(17, 4);
         builder.Property(bu => bu.Description).IsRequired(false);
 
         builder.HasMany(bu => bu.MonthlyBalances)

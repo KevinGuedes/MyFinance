@@ -1,9 +1,9 @@
-﻿using MyFinance.Application.Common.RequestHandling;
+﻿using MyFinance.Application.Common.RequestHandling.Queries;
 using MyFinance.Domain.Entities;
 
 namespace MyFinance.Application.UseCases.MonthlyBalances.Queries.GetMonthlyBalances;
 
-public sealed class GetMonthlyBalancesQuery : Query<IEnumerable<MonthlyBalance>>
+public sealed class GetMonthlyBalancesQuery : IQuery<IEnumerable<MonthlyBalance>>
 {
     public Guid BusinessUnitId { get; set; }
     public int Take { get; set; }

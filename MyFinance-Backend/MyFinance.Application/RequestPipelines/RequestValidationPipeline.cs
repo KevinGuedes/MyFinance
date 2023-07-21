@@ -3,11 +3,12 @@ using FluentValidation;
 using MediatR;
 using Microsoft.Extensions.Logging;
 using MyFinance.Application.Common.Errors;
+using MyFinance.Application.Common.RequestHandling;
 
-namespace MyFinance.Application.Pipelines;
+namespace MyFinance.Application.RequestPipelines;
 
 public sealed class RequestValidationPipeline<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
-    where TRequest : IRequest<TResponse>
+    where TRequest : IBaseAppRequest
     where TResponse : ResultBase, new()
 {
     private readonly ILogger<RequestValidationPipeline<TRequest, TResponse>> _logger;

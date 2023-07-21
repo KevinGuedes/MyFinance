@@ -1,25 +1,25 @@
-﻿using MyFinance.Application.UseCases.Transfers.ViewModels;
+﻿using MyFinance.Application.Common.DTO;
+using MyFinance.Application.UseCases.Transfers.DTOs;
 
-namespace MyFinance.Application.UseCases.MonthlyBalances.ViewModels;
+namespace MyFinance.Application.UseCases.MonthlyBalances.DTOs;
 
-public class MonthlyBalanceViewModel
+public class MonthlyBalanceDTO : BaseDTO
 {
-    public Guid Id { get; set; }
     public double Income { get; set; }
     public double Outcome { get; set; }
     public int ReferenceMonth { get; set; }
     public int ReferenceYear { get; set; }
     public Guid BusinessUnitId { get; set; }
-    public List<TransferViewModel> Transfers { get; set; }
+    public List<TransferDTO> Transfers { get; set; }
 
-    public MonthlyBalanceViewModel(
+    public MonthlyBalanceDTO(
         Guid id,
         double income,
         double outcome,
         int referenceMonth,
         int referenceYear,
         Guid businessUnitId,
-        List<TransferViewModel> transfers)
+        List<TransferDTO> transfers)
     {
         Id = id;
         Income = income;

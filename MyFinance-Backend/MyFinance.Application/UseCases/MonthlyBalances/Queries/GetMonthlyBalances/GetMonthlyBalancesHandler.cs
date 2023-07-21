@@ -1,12 +1,12 @@
 ﻿using FluentResults;
 using Microsoft.Extensions.Logging;
-using MyFinance.Application.Common.RequestHandling;
+using MyFinance.Application.Common.RequestHandling.Queries;
 using MyFinance.Domain.Entities;
 using MyFinance.Domain.Interfaces;
 
 namespace MyFinance.Application.UseCases.MonthlyBalances.Queries.GetMonthlyBalances;
 
-internal sealed class GetMonthlyBalancesHandler : QueryHandler<GetMonthlyBalancesQuery, IEnumerable<MonthlyBalance>>
+internal sealed class GetMonthlyBalancesHandler : IQueryHandler<GetMonthlyBalancesQuery, IEnumerable<MonthlyBalance>>
 {
     private readonly ILogger<GetMonthlyBalancesHandler> _logger;
     private readonly IMonthlyBalanceRepository _monthlyBalanceRepository;
@@ -16,16 +16,16 @@ internal sealed class GetMonthlyBalancesHandler : QueryHandler<GetMonthlyBalance
         IMonthlyBalanceRepository monthlyBalanceRepository)
         => (_logger, _monthlyBalanceRepository) = (logger, monthlyBalanceRepository);
 
-    public async override Task<Result<IEnumerable<MonthlyBalance>>> Handle(GetMonthlyBalancesQuery query, CancellationToken cancellationToken)
+    public async Task<Result<IEnumerable<MonthlyBalance>>> Handle(GetMonthlyBalancesQuery query, CancellationToken cancellationToken)
     {
         _logger.LogInformation("Retrieving Monthly Balances");
-        var topRecentMonthlybalances = await _monthlyBalanceRepository.GetByBusinessUnitId(
+        var monthlyBalances = await _monthlyBalanceRepository.GetByBusinessUnitId(
             query.BusinessUnitId,
             query.Take,
             query.Skip,
             cancellationToken);
         _logger.LogInformation("Monthly Balances retrieved");
 
-        return Result.Ok(topRecentMonthlybalances);
+        return Result.Ok(monthlyBalances);
     }
 }

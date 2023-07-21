@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MyFinance.Application.Common.ApiService;
 using MyFinance.Application.UseCases.MonthlyBalances.ApiService;
-using MyFinance.Application.UseCases.MonthlyBalances.ViewModels;
+using MyFinance.Application.UseCases.MonthlyBalances.DTOs;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace MyFinance.Presentation.Controllers;
@@ -17,8 +17,8 @@ public class MonthlyBalanceController : BaseController
         => _monthlyBalanceApiService = monthlyBalanceApiService;
 
     [HttpGet]
-    [SwaggerOperation(Summary = "Lists all existing Monthly Balances according to query parameters.")]
-    [SwaggerResponse(StatusCodes.Status200OK, "List of Monthly Balances", typeof(IEnumerable<MonthlyBalanceViewModel>))]
+    [SwaggerOperation(Summary = "Lists all existing Monthly Balances according to query parameters")]
+    [SwaggerResponse(StatusCodes.Status200OK, "List of Monthly Balances", typeof(IEnumerable<MonthlyBalanceDTO>))]
     [SwaggerResponse(StatusCodes.Status400BadRequest, "Invalid query parameters", typeof(BadRequestResponse))]
     public async Task<IActionResult> GetBusinessUnitsAsync(
         [FromQuery, SwaggerParameter("Business Unit Id", Required = true)] Guid businessUnitId,
