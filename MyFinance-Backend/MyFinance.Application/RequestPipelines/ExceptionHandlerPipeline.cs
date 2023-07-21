@@ -17,7 +17,7 @@ public sealed class ExceptionHandlerPipeline<TRequest, TResponse> : IPipelineBeh
 
     public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
     {
-        var requestName = request.GetType();
+        var requestName = request.GetType().Name;
 
         try
         {
@@ -35,7 +35,7 @@ public sealed class ExceptionHandlerPipeline<TRequest, TResponse> : IPipelineBeh
         {
             _logger.LogError(exception, "[{RequestName}] Failed to handle request", requestName);
 
-            var error = Result.Fail(new FailedToProcessRequest(requestName.ToString()).CausedBy(exception));
+            var error = Result.Fail(new UnexpectedBehavior(requestName.ToString()).CausedBy(exception));
             var response = new TResponse();
             response.Reasons.AddRange(error.Reasons);
 

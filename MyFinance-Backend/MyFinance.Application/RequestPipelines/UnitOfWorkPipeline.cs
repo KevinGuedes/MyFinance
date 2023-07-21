@@ -18,7 +18,7 @@ public sealed class UnitOfWorkPipeline<TRequest, TResponse> : IPipelineBehavior<
 
     public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
     {
-        var requestName = request.GetType();
+        var requestName = request.GetType().Name;
 
         try
         {
