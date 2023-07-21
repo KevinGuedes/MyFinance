@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MyFinance.Application.Common.ApiService;
 using MyFinance.Application.UseCases.BusinessUnits.ApiService;
+using MyFinance.Application.UseCases.BusinessUnits.Commands.ArchiveBusinessUnit;
 using MyFinance.Application.UseCases.BusinessUnits.Commands.CreateBusinessUnit;
 using MyFinance.Application.UseCases.BusinessUnits.Commands.UpdateBusinessUnit;
 using MyFinance.Application.UseCases.BusinessUnits.DTOs;
@@ -38,16 +39,25 @@ public class BusinessUnitController : BaseController
     [SwaggerResponse(StatusCodes.Status200OK, "Updated Business Unit", typeof(BusinessUnitDTO))]
     [SwaggerResponse(StatusCodes.Status400BadRequest, "Invalid payload", typeof(BadRequestResponse))]
     public async Task<IActionResult> UpdateBusinessUnitAsync(
-        [FromBody, SwaggerRequestBody("Business unit payload", Required = true)] UpdateBusinessUnitCommand command,
+        [FromBody, SwaggerRequestBody("Business Unit payload", Required = true)] UpdateBusinessUnitCommand command,
         CancellationToken cancellationToken)
         => ProcessResult(await _businessUnitApiService.UpdateBusinessUnitAsync(command, cancellationToken));
 
-    [HttpDelete("{id:guid}")]
+    [HttpPatch("{id:guid}")]
+    [SwaggerOperation(Summary = "Unarchives an existing Business Unit")]
+    [SwaggerResponse(StatusCodes.Status204NoContent, "Business Unit successfully unarchived")]
+    [SwaggerResponse(StatusCodes.Status400BadRequest, "Invalid Business Unit Id", typeof(BadRequestResponse))]
+    public async Task<IActionResult> UnarchiveBusinessUnitAsync(
+        [FromRoute, SwaggerParameter("Id of the Business Unit to unarchive", Required = true)] Guid id,
+        CancellationToken cancellationToken)
+        => ProcessResult(await _businessUnitApiService.UnarchiveBusinessUnitAsync(id, cancellationToken));
+
+    [HttpDelete]
     [SwaggerOperation(Summary = "Logically deletes (archives) an existing Business Unit")]
     [SwaggerResponse(StatusCodes.Status204NoContent, "Business Unit successfully archived")]
-    [SwaggerResponse(StatusCodes.Status400BadRequest, "Invalid Business Unit Id", typeof(BadRequestResponse))]
-    public async Task<IActionResult> DeleteTransferAsync(
-        [FromRoute, SwaggerParameter("Business Unit Id", Required = true)] Guid id,
+    [SwaggerResponse(StatusCodes.Status400BadRequest, "Invalid payload", typeof(BadRequestResponse))]
+    public async Task<IActionResult> ArchiveBusinessUnitAsync(
+        [FromBody, SwaggerRequestBody("Payload to archvie a Business Unit", Required = true)] ArchiveBusinessUnitCommand command,
         CancellationToken cancellationToken)
-        => ProcessResult(await _businessUnitApiService.ArchiveBusinessUnitAsync(id, cancellationToken));
+        => ProcessResult(await _businessUnitApiService.ArchiveBusinessUnitAsync(command, cancellationToken));
 }

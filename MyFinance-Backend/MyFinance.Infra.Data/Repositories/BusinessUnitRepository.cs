@@ -12,4 +12,7 @@ public class BusinessUnitRepository : EntityRepository<BusinessUnit>, IBusinessU
 
     public Task<bool> ExistsByNameAsync(string name, CancellationToken cancellationToken)
         => _myFinanceDbContext.BusinessUnits.AnyAsync(bu => bu.Name == name, cancellationToken);
+
+    public async Task<BusinessUnit?> GetByNameAsync(string name, CancellationToken cancellationToken)
+        => await _myFinanceDbContext.BusinessUnits.Where(bu => bu.Name == name).FirstOrDefaultAsync(cancellationToken);
 }

@@ -43,6 +43,14 @@ public class BusinessUnit : Entity
         ReasonToArchive = reasonToArchive;
     }
 
+    public void Unarchive()
+    {
+        SetUpdateDateToNow();
+        IsArchived = false;
+        ArchiveDate = null;
+        ReasonToArchive = null;
+    }
+
     public void RegisterValue(double transferValue, TransferType transferType)
     {
         SetUpdateDateToNow();
