@@ -18,13 +18,13 @@ public sealed class ArchiveBusinessUnitValidator : AbstractValidator<ArchiveBusi
           .NotEmpty().WithMessage("{PropertyName} must not be empty")
           .MinimumLength(10).WithMessage("{PropertyName} must have 10 or more characters");
 
-        RuleFor(command => command.Id)
-            .Cascade(CascadeMode.Stop)
-            .NotEqual(Guid.Empty).WithMessage("{PropertyName} invalid")
-            .MustAsync(async (businessUnitId, cancellationToken) =>
-            {
-                var exists = await _businessUnitRepository.ExistsByIdAsync(businessUnitId, cancellationToken);
-                return exists;
-            }).WithMessage("Business Unit not found");
+        //RuleFor(command => command.Id)
+        //    .Cascade(CascadeMode.Stop)
+        //    .NotEqual(Guid.Empty).WithMessage("{PropertyName} invalid")
+        //    .MustAsync(async (businessUnitId, cancellationToken) =>
+        //    {
+        //        var exists = await _businessUnitRepository.ExistsByIdAsync(businessUnitId, cancellationToken);
+        //        return exists;
+        //    }).WithMessage("Business Unit not found");
     }
 }

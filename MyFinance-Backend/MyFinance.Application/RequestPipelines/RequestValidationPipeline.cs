@@ -40,7 +40,7 @@ public sealed class RequestValidationPipeline<TRequest, TResponse> : IPipelineBe
                 validationResult => validationResult.ErrorMessage,
                 (propertyName, errorMessages) => new
                 {
-                    Key = propertyName,
+                    Key = string.Concat(char.ToLower(propertyName[0]), propertyName[1..]),
                     Values = errorMessages.Distinct().ToArray()
                 })
             .ToDictionary(dictionaryData => dictionaryData.Key, dictionaryData => dictionaryData.Values);
