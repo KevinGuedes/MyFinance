@@ -12,9 +12,10 @@ public class ErrorController : BaseController
     [Route("/error")]
     public IActionResult BuildErrorResponse()
     {
-        var exception = HttpContext.Features.Get<IExceptionHandlerFeature>();
         var internalServerError = new InternalServerError();
-        internalServerError.CausedBy(exception!.Error);
+
+        var exception = HttpContext.Features.Get<IExceptionHandlerFeature>();
+        if(exception is not null) internalServerError.CausedBy(exception.Error);
 
         return BuildInternalServerErrorResponse(internalServerError);
     }
