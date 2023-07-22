@@ -12,6 +12,9 @@ public sealed class UpdateBusinessUnitValidator : AbstractValidator<UpdateBusine
         _businessUnitRepository = businessUnitRepository;
         ClassLevelCascadeMode = CascadeMode.Stop;
 
+        RuleFor(command => command.Id)
+            .NotEqual(Guid.Empty).WithMessage("{PropertyName} invalid");
+
         RuleFor(command => command.Name)
            .Cascade(CascadeMode.Stop)
            .NotNull().WithMessage("{PropertyName} must not be null")
@@ -25,14 +28,5 @@ public sealed class UpdateBusinessUnitValidator : AbstractValidator<UpdateBusine
                var isValidName = existingBusinessUnit.Id == command.Id;
                return isValidName;
            }).WithMessage("This {PropertyName} has already been taken");
-
-        RuleFor(command => command.Id)
-            .Cascade(CascadeMode.Stop)
-            .NotEqual(Guid.Empty).WithMessage("{PropertyName} invalid")
-            .MustAsync(async (businessUnitId, cancellationToken) =>
-            {
-                var exists = await _businessUnitRepository.ExistsByIdAsync(businessUnitId, cancellationToken);
-                return exists;
-            }).WithMessage("Business Unit not found");
     }
 }

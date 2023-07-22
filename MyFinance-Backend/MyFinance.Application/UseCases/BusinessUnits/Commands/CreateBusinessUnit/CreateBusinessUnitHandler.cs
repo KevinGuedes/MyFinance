@@ -19,8 +19,6 @@ internal sealed class CreateBusinessUnitHandler : ICommandHandler<CreateBusiness
 
     public Task<Result<BusinessUnit>> Handle(CreateBusinessUnitCommand command, CancellationToken cancellationToken)
     {
-        var error = new EntityNotFoundError("BU not found");
-        return Task.FromResult(Result.Fail<BusinessUnit>(error));
         _logger.LogInformation("Creating new Business Unit with Name: {Name}", command.Name);
         var businessUnit = new BusinessUnit(command.Name, command.Description);
         _businessUnitRepository.Insert(businessUnit);
