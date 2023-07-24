@@ -1,15 +1,11 @@
 ﻿using FluentValidation;
-using MyFinance.Domain.Interfaces;
 
 namespace MyFinance.Application.UseCases.Transfers.Commands.RegisterTransfers;
 
 public sealed class RegisterTransfersValidator : AbstractValidator<RegisterTransfersCommand>
 {
-    private readonly IBusinessUnitRepository _businessUnitRepository;
-    public RegisterTransfersValidator(IBusinessUnitRepository businessUnitRepository)
+    public RegisterTransfersValidator()
     {
-        _businessUnitRepository = businessUnitRepository;
-
         RuleFor(command => command.Value)
             .NotEqual(0).WithMessage("{PropertyName} must not be equal to 0")
             .GreaterThan(0).WithMessage("{PropertyName} must be greater than 0");
@@ -28,12 +24,6 @@ public sealed class RegisterTransfersValidator : AbstractValidator<RegisterTrans
             .IsInEnum().WithMessage("Invalid {PropertyName}");
 
         RuleFor(command => command.BusinessUnitId)
-            .Cascade(CascadeMode.Stop)
-            .NotEqual(Guid.Empty).WithMessage("{PropertyName} invalid")
-            .MustAsync(async (businessUnitId, cancellationToken) =>
-            {
-                var exists = await _businessUnitRepository.ExistsByIdAsync(businessUnitId, cancellationToken);
-                return exists;
-            }).WithMessage("Business Unit not found");
+            .NotEqual(Guid.Empty).WithMessage("{PropertyName} invalid");
     }
 }

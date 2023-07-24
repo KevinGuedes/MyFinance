@@ -15,14 +15,14 @@ public class MonthlyBalanceApiService : EntityApiService, IMonthlyBalanceApiServ
     {
     }
 
-    public async Task<Result<IEnumerable<MonthlyBalanceDTO>>> GetMonthlyBalancesAsync(
+    public async Task<Result<IReadOnlyCollection<MonthlyBalanceDTO>>> GetMonthlyBalancesAsync(
         Guid businessUnitId,
         int take,
         int skip,
         CancellationToken cancellationToken)
     {
         var query = new GetMonthlyBalancesQuery(businessUnitId, take, skip);
-        var result = await _mediator.Send(query, cancellationToken);
-        return MapResult<MonthlyBalance, MonthlyBalanceDTO>(result);
+        var monthlyBalances = await _mediator.Send(query, cancellationToken);
+        return MapResult<MonthlyBalance, MonthlyBalanceDTO>(monthlyBalances);
     }
 }

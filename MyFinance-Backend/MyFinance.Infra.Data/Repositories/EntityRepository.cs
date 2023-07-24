@@ -15,8 +15,11 @@ public abstract class EntityRepository<TEntity> : IEntityRepository<TEntity> whe
     public Task<bool> ExistsByIdAsync(Guid id, CancellationToken cancellationToken)
         => _myFinanceDbContext.Set<TEntity>().AnyAsync(entity => entity.Id == id, cancellationToken);
 
-    public async Task<IEnumerable<TEntity>> GetAllAsync(CancellationToken cancellationToken)
-       => await _myFinanceDbContext.Set<TEntity>().AsNoTracking().ToListAsync(cancellationToken);
+    public async Task<IReadOnlyCollection<TEntity>> GetAllAsync(CancellationToken cancellationToken)
+        {
+        var entities = await _myFinanceDbContext.Set<TEntity>().ToListAsync(cancellationToken);
+        return entities.AsReadOnly();
+    }
 
     public virtual async Task<TEntity?> GetByIdAsync(Guid id, CancellationToken cancellationToken)
         => await _myFinanceDbContext.Set<TEntity>().FindAsync(new object[] { id }, cancellationToken);

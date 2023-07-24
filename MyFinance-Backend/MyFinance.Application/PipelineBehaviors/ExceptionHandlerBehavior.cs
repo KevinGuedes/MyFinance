@@ -4,15 +4,15 @@ using Microsoft.Extensions.Logging;
 using MyFinance.Application.Common.Errors;
 using MyFinance.Application.Common.RequestHandling;
 
-namespace MyFinance.Application.RequestPipelines;
+namespace MyFinance.Application.PipelineBehaviors;
 
-public sealed class ExceptionHandlerPipeline<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
+public sealed class ExceptionHandlerBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
     where TRequest : IBaseAppRequest
     where TResponse : ResultBase, new()
 {
-    private readonly ILogger<ExceptionHandlerPipeline<TRequest, TResponse>> _logger;
+    private readonly ILogger<ExceptionHandlerBehavior<TRequest, TResponse>> _logger;
 
-    public ExceptionHandlerPipeline(ILogger<ExceptionHandlerPipeline<TRequest, TResponse>> logger)
+    public ExceptionHandlerBehavior(ILogger<ExceptionHandlerBehavior<TRequest, TResponse>> logger)
         => _logger = logger;
 
     public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)

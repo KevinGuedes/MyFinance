@@ -1,5 +1,6 @@
 ﻿using FluentResults;
 using Microsoft.Extensions.Logging;
+using MyFinance.Application.Common.Errors;
 using MyFinance.Application.Common.RequestHandling.Commands;
 using MyFinance.Domain.Interfaces;
 
@@ -28,7 +29,18 @@ internal sealed class DeleteTransferHandler : ICommandHandler<DeleteTransferComm
     {
         _logger.LogInformation("Retrieving data required to delete Transfer with Id {TransferId}", command.Id);
         var transfer = await _transferRepository.GetByIdAsync(command.Id, cancellationToken);
-        var monthlyBalance = transfer!.MonthlyBalance;
+
+        await Task.Delay(10000);
+
+        if (transfer is null)
+        {
+            _logger.LogWarning("Transfer with Id {BusinessUnitId} not found", command.Id);
+            var errorMessage = string.Format("Transfer with Id {0} not found", command.Id);
+            var entityNotFoundError = new EntityNotFoundError(errorMessage);
+            return Result.Fail(entityNotFoundError);
+        }
+
+        var monthlyBalance = transfer.MonthlyBalance;
         var businessUnit = monthlyBalance.BusinessUnit;
 
         _logger.LogInformation("Deleting Transfer with Id {TransferId}", command.Id);

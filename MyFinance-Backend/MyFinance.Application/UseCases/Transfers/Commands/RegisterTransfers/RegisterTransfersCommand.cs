@@ -1,9 +1,10 @@
 ﻿using MyFinance.Application.Common.RequestHandling.Commands;
+using MyFinance.Domain.Entities;
 using MyFinance.Domain.Enums;
 
 namespace MyFinance.Application.UseCases.Transfers.Commands.RegisterTransfers;
 
-public sealed class RegisterTransfersCommand : ICommand
+public sealed class RegisterTransfersCommand : ICommand<Transfer>
 {
     public Guid BusinessUnitId { get; set; }
     public double Value { get; set; }

@@ -17,10 +17,13 @@ public class TransferApiService : EntityApiService, ITransferApiService
     {
     }
 
-    public Task<Result> RegisterTransfersAsync(
+    public async Task<Result<TransferDTO>> RegisterTransfersAsync(
         RegisterTransfersCommand command,
         CancellationToken cancellationToken)
-        => _mediator.Send(command, cancellationToken);
+    {
+        var result = await _mediator.Send(command, cancellationToken);
+        return MapResult<Transfer, TransferDTO>(result);
+    }
 
     public async Task<Result<TransferDTO>> UpdateTransferAsync(
         UpdateTransferCommand command,

@@ -5,7 +5,7 @@ namespace MyFinance.Application.UseCases.MonthlyBalances.ApiService;
 
 public interface IMonthlyBalanceApiService
 {
-    Task<Result<IEnumerable<MonthlyBalanceDTO>>> GetMonthlyBalancesAsync(
+    Task<Result<IReadOnlyCollection<MonthlyBalanceDTO>>> GetMonthlyBalancesAsync(
         Guid businessUnitId,
         int count,
         int skip,

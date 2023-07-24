@@ -6,7 +6,7 @@ using MyFinance.Domain.Interfaces;
 
 namespace MyFinance.Application.UseCases.MonthlyBalances.Queries.GetMonthlyBalances;
 
-internal sealed class GetMonthlyBalancesHandler : IQueryHandler<GetMonthlyBalancesQuery, IEnumerable<MonthlyBalance>>
+internal sealed class GetMonthlyBalancesHandler : IQueryHandler<GetMonthlyBalancesQuery, IReadOnlyCollection<MonthlyBalance>>
 {
     private readonly ILogger<GetMonthlyBalancesHandler> _logger;
     private readonly IMonthlyBalanceRepository _monthlyBalanceRepository;
@@ -16,7 +16,7 @@ internal sealed class GetMonthlyBalancesHandler : IQueryHandler<GetMonthlyBalanc
         IMonthlyBalanceRepository monthlyBalanceRepository)
         => (_logger, _monthlyBalanceRepository) = (logger, monthlyBalanceRepository);
 
-    public async Task<Result<IEnumerable<MonthlyBalance>>> Handle(GetMonthlyBalancesQuery query, CancellationToken cancellationToken)
+    public async Task<Result<IReadOnlyCollection<MonthlyBalance>>> Handle(GetMonthlyBalancesQuery query, CancellationToken cancellationToken)
     {
         _logger.LogInformation("Retrieving Monthly Balances");
         var monthlyBalances = await _monthlyBalanceRepository.GetByBusinessUnitId(

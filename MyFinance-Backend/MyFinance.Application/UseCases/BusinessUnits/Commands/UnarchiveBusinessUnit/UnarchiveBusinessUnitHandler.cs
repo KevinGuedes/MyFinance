@@ -23,8 +23,8 @@ public class UnarchiveBusinessUnitHandler : ICommandHandler<UnarchiveBusinessUni
 
         if (businessUnit is null)
         {
-            var errorMessage = string.Format("Business Unit with Id {0} not found", command.Id);
             _logger.LogWarning("Business Unit with Id {BusinessUnitId} not found", command.Id);
+            var errorMessage = string.Format("Business Unit with Id {0} not found", command.Id);
             var entityNotFoundError = new EntityNotFoundError(errorMessage);
             return Result.Fail(entityNotFoundError);
         }

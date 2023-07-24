@@ -3,7 +3,7 @@ using MyFinance.Domain.Entities;
 
 namespace MyFinance.Application.UseCases.MonthlyBalances.Queries.GetMonthlyBalances;
 
-public sealed class GetMonthlyBalancesQuery : IQuery<IEnumerable<MonthlyBalance>>
+public sealed class GetMonthlyBalancesQuery : IQuery<IReadOnlyCollection<MonthlyBalance>>
 {
     public Guid BusinessUnitId { get; set; }
     public int Take { get; set; }

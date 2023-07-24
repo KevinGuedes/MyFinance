@@ -5,17 +5,17 @@ using Microsoft.Extensions.Logging;
 using MyFinance.Application.Common.Errors;
 using MyFinance.Application.Common.RequestHandling;
 
-namespace MyFinance.Application.RequestPipelines;
+namespace MyFinance.Application.PipelineBehaviors;
 
-public sealed class RequestValidationPipeline<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
+public sealed class RequestValidationBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
     where TRequest : IBaseAppRequest
     where TResponse : ResultBase, new()
 {
-    private readonly ILogger<RequestValidationPipeline<TRequest, TResponse>> _logger;
+    private readonly ILogger<RequestValidationBehavior<TRequest, TResponse>> _logger;
     private readonly IEnumerable<IValidator<TRequest>> _validators;
 
-    public RequestValidationPipeline(
-        ILogger<RequestValidationPipeline<TRequest, TResponse>> logger,
+    public RequestValidationBehavior(
+        ILogger<RequestValidationBehavior<TRequest, TResponse>> logger,
         IEnumerable<IValidator<TRequest>> validators)
         => (_logger, _validators) = (logger, validators);
 

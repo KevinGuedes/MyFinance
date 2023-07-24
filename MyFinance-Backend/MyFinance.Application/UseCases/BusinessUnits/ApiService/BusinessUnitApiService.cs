@@ -19,27 +19,27 @@ public class BusinessUnitApiService : EntityApiService, IBusinessUnitApiService
     {
     }
 
-    public async Task<Result<IEnumerable<BusinessUnitDTO>>> GetBusinessUnitsAsync(
+    public async Task<Result<IReadOnlyCollection<BusinessUnitDTO>>> GetBusinessUnitsAsync(
         CancellationToken cancellationToken)
     {
-        var result = await _mediator.Send(new GetBusinessUnitsQuery(), cancellationToken);
-        return MapResult<BusinessUnit, BusinessUnitDTO>(result);
+        var businessUnits = await _mediator.Send(new GetBusinessUnitsQuery(), cancellationToken);
+        return MapResult<BusinessUnit, BusinessUnitDTO>(businessUnits);
     }
 
     public async Task<Result<BusinessUnitDTO>> CreateBusinessUnitAsync(
         CreateBusinessUnitCommand command,
         CancellationToken cancellationToken)
     {
-        var result = await _mediator.Send(command, cancellationToken);
-        return MapResult<BusinessUnit, BusinessUnitDTO>(result);
+        var businessUnit = await _mediator.Send(command, cancellationToken);
+        return MapResult<BusinessUnit, BusinessUnitDTO>(businessUnit);
     }
 
     public async Task<Result<BusinessUnitDTO>> UpdateBusinessUnitAsync(
         UpdateBusinessUnitCommand command,
         CancellationToken cancellationToken)
     {
-        var result = await _mediator.Send(command, cancellationToken);
-        return MapResult<BusinessUnit, BusinessUnitDTO>(result);
+        var businessUnit = await _mediator.Send(command, cancellationToken);
+        return MapResult<BusinessUnit, BusinessUnitDTO>(businessUnit);
     }
 
     public Task<Result> ArchiveBusinessUnitAsync(ArchiveBusinessUnitCommand command, CancellationToken cancellationToken)

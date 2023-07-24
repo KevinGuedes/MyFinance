@@ -3,6 +3,6 @@ using MyFinance.Domain.Entities;
 
 namespace MyFinance.Application.UseCases.BusinessUnits.Queries.GetBusinessUnits;
 
-public sealed class GetBusinessUnitsQuery : IQuery<IEnumerable<BusinessUnit>>
+public sealed class GetBusinessUnitsQuery : IQuery<IReadOnlyCollection<BusinessUnit>>
 {
 }

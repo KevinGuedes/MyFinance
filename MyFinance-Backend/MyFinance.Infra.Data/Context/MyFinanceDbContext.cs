@@ -12,6 +12,8 @@ public class MyFinanceDbContext : DbContext
     public MyFinanceDbContext(DbContextOptions<MyFinanceDbContext> options)
         : base(options)
     {
+        ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
+        ChangeTracker.AutoDetectChangesEnabled = false;
     }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)

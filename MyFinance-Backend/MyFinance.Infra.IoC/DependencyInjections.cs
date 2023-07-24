@@ -3,7 +3,7 @@ using FluentValidation.AspNetCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using MyFinance.Application.RequestPipelines;
+using MyFinance.Application.PipelineBehaviors;
 using MyFinance.Application.UseCases.BusinessUnits.ApiService;
 using MyFinance.Application.UseCases.MonthlyBalances.ApiService;
 using MyFinance.Application.UseCases.Transfers.ApiService;
@@ -62,8 +62,8 @@ public static class DependencyInjections
             {
                 cfg.RegisterServicesFromAssembly(applicationLayerAssembly);
                 cfg
-                    .AddOpenBehavior(typeof(ExceptionHandlerPipeline<,>))
-                    .AddOpenBehavior(typeof(RequestValidationPipeline<,>))
-                    .AddOpenBehavior(typeof(UnitOfWorkPipeline<,>));
+                    .AddOpenBehavior(typeof(ExceptionHandlerBehavior<,>))
+                    .AddOpenBehavior(typeof(RequestValidationBehavior<,>))
+                    .AddOpenBehavior(typeof(UnitOfWorkBehavior<,>));
             });
 }

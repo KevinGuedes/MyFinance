@@ -1,5 +1,6 @@
 ﻿using FluentResults;
 using Microsoft.Extensions.Logging;
+using MyFinance.Application.Common.Errors;
 using MyFinance.Application.Common.RequestHandling.Commands;
 using MyFinance.Domain.Entities;
 using MyFinance.Domain.Interfaces;
@@ -29,7 +30,16 @@ internal sealed class UpdateTransferHandler : ICommandHandler<UpdateTransferComm
     {
         _logger.LogInformation("Retrieving current Monthly Balance of Transfer with Id {TransferId}", command.Id);
         var transfer = await _transferRepository.GetByIdAsync(command.Id, cancellationToken);
-        var currentMonthlyBalance = transfer!.MonthlyBalance;
+
+        if (transfer is null)
+        {
+            _logger.LogWarning("Transfer with Id {BusinessUnitId} not found", command.Id);
+            var errorMessage = string.Format("Transfer with Id {0} not found", command.Id);
+            var entityNotFoundError = new EntityNotFoundError(errorMessage);
+            return Result.Fail(entityNotFoundError);
+        }
+
+        var currentMonthlyBalance = transfer.MonthlyBalance;
         var businessUnit = currentMonthlyBalance.BusinessUnit;
 
         var shouldGoToAnotherMonthlyBalance =
