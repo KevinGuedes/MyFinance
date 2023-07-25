@@ -12,7 +12,7 @@ public class BusinessUnit : Entity
     public bool IsArchived { get; private set; }
     public string? ReasonToArchive { get; private set; }
     public DateTime? ArchiveDate { get; private set; }
-    public List<MonthlyBalance> MonthlyBalances { get; private set; }
+    public IReadOnlyCollection<MonthlyBalance> MonthlyBalances { get; private set; }
 
     public BusinessUnit() { }
 
@@ -25,7 +25,7 @@ public class BusinessUnit : Entity
         IsArchived = false;
         ReasonToArchive = null;
         ArchiveDate = null;
-        MonthlyBalances = new List<MonthlyBalance>();
+        MonthlyBalances = new List<MonthlyBalance>().AsReadOnly();
     }
 
     public void Update(string name, string? description)

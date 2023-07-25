@@ -10,7 +10,7 @@ public class MonthlyBalance : Entity
     public int ReferenceYear { get; init; }
     public Guid BusinessUnitId { get; private set; }
     public BusinessUnit BusinessUnit { get; private set; }
-    public List<Transfer> Transfers { get; private set; }
+    public IReadOnlyCollection<Transfer> Transfers { get; private set; }
 
     protected MonthlyBalance() { }
 
@@ -22,7 +22,7 @@ public class MonthlyBalance : Entity
         ReferenceYear = referenceDate.Year;
         BusinessUnit = businessUnit;
         BusinessUnitId = businessUnit.Id;
-        Transfers = new List<Transfer>();
+        Transfers = new List<Transfer>().AsReadOnly();
     }
 
     public void RegisterValue(double transferValue, TransferType transferType)
