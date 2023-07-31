@@ -3,12 +3,9 @@ using MyFinance.Domain.Entities;
 
 namespace MyFinance.Application.UseCases.BusinessUnits.Commands.UpdateBusinessUnit;
 
-public sealed class UpdateBusinessUnitCommand : ICommand<BusinessUnit>
+public sealed record UpdateBusinessUnitCommand(
+    Guid Id,
+    string Name,
+    string? Description) : ICommand<BusinessUnit>
 {
-    public Guid Id { get; set; }
-    public string Name { get; set; }
-    public string? Description { get; set; }
-
-    public UpdateBusinessUnitCommand(Guid id, string name, string? description)
-        => (Id, Name, Description) = (id, name, description);
 }

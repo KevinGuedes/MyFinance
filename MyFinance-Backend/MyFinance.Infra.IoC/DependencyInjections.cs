@@ -38,9 +38,7 @@ public static class DependencyInjections
     {
         var migrationsAssemblyName = typeof(MyFinanceDbContext).Assembly.FullName;
         services.AddDbContext<MyFinanceDbContext>(
-            options => options
-                .EnableSensitiveDataLogging()
-                .UseSqlServer(configuration.GetConnectionString("MyFinanceDb"),
+            options => options.UseSqlServer(configuration.GetConnectionString("MyFinanceDb"),
             sqlServerOptions => sqlServerOptions.MigrationsAssembly(migrationsAssemblyName)));
 
         services

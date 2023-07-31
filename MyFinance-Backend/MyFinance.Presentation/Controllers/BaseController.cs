@@ -14,8 +14,8 @@ public abstract class BaseController : ControllerBase
     {
         if (result.IsSuccess)
         {
-            return isCreatedEntity ? 
-                StatusCode(StatusCodes.Status201Created, result.Value) : 
+            return isCreatedEntity ?
+                StatusCode(StatusCodes.Status201Created, result.Value) :
                 Ok(result.Value);
         }
 
