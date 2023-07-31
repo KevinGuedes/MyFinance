@@ -19,6 +19,15 @@ public class BusinessUnitController : BaseController
     public BusinessUnitController(IBusinessUnitApiService businessUnitApiService)
         => _businessUnitApiService = businessUnitApiService;
 
+    [HttpPost]
+    [SwaggerOperation(Summary = "Creates a new Business Unit")]
+    [SwaggerResponse(StatusCodes.Status200OK, "Created Business Unit", typeof(BusinessUnitDTO))]
+    [SwaggerResponse(StatusCodes.Status400BadRequest, "Invalid payload", typeof(BadRequestResponse))]
+    public async Task<IActionResult> CreateBusinessUnitAsync(
+        [FromBody, SwaggerRequestBody("Business unit payload", Required = true)] CreateBusinessUnitCommand command,
+        CancellationToken cancellationToken)
+        => ProcessResult(await _businessUnitApiService.CreateBusinessUnitAsync(command, cancellationToken), true);
+
     [HttpGet]
     [SwaggerOperation(Summary = "Lists all Business Units")]
     [SwaggerResponse(StatusCodes.Status200OK, "List of all existing Business Units", typeof(IEnumerable<BusinessUnitDTO>))]
@@ -27,15 +36,6 @@ public class BusinessUnitController : BaseController
         [FromQuery, SwaggerParameter("Units per page", Required = true)] int pageSize,
         CancellationToken cancellationToken)
         => ProcessResult(await _businessUnitApiService.GetBusinessUnitsAsync(page, pageSize, cancellationToken));
-
-    [HttpPost]
-    [SwaggerOperation(Summary = "Creates a new Business Unit")]
-    [SwaggerResponse(StatusCodes.Status200OK, "Created Business Unit", typeof(BusinessUnitDTO))]
-    [SwaggerResponse(StatusCodes.Status400BadRequest, "Invalid payload", typeof(BadRequestResponse))]
-    public async Task<IActionResult> CreateBusinessUnitAsync(
-        [FromBody, SwaggerRequestBody("Business unit payload", Required = true)] CreateBusinessUnitCommand command,
-        CancellationToken cancellationToken)
-        => ProcessResult(await _businessUnitApiService.CreateBusinessUnitAsync(command, cancellationToken));
 
     [HttpPut]
     [SwaggerOperation(Summary = "Updates an existing Business Unit")]

@@ -10,9 +10,15 @@ namespace MyFinance.Presentation.Controllers;
 [SwaggerResponse(StatusCodes.Status500InternalServerError, "Backend went rogue", typeof(InternalServerErrorResponse))]
 public abstract class BaseController : ControllerBase
 {
-    protected IActionResult ProcessResult<TResponse>(Result<TResponse> result)
+    protected IActionResult ProcessResult<TResponse>(Result<TResponse> result, bool isCreatedEntity = false)
     {
-        if (result.IsSuccess) return Ok(result.Value);
+        if (result.IsSuccess)
+        {
+            return isCreatedEntity ? 
+                StatusCode(StatusCodes.Status201Created, result.Value) : 
+                Ok(result.Value);
+        }
+
         return HandleFailureResult(result.Errors);
     }
 
@@ -37,18 +43,18 @@ public abstract class BaseController : ControllerBase
         return BuildInternalServerErrorResponse(internalServerError);
     }
 
-    protected IActionResult BuildBadRequestResponse(InvalidRequestError invalidRequestError)
-        => BadRequest(new BadRequestResponse(invalidRequestError));
-
-    protected IActionResult BuildNotFoundResponse(EntityNotFoundError entityNotFoundError)
-        => NotFound(new EntityNotFoundResponse(entityNotFoundError));
-
-    protected IActionResult BuildUnprocessableEntityResponse(UnprocessableEntityError unprocessableEntityError)
-        => UnprocessableEntity(new UnprocessableEntityResponse(unprocessableEntityError));
-
     protected IActionResult BuildInternalServerErrorResponse(InternalServerError internalServerError)
     {
         var internalServerErrorResponse = new InternalServerErrorResponse(internalServerError);
         return StatusCode(StatusCodes.Status500InternalServerError, internalServerErrorResponse);
     }
+
+    private IActionResult BuildBadRequestResponse(InvalidRequestError invalidRequestError)
+        => BadRequest(new BadRequestResponse(invalidRequestError));
+
+    private IActionResult BuildNotFoundResponse(EntityNotFoundError entityNotFoundError)
+        => NotFound(new EntityNotFoundResponse(entityNotFoundError));
+
+    private IActionResult BuildUnprocessableEntityResponse(UnprocessableEntityError unprocessableEntityError)
+        => UnprocessableEntity(new UnprocessableEntityResponse(unprocessableEntityError));
 }

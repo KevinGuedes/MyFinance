@@ -25,7 +25,7 @@ public class TransferController : BaseController
     public async Task<IActionResult> RegisterTransfersAsync(
         [FromBody, SwaggerRequestBody("Transfers' payload", Required = true)] RegisterTransfersCommand command,
         CancellationToken cancellationToken)
-        => ProcessResult(await _transferApiService.RegisterTransfersAsync(command, cancellationToken));
+        => ProcessResult(await _transferApiService.RegisterTransfersAsync(command, cancellationToken), true);
 
     [HttpPut]
     [SwaggerOperation(Summary = "Updates an existing Transfer")]
