@@ -2,7 +2,7 @@
 
 namespace MyFinance.Infra.Data.UnitOfWork;
 
-public class UnitOfWork : IUnitOfWork
+public sealed class UnitOfWork : IUnitOfWork
 {
     private readonly MyFinanceDbContext _myFinanceDbContext;
 

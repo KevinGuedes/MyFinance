@@ -3,7 +3,7 @@ using MyFinance.Domain.Entities;
 
 namespace MyFinance.Infra.Data.Context;
 
-public class MyFinanceDbContext : DbContext
+public sealed class MyFinanceDbContext : DbContext
 {
     public DbSet<BusinessUnit> BusinessUnits { get; set; }
     public DbSet<Transfer> Transfers { get; set; }

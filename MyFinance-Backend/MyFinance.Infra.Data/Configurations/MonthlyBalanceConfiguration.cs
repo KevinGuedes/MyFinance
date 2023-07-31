@@ -3,7 +3,7 @@ using MyFinance.Domain.Entities;
 
 namespace MyFinance.Infra.Data.Configurations;
 
-public class MonthlyBalanceConfiguration : EntityConfiguration<MonthlyBalance>
+public sealed class MonthlyBalanceConfiguration : EntityConfiguration<MonthlyBalance>
 {
     public override void Configure(EntityTypeBuilder<MonthlyBalance> builder)
     {

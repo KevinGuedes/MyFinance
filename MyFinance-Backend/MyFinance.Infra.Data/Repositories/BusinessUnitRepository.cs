@@ -5,7 +5,7 @@ using MyFinance.Infra.Data.Context;
 
 namespace MyFinance.Infra.Data.Repositories;
 
-public class BusinessUnitRepository : EntityRepository<BusinessUnit>, IBusinessUnitRepository
+public sealed class BusinessUnitRepository : EntityRepository<BusinessUnit>, IBusinessUnitRepository
 {
     public BusinessUnitRepository(MyFinanceDbContext myFinanceDbContext)
         : base(myFinanceDbContext) { }

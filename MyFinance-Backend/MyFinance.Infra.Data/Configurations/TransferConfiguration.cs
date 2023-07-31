@@ -3,7 +3,7 @@ using MyFinance.Domain.Entities;
 
 namespace MyFinance.Infra.Data.Configurations;
 
-public class TransferConfiguration : EntityConfiguration<Transfer>
+public sealed class TransferConfiguration : EntityConfiguration<Transfer>
 {
     public override void Configure(EntityTypeBuilder<Transfer> builder)
     {

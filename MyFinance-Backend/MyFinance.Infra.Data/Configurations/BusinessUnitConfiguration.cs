@@ -3,7 +3,7 @@ using MyFinance.Domain.Entities;
 
 namespace MyFinance.Infra.Data.Configurations;
 
-public class BusinessUnitConfiguration : EntityConfiguration<BusinessUnit>
+public sealed class BusinessUnitConfiguration : EntityConfiguration<BusinessUnit>
 {
     public override void Configure(EntityTypeBuilder<BusinessUnit> builder)
     {
