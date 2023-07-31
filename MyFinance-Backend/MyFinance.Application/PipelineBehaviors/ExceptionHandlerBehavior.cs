@@ -1,5 +1,6 @@
 ﻿using FluentResults;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using MyFinance.Application.Common.Errors;
 using MyFinance.Application.Common.RequestHandling;
@@ -31,13 +32,25 @@ public sealed class ExceptionHandlerBehavior<TRequest, TResponse> : IPipelineBeh
 
             return result;
         }
+        catch (DbUpdateConcurrencyException exception)
+        {
+            _logger.LogError(exception, "[{RequestName}] Entity has been updated previously", requestName);
+
+            var message = "The regarding entity has been previously updated. Try again later";
+            var unprocessableEntityError = new UnprocessableEntityError(message);
+            var failedResult = Result.Fail(unprocessableEntityError.CausedBy(exception));
+            var response = new TResponse();
+            response.Reasons.AddRange(failedResult.Reasons);
+
+            return response;
+        }
         catch (Exception exception)
         {
             _logger.LogError(exception, "[{RequestName}] Failed to handle request", requestName);
 
-            var error = Result.Fail(new InternalServerError().CausedBy(exception));
+            var failedResult = Result.Fail(new InternalServerError().CausedBy(exception));
             var response = new TResponse();
-            response.Reasons.AddRange(error.Reasons);
+            response.Reasons.AddRange(failedResult.Reasons);
 
             return response;
         }

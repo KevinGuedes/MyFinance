@@ -5,14 +5,14 @@ namespace MyFinance.Domain.Entities;
 public class BusinessUnit : Entity
 {
     public string Name { get; private set; }
+    public string? Description { get; private set; }
     public double Income { get; private set; }
     public double Outcome { get; private set; }
     public double Balance { get => Income - Outcome; }
-    public string? Description { get; private set; }
     public bool IsArchived { get; private set; }
     public string? ReasonToArchive { get; private set; }
     public DateTime? ArchiveDate { get; private set; }
-    public IReadOnlyCollection<MonthlyBalance> MonthlyBalances { get; private set; }
+    public List<MonthlyBalance> MonthlyBalances { get; private set; }
 
     public BusinessUnit() { }
 
@@ -25,7 +25,7 @@ public class BusinessUnit : Entity
         IsArchived = false;
         ReasonToArchive = null;
         ArchiveDate = null;
-        MonthlyBalances = new List<MonthlyBalance>().AsReadOnly();
+        MonthlyBalances = new List<MonthlyBalance>();
     }
 
     public void Update(string name, string? description)

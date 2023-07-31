@@ -36,10 +36,12 @@ public static class DependencyInjections
 
     private static void AddPersistence(IServiceCollection services, IConfiguration configuration)
     {
+        var migrationsAssemblyName = typeof(MyFinanceDbContext).Assembly.FullName;
         services.AddDbContext<MyFinanceDbContext>(
-            options => options.UseSqlServer(configuration.GetConnectionString("MyFinanceDb"),
-            sqlServerOptions => sqlServerOptions
-                .MigrationsAssembly(typeof(MyFinanceDbContext).Assembly.FullName)));
+            options => options
+                .EnableSensitiveDataLogging()
+                .UseSqlServer(configuration.GetConnectionString("MyFinanceDb"),
+            sqlServerOptions => sqlServerOptions.MigrationsAssembly(migrationsAssemblyName)));
 
         services
             .AddScoped<IUnitOfWork, UnitOfWork>()

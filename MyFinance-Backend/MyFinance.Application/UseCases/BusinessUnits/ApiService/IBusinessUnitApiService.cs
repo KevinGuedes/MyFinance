@@ -8,7 +8,7 @@ namespace MyFinance.Application.UseCases.BusinessUnits.ApiService;
 
 public interface IBusinessUnitApiService
 {
-    Task<Result<IReadOnlyCollection<BusinessUnitDTO>>> GetBusinessUnitsAsync(CancellationToken cancellationToken);
+    Task<Result<IEnumerable<BusinessUnitDTO>>> GetBusinessUnitsAsync(int page, int pageSize, CancellationToken cancellationToken);
     Task<Result<BusinessUnitDTO>> CreateBusinessUnitAsync(CreateBusinessUnitCommand command, CancellationToken cancellationToken);
     Task<Result<BusinessUnitDTO>> UpdateBusinessUnitAsync(UpdateBusinessUnitCommand command, CancellationToken cancellationToken);
     Task<Result> ArchiveBusinessUnitAsync(ArchiveBusinessUnitCommand command, CancellationToken cancellationToken);

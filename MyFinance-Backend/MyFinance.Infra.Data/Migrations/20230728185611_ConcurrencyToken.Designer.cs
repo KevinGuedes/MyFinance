@@ -12,15 +12,15 @@ using MyFinance.Infra.Data.Context;
 namespace MyFinance.Infra.Data.Migrations
 {
     [DbContext(typeof(MyFinanceDbContext))]
-    [Migration("20230720125315_FirstMigration")]
-    partial class FirstMigration
+    [Migration("20230728185611_ConcurrencyToken")]
+    partial class ConcurrencyToken
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "7.0.8")
+                .HasAnnotation("ProductVersion", "7.0.9")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -58,6 +58,7 @@ namespace MyFinance.Infra.Data.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("UpdateDate")
+                        .IsConcurrencyToken()
                         .HasColumnType("datetime2");
 
                     b.HasKey("Id");
@@ -94,6 +95,7 @@ namespace MyFinance.Infra.Data.Migrations
                         .HasColumnType("int");
 
                     b.Property<DateTime?>("UpdateDate")
+                        .IsConcurrencyToken()
                         .HasColumnType("datetime2");
 
                     b.HasKey("Id");
@@ -130,6 +132,7 @@ namespace MyFinance.Infra.Data.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("UpdateDate")
+                        .IsConcurrencyToken()
                         .HasColumnType("datetime2");
 
                     b.Property<double>("Value")

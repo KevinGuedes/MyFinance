@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
-using MyFinance.Application.Common.ApiResponses;
 using MyFinance.Application.Common.Errors;
 
 namespace MyFinance.Presentation.Controllers;
@@ -15,7 +14,7 @@ public class ErrorController : BaseController
         var internalServerError = new InternalServerError();
 
         var exception = HttpContext.Features.Get<IExceptionHandlerFeature>();
-        if(exception is not null) internalServerError.CausedBy(exception.Error);
+        if (exception is not null) internalServerError.CausedBy(exception.Error);
 
         return BuildInternalServerErrorResponse(internalServerError);
     }

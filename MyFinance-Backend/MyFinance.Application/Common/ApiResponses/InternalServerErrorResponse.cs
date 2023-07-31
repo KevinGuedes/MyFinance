@@ -6,4 +6,4 @@ public sealed class InternalServerErrorResponse : BaseApiResponse<InternalServer
 {
     public InternalServerErrorResponse(InternalServerError internalServerError)
         : base("MyFinance API went rogue! Sorry.", internalServerError) { }
-  }
+}

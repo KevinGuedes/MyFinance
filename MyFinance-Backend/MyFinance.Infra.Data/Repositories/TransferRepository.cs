@@ -14,5 +14,6 @@ public class TransferRepository : EntityRepository<Transfer>, ITransferRepositor
         => await _myFinanceDbContext.Transfers
             .Include(t => t.MonthlyBalance)
             .ThenInclude(mb => mb.BusinessUnit)
+            .AsSplitQuery()
             .FirstOrDefaultAsync(t => t.Id == id, cancellationToken);
 }

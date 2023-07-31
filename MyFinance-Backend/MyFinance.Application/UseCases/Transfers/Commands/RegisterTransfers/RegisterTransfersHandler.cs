@@ -41,6 +41,7 @@ internal sealed class RegisterTransfersHandler : ICommandHandler<RegisterTransfe
 
         _logger.LogInformation("Updating balance of Business Unit with Id {BusinessUnitId}", command.BusinessUnitId);
         businessUnit.RegisterValue(command.Value, command.Type);
+        _businessUnitRepository.Update(businessUnit);
 
         _logger.LogInformation("Checking if there is an existing Monthly Balance to register new Transfer");
         var monthlyBalance = await _monthlyBalanceRepository.GetByReferenceDateAndBusinessUnitId(
@@ -71,8 +72,8 @@ internal sealed class RegisterTransfersHandler : ICommandHandler<RegisterTransfe
             command.Type,
             monthlyBalance);
         _transferRepository.Insert(transfer);
-
         _logger.LogInformation("New transfer(s) successfully registered");
+
         return Result.Ok(transfer);
     }
 }

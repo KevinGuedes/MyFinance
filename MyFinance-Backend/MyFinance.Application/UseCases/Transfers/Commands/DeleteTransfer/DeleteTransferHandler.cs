@@ -30,8 +30,6 @@ internal sealed class DeleteTransferHandler : ICommandHandler<DeleteTransferComm
         _logger.LogInformation("Retrieving data required to delete Transfer with Id {TransferId}", command.Id);
         var transfer = await _transferRepository.GetByIdAsync(command.Id, cancellationToken);
 
-        await Task.Delay(10000);
-
         if (transfer is null)
         {
             _logger.LogWarning("Transfer with Id {BusinessUnitId} not found", command.Id);
@@ -43,16 +41,16 @@ internal sealed class DeleteTransferHandler : ICommandHandler<DeleteTransferComm
         var monthlyBalance = transfer.MonthlyBalance;
         var businessUnit = monthlyBalance.BusinessUnit;
 
-        _logger.LogInformation("Deleting Transfer with Id {TransferId}", command.Id);
-        _transferRepository.Delete(transfer!);
-
         _logger.LogInformation("Updating Monthly Balance with Id {MonthlyBalanceId}", monthlyBalance.Id);
-        monthlyBalance.CancelValue(transfer!.Value, transfer!.Type);
+        monthlyBalance.CancelValue(transfer.Value, transfer.Type);
         _monthlyBalanceRepository.Update(monthlyBalance);
 
-        _logger.LogInformation("Updating Balance of Business Unit with Id {BusinessUnitId}", businessUnit!.Id);
-        businessUnit.CancelValue(transfer!.Value, transfer!.Type);
+        _logger.LogInformation("Updating Balance of Business Unit with Id {BusinessUnitId}", businessUnit.Id);
+        businessUnit.CancelValue(transfer.Value, transfer.Type);
         _businessUnitRepository.Update(businessUnit);
+
+        _logger.LogInformation("Deleting Transfer with Id {TransferId}", command.Id);
+        _transferRepository.Delete(transfer);
 
         _logger.LogInformation("Transfer with Id {TransferId} sucessfully deleted", transfer.Id);
         return Result.Ok();

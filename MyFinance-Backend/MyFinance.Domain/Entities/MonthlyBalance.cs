@@ -4,13 +4,14 @@ namespace MyFinance.Domain.Entities;
 
 public class MonthlyBalance : Entity
 {
+    public int ReferenceYear { get; init; }
+    public int ReferenceMonth { get; init; }
     public double Income { get; private set; }
     public double Outcome { get; private set; }
-    public int ReferenceMonth { get; init; }
-    public int ReferenceYear { get; init; }
+    public double Balance { get => Income - Outcome; }
     public Guid BusinessUnitId { get; private set; }
     public BusinessUnit BusinessUnit { get; private set; }
-    public IReadOnlyCollection<Transfer> Transfers { get; private set; }
+    public List<Transfer> Transfers { get; private set; }
 
     protected MonthlyBalance() { }
 
@@ -22,7 +23,7 @@ public class MonthlyBalance : Entity
         ReferenceYear = referenceDate.Year;
         BusinessUnit = businessUnit;
         BusinessUnitId = businessUnit.Id;
-        Transfers = new List<Transfer>().AsReadOnly();
+        Transfers = new List<Transfer>();
     }
 
     public void RegisterValue(double transferValue, TransferType transferType)

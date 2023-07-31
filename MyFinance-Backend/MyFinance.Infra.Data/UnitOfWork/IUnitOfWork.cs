@@ -3,7 +3,4 @@
 public interface IUnitOfWork
 {
     Task SaveChangesAsync(CancellationToken cancellationToken);
-    Task BeginTrasactionAsync(CancellationToken cancellationToken);
-    Task CommitTransactionAsync(CancellationToken cancellationToken);
-    Task RollbackTransactionAsync(CancellationToken cancellationToken);
 }

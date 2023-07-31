@@ -28,7 +28,7 @@ public abstract class BaseController : ControllerBase
         if (invalidRequestError is not null) return BuildBadRequestResponse(invalidRequestError);
 
         var entityNotFoundError = errors.OfType<EntityNotFoundError>().FirstOrDefault();
-        if (entityNotFoundError is not null) return BuildNotFoundResponse(entityNotFoundError); 
+        if (entityNotFoundError is not null) return BuildNotFoundResponse(entityNotFoundError);
 
         var unprocessableEntityError = errors.OfType<UnprocessableEntityError>().FirstOrDefault();
         if (unprocessableEntityError is not null) return BuildUnprocessableEntityResponse(unprocessableEntityError);

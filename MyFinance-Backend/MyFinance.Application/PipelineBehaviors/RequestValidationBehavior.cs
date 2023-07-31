@@ -49,8 +49,8 @@ public sealed class RequestValidationBehavior<TRequest, TResponse> : IPipelineBe
         {
             _logger.LogWarning("[{RequestName}] Invalid request data", requestName);
             var response = new TResponse();
-            var error = Result.Fail(new InvalidRequestError(errors));
-            response.Reasons.AddRange(error.Reasons);
+            var failedResult = Result.Fail(new InvalidRequestError(errors));
+            response.Reasons.AddRange(failedResult.Reasons);
             return response;
         }
 

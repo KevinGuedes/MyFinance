@@ -12,7 +12,7 @@ namespace MyFinance.Application.UseCases.BusinessUnits.Commands.ArchiveBusinessU
         private readonly IBusinessUnitRepository _businessUnitRepository;
 
         public ArchiveBusinessUnitHandler(
-            ILogger<ArchiveBusinessUnitHandler> logger, 
+            ILogger<ArchiveBusinessUnitHandler> logger,
             IBusinessUnitRepository businessUnitRepository)
             => (_logger, _businessUnitRepository) = (logger, businessUnitRepository);
 
@@ -21,7 +21,7 @@ namespace MyFinance.Application.UseCases.BusinessUnits.Commands.ArchiveBusinessU
             _logger.LogInformation("Retrieving Business Unit with Id {BusinessUnitId}", command.Id);
             var businessUnit = await _businessUnitRepository.GetByIdAsync(command.Id, cancellationToken);
 
-            if(businessUnit is null)
+            if (businessUnit is null)
             {
                 _logger.LogWarning("Business Unit with Id {BusinessUnitId} not found", command.Id);
                 var errorMessage = string.Format("Business Unit with Id {0} not found", command.Id);

@@ -22,8 +22,11 @@ public class BusinessUnitController : BaseController
     [HttpGet]
     [SwaggerOperation(Summary = "Lists all Business Units")]
     [SwaggerResponse(StatusCodes.Status200OK, "List of all existing Business Units", typeof(IEnumerable<BusinessUnitDTO>))]
-    public async Task<IActionResult> GetBusinessUnitsAsync(CancellationToken cancellationToken)
-        => ProcessResult(await _businessUnitApiService.GetBusinessUnitsAsync(cancellationToken));
+    public async Task<IActionResult> GetBusinessUnitsAsync(
+        [FromQuery, SwaggerParameter("Page number", Required = true)] int page,
+        [FromQuery, SwaggerParameter("Units per page", Required = true)] int pageSize,
+        CancellationToken cancellationToken)
+        => ProcessResult(await _businessUnitApiService.GetBusinessUnitsAsync(page, pageSize, cancellationToken));
 
     [HttpPost]
     [SwaggerOperation(Summary = "Creates a new Business Unit")]

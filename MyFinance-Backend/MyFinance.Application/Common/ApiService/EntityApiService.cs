@@ -27,12 +27,4 @@ public abstract class EntityApiService
 
         return result.ToResult<IEnumerable<TTarget>>();
     }
-
-    protected Result<IReadOnlyCollection<TTarget>> MapResult<TSource, TTarget>(Result<IReadOnlyCollection<TSource>> result)
-    {
-        if (result.IsSuccess)
-            return result.ToResult(_mapper.Map<IReadOnlyCollection<TTarget>>);
-
-        return result.ToResult<IReadOnlyCollection<TTarget>>();
-    }
 }
