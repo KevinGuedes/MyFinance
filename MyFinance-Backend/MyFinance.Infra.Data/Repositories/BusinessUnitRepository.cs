@@ -10,7 +10,7 @@ public sealed class BusinessUnitRepository : EntityRepository<BusinessUnit>, IBu
     public BusinessUnitRepository(MyFinanceDbContext myFinanceDbContext)
         : base(myFinanceDbContext) { }
 
-    public async Task<IEnumerable<BusinessUnit>> GetAllPaginatedAsync(
+    public async Task<IEnumerable<BusinessUnit>> GetPaginatedAsync(
         int page,
         int pageSize,
         CancellationToken cancellationToken)
@@ -30,23 +30,6 @@ public sealed class BusinessUnitRepository : EntityRepository<BusinessUnit>, IBu
     public Task<BusinessUnit?> GetByNameAsync(string name, CancellationToken cancellationToken)
         => _myFinanceDbContext.BusinessUnits
             .Where(bu => bu.Name == name)
-            .AsNoTracking()
-            .FirstOrDefaultAsync(cancellationToken);
-
-    public Task<BusinessUnit?> GetWithMonthlyBalancesPaginated(
-        Guid id,
-        int page,
-        int pageSize,
-        CancellationToken cancellationToken)
-        => _myFinanceDbContext.BusinessUnits
-            .Where(bu => bu.Id == id)
-            .Include(bu => bu.MonthlyBalances
-                .OrderByDescending(mb => mb.ReferenceYear)
-                .ThenByDescending(mb => mb.ReferenceMonth)
-                .Skip((page - 1) * pageSize)
-                .Take(pageSize))
-            .ThenInclude(mb => mb.Transfers)
-            .AsSplitQuery()
             .AsNoTracking()
             .FirstOrDefaultAsync(cancellationToken);
 }

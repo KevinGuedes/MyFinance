@@ -4,8 +4,7 @@ namespace MyFinance.Domain.Interfaces;
 
 public interface IBusinessUnitRepository : IEntityRepository<BusinessUnit>
 {
-    Task<IEnumerable<BusinessUnit>> GetAllPaginatedAsync(int page, int pageSize, CancellationToken cancellationToken);
+    Task<IEnumerable<BusinessUnit>> GetPaginatedAsync(int page, int pageSize, CancellationToken cancellationToken);
     Task<bool> ExistsByNameAsync(string name, CancellationToken cancellationToken);
     Task<BusinessUnit?> GetByNameAsync(string name, CancellationToken cancellationToken);
-    Task<BusinessUnit?> GetWithMonthlyBalancesPaginated(Guid id, int page, int pageSize, CancellationToken cancellationToken);
 }

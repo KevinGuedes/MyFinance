@@ -1,4 +1,5 @@
-﻿using MyFinance.Domain.Entities;
+﻿using Microsoft.EntityFrameworkCore;
+using MyFinance.Domain.Entities;
 using MyFinance.Domain.Interfaces;
 using MyFinance.Infra.Data.Context;
 
@@ -13,6 +14,9 @@ public abstract class EntityRepository<TEntity> : IEntityRepository<TEntity> whe
 
     public virtual async Task<TEntity?> GetByIdAsync(Guid id, CancellationToken cancellationToken)
         => await _myFinanceDbContext.Set<TEntity>().FindAsync(new object[] { id }, cancellationToken);
+
+    public Task<bool> ExistsByIdAsync(Guid id, CancellationToken cancellationToken)
+        => _myFinanceDbContext.Set<TEntity>().AnyAsync(entity => entity.Id == id, cancellationToken);
 
     public void Insert(TEntity entity)
         => _myFinanceDbContext.Set<TEntity>().Add(entity);

@@ -21,4 +21,17 @@ public sealed class MonthlyBalanceRepository : EntityRepository<MonthlyBalance>,
                 mb.BusinessUnitId == businessUnitId,
                 cancellationToken);
 
+    public async Task<IEnumerable<MonthlyBalance>> GetPaginatedByBusinessUnitIdAsync(
+        Guid businessUnitId,
+        int page,
+        int pageSize,
+        CancellationToken cancellationToken)
+        => await _myFinanceDbContext.MonthlyBalances
+            .Where(mb => mb.BusinessUnitId == businessUnitId)
+            .OrderByDescending(mb => mb.ReferenceYear)
+            .ThenByDescending(mb => mb.ReferenceMonth)
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize)
+            .AsNoTracking()
+            .ToListAsync(cancellationToken);
 }

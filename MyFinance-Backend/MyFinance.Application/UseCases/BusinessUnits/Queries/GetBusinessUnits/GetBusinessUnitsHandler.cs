@@ -19,10 +19,7 @@ internal sealed class GetBusinessUnitsHandler : IQueryHandler<GetBusinessUnitsQu
     public async Task<Result<IEnumerable<BusinessUnit>>> Handle(GetBusinessUnitsQuery query, CancellationToken cancellationToken)
     {
         _logger.LogInformation("Retrieving Business Units from database");
-        var businessUnits = await _businessUnitRepository.GetAllPaginatedAsync(
-            query.Page,
-            query.PageSize,
-            cancellationToken);
+        var businessUnits = await _businessUnitRepository.GetPaginatedAsync(query.Page, query.PageSize, cancellationToken);
         _logger.LogInformation("Business Units successfully retrived from database");
 
         return Result.Ok(businessUnits);
