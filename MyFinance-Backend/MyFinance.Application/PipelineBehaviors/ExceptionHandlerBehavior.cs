@@ -1,18 +1,19 @@
 ﻿using FluentResults;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using MyFinance.Application.Common.Errors;
 using MyFinance.Application.Common.RequestHandling;
 
-namespace MyFinance.Application.RequestPipelines;
+namespace MyFinance.Application.PipelineBehaviors;
 
-public sealed class ExceptionHandlerPipeline<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
+public sealed class ExceptionHandlerBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
     where TRequest : IBaseAppRequest
     where TResponse : ResultBase, new()
 {
-    private readonly ILogger<ExceptionHandlerPipeline<TRequest, TResponse>> _logger;
+    private readonly ILogger<ExceptionHandlerBehavior<TRequest, TResponse>> _logger;
 
-    public ExceptionHandlerPipeline(ILogger<ExceptionHandlerPipeline<TRequest, TResponse>> logger)
+    public ExceptionHandlerBehavior(ILogger<ExceptionHandlerBehavior<TRequest, TResponse>> logger)
         => _logger = logger;
 
     public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
@@ -31,13 +32,25 @@ public sealed class ExceptionHandlerPipeline<TRequest, TResponse> : IPipelineBeh
 
             return result;
         }
+        catch (DbUpdateConcurrencyException exception)
+        {
+            _logger.LogError(exception, "[{RequestName}] Entity has been updated previously", requestName);
+
+            var message = "The regarding entity has been previously updated. Try again later";
+            var unprocessableEntityError = new UnprocessableEntityError(message);
+            var failedResult = Result.Fail(unprocessableEntityError.CausedBy(exception));
+            var response = new TResponse();
+            response.Reasons.AddRange(failedResult.Reasons);
+
+            return response;
+        }
         catch (Exception exception)
         {
             _logger.LogError(exception, "[{RequestName}] Failed to handle request", requestName);
 
-            var error = Result.Fail(new UnexpectedBehavior(requestName.ToString()).CausedBy(exception));
+            var failedResult = Result.Fail(new InternalServerError().CausedBy(exception));
             var response = new TResponse();
-            response.Reasons.AddRange(error.Reasons);
+            response.Reasons.AddRange(failedResult.Reasons);
 
             return response;
         }

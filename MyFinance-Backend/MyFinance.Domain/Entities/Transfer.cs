@@ -19,14 +19,14 @@ public class Transfer : Entity
         string relatedTo,
         string description,
         DateTime settlementDate,
-        TransferType transferType,
+        TransferType type,
         MonthlyBalance monthlyBalance)
     {
         Value = value;
         RelatedTo = relatedTo;
         Description = description;
         SettlementDate = settlementDate;
-        Type = transferType;
+        Type = type;
         MonthlyBalance = monthlyBalance;
         MonthlyBalanceId = monthlyBalance.Id;
     }
@@ -36,7 +36,7 @@ public class Transfer : Entity
         string relatedTo,
         string description,
         DateTime settlementDate,
-        TransferType transferType,
+        TransferType type,
         MonthlyBalance monthlyBalance)
     {
         SetUpdateDateToNow();
@@ -44,7 +44,7 @@ public class Transfer : Entity
         RelatedTo = relatedTo;
         Description = description;
         SettlementDate = settlementDate;
-        Type = transferType;
+        Type = type;
         MonthlyBalance = monthlyBalance;
         MonthlyBalanceId = monthlyBalance.Id;
     }

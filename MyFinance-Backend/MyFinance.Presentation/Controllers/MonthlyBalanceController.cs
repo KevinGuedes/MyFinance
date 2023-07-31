@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using MyFinance.Application.Common.ApiService;
+using MyFinance.Application.Common.ApiResponses;
 using MyFinance.Application.UseCases.MonthlyBalances.ApiService;
 using MyFinance.Application.UseCases.MonthlyBalances.DTOs;
 using Swashbuckle.AspNetCore.Annotations;
@@ -22,12 +22,12 @@ public class MonthlyBalanceController : BaseController
     [SwaggerResponse(StatusCodes.Status400BadRequest, "Invalid query parameters", typeof(BadRequestResponse))]
     public async Task<IActionResult> GetBusinessUnitsAsync(
         [FromQuery, SwaggerParameter("Business Unit Id", Required = true)] Guid businessUnitId,
-        [FromQuery, SwaggerParameter("Amount of Monthly Balancers to take", Required = true)] int take,
-        [FromQuery, SwaggerParameter("Skip amount", Required = true)] int skip,
+        [FromQuery, SwaggerParameter("Page number", Required = true)] int page,
+        [FromQuery, SwaggerParameter("Units per page", Required = true)] int pageSize,
         CancellationToken cancellationToken)
         => ProcessResult(await _monthlyBalanceApiService.GetMonthlyBalancesAsync(
             businessUnitId,
-            take,
-            skip,
+            page,
+            pageSize,
             cancellationToken));
 }

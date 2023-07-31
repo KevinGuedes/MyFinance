@@ -1,20 +1,21 @@
 ﻿using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
-using MyFinance.Application.Common.ApiService;
+using MyFinance.Application.Common.Errors;
 
 namespace MyFinance.Presentation.Controllers;
 
 [ApiController]
 [ApiExplorerSettings(IgnoreApi = true)]
-public class ErrorController : ControllerBase
+public class ErrorController : BaseController
 {
     [Route("/error")]
     public IActionResult BuildErrorResponse()
     {
-        var exception = HttpContext.Features.Get<IExceptionHandlerFeature>();
-        var message = exception is null ? "Unexpected server behavior" : exception.Error.Message;
-        var apiErrorResponse = new InternalServerErrorResponse("MyFinance API went rogue! Sorry.", message);
+        var internalServerError = new InternalServerError();
 
-        return StatusCode(StatusCodes.Status500InternalServerError, apiErrorResponse);
+        var exception = HttpContext.Features.Get<IExceptionHandlerFeature>();
+        if (exception is not null) internalServerError.CausedBy(exception.Error);
+
+        return BuildInternalServerErrorResponse(internalServerError);
     }
 }

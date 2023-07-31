@@ -7,7 +7,7 @@ public interface IMonthlyBalanceApiService
 {
     Task<Result<IEnumerable<MonthlyBalanceDTO>>> GetMonthlyBalancesAsync(
         Guid businessUnitId,
-        int count,
-        int skip,
+        int page,
+        int pageSize,
         CancellationToken cancellationToken);
 }

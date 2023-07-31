@@ -12,14 +12,11 @@ public abstract class EntityRepository<TEntity> : IEntityRepository<TEntity> whe
     protected EntityRepository(MyFinanceDbContext myFinanceDbContext)
         => _myFinanceDbContext = myFinanceDbContext;
 
-    public Task<bool> ExistsByIdAsync(Guid id, CancellationToken cancellationToken)
-        => _myFinanceDbContext.Set<TEntity>().AnyAsync(entity => entity.Id == id, cancellationToken);
-
-    public async Task<IEnumerable<TEntity>> GetAllAsync(CancellationToken cancellationToken)
-       => await _myFinanceDbContext.Set<TEntity>().AsNoTracking().ToListAsync(cancellationToken);
-
     public virtual async Task<TEntity?> GetByIdAsync(Guid id, CancellationToken cancellationToken)
         => await _myFinanceDbContext.Set<TEntity>().FindAsync(new object[] { id }, cancellationToken);
+
+    public Task<bool> ExistsByIdAsync(Guid id, CancellationToken cancellationToken)
+        => _myFinanceDbContext.Set<TEntity>().AnyAsync(entity => entity.Id == id, cancellationToken);
 
     public void Insert(TEntity entity)
         => _myFinanceDbContext.Set<TEntity>().Add(entity);

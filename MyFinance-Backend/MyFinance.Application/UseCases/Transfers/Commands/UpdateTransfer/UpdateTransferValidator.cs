@@ -1,17 +1,11 @@
 ﻿using FluentValidation;
-using MyFinance.Domain.Interfaces;
 
 namespace MyFinance.Application.UseCases.Transfers.Commands.UpdateTransfer;
 
 public sealed class UpdateTransferValidator : AbstractValidator<UpdateTransferCommand>
 {
-    private readonly ITransferRepository _transferRepository;
-
-    public UpdateTransferValidator(ITransferRepository transferRepository)
+    public UpdateTransferValidator()
     {
-        _transferRepository = transferRepository;
-        ClassLevelCascadeMode = CascadeMode.Stop;
-
         RuleFor(command => command.Value)
             .NotEqual(0).WithMessage("{PropertyName} must not be equal to 0")
             .GreaterThan(0).WithMessage("{PropertyName} must be greater than 0");
@@ -30,12 +24,6 @@ public sealed class UpdateTransferValidator : AbstractValidator<UpdateTransferCo
             .IsInEnum().WithMessage("Invalid {PropertyName}");
 
         RuleFor(command => command.Id)
-             .Cascade(CascadeMode.Stop)
-             .NotEqual(Guid.Empty).WithMessage("{PropertyName} invalid")
-             .MustAsync(async (transferId, cancellationToken) =>
-             {
-                 var exists = await _transferRepository.ExistsByIdAsync(transferId, cancellationToken);
-                 return exists;
-             }).WithMessage("Transfer not found");
+             .NotEqual(Guid.Empty).WithMessage("{PropertyName} invalid");
     }
 }

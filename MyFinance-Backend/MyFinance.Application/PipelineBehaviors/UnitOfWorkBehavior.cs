@@ -4,16 +4,16 @@ using Microsoft.Extensions.Logging;
 using MyFinance.Application.Common.RequestHandling.Commands;
 using MyFinance.Infra.Data.UnitOfWork;
 
-namespace MyFinance.Application.RequestPipelines;
+namespace MyFinance.Application.PipelineBehaviors;
 
-public sealed class UnitOfWorkPipeline<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
+public sealed class UnitOfWorkBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
     where TRequest : IBaseCommand
     where TResponse : ResultBase
 {
-    private readonly ILogger<UnitOfWorkPipeline<TRequest, TResponse>> _logger;
+    private readonly ILogger<UnitOfWorkBehavior<TRequest, TResponse>> _logger;
     private readonly IUnitOfWork _unitOfWork;
 
-    public UnitOfWorkPipeline(ILogger<UnitOfWorkPipeline<TRequest, TResponse>> logger, IUnitOfWork unitOfWork)
+    public UnitOfWorkBehavior(ILogger<UnitOfWorkBehavior<TRequest, TResponse>> logger, IUnitOfWork unitOfWork)
         => (_logger, _unitOfWork) = (logger, unitOfWork);
 
     public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
@@ -22,28 +22,22 @@ public sealed class UnitOfWorkPipeline<TRequest, TResponse> : IPipelineBehavior<
 
         try
         {
-            await _unitOfWork.BeginTrasactionAsync(cancellationToken);
             _logger.LogInformation("[{RequestName}] Listening to database changes", requestName);
             var response = await next();
 
             if (response.IsSuccess)
             {
-                _logger.LogInformation("[{RequestName}] Committing database changes", requestName);
+                _logger.LogInformation("[{RequestName}] Saving database changes", requestName);
                 await _unitOfWork.SaveChangesAsync(cancellationToken);
-                await _unitOfWork.CommitTransactionAsync(cancellationToken);
-                _logger.LogInformation("[{RequestName}] Database changes successfully commited", requestName);
+                _logger.LogInformation("[{RequestName}] Database changes successfully saved", requestName);
             }
             else
-            {
-                await _unitOfWork.RollbackTransactionAsync(cancellationToken);
                 _logger.LogWarning("[{RequestName}] Changes not commited due to failure response", requestName);
-            }
 
             return response;
         }
         catch
         {
-            await _unitOfWork.RollbackTransactionAsync(cancellationToken);
             _logger.LogWarning("[{RequestName}] Changes not commited due to exception throwed", requestName);
             throw;
         }

@@ -5,17 +5,17 @@ using Microsoft.Extensions.Logging;
 using MyFinance.Application.Common.Errors;
 using MyFinance.Application.Common.RequestHandling;
 
-namespace MyFinance.Application.RequestPipelines;
+namespace MyFinance.Application.PipelineBehaviors;
 
-public sealed class RequestValidationPipeline<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
+public sealed class RequestValidationBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
     where TRequest : IBaseAppRequest
     where TResponse : ResultBase, new()
 {
-    private readonly ILogger<RequestValidationPipeline<TRequest, TResponse>> _logger;
+    private readonly ILogger<RequestValidationBehavior<TRequest, TResponse>> _logger;
     private readonly IEnumerable<IValidator<TRequest>> _validators;
 
-    public RequestValidationPipeline(
-        ILogger<RequestValidationPipeline<TRequest, TResponse>> logger,
+    public RequestValidationBehavior(
+        ILogger<RequestValidationBehavior<TRequest, TResponse>> logger,
         IEnumerable<IValidator<TRequest>> validators)
         => (_logger, _validators) = (logger, validators);
 
@@ -40,7 +40,7 @@ public sealed class RequestValidationPipeline<TRequest, TResponse> : IPipelineBe
                 validationResult => validationResult.ErrorMessage,
                 (propertyName, errorMessages) => new
                 {
-                    Key = propertyName,
+                    Key = string.Concat(char.ToLower(propertyName[0]), propertyName[1..]),
                     Values = errorMessages.Distinct().ToArray()
                 })
             .ToDictionary(dictionaryData => dictionaryData.Key, dictionaryData => dictionaryData.Values);
@@ -49,8 +49,8 @@ public sealed class RequestValidationPipeline<TRequest, TResponse> : IPipelineBe
         {
             _logger.LogWarning("[{RequestName}] Invalid request data", requestName);
             var response = new TResponse();
-            var error = Result.Fail(new InvalidRequest(requestName, errors));
-            response.Reasons.AddRange(error.Reasons);
+            var failedResult = Result.Fail(new InvalidRequestError(errors));
+            response.Reasons.AddRange(failedResult.Reasons);
             return response;
         }
 

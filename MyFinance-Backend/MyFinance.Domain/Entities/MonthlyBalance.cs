@@ -4,10 +4,11 @@ namespace MyFinance.Domain.Entities;
 
 public class MonthlyBalance : Entity
 {
+    public int ReferenceYear { get; init; }
+    public int ReferenceMonth { get; init; }
     public double Income { get; private set; }
     public double Outcome { get; private set; }
-    public int ReferenceMonth { get; init; }
-    public int ReferenceYear { get; init; }
+    public double Balance { get => Income - Outcome; }
     public Guid BusinessUnitId { get; private set; }
     public BusinessUnit BusinessUnit { get; private set; }
     public List<Transfer> Transfers { get; private set; }

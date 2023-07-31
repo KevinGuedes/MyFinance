@@ -1,5 +1,6 @@
 ﻿using FluentResults;
 using Microsoft.Extensions.Logging;
+using MyFinance.Application.Common.Errors;
 using MyFinance.Application.Common.RequestHandling.Commands;
 using MyFinance.Domain.Interfaces;
 
@@ -28,19 +29,28 @@ internal sealed class DeleteTransferHandler : ICommandHandler<DeleteTransferComm
     {
         _logger.LogInformation("Retrieving data required to delete Transfer with Id {TransferId}", command.Id);
         var transfer = await _transferRepository.GetByIdAsync(command.Id, cancellationToken);
-        var monthlyBalance = transfer!.MonthlyBalance;
+
+        if (transfer is null)
+        {
+            _logger.LogWarning("Transfer with Id {BusinessUnitId} not found", command.Id);
+            var errorMessage = string.Format("Transfer with Id {0} not found", command.Id);
+            var entityNotFoundError = new EntityNotFoundError(errorMessage);
+            return Result.Fail(entityNotFoundError);
+        }
+
+        var monthlyBalance = transfer.MonthlyBalance;
         var businessUnit = monthlyBalance.BusinessUnit;
 
-        _logger.LogInformation("Deleting Transfer with Id {TransferId}", command.Id);
-        _transferRepository.Delete(transfer!);
-
         _logger.LogInformation("Updating Monthly Balance with Id {MonthlyBalanceId}", monthlyBalance.Id);
-        monthlyBalance.CancelValue(transfer!.Value, transfer!.Type);
+        monthlyBalance.CancelValue(transfer.Value, transfer.Type);
         _monthlyBalanceRepository.Update(monthlyBalance);
 
-        _logger.LogInformation("Updating Balance of Business Unit with Id {BusinessUnitId}", businessUnit!.Id);
-        businessUnit.CancelValue(transfer!.Value, transfer!.Type);
+        _logger.LogInformation("Updating Balance of Business Unit with Id {BusinessUnitId}", businessUnit.Id);
+        businessUnit.CancelValue(transfer.Value, transfer.Type);
         _businessUnitRepository.Update(businessUnit);
+
+        _logger.LogInformation("Deleting Transfer with Id {TransferId}", command.Id);
+        _transferRepository.Delete(transfer);
 
         _logger.LogInformation("Transfer with Id {TransferId} sucessfully deleted", transfer.Id);
         return Result.Ok();

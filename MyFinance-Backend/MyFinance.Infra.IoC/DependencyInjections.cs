@@ -3,7 +3,7 @@ using FluentValidation.AspNetCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using MyFinance.Application.RequestPipelines;
+using MyFinance.Application.PipelineBehaviors;
 using MyFinance.Application.UseCases.BusinessUnits.ApiService;
 using MyFinance.Application.UseCases.MonthlyBalances.ApiService;
 using MyFinance.Application.UseCases.Transfers.ApiService;
@@ -36,10 +36,10 @@ public static class DependencyInjections
 
     private static void AddPersistence(IServiceCollection services, IConfiguration configuration)
     {
+        var migrationsAssemblyName = typeof(MyFinanceDbContext).Assembly.FullName;
         services.AddDbContext<MyFinanceDbContext>(
             options => options.UseSqlServer(configuration.GetConnectionString("MyFinanceDb"),
-            sqlServerOptions => sqlServerOptions
-                .MigrationsAssembly(typeof(MyFinanceDbContext).Assembly.FullName)));
+            sqlServerOptions => sqlServerOptions.MigrationsAssembly(migrationsAssemblyName)));
 
         services
             .AddScoped<IUnitOfWork, UnitOfWork>()
@@ -62,8 +62,8 @@ public static class DependencyInjections
             {
                 cfg.RegisterServicesFromAssembly(applicationLayerAssembly);
                 cfg
-                    .AddOpenBehavior(typeof(ExceptionHandlerPipeline<,>))
-                    .AddOpenBehavior(typeof(RequestValidationPipeline<,>))
-                    .AddOpenBehavior(typeof(UnitOfWorkPipeline<,>));
+                    .AddOpenBehavior(typeof(ExceptionHandlerBehavior<,>))
+                    .AddOpenBehavior(typeof(RequestValidationBehavior<,>))
+                    .AddOpenBehavior(typeof(UnitOfWorkBehavior<,>));
             });
 }

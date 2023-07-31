@@ -5,14 +5,31 @@ using MyFinance.Infra.Data.Context;
 
 namespace MyFinance.Infra.Data.Repositories;
 
-public class BusinessUnitRepository : EntityRepository<BusinessUnit>, IBusinessUnitRepository
+public sealed class BusinessUnitRepository : EntityRepository<BusinessUnit>, IBusinessUnitRepository
 {
     public BusinessUnitRepository(MyFinanceDbContext myFinanceDbContext)
         : base(myFinanceDbContext) { }
 
-    public Task<bool> ExistsByNameAsync(string name, CancellationToken cancellationToken)
-        => _myFinanceDbContext.BusinessUnits.AnyAsync(bu => bu.Name == name, cancellationToken);
+    public async Task<IEnumerable<BusinessUnit>> GetPaginatedAsync(
+        int page,
+        int pageSize,
+        CancellationToken cancellationToken)
+        => await _myFinanceDbContext.BusinessUnits
+            .OrderByDescending(bu => bu.CreationDate)
+            .ThenByDescending(bu => bu.Name)
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize)
+            .AsNoTracking()
+            .ToListAsync(cancellationToken);
 
-    public async Task<BusinessUnit?> GetByNameAsync(string name, CancellationToken cancellationToken)
-        => await _myFinanceDbContext.BusinessUnits.Where(bu => bu.Name == name).FirstOrDefaultAsync(cancellationToken);
+    public Task<bool> ExistsByNameAsync(string name, CancellationToken cancellationToken)
+        => _myFinanceDbContext.BusinessUnits
+            .AsNoTracking()
+            .AnyAsync(bu => bu.Name == name, cancellationToken);
+
+    public Task<BusinessUnit?> GetByNameAsync(string name, CancellationToken cancellationToken)
+        => _myFinanceDbContext.BusinessUnits
+            .Where(bu => bu.Name == name)
+            .AsNoTracking()
+            .FirstOrDefaultAsync(cancellationToken);
 }

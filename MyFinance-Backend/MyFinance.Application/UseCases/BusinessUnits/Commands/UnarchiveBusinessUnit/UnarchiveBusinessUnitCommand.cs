@@ -2,10 +2,6 @@
 
 namespace MyFinance.Application.UseCases.BusinessUnits.Commands.UnarchiveBusinessUnit;
 
-public class UnarchiveBusinessUnitCommand : ICommand
+public sealed record UnarchiveBusinessUnitCommand(Guid Id) : ICommand
 {
-    public Guid Id { get; set; }
-
-    public UnarchiveBusinessUnitCommand(Guid id)
-        => Id = id;
 }

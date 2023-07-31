@@ -5,27 +5,33 @@ using MyFinance.Infra.Data.Context;
 
 namespace MyFinance.Infra.Data.Repositories;
 
-public class MonthlyBalanceRepository : EntityRepository<MonthlyBalance>, IMonthlyBalanceRepository
+public sealed class MonthlyBalanceRepository : EntityRepository<MonthlyBalance>, IMonthlyBalanceRepository
 {
     public MonthlyBalanceRepository(MyFinanceDbContext myFinanceDbContext)
         : base(myFinanceDbContext) { }
 
-    public async Task<IEnumerable<MonthlyBalance>> GetByBusinessUnitId(Guid businessUnitId, int take, int skip, CancellationToken cancellationToken)
+    public Task<MonthlyBalance?> GetByReferenceDateAndBusinessUnitId(
+        DateTime referenceDate,
+        Guid businessUnitId,
+        CancellationToken cancellationToken)
+        => _myFinanceDbContext.MonthlyBalances
+            .FirstOrDefaultAsync(
+                mb => mb.ReferenceYear == referenceDate.Year &&
+                mb.ReferenceMonth == referenceDate.Month &&
+                mb.BusinessUnitId == businessUnitId,
+                cancellationToken);
+
+    public async Task<IEnumerable<MonthlyBalance>> GetPaginatedByBusinessUnitIdAsync(
+        Guid businessUnitId,
+        int page,
+        int pageSize,
+        CancellationToken cancellationToken)
         => await _myFinanceDbContext.MonthlyBalances
             .Where(mb => mb.BusinessUnitId == businessUnitId)
             .OrderByDescending(mb => mb.ReferenceYear)
             .ThenByDescending(mb => mb.ReferenceMonth)
-            .Skip(skip)
-            .Take(take)
-            .Include(mb => mb.Transfers)
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize)
             .AsNoTracking()
             .ToListAsync(cancellationToken);
-
-    public Task<MonthlyBalance?> GetByReferenceDateAndBusinessUnitId(DateTime referenceDate, Guid businessUnitId, CancellationToken cancellationToken)
-        => _myFinanceDbContext.MonthlyBalances
-            .AsNoTracking()
-            .FirstOrDefaultAsync(
-                mb => mb.ReferenceYear == referenceDate.Year && mb.ReferenceMonth == referenceDate.Month && mb.BusinessUnitId == businessUnitId,
-                cancellationToken);
-
 }

@@ -1,5 +1,6 @@
 ﻿using FluentResults;
 using Microsoft.Extensions.Logging;
+using MyFinance.Application.Common.Errors;
 using MyFinance.Application.Common.RequestHandling.Commands;
 using MyFinance.Domain.Entities;
 using MyFinance.Domain.Interfaces;
@@ -27,87 +28,78 @@ internal sealed class UpdateTransferHandler : ICommandHandler<UpdateTransferComm
 
     public async Task<Result<Transfer>> Handle(UpdateTransferCommand command, CancellationToken cancellationToken)
     {
-        _logger.LogInformation("Retrieving current Monthly Balance of Transfer with Id {TransferId}", command.Id);
-        var transfer = await _transferRepository.GetByIdAsync(command.Id, cancellationToken);
-        var currentMonthlyBalance = transfer!.MonthlyBalance;
+        var (transferId, newTransferValue, relatedTo, description, settlementDate, type) = command;
+
+        _logger.LogInformation("Retrieving current Monthly Balance of Transfer with Id {TransferId}", transferId);
+        var transfer = await _transferRepository.GetByIdAsync(transferId, cancellationToken);
+
+        if (transfer is null)
+        {
+            _logger.LogWarning("Transfer with Id {TransferId} not found", transferId);
+            var errorMessage = string.Format("Transfer with Id {0} not found", transferId);
+            var entityNotFoundError = new EntityNotFoundError(errorMessage);
+            return Result.Fail(entityNotFoundError);
+        }
+
+        var currentMonthlyBalance = transfer.MonthlyBalance;
         var businessUnit = currentMonthlyBalance.BusinessUnit;
 
+        businessUnit.CancelValue(transfer.Value, transfer.Type);
+        currentMonthlyBalance.CancelValue(transfer.Value, transfer.Type);
+
         var shouldGoToAnotherMonthlyBalance =
-            currentMonthlyBalance.ReferenceYear != command.SettlementDate.Year ||
-            currentMonthlyBalance.ReferenceMonth != command.SettlementDate.Month;
+            currentMonthlyBalance.ReferenceYear != settlementDate.Year ||
+            currentMonthlyBalance.ReferenceMonth != settlementDate.Month;
 
         if (shouldGoToAnotherMonthlyBalance)
         {
-            var existingMonthlyBalance = await _monthlyBalanceRepository.GetByReferenceDateAndBusinessUnitId(command.SettlementDate, businessUnit.Id, cancellationToken);
+            _logger.LogInformation("Adding Transfer with Id {TransferId} to another Monthly Balance", transfer.Id);
+            currentMonthlyBalance.Transfers.Remove(transfer);
+
+            _logger.LogInformation("Checking if there is a axisting Monthly Balance");
+            var existingMonthlyBalance = await _monthlyBalanceRepository.GetByReferenceDateAndBusinessUnitId(
+                settlementDate,
+                businessUnit.Id,
+                cancellationToken);
+
             if (existingMonthlyBalance is null)
             {
-                var newMonthlyBalance = new MonthlyBalance(command.SettlementDate, businessUnit);
-                businessUnit.CancelValue(transfer.Value, transfer.Type);
-                currentMonthlyBalance.CancelValue(transfer.Value, transfer.Type);
-
-                transfer.Update(
-                   command.Value,
-                   command.RelatedTo,
-                   command.Description,
-                   command.SettlementDate,
-                   command.Type,
-                   newMonthlyBalance);
-
+                var newMonthlyBalance = new MonthlyBalance(settlementDate, businessUnit);
+                transfer.Update(newTransferValue, relatedTo, description, settlementDate, type, newMonthlyBalance);
                 newMonthlyBalance.RegisterValue(transfer.Value, transfer.Type);
-                businessUnit.RegisterValue(transfer.Value, transfer.Type);
-
-                _transferRepository.Update(transfer);
-                _businessUnitRepository.Update(businessUnit);
-                _monthlyBalanceRepository.Update(currentMonthlyBalance);
                 _monthlyBalanceRepository.Insert(newMonthlyBalance);
 
-                return Result.Ok(transfer);
+                _logger.LogInformation(
+                   "Transfer with Id {TransferId} added to new Monthly Balance with Id {MonthlyBalanceId}",
+                   transfer.Id, newMonthlyBalance.Id);
             }
             else
             {
-                businessUnit.CancelValue(transfer.Value, transfer.Type);
-                currentMonthlyBalance.CancelValue(transfer.Value, transfer.Type);
-
-                transfer.Update(
-                   command.Value,
-                   command.RelatedTo,
-                   command.Description,
-                   command.SettlementDate,
-                   command.Type,
-                   existingMonthlyBalance);
-
+                transfer.Update(newTransferValue, relatedTo, description, settlementDate, type, existingMonthlyBalance);
                 existingMonthlyBalance.RegisterValue(transfer.Value, transfer.Type);
-                businessUnit.RegisterValue(transfer.Value, transfer.Type);
-
-                _transferRepository.Update(transfer);
-                _businessUnitRepository.Update(businessUnit);
-                _monthlyBalanceRepository.Update(currentMonthlyBalance);
                 _monthlyBalanceRepository.Update(existingMonthlyBalance);
 
-                return Result.Ok(transfer);
+                _logger.LogInformation(
+                   "Transfer with Id {TransferId} added to existing Monthly Balance with Id {MonthlyBalanceId}",
+                   transfer.Id, existingMonthlyBalance.Id);
             }
         }
         else
         {
-            _logger.LogInformation("Updating balance of Business Unit with Id {BusinessUnitId}", businessUnit.Id);
-            businessUnit.CancelValue(transfer.Value, transfer.Type);
-            currentMonthlyBalance.CancelValue(transfer.Value, transfer.Type);
-            transfer.Update(
-                command.Value,
-                command.RelatedTo,
-                command.Description,
-                command.SettlementDate,
-                command.Type,
-                currentMonthlyBalance);
-
+            transfer.Update(newTransferValue, relatedTo, description, settlementDate, type, currentMonthlyBalance);
             currentMonthlyBalance.RegisterValue(transfer.Value, transfer.Type);
-            businessUnit.RegisterValue(transfer.Value, transfer.Type);
 
-            _businessUnitRepository.Update(businessUnit);
-            _monthlyBalanceRepository.Update(currentMonthlyBalance);
-            _transferRepository.Update(transfer);
-
-            return Result.Ok(transfer);
+            _logger.LogInformation(
+                "Transfer with Id {TransferId} kept on the same Monthly Balance with Id {MonthlyBalanceId}",
+                transfer.Id, currentMonthlyBalance.Id);
         }
+
+        businessUnit.RegisterValue(transfer.Value, transfer.Type);
+        _transferRepository.Update(transfer);
+        _businessUnitRepository.Update(businessUnit);
+        _monthlyBalanceRepository.Update(currentMonthlyBalance);
+        _logger.LogInformation("Transfer with Id {TransferId} successfully updated", transfer.Id);
+
+        return Result.Ok(transfer);
     }
 }

@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using MyFinance.Application.Common.ApiService;
+using MyFinance.Application.Common.ApiResponses;
 using MyFinance.Application.UseCases.BusinessUnits.ApiService;
 using MyFinance.Application.UseCases.BusinessUnits.Commands.ArchiveBusinessUnit;
 using MyFinance.Application.UseCases.BusinessUnits.Commands.CreateBusinessUnit;
@@ -19,12 +19,6 @@ public class BusinessUnitController : BaseController
     public BusinessUnitController(IBusinessUnitApiService businessUnitApiService)
         => _businessUnitApiService = businessUnitApiService;
 
-    [HttpGet]
-    [SwaggerOperation(Summary = "Lists all Business Units")]
-    [SwaggerResponse(StatusCodes.Status200OK, "List of all existing Business Units", typeof(IEnumerable<BusinessUnitDTO>))]
-    public async Task<IActionResult> GetBusinessUnitsAsync(CancellationToken cancellationToken)
-        => ProcessResult(await _businessUnitApiService.GetBusinessUnitsAsync(cancellationToken));
-
     [HttpPost]
     [SwaggerOperation(Summary = "Creates a new Business Unit")]
     [SwaggerResponse(StatusCodes.Status200OK, "Created Business Unit", typeof(BusinessUnitDTO))]
@@ -32,7 +26,16 @@ public class BusinessUnitController : BaseController
     public async Task<IActionResult> CreateBusinessUnitAsync(
         [FromBody, SwaggerRequestBody("Business unit payload", Required = true)] CreateBusinessUnitCommand command,
         CancellationToken cancellationToken)
-        => ProcessResult(await _businessUnitApiService.CreateBusinessUnitAsync(command, cancellationToken));
+        => ProcessResult(await _businessUnitApiService.CreateBusinessUnitAsync(command, cancellationToken), true);
+
+    [HttpGet]
+    [SwaggerOperation(Summary = "Lists all Business Units")]
+    [SwaggerResponse(StatusCodes.Status200OK, "List of all existing Business Units", typeof(IEnumerable<BusinessUnitDTO>))]
+    public async Task<IActionResult> GetBusinessUnitsAsync(
+        [FromQuery, SwaggerParameter("Page number", Required = true)] int page,
+        [FromQuery, SwaggerParameter("Units per page", Required = true)] int pageSize,
+        CancellationToken cancellationToken)
+        => ProcessResult(await _businessUnitApiService.GetBusinessUnitsAsync(page, pageSize, cancellationToken));
 
     [HttpPut]
     [SwaggerOperation(Summary = "Updates an existing Business Unit")]

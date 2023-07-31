@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using MyFinance.Application.Common.ApiService;
+using MyFinance.Application.Common.ApiResponses;
 using MyFinance.Application.UseCases.Transfers.ApiService;
-using MyFinance.Application.UseCases.Transfers.Commands.DeleteTransfer;
 using MyFinance.Application.UseCases.Transfers.Commands.RegisterTransfers;
 using MyFinance.Application.UseCases.Transfers.Commands.UpdateTransfer;
 using MyFinance.Application.UseCases.Transfers.DTOs;
@@ -26,7 +25,7 @@ public class TransferController : BaseController
     public async Task<IActionResult> RegisterTransfersAsync(
         [FromBody, SwaggerRequestBody("Transfers' payload", Required = true)] RegisterTransfersCommand command,
         CancellationToken cancellationToken)
-        => ProcessResult(await _transferApiService.RegisterTransfersAsync(command, cancellationToken));
+        => ProcessResult(await _transferApiService.RegisterTransfersAsync(command, cancellationToken), true);
 
     [HttpPut]
     [SwaggerOperation(Summary = "Updates an existing Transfer")]

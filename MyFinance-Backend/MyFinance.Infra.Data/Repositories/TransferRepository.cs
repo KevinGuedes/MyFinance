@@ -5,7 +5,7 @@ using MyFinance.Infra.Data.Context;
 
 namespace MyFinance.Infra.Data.Repositories;
 
-public class TransferRepository : EntityRepository<Transfer>, ITransferRepository
+public sealed class TransferRepository : EntityRepository<Transfer>, ITransferRepository
 {
     public TransferRepository(MyFinanceDbContext myFinanceDbContext)
       : base(myFinanceDbContext) { }
@@ -14,5 +14,6 @@ public class TransferRepository : EntityRepository<Transfer>, ITransferRepositor
         => await _myFinanceDbContext.Transfers
             .Include(t => t.MonthlyBalance)
             .ThenInclude(mb => mb.BusinessUnit)
+            .AsSplitQuery()
             .FirstOrDefaultAsync(t => t.Id == id, cancellationToken);
 }

@@ -2,10 +2,6 @@
 
 namespace MyFinance.Application.UseCases.Transfers.Commands.DeleteTransfer;
 
-public sealed class DeleteTransferCommand : ICommand
+public sealed record DeleteTransferCommand(Guid Id) : ICommand
 {
-    public Guid Id { get; set; }
-
-    public DeleteTransferCommand(Guid id)
-        => Id = id;
 }
