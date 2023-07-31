@@ -3,7 +3,7 @@ using MyFinance.Application.UseCases.Transfers.DTOs;
 
 namespace MyFinance.Application.UseCases.MonthlyBalances.DTOs;
 
-public class MonthlyBalanceDTO : BaseDTO
+public sealed class MonthlyBalanceDTO : BaseDTO
 {
     public double Income { get; set; }
     public double Outcome { get; set; }
