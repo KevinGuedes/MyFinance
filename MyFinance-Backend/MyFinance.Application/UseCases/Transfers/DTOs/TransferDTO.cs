@@ -12,14 +12,12 @@ public sealed class TransferDTO : BaseDTO
     public double Value { get; set; }
 
     public TransferDTO(
-        Guid id,
         string relatedTo,
         string description,
         DateTime settlementDate,
         TransferType type,
         double value)
     {
-        Id = id;
         RelatedTo = relatedTo;
         Description = description;
         SettlementDate = settlementDate;
