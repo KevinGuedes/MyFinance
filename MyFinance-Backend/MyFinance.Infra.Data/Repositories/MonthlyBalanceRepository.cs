@@ -10,6 +10,15 @@ public sealed class MonthlyBalanceRepository : EntityRepository<MonthlyBalance>,
     public MonthlyBalanceRepository(MyFinanceDbContext myFinanceDbContext)
         : base(myFinanceDbContext) { }
 
+    public override Task<MonthlyBalance?> GetByIdAsync(Guid id, CancellationToken cancellationToken)
+        => _myFinanceDbContext.MonthlyBalances
+            .Include(mb => mb.Transfers
+                .OrderByDescending(t => t.CreationDate)
+                .ThenByDescending(t => t.RelatedTo))
+            .AsNoTracking()
+            .AsSplitQuery()
+            .FirstOrDefaultAsync(mb  => mb.Id == id, cancellationToken); 
+
     public Task<MonthlyBalance?> GetByReferenceDateAndBusinessUnitId(
         DateTime referenceDate,
         Guid businessUnitId,

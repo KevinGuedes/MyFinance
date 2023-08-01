@@ -6,6 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using MyFinance.Application.PipelineBehaviors;
 using MyFinance.Application.UseCases.BusinessUnits.ApiService;
 using MyFinance.Application.UseCases.MonthlyBalances.ApiService;
+using MyFinance.Application.UseCases.Summary.ApiService;
 using MyFinance.Application.UseCases.Transfers.ApiService;
 using MyFinance.Domain.Interfaces;
 using MyFinance.Infra.Data.Context;
@@ -32,7 +33,8 @@ public static class DependencyInjections
         => services
             .AddScoped<IBusinessUnitApiService, BusinessUnitApiService>()
             .AddScoped<IMonthlyBalanceApiService, MonthlyBalanceApiService>()
-            .AddScoped<ITransferApiService, TransferApiService>();
+            .AddScoped<ITransferApiService, TransferApiService>()
+            .AddScoped<ISummaryApiService, SummaryApiService>();
 
     private static void AddPersistence(IServiceCollection services, IConfiguration configuration)
     {

@@ -11,15 +11,22 @@ namespace MyFinance.Presentation.Controllers
     [SwaggerTag("Generate Summary Spreadsheets for Business Units and Monthly Balances")]
     public class SummaryController : BaseController
     {
-        [HttpPost]
-        [SwaggerOperation(Summary = "Registers a new Transfer")]
-        [SwaggerResponse(StatusCodes.Status204NoContent)]
-        [SwaggerResponse(StatusCodes.Status400BadRequest, "Invalid payload", typeof(BadRequestResponse))]
-        public async Task<IActionResult> RegisterTransfersAsync(
-        [FromBody, SwaggerRequestBody("Transfers' payload", Required = true)] RegisterTransfersCommand command,
-        CancellationToken cancellationToken)
+        [HttpPost("BusinessUnit/{id:guid}")]
+        [SwaggerOperation(Summary = "Generate the Summary Spreadsheet for the given Business Unit")]
+        [SwaggerResponse(StatusCodes.Status404NotFound, "Business Unit not found", typeof(EntityNotFoundResponse))]
+        public IActionResult GenerateBusinessUnitSummary(
+            [FromRoute, SwaggerRequestBody("Business Unit Id", Required = true)] Guid id, CancellationToken cancellationToken)
         {
+            return Ok();
+        }
 
+        [HttpPost("MonthlyBalance/{id:guid}")]
+        [SwaggerOperation(Summary = "Generate the Summary Spreadsheet for the given Monthly Balance")]
+        [SwaggerResponse(StatusCodes.Status404NotFound, "Monthly Balance not found", typeof(EntityNotFoundResponse))]
+        public IActionResult GenerateMonthlyBalanceSummaryAsync(
+            [FromRoute, SwaggerRequestBody("Monthly Balance Id", Required = true)] Guid id, CancellationToken cancellationToken)
+        {
+            return Ok();
         }
     }
 }
