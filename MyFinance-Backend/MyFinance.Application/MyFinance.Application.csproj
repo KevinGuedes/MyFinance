@@ -15,7 +15,6 @@
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="12.0.1" />
     <PackageReference Include="ClosedXML" Version="0.102.0" />
-    <PackageReference Include="ClosedXML.Extensions.WebApi" Version="0.3.0" />
     <PackageReference Include="FluentResults" Version="3.15.2" />
     <PackageReference Include="FluentValidation" Version="11.6.0" />
     <PackageReference Include="MediatR" Version="12.1.1" />
@@ -25,11 +24,6 @@
   <ItemGroup>
     <ProjectReference Include="..\MyFinance.Domain\MyFinance.Domain.csproj" />
     <ProjectReference Include="..\MyFinance.Infra.Data\MyFinance.Infra.Data.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="UseCases\Summary\Commands\" />
-    <Folder Include="UseCases\Summary\Queries\GetBusinessUnitSummary\" />
   </ItemGroup>
 
 </Project>

@@ -37,8 +37,6 @@ internal sealed class GetMonthlyBalanceSummaryHandler : IQueryHandler<GetMonthly
         var workBook = new XLWorkbook();
         var workSheet = workBook.AddWorksheet(workSheetName);
 
-
-
         return Result.Ok(new Tuple<string, XLWorkbook>(fileName, workBook));
     }
 }

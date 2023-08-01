@@ -44,7 +44,7 @@ public class BusinessUnitController : BaseController
     [SwaggerResponse(StatusCodes.Status400BadRequest, "Invalid payload", typeof(BadRequestResponse))]
     [SwaggerResponse(StatusCodes.Status404NotFound, "Business Unit not found", typeof(EntityNotFoundResponse))]
     [SwaggerResponse(StatusCodes.Status422UnprocessableEntity, "Server currently unable to process the Business Unit", typeof(UnprocessableEntityResponse))]
-        public async Task<IActionResult> UpdateBusinessUnitAsync(
+    public async Task<IActionResult> UpdateBusinessUnitAsync(
         [FromBody, SwaggerRequestBody("Business Unit payload", Required = true)] UpdateBusinessUnitCommand command,
         CancellationToken cancellationToken)
         => ProcessResult(await _businessUnitApiService.UpdateBusinessUnitAsync(command, cancellationToken));

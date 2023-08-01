@@ -5,7 +5,6 @@ using MyFinance.Application.Common.Errors;
 using MyFinance.Application.Common.RequestHandling.Queries;
 using MyFinance.Application.UseCases.Summary.Queries.GetMonthlyBalanceSummary;
 using MyFinance.Domain.Interfaces;
-using MyFinance.Infra.Data.Repositories;
 
 namespace MyFinance.Application.UseCases.Summary.Queries.GetBusinessUnitSummary;
 
@@ -32,6 +31,9 @@ internal sealed class GetBusinessUnitSummaryHandler : IQueryHandler<GetMonthlyBa
             return Result.Fail(entityNotFoundError);
         }
 
+        var fileName = businessUnit.Name;
+        var workBook = new XLWorkbook();
 
+        return Result.Ok(new Tuple<string, XLWorkbook>(fileName, workBook));
     }
 }

@@ -1,5 +1,4 @@
 ﻿using MyFinance.Application.Common.DTO;
-using MyFinance.Application.UseCases.Transfers.DTOs;
 
 namespace MyFinance.Application.UseCases.MonthlyBalances.DTOs;
 
