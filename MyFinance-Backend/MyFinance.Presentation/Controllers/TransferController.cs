@@ -20,8 +20,9 @@ public class TransferController : BaseController
 
     [HttpPost]
     [SwaggerOperation(Summary = "Registers a new Transfer")]
-    [SwaggerResponse(StatusCodes.Status204NoContent)]
+    [SwaggerResponse(StatusCodes.Status201Created, "Transfer registered", typeof(TransferDTO))]
     [SwaggerResponse(StatusCodes.Status400BadRequest, "Invalid payload", typeof(BadRequestResponse))]
+    [SwaggerResponse(StatusCodes.Status404NotFound, "Business Unit not found", typeof(EntityNotFoundResponse))]
     public async Task<IActionResult> RegisterTransfersAsync(
         [FromBody, SwaggerRequestBody("Transfers' payload", Required = true)] RegisterTransfersCommand command,
         CancellationToken cancellationToken)
@@ -31,6 +32,8 @@ public class TransferController : BaseController
     [SwaggerOperation(Summary = "Updates an existing Transfer")]
     [SwaggerResponse(StatusCodes.Status200OK, "Updated Transfer", typeof(TransferDTO))]
     [SwaggerResponse(StatusCodes.Status400BadRequest, "Invalid payload", typeof(BadRequestResponse))]
+    [SwaggerResponse(StatusCodes.Status404NotFound, "Transfer not found", typeof(EntityNotFoundResponse))]
+    [SwaggerResponse(StatusCodes.Status422UnprocessableEntity, "Server currently unable to process the Transfer", typeof(UnprocessableEntityResponse))]
     public async Task<IActionResult> UpdateTransferAsync(
         [FromBody, SwaggerRequestBody("Transfers' payload", Required = true)] UpdateTransferCommand command,
         CancellationToken cancellationToken)
@@ -40,6 +43,8 @@ public class TransferController : BaseController
     [SwaggerOperation(Summary = "Deletes an existing Transfer")]
     [SwaggerResponse(StatusCodes.Status204NoContent, "Transfer successfully deleted")]
     [SwaggerResponse(StatusCodes.Status400BadRequest, "Invalid Transfer Id", typeof(BadRequestResponse))]
+    [SwaggerResponse(StatusCodes.Status404NotFound, "Transfer not found", typeof(EntityNotFoundResponse))]
+    [SwaggerResponse(StatusCodes.Status422UnprocessableEntity, "Server currently unable to process the Transfer", typeof(UnprocessableEntityResponse))]
     public async Task<IActionResult> DeleteTransferAsync(
         [FromRoute, SwaggerParameter("Transfer Id", Required = true)] Guid id,
         CancellationToken cancellationToken)
