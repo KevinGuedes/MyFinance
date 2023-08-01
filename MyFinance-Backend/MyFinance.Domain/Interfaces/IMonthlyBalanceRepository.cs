@@ -4,6 +4,7 @@ namespace MyFinance.Domain.Interfaces;
 
 public interface IMonthlyBalanceRepository : IEntityRepository<MonthlyBalance>
 {
+    Task<MonthlyBalance?> GetWithSummaryData(Guid id, CancellationToken cancellationToken);
     Task<MonthlyBalance?> GetByReferenceDateAndBusinessUnitId(
         DateTime referenceDate,
         Guid businessUnitId,

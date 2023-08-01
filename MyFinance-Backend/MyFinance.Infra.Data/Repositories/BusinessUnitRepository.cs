@@ -32,4 +32,14 @@ public sealed class BusinessUnitRepository : EntityRepository<BusinessUnit>, IBu
             .Where(bu => bu.Name == name)
             .AsNoTracking()
             .FirstOrDefaultAsync(cancellationToken);
+
+    public Task<BusinessUnit?> GetWithSummaryData(Guid id, CancellationToken cancellationToken)
+        => _myFinanceDbContext.BusinessUnits
+            .Include(bu => bu.MonthlyBalances)
+            .ThenInclude(mb => mb.Transfers
+               .OrderByDescending(t => t.CreationDate)
+               .ThenByDescending(t => t.RelatedTo))
+            .AsNoTracking()
+            .AsSplitQuery()
+            .FirstOrDefaultAsync(bu => bu.Id == id, cancellationToken);
 }

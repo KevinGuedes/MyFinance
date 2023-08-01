@@ -1,32 +1,49 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using ClosedXML.Excel;
+using FluentResults;
 using Microsoft.AspNetCore.Mvc;
 using MyFinance.Application.Common.ApiResponses;
-using MyFinance.Application.UseCases.Transfers.Commands.RegisterTransfers;
+using MyFinance.Application.UseCases.Summary.ApiService;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace MyFinance.Presentation.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [SwaggerTag("Generate Summary Spreadsheets for Business Units and Monthly Balances")]
+    [SwaggerTag("Gets Summary Spreadsheets for Business Units and Monthly Balances")]
     public class SummaryController : BaseController
     {
-        [HttpPost("BusinessUnit/{id:guid}")]
-        [SwaggerOperation(Summary = "Generate the Summary Spreadsheet for the given Business Unit")]
-        [SwaggerResponse(StatusCodes.Status404NotFound, "Business Unit not found", typeof(EntityNotFoundResponse))]
-        public IActionResult GenerateBusinessUnitSummary(
-            [FromRoute, SwaggerRequestBody("Business Unit Id", Required = true)] Guid id, CancellationToken cancellationToken)
-        {
-            return Ok();
-        }
+        private readonly ISummaryApiService _summaryApiService;
 
-        [HttpPost("MonthlyBalance/{id:guid}")]
-        [SwaggerOperation(Summary = "Generate the Summary Spreadsheet for the given Monthly Balance")]
+        public SummaryController(ISummaryApiService summaryApiService)
+            => _summaryApiService = summaryApiService;
+
+        [HttpGet("BusinessUnit/{id:guid}")]
+        [SwaggerOperation(Summary = "Get the Summary Spreadsheet for the given Business Unit")]
+        [SwaggerResponse(StatusCodes.Status404NotFound, "Business Unit not found", typeof(EntityNotFoundResponse))]
+        public async Task<IActionResult> GetBusinessUnitSummary(
+            [FromRoute, SwaggerRequestBody("Business Unit Id", Required = true)] Guid id, CancellationToken cancellationToken)
+            => HandleFileResult(await _summaryApiService.GetMonthlyBalanceSummaryAsync(id, cancellationToken));
+
+        [HttpGet("MonthlyBalance/{id:guid}")]
+        [SwaggerOperation(Summary = "Get the Summary Spreadsheet for the given Monthly Balance")]
         [SwaggerResponse(StatusCodes.Status404NotFound, "Monthly Balance not found", typeof(EntityNotFoundResponse))]
-        public IActionResult GenerateMonthlyBalanceSummaryAsync(
+        public async Task<IActionResult> GetMonthlyBalanceSummaryAsync(
             [FromRoute, SwaggerRequestBody("Monthly Balance Id", Required = true)] Guid id, CancellationToken cancellationToken)
+            => HandleFileResult(await _summaryApiService.GetMonthlyBalanceSummaryAsync(id, cancellationToken));
+
+        private IActionResult HandleFileResult(Result<Tuple<string, XLWorkbook>> result)
         {
-            return Ok();
+            if (result.IsFailed) return HandleFailureResult(result.Errors);
+
+            var (workBookName, workBook) = result.Value;
+            using var stream = new MemoryStream();
+            workBook.SaveAs(stream);
+
+            return File(
+                stream.ToArray(),
+                "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                workBookName,
+                true);
         }
     }
 }
