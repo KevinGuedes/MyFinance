@@ -33,7 +33,7 @@ internal sealed class GetBusinessUnitSummaryHandler : IQueryHandler<GetBusinessU
             return Result.Fail(entityNotFoundError);
         }
 
-        var monthlyBalancesForProcessing = businessUnit.MonthlyBalances.Where(mb => mb.Transfers.Count > 0);
+        var monthlyBalancesForProcessing = businessUnit.MonthlyBalances.Where(mb => mb.Transfers.Any());
         if (!monthlyBalancesForProcessing.Any())
         {
             _logger.LogWarning("Business Unit with Id {BusinessUnitId} has no Monthly Balances with Transfers to summarize", query.Id);
@@ -42,6 +42,6 @@ internal sealed class GetBusinessUnitSummaryHandler : IQueryHandler<GetBusinessU
             return Result.Fail(unprocessableEntityError);
         }
 
-        return Result.Ok(_spreadsheetService.GetBusinessUnitSummary(businessUnit));
+        return Result.Ok(_spreadsheetService.GetBusinessUnitSummary(businessUnit, monthlyBalancesForProcessing));
     }
 }

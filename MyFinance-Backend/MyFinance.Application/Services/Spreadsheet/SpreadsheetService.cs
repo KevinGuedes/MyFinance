@@ -7,14 +7,16 @@ namespace MyFinance.Application.Services.Spreadsheet;
 
 public class SpreadsheetService : ISpreadsheetService
 {
-    public Tuple<string, XLWorkbook> GetBusinessUnitSummary(BusinessUnit businessUnit)
+    public Tuple<string, XLWorkbook> GetBusinessUnitSummary(
+        BusinessUnit businessUnit, 
+        IEnumerable<MonthlyBalance> monthlyBalancesForProcessing)
     {
         var workbookName = string.Format("Summary - {0}.xlsx", businessUnit.Name);
         var wb = new XLWorkbook();
 
         GenerateBusinessUnitSummary(businessUnit, wb);
 
-        foreach (var monthlyBalance in businessUnit.MonthlyBalances)
+        foreach (var monthlyBalance in monthlyBalancesForProcessing)
         {
             var referenceDate = new DateOnly(monthlyBalance.ReferenceYear, monthlyBalance.ReferenceMonth, 1);
             var wsName = referenceDate.ToString("y", new CultureInfo("en-US"));
