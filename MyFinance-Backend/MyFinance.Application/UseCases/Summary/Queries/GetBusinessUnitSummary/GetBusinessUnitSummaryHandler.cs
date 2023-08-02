@@ -3,22 +3,24 @@ using FluentResults;
 using Microsoft.Extensions.Logging;
 using MyFinance.Application.Common.Errors;
 using MyFinance.Application.Common.RequestHandling.Queries;
-using MyFinance.Application.UseCases.Summary.Queries.GetMonthlyBalanceSummary;
+using MyFinance.Application.Services.Spreadsheet;
 using MyFinance.Domain.Interfaces;
 
 namespace MyFinance.Application.UseCases.Summary.Queries.GetBusinessUnitSummary;
 
-internal sealed class GetBusinessUnitSummaryHandler : IQueryHandler<GetMonthlyBalanceSummaryQuery, Tuple<string, XLWorkbook>>
+internal sealed class GetBusinessUnitSummaryHandler : IQueryHandler<GetBusinessUnitSummaryQuery, Tuple<string, XLWorkbook>>
 {
     private readonly ILogger<GetBusinessUnitSummaryHandler> _logger;
     private readonly IBusinessUnitRepository _businessUnitRepository;
+    private readonly ISpreadsheetService _spreadsheetService;
 
     public GetBusinessUnitSummaryHandler(
         ILogger<GetBusinessUnitSummaryHandler> logger,
-        IBusinessUnitRepository businessUnitRepository)
-        => (_logger, _businessUnitRepository) = (logger, businessUnitRepository);
+        IBusinessUnitRepository businessUnitRepository,
+        ISpreadsheetService spreadsheetService)
+        => (_logger, _businessUnitRepository, _spreadsheetService) = (logger, businessUnitRepository, spreadsheetService);
 
-    public async Task<Result<Tuple<string, XLWorkbook>>> Handle(GetMonthlyBalanceSummaryQuery query, CancellationToken cancellationToken)
+    public async Task<Result<Tuple<string, XLWorkbook>>> Handle(GetBusinessUnitSummaryQuery query, CancellationToken cancellationToken)
     {
         _logger.LogInformation("Retrieving Business Unit with Id {BusinessUnitId} ", query.Id);
         var businessUnit = await _businessUnitRepository.GetWithSummaryData(query.Id, cancellationToken);
@@ -31,9 +33,6 @@ internal sealed class GetBusinessUnitSummaryHandler : IQueryHandler<GetMonthlyBa
             return Result.Fail(entityNotFoundError);
         }
 
-        var fileName = businessUnit.Name;
-        var workBook = new XLWorkbook();
-
-        return Result.Ok(new Tuple<string, XLWorkbook>(fileName, workBook));
+        return Result.Ok(_spreadsheetService.GetBusinessUnitSummary(businessUnit));
     }
 }

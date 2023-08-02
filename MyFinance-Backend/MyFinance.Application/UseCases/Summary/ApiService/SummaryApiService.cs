@@ -16,6 +16,15 @@ public class SummaryApiService : ISummaryApiService
     public Task<Result<Tuple<string, XLWorkbook>>> GetBusinessUnitSummaryAsync(Guid id, CancellationToken cancellationToken)
         => _mediator.Send(new GetBusinessUnitSummaryQuery(id), cancellationToken);
 
-    public Task<Result<Tuple<string, XLWorkbook>>> GetMonthlyBalanceSummaryAsync(Guid id, CancellationToken cancellationToken)
-        => _mediator.Send(new GetMonthlyBalanceSummaryQuery(id), cancellationToken);
+    public async Task<Result<Tuple<string, byte[]>>> GetMonthlyBalanceSummaryAsync(Guid id, CancellationToken cancellationToken)
+    {
+        var result = await _mediator.Send(new GetMonthlyBalanceSummaryQuery(id), cancellationToken);
+
+        var (workBookName, workBook) = result.Value;
+        using var stream = new MemoryStream();
+        workBook.SaveAs(stream);
+        stream.Close();
+
+        return Result.Ok(new Tuple<string, byte[]>(workBookName, stream.ToArray()));
+    }
 }

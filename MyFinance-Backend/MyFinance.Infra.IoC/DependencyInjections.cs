@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using MyFinance.Application.PipelineBehaviors;
+using MyFinance.Application.Services.Spreadsheet;
 using MyFinance.Application.UseCases.BusinessUnits.ApiService;
 using MyFinance.Application.UseCases.MonthlyBalances.ApiService;
 using MyFinance.Application.UseCases.Summary.ApiService;
@@ -20,14 +21,18 @@ public static class DependencyInjections
 {
     public static void AddDependencies(this IServiceCollection services, IConfiguration configuration)
     {
-        AddPersistence(services, configuration);
+        AddServices(services);
         AddApiServices(services);
+        AddPersistence(services, configuration);
 
         var applicationLayerAssembly = Assembly.Load("MyFinance.Application");
         AddAutoMapper(services, applicationLayerAssembly);
         AddValidators(services, applicationLayerAssembly);
         AddMediatR(services, applicationLayerAssembly);
     }
+
+    private static void AddServices(IServiceCollection services)
+        => services.AddScoped<ISpreadsheetService, SpreadsheetService>();
 
     private static void AddApiServices(IServiceCollection services)
         => services
