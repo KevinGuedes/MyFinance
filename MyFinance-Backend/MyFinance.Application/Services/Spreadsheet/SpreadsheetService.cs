@@ -12,6 +12,33 @@ public class SpreadsheetService : ISpreadsheetService
         var workbookName = string.Format("Summary - {0}.xlsx", businessUnit.Name);
         var wb = new XLWorkbook();
 
+        GenerateBusinessUnitSummary(businessUnit, wb);
+
+        foreach (var monthlyBalance in businessUnit.MonthlyBalances)
+        {
+            var referenceDate = new DateOnly(monthlyBalance.ReferenceYear, monthlyBalance.ReferenceMonth, 1);
+            var wsName = referenceDate.ToString("y", new CultureInfo("en-US"));
+            GenerateMonthlyBalanceSummary(monthlyBalance, wb, wsName);
+        }
+
+        return new(workbookName, wb);
+    }
+
+    public Tuple<string, XLWorkbook> GetMonthlyBalanceSummary(MonthlyBalance monthlyBalance)
+    {
+        var referenceDate = new DateOnly(monthlyBalance.ReferenceYear, monthlyBalance.ReferenceMonth, 1);
+        var wsName = referenceDate.ToString("y", new CultureInfo("en-US"));
+        var businessUnitName = monthlyBalance.BusinessUnit.Name;
+        var workbookName = string.Format("Summary - {0} - {1}.xlsx", businessUnitName, wsName);
+
+        var wb = new XLWorkbook();
+        GenerateMonthlyBalanceSummary(monthlyBalance, wb, wsName);
+
+        return new(workbookName, wb);
+    }
+
+    private static void GenerateBusinessUnitSummary(BusinessUnit businessUnit, XLWorkbook wb)
+    {
         var ws = wb.AddWorksheet(string.Format("Summary - {0}", businessUnit.Name));
         ws.Range(1, 1, 1, 3)
                .SetValue(string.Format("Summary - {0}", businessUnit.Name))
@@ -52,31 +79,9 @@ public class SpreadsheetService : ISpreadsheetService
         ws.Column(1).Width = 12;
         ws.Column(2).Width = 12;
         ws.Column(3).Width = 12;
-
-        foreach (var monthlyBalance in businessUnit.MonthlyBalances.Where(mb => mb.Transfers.Count > 0))
-        {
-            var referenceDate = new DateOnly(monthlyBalance.ReferenceYear, monthlyBalance.ReferenceMonth, 1);
-            var wsName = referenceDate.ToString("y", new CultureInfo("en-US"));
-            GenerateMonthlyBalanceSummary(wb, monthlyBalance, wsName);
-        }
-
-        return new(workbookName, wb);
     }
 
-    public Tuple<string, XLWorkbook> GetMonthlyBalanceSummary(MonthlyBalance monthlyBalance)
-    {
-        var referenceDate = new DateOnly(monthlyBalance.ReferenceYear, monthlyBalance.ReferenceMonth, 1);
-        var wsName = referenceDate.ToString("y", new CultureInfo("en-US"));
-        var businessUnitName = monthlyBalance.BusinessUnit.Name;
-        var workbookName = string.Format("Summary - {0} - {1}.xlsx", businessUnitName, wsName);
-
-        var wb = new XLWorkbook();
-        GenerateMonthlyBalanceSummary(wb, monthlyBalance, wsName);
-
-        return new(workbookName, wb);
-    }
-
-    private static XLWorkbook GenerateMonthlyBalanceSummary(XLWorkbook wb, MonthlyBalance monthlyBalance, string wsName)
+    private static void GenerateMonthlyBalanceSummary(MonthlyBalance monthlyBalance, XLWorkbook wb, string wsName)
     {
         var ws = wb.AddWorksheet(wsName);
 
@@ -168,7 +173,5 @@ public class SpreadsheetService : ISpreadsheetService
         ws.Column(6).Width = 12;
         ws.Column(7).Width = 12;
         ws.Column(8).Width = 12;
-
-        return wb;
     }
 }
