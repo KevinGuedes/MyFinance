@@ -30,8 +30,8 @@ public class SpreadsheetService : ISpreadsheetService
         var wsName = referenceDate.ToString("y", new CultureInfo("en-US"));
         var businessUnitName = monthlyBalance.BusinessUnit.Name;
         var workbookName = string.Format("Summary - {0} - {1}.xlsx", businessUnitName, wsName);
-
         var wb = new XLWorkbook();
+
         GenerateMonthlyBalanceSummary(monthlyBalance, wb, wsName);
 
         return new(workbookName, wb);

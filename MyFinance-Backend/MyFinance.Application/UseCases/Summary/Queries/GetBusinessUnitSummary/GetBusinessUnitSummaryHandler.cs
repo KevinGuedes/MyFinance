@@ -37,8 +37,8 @@ internal sealed class GetBusinessUnitSummaryHandler : IQueryHandler<GetBusinessU
         var monthlyBalancesForProcessing = businessUnit.MonthlyBalances.Where(mb => mb.Transfers.Count > 0);
         if(!monthlyBalancesForProcessing.Any()) 
         {
-            _logger.LogWarning("Business Unit with Id {BusinessUnitId} has no Monthly Balances with Transfers to process", query.Id);
-            var errorMessage = string.Format("Business Unit with Id {0} has no Monthly Balances with Transfers to process", query.Id);
+            _logger.LogWarning("Business Unit with Id {BusinessUnitId} has no Monthly Balances with Transfers to summarize", query.Id);
+            var errorMessage = string.Format("Business Unit with Id {0} has no Monthly Balances with Transfers to summarize", query.Id);
             var unprocessableEntityError = new UnprocessableEntityError(errorMessage);
             return Result.Fail(unprocessableEntityError);
         }

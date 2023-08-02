@@ -39,8 +39,8 @@ internal sealed class GetMonthlyBalanceSummaryHandler : IQueryHandler<GetMonthly
 
         if(monthlyBalance.Transfers.Count == 0)
         {
-            _logger.LogWarning("Monthly Balance with Id {MonthlyBalanceId} has no Transfers to process", query.Id);
-            var errorMessage = string.Format("Monthly Balance with Id {0} has no Transfers to process", query.Id);
+            _logger.LogWarning("Monthly Balance with Id {MonthlyBalanceId} has no Transfers to summarize", query.Id);
+            var errorMessage = string.Format("Monthly Balance with Id {0} has no Transfers to summarize", query.Id);
             var unprocessableEntityError = new UnprocessableEntityError(errorMessage);
             return Result.Fail(unprocessableEntityError);
         }
