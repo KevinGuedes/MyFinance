@@ -36,24 +36,14 @@ namespace MyFinance.Presentation.Controllers
         [SwaggerResponse(StatusCodes.Status400BadRequest, "Invalid Monthly Balance Id", typeof(BadRequestResponse))]
         public async Task<IActionResult> GetMonthlyBalanceSummaryAsync(
             [FromRoute, SwaggerRequestBody("Monthly Balance Id", Required = true)] Guid id, CancellationToken cancellationToken)
-        {
-            var result = await _summaryApiService.GetMonthlyBalanceSummaryAsync(id, cancellationToken);
-            if (result.IsFailed) return HandleFailureResult(result.Errors);
-            
-            var (workBookName, fileContent) = result.Value;
-            return File(fileContent, SPREADSHEET_CONTENT_TYPE, workBookName, true);
-        }
+            => HandleFileResult(await _summaryApiService.GetMonthlyBalanceSummaryAsync(id, cancellationToken));
 
-        private IActionResult HandleFileResult(Result<Tuple<string, XLWorkbook>> result)
+        private IActionResult HandleFileResult(Result<Tuple<string, byte[]>> result)
         {
             if (result.IsFailed) return HandleFailureResult(result.Errors);
 
-            var (workBookName, workBook) = result.Value;
-            using var stream = new MemoryStream();
-            workBook.SaveAs(stream);
-            stream.Close();
-
-            return File(stream.ToArray(), SPREADSHEET_CONTENT_TYPE, workBookName, true);
+            var (fileName, fileContent) = result.Value;
+            return File(fileContent, SPREADSHEET_CONTENT_TYPE, fileName, true);
         }
     }
 }

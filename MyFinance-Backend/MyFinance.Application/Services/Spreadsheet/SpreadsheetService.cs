@@ -9,7 +9,7 @@ public class SpreadsheetService : ISpreadsheetService
 {
     public Tuple<string, XLWorkbook> GetBusinessUnitSummary(BusinessUnit businessUnit)
     {
-        var fileName = string.Format("Summary - {0}.xlsx", businessUnit.Name);
+        var workbookName = string.Format("Summary - {0}.xlsx", businessUnit.Name);
         var wb = new XLWorkbook();
 
         foreach (var monthlyBalance in businessUnit.MonthlyBalances.Where(mb => mb.Transfers.Count > 0))
@@ -19,7 +19,7 @@ public class SpreadsheetService : ISpreadsheetService
             GenerateMonthlyBalanceSummary(wb, monthlyBalance, wsName);
         }
 
-        return new(fileName, wb);
+        return new(workbookName, wb);
     }
 
     public Tuple<string, XLWorkbook> GetMonthlyBalanceSummary(MonthlyBalance monthlyBalance)
@@ -27,12 +27,12 @@ public class SpreadsheetService : ISpreadsheetService
         var referenceDate = new DateOnly(monthlyBalance.ReferenceYear, monthlyBalance.ReferenceMonth, 1);
         var wsName = referenceDate.ToString("y", new CultureInfo("en-US"));
         var businessUnitName = monthlyBalance.BusinessUnit.Name;
-        var fileName = string.Format("Summary - {0} - {1}.xlsx", businessUnitName, wsName);
+        var workbookName = string.Format("Summary - {0} - {1}.xlsx", businessUnitName, wsName);
 
         var wb = new XLWorkbook();
         GenerateMonthlyBalanceSummary(wb, monthlyBalance, wsName);
 
-        return new(fileName, wb);
+        return new(workbookName, wb);
     }
 
     private static XLWorkbook GenerateMonthlyBalanceSummary(XLWorkbook wb, MonthlyBalance monthlyBalance, string wsName)

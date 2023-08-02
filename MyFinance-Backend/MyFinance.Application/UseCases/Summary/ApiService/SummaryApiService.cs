@@ -1,4 +1,5 @@
 ﻿using ClosedXML.Excel;
+using DocumentFormat.OpenXml.Spreadsheet;
 using FluentResults;
 using MediatR;
 using MyFinance.Application.UseCases.Summary.Queries.GetBusinessUnitSummary;
@@ -13,18 +14,27 @@ public class SummaryApiService : ISummaryApiService
     public SummaryApiService(IMediator mediator)
         => _mediator = mediator;
 
-    public Task<Result<Tuple<string, XLWorkbook>>> GetBusinessUnitSummaryAsync(Guid id, CancellationToken cancellationToken)
-        => _mediator.Send(new GetBusinessUnitSummaryQuery(id), cancellationToken);
+    public async Task<Result<Tuple<string, byte[]>>> GetBusinessUnitSummaryAsync(Guid id, CancellationToken cancellationToken)
+    {
+        var result = await _mediator.Send(new GetBusinessUnitSummaryQuery(id), cancellationToken);
+
+        var (workbookName, workbook) = result.Value;
+        using var stream = new MemoryStream();
+        workbook.SaveAs(stream);
+        stream.Close();
+
+        return Result.Ok(new Tuple<string, byte[]>(workbookName, stream.ToArray()));
+    }
 
     public async Task<Result<Tuple<string, byte[]>>> GetMonthlyBalanceSummaryAsync(Guid id, CancellationToken cancellationToken)
     {
         var result = await _mediator.Send(new GetMonthlyBalanceSummaryQuery(id), cancellationToken);
 
-        var (workBookName, workBook) = result.Value;
+        var (workbookName, workbook) = result.Value;
         using var stream = new MemoryStream();
-        workBook.SaveAs(stream);
+        workbook.SaveAs(stream);
         stream.Close();
 
-        return Result.Ok(new Tuple<string, byte[]>(workBookName, stream.ToArray()));
+        return Result.Ok(new Tuple<string, byte[]>(workbookName, stream.ToArray()));
     }
 }
