@@ -1,16 +1,10 @@
 ﻿using ClosedXML.Excel;
-using DocumentFormat.OpenXml.Bibliography;
-using DocumentFormat.OpenXml.Office2013.Word;
 using FluentResults;
 using Microsoft.Extensions.Logging;
 using MyFinance.Application.Common.Errors;
 using MyFinance.Application.Common.RequestHandling.Queries;
 using MyFinance.Application.Services.Spreadsheet;
-using MyFinance.Domain.Entities;
-using MyFinance.Domain.Enums;
 using MyFinance.Domain.Interfaces;
-using System;
-using System.Globalization;
 
 namespace MyFinance.Application.UseCases.Summary.Queries.GetMonthlyBalanceSummary;
 
@@ -37,7 +31,7 @@ internal sealed class GetMonthlyBalanceSummaryHandler : IQueryHandler<GetMonthly
             return Result.Fail(entityNotFoundError);
         }
 
-        if(monthlyBalance.Transfers.Count == 0)
+        if (monthlyBalance.Transfers.Count == 0)
         {
             _logger.LogWarning("Monthly Balance with Id {MonthlyBalanceId} has no Transfers to summarize", query.Id);
             var errorMessage = string.Format("Monthly Balance with Id {0} has no Transfers to summarize", query.Id);

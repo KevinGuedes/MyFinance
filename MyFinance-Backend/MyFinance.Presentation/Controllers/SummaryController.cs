@@ -1,5 +1,4 @@
-﻿using ClosedXML.Excel;
-using FluentResults;
+﻿using FluentResults;
 using Microsoft.AspNetCore.Mvc;
 using MyFinance.Application.Common.ApiResponses;
 using MyFinance.Application.UseCases.Summary.ApiService;

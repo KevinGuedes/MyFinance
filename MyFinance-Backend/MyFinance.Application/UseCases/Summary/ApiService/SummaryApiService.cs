@@ -1,6 +1,4 @@
-﻿using ClosedXML.Excel;
-using DocumentFormat.OpenXml.Spreadsheet;
-using FluentResults;
+﻿using FluentResults;
 using MediatR;
 using MyFinance.Application.UseCases.Summary.Queries.GetBusinessUnitSummary;
 using MyFinance.Application.UseCases.Summary.Queries.GetMonthlyBalanceSummary;
@@ -18,8 +16,8 @@ public class SummaryApiService : ISummaryApiService
     {
         var result = await _mediator.Send(new GetBusinessUnitSummaryQuery(id), cancellationToken);
 
-        if(result.IsFailed) return result.ToResult<Tuple<string, byte[]>>();
-        
+        if (result.IsFailed) return result.ToResult<Tuple<string, byte[]>>();
+
         var (workbookName, workbook) = result.Value;
         using var stream = new MemoryStream();
         workbook.SaveAs(stream);
@@ -31,7 +29,7 @@ public class SummaryApiService : ISummaryApiService
     public async Task<Result<Tuple<string, byte[]>>> GetMonthlyBalanceSummaryAsync(Guid id, CancellationToken cancellationToken)
     {
         var result = await _mediator.Send(new GetMonthlyBalanceSummaryQuery(id), cancellationToken);
-        
+
         if (result.IsFailed) return result.ToResult<Tuple<string, byte[]>>();
 
         var (workbookName, workbook) = result.Value;
