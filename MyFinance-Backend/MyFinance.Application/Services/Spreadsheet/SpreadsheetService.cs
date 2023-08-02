@@ -12,6 +12,47 @@ public class SpreadsheetService : ISpreadsheetService
         var workbookName = string.Format("Summary - {0}.xlsx", businessUnit.Name);
         var wb = new XLWorkbook();
 
+        var ws = wb.AddWorksheet(string.Format("Summary - {0}", businessUnit.Name));
+        ws.Range(1, 1, 1, 3)
+               .SetValue(string.Format("Summary - {0}", businessUnit.Name))
+               .Merge()
+               .Style
+               .Font.SetBold()
+               .Fill.SetBackgroundColor(XLColor.CornflowerBlue)
+               .Alignment.SetHorizontal(XLAlignmentHorizontalValues.Center)
+               .Border.SetOutsideBorder(XLBorderStyleValues.Thin);
+
+        var businessUnitHeaders = new string[] { "Income", "Outcome", "Balance" };
+        ws.Cell(2, 1)
+            .InsertData(businessUnitHeaders, true)
+            .Style
+            .Font.SetBold()
+            .Alignment.SetHorizontal(XLAlignmentHorizontalValues.Center)
+            .Border.SetOutsideBorder(XLBorderStyleValues.Thin);
+
+        var businessUnitData = new double[] {
+            Math.Round(businessUnit.Income, 2),
+            (-1 * Math.Round(businessUnit.Outcome, 2)),
+            Math.Round(businessUnit.Balance, 2)
+        };
+
+        var businessUnitDataRange = ws.Cell(3, 1).InsertData(businessUnitData, true);
+        businessUnitDataRange.Columns().Style.NumberFormat.SetFormat("R$ #,##0.00");
+        businessUnitDataRange.Range("A3:C3").Style.Font.SetBold();
+
+        businessUnitDataRange.Column(1).Style.Font.SetFontColor(XLColor.Green);
+        businessUnitDataRange.Column(2).Style.Font.SetFontColor(XLColor.Red);
+        var balanceColor = businessUnit.Balance >= 0 ? XLColor.Green : XLColor.Red;
+        businessUnitDataRange.Column(3).Style.Font.SetFontColor(balanceColor);
+
+        businessUnitDataRange.Style
+            .Alignment.SetHorizontal(XLAlignmentHorizontalValues.Center)
+            .Border.SetOutsideBorder(XLBorderStyleValues.Thin);
+
+        ws.Column(1).Width = 12;
+        ws.Column(2).Width = 12;
+        ws.Column(3).Width = 12;
+
         foreach (var monthlyBalance in businessUnit.MonthlyBalances.Where(mb => mb.Transfers.Count > 0))
         {
             var referenceDate = new DateOnly(monthlyBalance.ReferenceYear, monthlyBalance.ReferenceMonth, 1);
@@ -86,7 +127,7 @@ public class SpreadsheetService : ISpreadsheetService
             .WhenLessThan(0).Font.SetFontColor(XLColor.Red);
 
         ws.Range(1, 6, 1, 8)
-                .SetValue(string.Format("{0} - Summary", wsName))
+                .SetValue(string.Format("Summary - {0}", wsName))
                 .Merge()
                 .Style
                 .Font.SetBold()
@@ -109,8 +150,7 @@ public class SpreadsheetService : ISpreadsheetService
         };
 
         var monthlyBalanceDataRange = ws.Cell(3, 6).InsertData(monthlyBalanceData, true);
-        monthlyBalanceDataRange.Columns().Style
-            .NumberFormat.SetFormat("R$ #,##0.00");
+        monthlyBalanceDataRange.Columns().Style.NumberFormat.SetFormat("R$ #,##0.00");
 
         monthlyBalanceDataRange.Range("F3:H3").Style.Font.SetBold();
 
