@@ -35,7 +35,10 @@ public sealed class BusinessUnitRepository : EntityRepository<BusinessUnit>, IBu
 
     public Task<BusinessUnit?> GetWithSummaryData(Guid id, CancellationToken cancellationToken)
         => _myFinanceDbContext.BusinessUnits
-            .Include(bu => bu.MonthlyBalances)
+            .Include(bu => bu.MonthlyBalances
+                .Where(mb => mb.Transfers.Any())
+                .OrderBy(mb => mb.ReferenceYear)
+                .ThenBy(mb => mb.ReferenceMonth))
             .ThenInclude(mb => mb.Transfers
                .OrderByDescending(t => t.CreationDate)
                .ThenByDescending(t => t.RelatedTo))

@@ -31,7 +31,8 @@ internal sealed class GetMonthlyBalanceSummaryHandler : IQueryHandler<GetMonthly
             return Result.Fail(entityNotFoundError);
         }
 
-        if (!monthlyBalance.Transfers.Any())
+        var hasTransfersForProcessing = monthlyBalance.Transfers.Any();
+        if (!hasTransfersForProcessing)
         {
             _logger.LogWarning("Monthly Balance with Id {MonthlyBalanceId} has no Transfers to summarize", query.Id);
             var errorMessage = string.Format("Monthly Balance with Id {0} has no Transfers to summarize", query.Id);

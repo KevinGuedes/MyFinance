@@ -34,13 +34,14 @@ public sealed class MonthlyBalanceRepository : EntityRepository<MonthlyBalance>,
             .Take(pageSize)
             .AsNoTracking()
             .ToListAsync(cancellationToken);
+
     public Task<MonthlyBalance?> GetWithSummaryData(Guid id, CancellationToken cancellationToken)
        => _myFinanceDbContext.MonthlyBalances
-           .Include(mb => mb.BusinessUnit)
-           .Include(mb => mb.Transfers
-               .OrderByDescending(t => t.CreationDate)
-               .ThenByDescending(t => t.RelatedTo))
-           .AsNoTracking()
-           .AsSplitQuery()
-           .FirstOrDefaultAsync(mb => mb.Id == id, cancellationToken);
+            .Include(mb => mb.BusinessUnit)
+            .Include(mb => mb.Transfers
+                .OrderByDescending(t => t.CreationDate)
+                .ThenByDescending(t => t.RelatedTo))
+            .AsNoTracking()
+            .AsSplitQuery()
+            .FirstOrDefaultAsync(mb => mb.Id == id, cancellationToken);
 }

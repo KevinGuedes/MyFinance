@@ -1,9 +1,8 @@
 ﻿using FluentValidation;
-using MyFinance.Application.UseCases.Summary.Queries.GetMonthlyBalanceSummary;
 
 namespace MyFinance.Application.UseCases.Summary.Queries.GetBusinessUnitSummary;
 
-public sealed class GetBusinessUnitSummaryValidator : AbstractValidator<GetMonthlyBalanceSummaryQuery>
+public sealed class GetBusinessUnitSummaryValidator : AbstractValidator<GetBusinessUnitSummaryQuery>
 {
     public GetBusinessUnitSummaryValidator()
     {
