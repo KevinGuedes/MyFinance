@@ -64,7 +64,7 @@ public class SpreadsheetService : ISpreadsheetService
         };
 
         var businessUnitDataRange = ws.Cell(3, 1).InsertData(businessUnitData, true);
-        
+
         businessUnitDataRange.LastRow()
             .Style
             .NumberFormat.SetFormat("R$ #,##0.00")

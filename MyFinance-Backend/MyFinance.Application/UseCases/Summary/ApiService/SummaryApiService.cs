@@ -8,7 +8,7 @@ namespace MyFinance.Application.UseCases.Summary.ApiService;
 
 public class SummaryApiService : BaseApiService, ISummaryApiService
 {
-    public SummaryApiService(IMediator mediator) : base(mediator) 
+    public SummaryApiService(IMediator mediator) : base(mediator)
     {
     }
 

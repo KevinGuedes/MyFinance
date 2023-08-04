@@ -11,4 +11,5 @@ public sealed record RegisterTransfersCommand(
     string Description,
     DateTime SettlementDate,
     TransferType Type) : ICommand<Transfer>
-{ }
+{
+}

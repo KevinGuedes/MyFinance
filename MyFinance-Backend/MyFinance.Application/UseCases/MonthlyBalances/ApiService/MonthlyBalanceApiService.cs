@@ -4,7 +4,6 @@ using MediatR;
 using MyFinance.Application.Common.ApiService;
 using MyFinance.Application.UseCases.MonthlyBalances.DTOs;
 using MyFinance.Application.UseCases.MonthlyBalances.Queries.GetMonthlyBalances;
-using MyFinance.Domain.Entities;
 
 namespace MyFinance.Application.UseCases.MonthlyBalances.ApiService;
 
