@@ -6,23 +6,21 @@ using MyFinance.Application.UseCases.Transfers.Commands.DeleteTransfer;
 using MyFinance.Application.UseCases.Transfers.Commands.RegisterTransfers;
 using MyFinance.Application.UseCases.Transfers.Commands.UpdateTransfer;
 using MyFinance.Application.UseCases.Transfers.DTOs;
-using MyFinance.Domain.Entities;
 
 namespace MyFinance.Application.UseCases.Transfers.ApiService;
 
-public class TransferApiService : EntityApiService, ITransferApiService
+public class TransferApiService : BaseApiService, ITransferApiService
 {
-    public TransferApiService(IMediator mediator, IMapper mapper)
-         : base(mediator, mapper)
-    {
-    }
+    private readonly IMapper _mapper;
+    public TransferApiService(IMediator mediator, IMapper mapper) : base(mediator)
+        => _mapper = mapper;
 
     public async Task<Result<TransferDTO>> RegisterTransfersAsync(
         RegisterTransfersCommand command,
         CancellationToken cancellationToken)
     {
         var result = await _mediator.Send(command, cancellationToken);
-        return MapResult<Transfer, TransferDTO>(result);
+        return MapResult(result, _mapper.Map<TransferDTO>);
     }
 
     public async Task<Result<TransferDTO>> UpdateTransferAsync(
@@ -30,7 +28,7 @@ public class TransferApiService : EntityApiService, ITransferApiService
         CancellationToken cancellationToken)
     {
         var result = await _mediator.Send(command, cancellationToken);
-        return MapResult<Transfer, TransferDTO>(result);
+        return MapResult(result, _mapper.Map<TransferDTO>);
     }
 
     public Task<Result> DeleteTransferAsync(Guid id, CancellationToken cancellationToken)
