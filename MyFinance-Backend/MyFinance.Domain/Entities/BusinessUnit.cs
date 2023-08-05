@@ -12,7 +12,7 @@ public class BusinessUnit : Entity
     public bool IsArchived { get; private set; }
     public string? ReasonToArchive { get; private set; }
     public DateTime? ArchiveDate { get; private set; }
-    public IEnumerable<MonthlyBalance> MonthlyBalances { get; private set; }
+    public List<MonthlyBalance> MonthlyBalances { get; private set; }
 
     public BusinessUnit() { }
 
