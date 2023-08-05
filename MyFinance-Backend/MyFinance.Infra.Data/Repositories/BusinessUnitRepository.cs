@@ -7,8 +7,9 @@ namespace MyFinance.Infra.Data.Repositories;
 
 public sealed class BusinessUnitRepository : EntityRepository<BusinessUnit>, IBusinessUnitRepository
 {
-    public BusinessUnitRepository(MyFinanceDbContext myFinanceDbContext)
-        : base(myFinanceDbContext) { }
+    public BusinessUnitRepository(MyFinanceDbContext myFinanceDbContext) : base(myFinanceDbContext) 
+    {
+    }
 
     public async Task<IEnumerable<BusinessUnit>> GetPaginatedAsync(
         int page,
@@ -43,6 +44,5 @@ public sealed class BusinessUnitRepository : EntityRepository<BusinessUnit>, IBu
                .OrderByDescending(t => t.CreationDate)
                .ThenByDescending(t => t.RelatedTo))
             .AsNoTracking()
-            .AsSplitQuery()
             .FirstOrDefaultAsync(bu => bu.Id == id, cancellationToken);
 }
