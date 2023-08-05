@@ -1,7 +1,7 @@
-﻿using AutoMapper;
-using FluentResults;
+﻿using FluentResults;
 using MediatR;
 using MyFinance.Application.Common.ApiService;
+using MyFinance.Application.MappingProfiles;
 using MyFinance.Application.UseCases.Transfers.Commands.DeleteTransfer;
 using MyFinance.Application.UseCases.Transfers.Commands.RegisterTransfers;
 using MyFinance.Application.UseCases.Transfers.Commands.UpdateTransfer;
@@ -11,16 +11,16 @@ namespace MyFinance.Application.UseCases.Transfers.ApiService;
 
 public class TransferApiService : BaseApiService, ITransferApiService
 {
-    private readonly IMapper _mapper;
-    public TransferApiService(IMediator mediator, IMapper mapper) : base(mediator)
-        => _mapper = mapper;
+    public TransferApiService(IMediator mediator) : base(mediator)
+    {
+    }
 
     public async Task<Result<TransferDTO>> RegisterTransfersAsync(
         RegisterTransfersCommand command,
         CancellationToken cancellationToken)
     {
         var result = await _mediator.Send(command, cancellationToken);
-        return MapResult(result, _mapper.Map<TransferDTO>);
+        return MapResult(result, DomainToDTOMapper.TransferToDTO);
     }
 
     public async Task<Result<TransferDTO>> UpdateTransferAsync(
@@ -28,7 +28,7 @@ public class TransferApiService : BaseApiService, ITransferApiService
         CancellationToken cancellationToken)
     {
         var result = await _mediator.Send(command, cancellationToken);
-        return MapResult(result, _mapper.Map<TransferDTO>);
+        return MapResult(result, DomainToDTOMapper.TransferToDTO);
     }
 
     public Task<Result> DeleteTransferAsync(Guid id, CancellationToken cancellationToken)

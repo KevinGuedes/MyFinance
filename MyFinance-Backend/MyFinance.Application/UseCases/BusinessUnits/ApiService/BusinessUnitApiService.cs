@@ -1,7 +1,7 @@
-﻿using AutoMapper;
-using FluentResults;
+﻿using FluentResults;
 using MediatR;
 using MyFinance.Application.Common.ApiService;
+using MyFinance.Application.MappingProfiles;
 using MyFinance.Application.UseCases.BusinessUnits.Commands.ArchiveBusinessUnit;
 using MyFinance.Application.UseCases.BusinessUnits.Commands.CreateBusinessUnit;
 using MyFinance.Application.UseCases.BusinessUnits.Commands.UnarchiveBusinessUnit;
@@ -13,9 +13,9 @@ namespace MyFinance.Application.UseCases.BusinessUnits.ApiService;
 
 public class BusinessUnitApiService : BaseApiService, IBusinessUnitApiService
 {
-    private readonly IMapper _mapper;
-    public BusinessUnitApiService(IMediator mediator, IMapper mapper) : base(mediator)
-        => _mapper = mapper;
+    public BusinessUnitApiService(IMediator mediator) : base(mediator)
+    {
+    }
 
     public async Task<Result<IEnumerable<BusinessUnitDTO>>> GetBusinessUnitsAsync(
         int page,
@@ -24,7 +24,8 @@ public class BusinessUnitApiService : BaseApiService, IBusinessUnitApiService
     {
         var query = new GetBusinessUnitsQuery(page, pageSize);
         var result = await _mediator.Send(query, cancellationToken);
-        return MapResult(result, _mapper.Map<IEnumerable<BusinessUnitDTO>>);
+
+        return MapResult(result, DomainToDTOMapper.BusinessUnitToDTO);
     }
 
     public async Task<Result<BusinessUnitDTO>> CreateBusinessUnitAsync(
@@ -32,7 +33,7 @@ public class BusinessUnitApiService : BaseApiService, IBusinessUnitApiService
         CancellationToken cancellationToken)
     {
         var result = await _mediator.Send(command, cancellationToken);
-        return MapResult(await _mediator.Send(command, cancellationToken), _mapper.Map<BusinessUnitDTO>);
+        return MapResult(result, DomainToDTOMapper.BusinessUnitToDTO);
     }
 
     public async Task<Result<BusinessUnitDTO>> UpdateBusinessUnitAsync(
@@ -40,7 +41,7 @@ public class BusinessUnitApiService : BaseApiService, IBusinessUnitApiService
         CancellationToken cancellationToken)
     {
         var result = await _mediator.Send(command, cancellationToken);
-        return MapResult(result, _mapper.Map<BusinessUnitDTO>);
+        return MapResult(result, DomainToDTOMapper.BusinessUnitToDTO);
     }
 
     public Task<Result> ArchiveBusinessUnitAsync(ArchiveBusinessUnitCommand command, CancellationToken cancellationToken)

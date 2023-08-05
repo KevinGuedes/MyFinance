@@ -26,7 +26,6 @@ public static class DependencyInjections
         AddPersistence(services, configuration);
 
         var applicationLayerAssembly = Assembly.Load("MyFinance.Application");
-        AddAutoMapper(services, applicationLayerAssembly);
         AddValidators(services, applicationLayerAssembly);
         AddMediatR(services, applicationLayerAssembly);
     }
@@ -55,13 +54,10 @@ public static class DependencyInjections
             .AddScoped<ITransferRepository, TransferRepository>();
     }
 
-    public static void AddAutoMapper(IServiceCollection services, Assembly applicationLayerAssembly)
+    public static void AddValidators(IServiceCollection services, Assembly applicationLayerAssembly)
         => services
             .AddFluentValidationClientsideAdapters()
             .AddValidatorsFromAssembly(applicationLayerAssembly);
-
-    private static void AddValidators(IServiceCollection services, Assembly applicationLayerAssembly)
-       => services.AddAutoMapper(applicationLayerAssembly);
 
     private static void AddMediatR(IServiceCollection services, Assembly applicationLayerAssembly)
        => services

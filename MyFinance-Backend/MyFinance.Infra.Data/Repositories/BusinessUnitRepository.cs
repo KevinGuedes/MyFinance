@@ -18,6 +18,7 @@ public sealed class BusinessUnitRepository : EntityRepository<BusinessUnit>, IBu
         => await _myFinanceDbContext.BusinessUnits
             .OrderByDescending(bu => bu.CreationDate)
             .ThenByDescending(bu => bu.Name)
+            .Include(bu => bu.MonthlyBalances)
             .Skip((page - 1) * pageSize)
             .Take(pageSize)
             .AsNoTracking()

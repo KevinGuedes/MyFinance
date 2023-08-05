@@ -1,4 +1,5 @@
 ﻿using MyFinance.Application.Common.DTO;
+using MyFinance.Application.UseCases.Transfers.DTOs;
 
 namespace MyFinance.Application.UseCases.MonthlyBalances.DTOs;
 
@@ -10,20 +11,4 @@ public sealed class MonthlyBalanceDTO : BaseDTO
     public int ReferenceMonth { get; set; }
     public int ReferenceYear { get; set; }
     public Guid BusinessUnitId { get; set; }
-
-    public MonthlyBalanceDTO(
-        double income,
-        double outcome,
-        double balance,
-        int referenceMonth,
-        int referenceYear,
-        Guid businessUnitId)
-    {
-        Income = income;
-        Outcome = outcome;
-        Balance = balance;
-        ReferenceMonth = referenceMonth;
-        ReferenceYear = referenceYear;
-        BusinessUnitId = businessUnitId;
-    }
 }
