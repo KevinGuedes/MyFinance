@@ -1,5 +1,4 @@
-﻿using FluentResults;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using MyFinance.Application.Common.ApiResponses;
 using MyFinance.Application.UseCases.Summary.ApiService;
 using Swashbuckle.AspNetCore.Annotations;
@@ -25,7 +24,7 @@ namespace MyFinance.Presentation.Controllers
         [SwaggerResponse(StatusCodes.Status404NotFound, "Business Unit not found", typeof(EntityNotFoundResponse))]
         public async Task<IActionResult> GetBusinessUnitSummary(
             [FromRoute, SwaggerRequestBody("Business Unit Id", Required = true)] Guid id, CancellationToken cancellationToken)
-            => HandleFileResult(await _summaryApiService.GetBusinessUnitSummaryAsync(id, cancellationToken));
+            => ProcessFileResult(await _summaryApiService.GetBusinessUnitSummaryAsync(id, cancellationToken), SPREADSHEET_CONTENT_TYPE);
 
         [HttpGet("MonthlyBalance/{id:guid}")]
         [SwaggerOperation(Summary = "Get the Summary Spreadsheet for the given Monthly Balance")]
@@ -35,14 +34,6 @@ namespace MyFinance.Presentation.Controllers
         [SwaggerResponse(StatusCodes.Status400BadRequest, "Invalid Monthly Balance Id", typeof(BadRequestResponse))]
         public async Task<IActionResult> GetMonthlyBalanceSummaryAsync(
             [FromRoute, SwaggerRequestBody("Monthly Balance Id", Required = true)] Guid id, CancellationToken cancellationToken)
-            => HandleFileResult(await _summaryApiService.GetMonthlyBalanceSummaryAsync(id, cancellationToken));
-
-        private IActionResult HandleFileResult(Result<Tuple<string, byte[]>> result)
-        {
-            if (result.IsFailed) return HandleFailureResult(result.Errors);
-
-            var (fileName, fileContent) = result.Value;
-            return File(fileContent, SPREADSHEET_CONTENT_TYPE, fileName, true);
-        }
+            => ProcessFileResult(await _summaryApiService.GetMonthlyBalanceSummaryAsync(id, cancellationToken), SPREADSHEET_CONTENT_TYPE);
     }
 }
