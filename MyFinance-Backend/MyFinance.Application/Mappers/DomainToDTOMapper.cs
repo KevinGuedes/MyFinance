@@ -2,32 +2,50 @@
 using MyFinance.Application.UseCases.MonthlyBalances.DTOs;
 using MyFinance.Application.UseCases.Transfers.DTOs;
 using MyFinance.Domain.Entities;
-using Riok.Mapperly.Abstractions;
 
 namespace MyFinance.Application.MappingProfiles;
 
-[Mapper]
-public static partial class DomainToDTOMapper
+public static class DomainToDTOMapper
 {
-    [MapperIgnoreSource(nameof(BusinessUnit.CreationDate))]
-    [MapperIgnoreSource(nameof(BusinessUnit.UpdateDate))]
-    [MapperIgnoreSource(nameof(BusinessUnit.MonthlyBalances))]
-    public static partial BusinessUnitDTO BusinessUnitToDTO(BusinessUnit businessUnit);
-    public static partial IEnumerable<BusinessUnitDTO> BusinessUnitToDTO(IEnumerable<BusinessUnit> businessUnits);
+    public static BusinessUnitDTO BusinessUnitToDTO(BusinessUnit businessUnit)
+        => new()
+        {
+            Id = businessUnit.Id,
+            Name = businessUnit.Name,
+            Income = businessUnit.Income,
+            Outcome = businessUnit.Outcome,
+            Balance = businessUnit.Balance,
+            Description = businessUnit.Description,
+            IsArchived = businessUnit.IsArchived,
+            ReasonToArchive = businessUnit.ReasonToArchive,
+            ArchiveDate = businessUnit.ArchiveDate
+        };
 
-    [MapperIgnoreSource(nameof(MonthlyBalance.CreationDate))]
-    [MapperIgnoreSource(nameof(MonthlyBalance.UpdateDate))]
-    [MapperIgnoreSource(nameof(MonthlyBalance.BusinessUnit))]
-    [MapperIgnoreSource(nameof(MonthlyBalance.Transfers))]
-    public static partial MonthlyBalanceDTO MonthlyBalanceToDTO(MonthlyBalance monthlyBalance);
-    public static partial IEnumerable<MonthlyBalanceDTO> MonthlyBalanceToDTO(IEnumerable<MonthlyBalance> monthlyBalances);
+    public static IEnumerable<BusinessUnitDTO> BusinessUnitToDTO(IEnumerable<BusinessUnit> businessUnits)
+        => businessUnits.Select(BusinessUnitToDTO);
 
-    [MapperIgnoreSource(nameof(Transfer.CreationDate))]
-    [MapperIgnoreSource(nameof(Transfer.UpdateDate))]
-    [MapperIgnoreSource(nameof(Transfer.UpdateDate))]
-    [MapperIgnoreSource(nameof(Transfer.MonthlyBalanceId))]
-    [MapperIgnoreSource(nameof(Transfer.MonthlyBalance))]
-    public static partial TransferDTO TransferToDTO(Transfer transfer);
-    public static partial IEnumerable<TransferDTO> TransferToDTO(IEnumerable<Transfer> transfers);
+    public static MonthlyBalanceDTO MonthlyBalanceToDTO(MonthlyBalance monthlyBalance)
+        => new()
+        {
+            Id = monthlyBalance.Id,
+            Income = monthlyBalance.Income,
+            Outcome = monthlyBalance.Outcome,
+            Balance = monthlyBalance.Balance,
+            ReferenceMonth = monthlyBalance.ReferenceMonth,
+            ReferenceYear = monthlyBalance.ReferenceYear,
+        };
 
+    public static IEnumerable<MonthlyBalanceDTO> MonthlyBalanceToDTO(IEnumerable<MonthlyBalance> monthlyBalances)
+        => monthlyBalances.Select(MonthlyBalanceToDTO);
+
+    public static TransferDTO TransferToDTO(Transfer transfer)
+        => new()
+        {
+            Id = transfer.Id,
+            RelatedTo = transfer.RelatedTo,
+            Description = transfer.Description,
+            SettlementDate = transfer.SettlementDate,
+            Type = transfer.Type,
+            Value = transfer.Value
+        };
 }

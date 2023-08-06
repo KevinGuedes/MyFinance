@@ -3,7 +3,7 @@ using MediatR;
 using MyFinance.Application.Common.ApiService;
 using MyFinance.Application.MappingProfiles;
 using MyFinance.Application.UseCases.Transfers.Commands.DeleteTransfer;
-using MyFinance.Application.UseCases.Transfers.Commands.RegisterTransfers;
+using MyFinance.Application.UseCases.Transfers.Commands.RegisterTransfer;
 using MyFinance.Application.UseCases.Transfers.Commands.UpdateTransfer;
 using MyFinance.Application.UseCases.Transfers.DTOs;
 
@@ -16,7 +16,7 @@ public class TransferApiService : BaseApiService, ITransferApiService
     }
 
     public async Task<Result<TransferDTO>> RegisterTransfersAsync(
-        RegisterTransfersCommand command,
+        RegisterTransferCommand command,
         CancellationToken cancellationToken)
     {
         var result = await _mediator.Send(command, cancellationToken);

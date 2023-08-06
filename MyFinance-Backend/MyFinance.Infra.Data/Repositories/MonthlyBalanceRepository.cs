@@ -7,7 +7,7 @@ namespace MyFinance.Infra.Data.Repositories;
 
 public sealed class MonthlyBalanceRepository : EntityRepository<MonthlyBalance>, IMonthlyBalanceRepository
 {
-    public MonthlyBalanceRepository(MyFinanceDbContext myFinanceDbContext) : base(myFinanceDbContext) 
+    public MonthlyBalanceRepository(MyFinanceDbContext myFinanceDbContext) : base(myFinanceDbContext)
     {
     }
 

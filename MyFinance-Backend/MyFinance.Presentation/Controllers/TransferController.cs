@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MyFinance.Application.Common.ApiResponses;
 using MyFinance.Application.UseCases.Transfers.ApiService;
-using MyFinance.Application.UseCases.Transfers.Commands.RegisterTransfers;
+using MyFinance.Application.UseCases.Transfers.Commands.RegisterTransfer;
 using MyFinance.Application.UseCases.Transfers.Commands.UpdateTransfer;
 using MyFinance.Application.UseCases.Transfers.DTOs;
 using Swashbuckle.AspNetCore.Annotations;
@@ -24,7 +24,7 @@ public class TransferController : BaseController
     [SwaggerResponse(StatusCodes.Status400BadRequest, "Invalid payload", typeof(BadRequestResponse))]
     [SwaggerResponse(StatusCodes.Status404NotFound, "Business Unit not found", typeof(EntityNotFoundResponse))]
     public async Task<IActionResult> RegisterTransfersAsync(
-        [FromBody, SwaggerRequestBody("Transfers' payload", Required = true)] RegisterTransfersCommand command,
+        [FromBody, SwaggerRequestBody("Transfers' payload", Required = true)] RegisterTransferCommand command,
         CancellationToken cancellationToken)
         => ProcessResult(await _transferApiService.RegisterTransfersAsync(command, cancellationToken), true);
 
