@@ -15,7 +15,7 @@ public class TransferApiService : BaseApiService, ITransferApiService
     {
     }
 
-    public async Task<Result<TransferDTO>> RegisterTransfersAsync(
+    public async Task<Result<TransferDTO>> RegisterTransferAsync(
         RegisterTransferCommand command,
         CancellationToken cancellationToken)
     {

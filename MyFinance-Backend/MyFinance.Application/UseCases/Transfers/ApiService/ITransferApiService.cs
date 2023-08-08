@@ -7,7 +7,7 @@ namespace MyFinance.Application.UseCases.Transfers.ApiService;
 
 public interface ITransferApiService
 {
-    Task<Result<TransferDTO>> RegisterTransfersAsync(RegisterTransferCommand command, CancellationToken cancellationToken);
+    Task<Result<TransferDTO>> RegisterTransferAsync(RegisterTransferCommand command, CancellationToken cancellationToken);
     Task<Result<TransferDTO>> UpdateTransferAsync(UpdateTransferCommand command, CancellationToken cancellationToken);
     Task<Result> DeleteTransferAsync(Guid Id, CancellationToken cancellationToken);
 }
