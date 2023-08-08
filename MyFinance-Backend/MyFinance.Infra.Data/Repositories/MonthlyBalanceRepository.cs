@@ -43,6 +43,5 @@ public sealed class MonthlyBalanceRepository : EntityRepository<MonthlyBalance>,
                 .OrderByDescending(t => t.CreationDate)
                 .ThenByDescending(t => t.RelatedTo))
             .AsNoTracking()
-            .AsSplitQuery()
             .FirstOrDefaultAsync(mb => mb.Id == id, cancellationToken);
 }
