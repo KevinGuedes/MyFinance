@@ -1,4 +1,5 @@
-﻿using MyFinance.Application.UseCases.BusinessUnits.DTOs;
+﻿using MyFinance.Application.UseCases.AccountTags.DTOs;
+using MyFinance.Application.UseCases.BusinessUnits.DTOs;
 using MyFinance.Application.UseCases.MonthlyBalances.DTOs;
 using MyFinance.Application.UseCases.Transfers.DTOs;
 using MyFinance.Domain.Entities;
@@ -47,5 +48,13 @@ public static class DomainToDTOMapper
             SettlementDate = transfer.SettlementDate,
             Type = transfer.Type,
             Value = transfer.Value
+        };
+
+    public static AccountTagDTO AccountTagToDTO(AccountTag accountTag)
+        => new()
+        {
+            Id = accountTag.Id,
+            Tag = accountTag.Tag,
+            Description = accountTag.Description
         };
 }

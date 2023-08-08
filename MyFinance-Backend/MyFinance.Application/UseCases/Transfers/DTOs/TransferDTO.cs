@@ -5,7 +5,7 @@ namespace MyFinance.Application.UseCases.Transfers.DTOs;
 
 public sealed class TransferDTO : BaseDTO
 {
-    public required string RelatedTo { get; init; } 
+    public required string RelatedTo { get; init; }
     public required string Description { get; init; }
     public required DateTime SettlementDate { get; init; }
     public required TransferType Type { get; init; }

@@ -25,4 +25,8 @@
     <ProjectReference Include="..\MyFinance.Infra.Data\MyFinance.Infra.Data.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="UseCases\AccountTags\Queries\" />
+  </ItemGroup>
+
 </Project>
