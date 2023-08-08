@@ -1,10 +1,10 @@
 ﻿using FluentValidation;
 
-namespace MyFinance.Application.UseCases.Transfers.Commands.RegisterTransfers;
+namespace MyFinance.Application.UseCases.Transfers.Commands.RegisterTransfer;
 
-public sealed class RegisterTransfersValidator : AbstractValidator<RegisterTransfersCommand>
+public sealed class RegisterTransferValidator : AbstractValidator<RegisterTransferCommand>
 {
-    public RegisterTransfersValidator()
+    public RegisterTransferValidator()
     {
         RuleFor(command => command.Value)
             .NotEqual(0).WithMessage("{PropertyName} must not be equal to 0")

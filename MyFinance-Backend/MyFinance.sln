@@ -23,7 +23,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MyFinance.Application", "My
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MyFinance.Presentation", "MyFinance.Presentation\MyFinance.Presentation.csproj", "{9BC45513-5FCD-447B-8F1B-DEA674AF9EC0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyFinance.Infra.Data", "MyFinance.Infra.Data\MyFinance.Infra.Data.csproj", "{AE1E84F1-0359-48D5-96F3-4329A589EB5A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MyFinance.Infra.Data", "MyFinance.Infra.Data\MyFinance.Infra.Data.csproj", "{AE1E84F1-0359-48D5-96F3-4329A589EB5A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

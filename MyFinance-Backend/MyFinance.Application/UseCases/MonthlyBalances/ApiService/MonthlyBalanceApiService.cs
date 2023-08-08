@@ -1,17 +1,16 @@
-﻿using AutoMapper;
-using FluentResults;
+﻿using FluentResults;
 using MediatR;
 using MyFinance.Application.Common.ApiService;
+using MyFinance.Application.MappingProfiles;
 using MyFinance.Application.UseCases.MonthlyBalances.DTOs;
 using MyFinance.Application.UseCases.MonthlyBalances.Queries.GetMonthlyBalances;
-using MyFinance.Domain.Entities;
 
 namespace MyFinance.Application.UseCases.MonthlyBalances.ApiService;
 
-public class MonthlyBalanceApiService : EntityApiService, IMonthlyBalanceApiService
+public class MonthlyBalanceApiService : BaseApiService, IMonthlyBalanceApiService
 {
-    public MonthlyBalanceApiService(IMediator mediator, IMapper mapper)
-         : base(mediator, mapper)
+
+    public MonthlyBalanceApiService(IMediator mediator) : base(mediator)
     {
     }
 
@@ -22,7 +21,7 @@ public class MonthlyBalanceApiService : EntityApiService, IMonthlyBalanceApiServ
         CancellationToken cancellationToken)
     {
         var query = new GetMonthlyBalancesQuery(businessUnitId, page, pageSize);
-        var monthlyBalances = await _mediator.Send(query, cancellationToken);
-        return MapResult<MonthlyBalance, MonthlyBalanceDTO>(monthlyBalances);
+        var result = await _mediator.Send(query, cancellationToken);
+        return MapResult(result, DomainToDTOMapper.MonthlyBalanceToDTO);
     }
 }

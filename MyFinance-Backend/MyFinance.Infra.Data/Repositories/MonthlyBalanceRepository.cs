@@ -7,8 +7,9 @@ namespace MyFinance.Infra.Data.Repositories;
 
 public sealed class MonthlyBalanceRepository : EntityRepository<MonthlyBalance>, IMonthlyBalanceRepository
 {
-    public MonthlyBalanceRepository(MyFinanceDbContext myFinanceDbContext)
-        : base(myFinanceDbContext) { }
+    public MonthlyBalanceRepository(MyFinanceDbContext myFinanceDbContext) : base(myFinanceDbContext)
+    {
+    }
 
     public Task<MonthlyBalance?> GetByReferenceDateAndBusinessUnitId(
         DateTime referenceDate,
@@ -34,4 +35,13 @@ public sealed class MonthlyBalanceRepository : EntityRepository<MonthlyBalance>,
             .Take(pageSize)
             .AsNoTracking()
             .ToListAsync(cancellationToken);
+
+    public Task<MonthlyBalance?> GetWithSummaryData(Guid id, CancellationToken cancellationToken)
+       => _myFinanceDbContext.MonthlyBalances
+            .Include(mb => mb.BusinessUnit)
+            .Include(mb => mb.Transfers
+                .OrderByDescending(t => t.CreationDate)
+                .ThenByDescending(t => t.RelatedTo))
+            .AsNoTracking()
+            .FirstOrDefaultAsync(mb => mb.Id == id, cancellationToken);
 }

@@ -28,6 +28,14 @@ public abstract class BaseController : ControllerBase
         return HandleFailureResult(result.Errors);
     }
 
+    protected IActionResult ProcessFileResult(Result<Tuple<string, byte[]>> result, string contentType)
+    {
+        if (result.IsFailed) return HandleFailureResult(result.Errors);
+
+        var (fileName, fileContent) = result.Value;
+        return File(fileContent, contentType, fileName, true);
+    }
+
     protected IActionResult HandleFailureResult(List<IError> errors)
     {
         var invalidRequestError = errors.OfType<InvalidRequestError>().FirstOrDefault();

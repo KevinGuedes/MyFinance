@@ -2,13 +2,14 @@
 using MyFinance.Domain.Entities;
 using MyFinance.Domain.Enums;
 
-namespace MyFinance.Application.UseCases.Transfers.Commands.RegisterTransfers;
+namespace MyFinance.Application.UseCases.Transfers.Commands.RegisterTransfer;
 
-public sealed record RegisterTransfersCommand(
+public sealed record RegisterTransferCommand(
     Guid BusinessUnitId,
     double Value,
     string RelatedTo,
     string Description,
     DateTime SettlementDate,
     TransferType Type) : ICommand<Transfer>
-{ }
+{
+}
