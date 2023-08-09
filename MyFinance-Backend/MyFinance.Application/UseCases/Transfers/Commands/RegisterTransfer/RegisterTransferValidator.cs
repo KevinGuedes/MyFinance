@@ -25,5 +25,8 @@ public sealed class RegisterTransferValidator : AbstractValidator<RegisterTransf
 
         RuleFor(command => command.BusinessUnitId)
             .NotEqual(Guid.Empty).WithMessage("{PropertyName} invalid");
+
+        RuleFor(command => command.AccountTagId)
+            .NotEqual(Guid.Empty).WithMessage("{PropertyName} invalid");
     }
 }

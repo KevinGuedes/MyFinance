@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
@@ -10,6 +11,21 @@ namespace MyFinance.Infra.Data.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.CreateTable(
+                name: "AccountTags",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Tag = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    CreationDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UpdateDate = table.Column<DateTime>(type: "datetime2", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AccountTags", x => x.Id);
+                });
+
             migrationBuilder.CreateTable(
                 name: "BusinessUnits",
                 columns: table => new
@@ -28,6 +44,30 @@ namespace MyFinance.Infra.Data.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_BusinessUnits", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "AccountTagBusinessUnit",
+                columns: table => new
+                {
+                    AccountTagsId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    BusinessUnitsId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AccountTagBusinessUnit", x => new { x.AccountTagsId, x.BusinessUnitsId });
+                    table.ForeignKey(
+                        name: "FK_AccountTagBusinessUnit_AccountTags_AccountTagsId",
+                        column: x => x.AccountTagsId,
+                        principalTable: "AccountTags",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_AccountTagBusinessUnit_BusinessUnits_BusinessUnitsId",
+                        column: x => x.BusinessUnitsId,
+                        principalTable: "BusinessUnits",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -65,6 +105,7 @@ namespace MyFinance.Infra.Data.Migrations
                     SettlementDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Type = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     MonthlyBalanceId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    AccountTagId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     CreationDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UpdateDate = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
@@ -72,12 +113,23 @@ namespace MyFinance.Infra.Data.Migrations
                 {
                     table.PrimaryKey("PK_Transfers", x => x.Id);
                     table.ForeignKey(
+                        name: "FK_Transfers_AccountTags_AccountTagId",
+                        column: x => x.AccountTagId,
+                        principalTable: "AccountTags",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
                         name: "FK_Transfers_MonthlyBalances_MonthlyBalanceId",
                         column: x => x.MonthlyBalanceId,
                         principalTable: "MonthlyBalances",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AccountTagBusinessUnit_BusinessUnitsId",
+                table: "AccountTagBusinessUnit",
+                column: "BusinessUnitsId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_BusinessUnits_Name",
@@ -91,6 +143,11 @@ namespace MyFinance.Infra.Data.Migrations
                 column: "BusinessUnitId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Transfers_AccountTagId",
+                table: "Transfers",
+                column: "AccountTagId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Transfers_MonthlyBalanceId",
                 table: "Transfers",
                 column: "MonthlyBalanceId");
@@ -100,7 +157,13 @@ namespace MyFinance.Infra.Data.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
+                name: "AccountTagBusinessUnit");
+
+            migrationBuilder.DropTable(
                 name: "Transfers");
+
+            migrationBuilder.DropTable(
+                name: "AccountTags");
 
             migrationBuilder.DropTable(
                 name: "MonthlyBalances");

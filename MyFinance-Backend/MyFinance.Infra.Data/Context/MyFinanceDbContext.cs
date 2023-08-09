@@ -8,6 +8,7 @@ public sealed class MyFinanceDbContext : DbContext
     public DbSet<BusinessUnit> BusinessUnits { get; set; }
     public DbSet<Transfer> Transfers { get; set; }
     public DbSet<MonthlyBalance> MonthlyBalances { get; set; }
+    public DbSet<AccountTag> AccountTags { get; set; }
 
     public MyFinanceDbContext(DbContextOptions<MyFinanceDbContext> options)
         : base(options)

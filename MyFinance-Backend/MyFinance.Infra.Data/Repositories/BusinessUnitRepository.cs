@@ -25,7 +25,6 @@ public sealed class BusinessUnitRepository : EntityRepository<BusinessUnit>, IBu
 
     public Task<bool> ExistsByNameAsync(string name, CancellationToken cancellationToken)
         => _myFinanceDbContext.BusinessUnits
-            .AsNoTracking()
             .AnyAsync(bu => bu.Name == name, cancellationToken);
 
     public Task<BusinessUnit?> GetByNameAsync(string name, CancellationToken cancellationToken)

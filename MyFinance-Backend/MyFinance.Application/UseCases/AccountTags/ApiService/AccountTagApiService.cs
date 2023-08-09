@@ -13,6 +13,11 @@ public class AccountTagApiService : BaseApiService, IAccountTagApiService
     {
     }
 
+    public Task<Result> BindToBusinessUnit(Guid businessUnitId, CancellationToken cancellationToken)
+    {
+        throw new NotImplementedException();
+    }
+
     public async Task<Result<AccountTagDTO>> CreateAccountTagAsync(CreateAccountTagCommand command, CancellationToken cancellationToken)
     {
         var result = await _mediator.Send(command, cancellationToken);

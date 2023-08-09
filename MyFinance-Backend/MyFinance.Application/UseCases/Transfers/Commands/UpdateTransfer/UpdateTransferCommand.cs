@@ -6,6 +6,7 @@ namespace MyFinance.Application.UseCases.Transfers.Commands.UpdateTransfer;
 
 public sealed record UpdateTransferCommand(
     Guid Id,
+    Guid AccountTagId,
     double Value,
     string RelatedTo,
     string Description,

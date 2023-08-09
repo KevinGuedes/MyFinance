@@ -56,7 +56,8 @@ public static class DependencyInjections
             .AddScoped<IUnitOfWork, UnitOfWork>()
             .AddScoped<IBusinessUnitRepository, BusinessUnitRepository>()
             .AddScoped<IMonthlyBalanceRepository, MonthlyBalanceRepository>()
-            .AddScoped<ITransferRepository, TransferRepository>();
+            .AddScoped<ITransferRepository, TransferRepository>()
+            .AddScoped<IAccountTagRepository, AccountTagRepository>();
     }
 
     public static void AddValidators(IServiceCollection services, Assembly applicationLayerAssembly)

@@ -7,4 +7,5 @@ namespace MyFinance.Application.UseCases.AccountTags.ApiService;
 public interface IAccountTagApiService
 {
     Task<Result<AccountTagDTO>> CreateAccountTagAsync(CreateAccountTagCommand command, CancellationToken cancellationToken);
+    Task<Result> BindToBusinessUnit(Guid businessUnitId, CancellationToken cancellationToken);
 }

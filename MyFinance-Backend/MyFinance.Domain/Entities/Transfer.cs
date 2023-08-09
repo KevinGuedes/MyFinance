@@ -11,6 +11,8 @@ public class Transfer : Entity
     public TransferType Type { get; private set; }
     public Guid MonthlyBalanceId { get; private set; }
     public MonthlyBalance MonthlyBalance { get; private set; }
+    public Guid AccountTagId { get; private set; }
+    public AccountTag AccountTag { get; private set; }
 
     protected Transfer() { }
 
@@ -20,7 +22,8 @@ public class Transfer : Entity
         string description,
         DateTime settlementDate,
         TransferType type,
-        MonthlyBalance monthlyBalance)
+        MonthlyBalance monthlyBalance,
+        AccountTag accountTag)
     {
         Value = value;
         RelatedTo = relatedTo;
@@ -29,6 +32,8 @@ public class Transfer : Entity
         Type = type;
         MonthlyBalance = monthlyBalance;
         MonthlyBalanceId = monthlyBalance.Id;
+        AccountTag = accountTag;
+        AccountTagId = accountTag.Id;
     }
 
     public void Update(
@@ -37,7 +42,8 @@ public class Transfer : Entity
         string description,
         DateTime settlementDate,
         TransferType type,
-        MonthlyBalance monthlyBalance)
+        MonthlyBalance monthlyBalance,
+        AccountTag accountTag)
     {
         SetUpdateDateToNow();
         Value = value;
@@ -47,5 +53,7 @@ public class Transfer : Entity
         Type = type;
         MonthlyBalance = monthlyBalance;
         MonthlyBalanceId = monthlyBalance.Id;
+        AccountTag = accountTag;
+        AccountTagId = accountTag.Id;
     }
 }
