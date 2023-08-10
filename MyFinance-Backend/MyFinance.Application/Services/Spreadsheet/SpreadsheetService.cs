@@ -39,10 +39,10 @@ public class SpreadsheetService : ISpreadsheetService
 
     private static void GenerateBusinessUnitSummary(BusinessUnit businessUnit, XLWorkbook wb)
     {
-        var ws = wb.AddWorksheet(string.Format("Summary - {0}", businessUnit.Name));
+        var ws = wb.AddWorksheet(businessUnit.Name);
 
         ws.Range(1, 1, 1, 3)
-               .SetValue(string.Format("Summary - {0}", businessUnit.Name))
+               .SetValue(businessUnit.Name)
                .Merge()
                .Style
                .Font.SetBold()
@@ -85,8 +85,13 @@ public class SpreadsheetService : ISpreadsheetService
     private static void GenerateMonthlyBalanceSummary(MonthlyBalance monthlyBalance, XLWorkbook wb, string wsName)
     {
         var ws = wb.AddWorksheet(wsName);
+        var transferHeaders = new[] { "Value", "Related To", "Description", "Account Tag", "Settlement Date" };
+        var monthlyBalanceHeaders = new[] { "Income", "Outcome", "Balance" };
+        var numberOfColumnsForMonthlyBalanceData = monthlyBalanceHeaders.Length;
+        var lastColumnNumberForTransferData = transferHeaders.Length;
+        var spaceBetweenData = 2;
 
-        ws.Range(1, 1, 1, 4)
+        ws.Range(1, 1, 1, lastColumnNumberForTransferData)
                 .SetValue("Transfers")
                 .Merge()
                 .Style
@@ -96,7 +101,7 @@ public class SpreadsheetService : ISpreadsheetService
                 .Border.SetOutsideBorder(XLBorderStyleValues.Thin);
 
         ws.Cell(2, 1)
-            .InsertData(new[] { "Value", "Related To", "Description", "Settlement Date" }, true)
+            .InsertData(transferHeaders, true)
             .Style
             .Font.SetBold()
             .Alignment.SetHorizontal(XLAlignmentHorizontalValues.Center)
@@ -113,7 +118,8 @@ public class SpreadsheetService : ISpreadsheetService
                 Value = value,
                 transfer.RelatedTo,
                 transfer.Description,
-                SettlementDate = transfer.SettlementDate.ToString("dddd, dd MMMM yyyy HH:mm:ss"),
+                AccountTag = transfer.AccountTag.Tag,
+                SettlementDate = transfer.SettlementDate.ToString("dddd, dd MMMM yyyy HH:mm:ss")
             };
         });
 
@@ -131,8 +137,12 @@ public class SpreadsheetService : ISpreadsheetService
             .AddConditionalFormat()
             .WhenLessThan(0).Font.SetFontColor(XLColor.Red);
 
-        ws.Range(1, 6, 1, 8)
-            .SetValue(string.Format("Summary - {0}", wsName))
+        ws.Range(
+            1,
+            lastColumnNumberForTransferData + spaceBetweenData,
+            1,
+            lastColumnNumberForTransferData + 1 + numberOfColumnsForMonthlyBalanceData)
+            .SetValue(wsName)
             .Merge()
             .Style
             .Font.SetBold()
@@ -140,8 +150,8 @@ public class SpreadsheetService : ISpreadsheetService
             .Alignment.SetHorizontal(XLAlignmentHorizontalValues.Center)
             .Border.SetOutsideBorder(XLBorderStyleValues.Thin);
 
-        ws.Cell(2, 6)
-            .InsertData(new[] { "Income", "Outcome", "Balance" }, true)
+        ws.Cell(2, lastColumnNumberForTransferData + 2)
+            .InsertData(monthlyBalanceHeaders, true)
             .Style
             .Font.SetBold()
             .Alignment.SetHorizontal(XLAlignmentHorizontalValues.Center)
@@ -153,7 +163,7 @@ public class SpreadsheetService : ISpreadsheetService
             Math.Round(monthlyBalance.Balance, 2)
         };
 
-        var monthlyBalanceDataRange = ws.Cell(3, 6)
+        var monthlyBalanceDataRange = ws.Cell(3, lastColumnNumberForTransferData + spaceBetweenData)
             .InsertData(monthlyBalanceData, true);
 
         monthlyBalanceDataRange.LastRow()
@@ -172,8 +182,11 @@ public class SpreadsheetService : ISpreadsheetService
 
         ws.Columns().AdjustToContents();
         ws.Column(1).Width = 12;
-        ws.Column(6).Width = 12;
-        ws.Column(7).Width = 12;
-        ws.Column(8).Width = 12;
+
+        var lastColumnNumber = lastColumnNumberForTransferData + spaceBetweenData + numberOfColumnsForMonthlyBalanceData;
+        for(int i = lastColumnNumberForTransferData + spaceBetweenData; i < lastColumnNumber; i++)
+        {
+            ws.Column(i).Width = 12;
+        }
     }
 }

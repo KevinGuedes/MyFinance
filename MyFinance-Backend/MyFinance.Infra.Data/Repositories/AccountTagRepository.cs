@@ -13,4 +13,10 @@ public sealed class AccountTagRepository : EntityRepository<AccountTag>, IAccoun
 
     public Task<bool> ExistsByTagAsync(string tag, CancellationToken cancellationToken)
         => _myFinanceDbContext.AccountTags.AnyAsync(at => at.Tag == tag, cancellationToken);
+
+    public Task<AccountTag?> GetByTagAsync(string tag, CancellationToken cancellationToken)
+        => _myFinanceDbContext.AccountTags
+            .Where(at => at.Tag == tag)
+            .AsNoTracking()
+            .FirstOrDefaultAsync(cancellationToken);
 }

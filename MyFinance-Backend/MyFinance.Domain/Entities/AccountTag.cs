@@ -16,4 +16,11 @@ public class AccountTag : Entity
         Transfers = new List<Transfer>();
         BusinessUnits = new List<BusinessUnit>();
     }
+
+    public void Update(string tag, string? description)
+    {
+        SetUpdateDateToNow();
+        Tag = tag;
+        Description = description;
+    }
 }

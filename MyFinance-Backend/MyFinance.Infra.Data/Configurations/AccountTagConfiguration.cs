@@ -9,7 +9,9 @@ public sealed class AccountTagConfiguration : EntityConfiguration<AccountTag>
     {
         base.Configure(builder);
 
+        builder.HasIndex(at => at.Tag).IsUnique();
         builder.Property(at => at.Tag).IsRequired();
+
         builder.Property(at => at.Description);
 
         builder.HasMany(at => at.Transfers)

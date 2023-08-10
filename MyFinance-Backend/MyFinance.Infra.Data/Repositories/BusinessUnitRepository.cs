@@ -42,6 +42,7 @@ public sealed class BusinessUnitRepository : EntityRepository<BusinessUnit>, IBu
             .ThenInclude(mb => mb.Transfers
                .OrderByDescending(t => t.CreationDate)
                .ThenByDescending(t => t.RelatedTo))
+            .ThenInclude(t => t.AccountTag)
             .AsNoTracking()
             .FirstOrDefaultAsync(bu => bu.Id == id, cancellationToken);
 }

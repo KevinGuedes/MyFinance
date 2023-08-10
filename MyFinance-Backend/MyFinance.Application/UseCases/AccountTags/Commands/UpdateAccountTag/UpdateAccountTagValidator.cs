@@ -1,28 +1,29 @@
 ﻿using FluentValidation;
+using MyFinance.Application.UseCases.AccountTags.Commands.UpdateAccountTag;
 using MyFinance.Domain.Interfaces;
 
 namespace MyFinance.Application.UseCases.BusinessUnits.Commands.UpdateBusinessUnit;
 
-public sealed class UpdateBusinessUnitValidator : AbstractValidator<UpdateBusinessUnitCommand>
+public sealed class UpdateAccountTagValidator : AbstractValidator<UpdateAccountTagCommand>
 {
-    private readonly IBusinessUnitRepository _businessUnitRepository;
+    private readonly IAccountTagRepository _accountTagRepository;
 
-    public UpdateBusinessUnitValidator(IBusinessUnitRepository businessUnitRepository)
+    public UpdateAccountTagValidator(IAccountTagRepository accountTagRepository)
     {
-        _businessUnitRepository = businessUnitRepository;
+        _accountTagRepository = accountTagRepository;
         ClassLevelCascadeMode = CascadeMode.Stop;
 
         RuleFor(command => command.Id)
             .NotEqual(Guid.Empty).WithMessage("{PropertyName} invalid");
 
-        RuleFor(command => command.Name)
+        RuleFor(command => command.Tag)
            .Cascade(CascadeMode.Stop)
            .NotNull().WithMessage("{PropertyName} must not be null")
            .NotEmpty().WithMessage("{PropertyName} must not be empty")
-           .Length(3, 30).WithMessage("{PropertyName} must have between 3 and 30 characters")
-           .MustAsync(async (command, newBusinessUnitName, cancellationToken) =>
+           .Length(2, 6).WithMessage("{PropertyName} must have between 2 and 6 characters")
+           .MustAsync(async (command, tag, cancellationToken) =>
            {
-               var existingBusinessUnit = await _businessUnitRepository.GetByNameAsync(newBusinessUnitName, cancellationToken);
+               var existingBusinessUnit = await _accountTagRepository.GetByTagAsync(tag, cancellationToken);
                if (existingBusinessUnit is null) return true;
 
                var isValidName = existingBusinessUnit.Id == command.Id;

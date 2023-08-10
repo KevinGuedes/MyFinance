@@ -66,4 +66,17 @@ public class BusinessUnit : Entity
         if (transferType == TransferType.Profit) Income -= transferValue;
         else Outcome -= transferValue;
     }
+
+    //public void BindAccountTag(AccountTag accountTag)
+    //{
+    //    SetUpdateDateToNow();
+    //    HasBoundedAccountTags = true;
+    //    AccountTags.Add(accountTag);
+    //}
+
+    //public void UnbindAccountTag(AccountTag accountTag)
+    //{
+    //    SetUpdateDateToNow();
+    //    AccountTags.Remove(accountTag);
+    //}
 }
