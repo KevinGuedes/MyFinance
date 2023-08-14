@@ -19,7 +19,6 @@ public sealed class BusinessUnitConfiguration : EntityConfiguration<BusinessUnit
         builder.Property(bu => bu.ReasonToArchive).IsRequired(false);
         builder.Property(bu => bu.ArchiveDate).IsRequired(false);
 
-
         builder.HasMany(bu => bu.MonthlyBalances)
             .WithOne(mb => mb.BusinessUnit)
             .HasForeignKey(mb => mb.BusinessUnitId)

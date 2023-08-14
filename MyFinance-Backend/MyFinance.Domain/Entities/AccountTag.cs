@@ -8,7 +8,6 @@ public class AccountTag : Entity
     public string? ReasonToArchive { get; private set; }
     public DateTime? ArchiveDate { get; private set; }
     public List<Transfer> Transfers { get; private set; }
-    public List<BusinessUnit> BusinessUnits { get; private set; }
 
     protected AccountTag() { }
 
@@ -20,7 +19,6 @@ public class AccountTag : Entity
         ReasonToArchive = null;
         ArchiveDate = null;
         Transfers = new List<Transfer>();
-        BusinessUnits = new List<BusinessUnit>();
     }
 
     public void Update(string tag, string? description)

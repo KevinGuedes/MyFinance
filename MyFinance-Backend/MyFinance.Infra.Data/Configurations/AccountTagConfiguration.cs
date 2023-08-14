@@ -21,8 +21,5 @@ public sealed class AccountTagConfiguration : EntityConfiguration<AccountTag>
             .WithOne(t => t.AccountTag)
             .HasForeignKey(t => t.AccountTagId)
             .IsRequired();
-
-        builder.HasMany(at => at.BusinessUnits)
-            .WithMany(bu => bu.AccountTags);
     }
 }

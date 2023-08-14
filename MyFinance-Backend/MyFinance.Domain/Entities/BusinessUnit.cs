@@ -13,7 +13,6 @@ public class BusinessUnit : Entity
     public string? ReasonToArchive { get; private set; }
     public DateTime? ArchiveDate { get; private set; }
     public List<MonthlyBalance> MonthlyBalances { get; private set; }
-    public List<AccountTag> AccountTags { get; private set; }
 
     public BusinessUnit() { }
 
@@ -27,7 +26,6 @@ public class BusinessUnit : Entity
         ReasonToArchive = null;
         ArchiveDate = null;
         MonthlyBalances = new List<MonthlyBalance>();
-        AccountTags = new List<AccountTag>();
     }
 
     public void Update(string name, string? description)
@@ -66,17 +64,4 @@ public class BusinessUnit : Entity
         if (transferType == TransferType.Profit) Income -= transferValue;
         else Outcome -= transferValue;
     }
-
-    //public void BindAccountTag(AccountTag accountTag)
-    //{
-    //    SetUpdateDateToNow();
-    //    HasBoundedAccountTags = true;
-    //    AccountTags.Add(accountTag);
-    //}
-
-    //public void UnbindAccountTag(AccountTag accountTag)
-    //{
-    //    SetUpdateDateToNow();
-    //    AccountTags.Remove(accountTag);
-    //}
 }
