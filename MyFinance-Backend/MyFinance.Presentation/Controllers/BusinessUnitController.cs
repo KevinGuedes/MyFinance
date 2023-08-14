@@ -29,8 +29,8 @@ public class BusinessUnitController : BaseController
         => ProcessResult(await _businessUnitApiService.CreateBusinessUnitAsync(command, cancellationToken), true);
 
     [HttpGet]
-    [SwaggerOperation(Summary = "Lists all Business Units")]
-    [SwaggerResponse(StatusCodes.Status200OK, "List of all existing Business Units", typeof(IEnumerable<BusinessUnitDTO>))]
+    [SwaggerOperation(Summary = "Lists all Business Units with pagination")]
+    [SwaggerResponse(StatusCodes.Status200OK, "List of all existing Business Units with pagination", typeof(IEnumerable<BusinessUnitDTO>))]
     [SwaggerResponse(StatusCodes.Status400BadRequest, "Invalid query parameters", typeof(BadRequestResponse))]
     public async Task<IActionResult> GetBusinessUnitsAsync(
         [FromQuery, SwaggerParameter("Page number", Required = true)] int page,

@@ -57,4 +57,7 @@ public static class DomainToDTOMapper
             Tag = accountTag.Tag,
             Description = accountTag.Description
         };
+
+    public static IEnumerable<AccountTagDTO> AccountTagToDTO(IEnumerable<AccountTag> businessUnits)
+        => businessUnits.Select(AccountTagToDTO);
 }

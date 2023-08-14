@@ -7,6 +7,7 @@ using MyFinance.Application.UseCases.AccountTags.Commands.CreateAccountTag;
 using MyFinance.Application.UseCases.AccountTags.Commands.UnarchiveAccountTag;
 using MyFinance.Application.UseCases.AccountTags.Commands.UpdateAccountTag;
 using MyFinance.Application.UseCases.AccountTags.DTOs;
+using MyFinance.Application.UseCases.AccountTags.Queries.GetAccountTags;
 
 namespace MyFinance.Application.UseCases.AccountTags.ApiService;
 
@@ -14,6 +15,17 @@ public class AccountTagApiService : BaseApiService, IAccountTagApiService
 {
     public AccountTagApiService(IMediator mediator) : base(mediator)
     {
+    }
+
+    public async Task<Result<IEnumerable<AccountTagDTO>>> GetAccountTagsAsync(
+        int page,
+        int pageSize,
+        CancellationToken cancellationToken)
+    {
+        var query = new GetAccountTagsQuery(page, pageSize);
+        var result = await _mediator.Send(query, cancellationToken);
+
+        return MapResult(result, DomainToDTOMapper.AccountTagToDTO);
     }
 
     public Task<Result> ArchiveAccountTagAsync(ArchiveAccountTagCommand command, CancellationToken cancellationToken)

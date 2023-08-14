@@ -8,6 +8,7 @@ namespace MyFinance.Application.UseCases.AccountTags.ApiService;
 
 public interface IAccountTagApiService
 {
+    Task<Result<IEnumerable<AccountTagDTO>>> GetAccountTagsAsync(int page, int pageSize, CancellationToken cancellationToken);
     Task<Result<AccountTagDTO>> CreateAccountTagAsync(CreateAccountTagCommand command, CancellationToken cancellationToken);
     Task<Result<AccountTagDTO>> UpdateAccountTagAsync(UpdateAccountTagCommand command, CancellationToken cancellationToken);
     Task<Result> ArchiveAccountTagAsync(ArchiveAccountTagCommand command, CancellationToken cancellationToken);

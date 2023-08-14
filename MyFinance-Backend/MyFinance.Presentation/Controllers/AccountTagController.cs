@@ -6,6 +6,7 @@ using MyFinance.Application.UseCases.AccountTags.Commands.CreateAccountTag;
 using MyFinance.Application.UseCases.AccountTags.Commands.UpdateAccountTag;
 using MyFinance.Application.UseCases.AccountTags.DTOs;
 using MyFinance.Application.UseCases.BusinessUnits.Commands.ArchiveBusinessUnit;
+using MyFinance.Application.UseCases.BusinessUnits.DTOs;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace MyFinance.Presentation.Controllers
@@ -27,6 +28,16 @@ namespace MyFinance.Presentation.Controllers
             [FromBody, SwaggerRequestBody("Account Tag's payload", Required = true)] CreateAccountTagCommand command,
             CancellationToken cancellationToken)
             => ProcessResult(await _accountTagApiService.CreateAccountTagAsync(command, cancellationToken), true);
+
+        [HttpGet]
+        [SwaggerOperation(Summary = "Lists all Account Tags with pagination")]
+        [SwaggerResponse(StatusCodes.Status200OK, "List of all existing Account Tags with pagination", typeof(IEnumerable<AccountTagDTO>))]
+        [SwaggerResponse(StatusCodes.Status400BadRequest, "Invalid query parameters", typeof(BadRequestResponse))]
+        public async Task<IActionResult> GetBusinessUnitsAsync(
+            [FromQuery, SwaggerParameter("Page number", Required = true)] int page,
+            [FromQuery, SwaggerParameter("Units per page", Required = true)] int pageSize,
+            CancellationToken cancellationToken)
+            => ProcessResult(await _accountTagApiService.GetAccountTagsAsync(page, pageSize, cancellationToken));
 
         [HttpPut]
         [SwaggerOperation(Summary = "Updates an existing Account Tag")]
