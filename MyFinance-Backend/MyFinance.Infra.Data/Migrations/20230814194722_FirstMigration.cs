@@ -16,8 +16,11 @@ namespace MyFinance.Infra.Data.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Tag = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Tag = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    IsArchived = table.Column<bool>(type: "bit", nullable: false),
+                    ReasonToArchive = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ArchiveDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     CreationDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UpdateDate = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
@@ -44,30 +47,6 @@ namespace MyFinance.Infra.Data.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_BusinessUnits", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "AccountTagBusinessUnit",
-                columns: table => new
-                {
-                    AccountTagsId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    BusinessUnitsId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_AccountTagBusinessUnit", x => new { x.AccountTagsId, x.BusinessUnitsId });
-                    table.ForeignKey(
-                        name: "FK_AccountTagBusinessUnit_AccountTags_AccountTagsId",
-                        column: x => x.AccountTagsId,
-                        principalTable: "AccountTags",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_AccountTagBusinessUnit_BusinessUnits_BusinessUnitsId",
-                        column: x => x.BusinessUnitsId,
-                        principalTable: "BusinessUnits",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -127,9 +106,10 @@ namespace MyFinance.Infra.Data.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_AccountTagBusinessUnit_BusinessUnitsId",
-                table: "AccountTagBusinessUnit",
-                column: "BusinessUnitsId");
+                name: "IX_AccountTags_Tag",
+                table: "AccountTags",
+                column: "Tag",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_BusinessUnits_Name",
@@ -156,9 +136,6 @@ namespace MyFinance.Infra.Data.Migrations
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropTable(
-                name: "AccountTagBusinessUnit");
-
             migrationBuilder.DropTable(
                 name: "Transfers");
 
