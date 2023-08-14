@@ -12,7 +12,10 @@ public sealed class AccountTagConfiguration : EntityConfiguration<AccountTag>
         builder.HasIndex(at => at.Tag).IsUnique();
         builder.Property(at => at.Tag).IsRequired();
 
-        builder.Property(at => at.Description);
+        builder.Property(at => at.Description).IsRequired(false);
+        builder.Property(bu => bu.IsArchived).IsRequired();
+        builder.Property(bu => bu.ReasonToArchive).IsRequired(false);
+        builder.Property(bu => bu.ArchiveDate).IsRequired(false);
 
         builder.HasMany(at => at.Transfers)
             .WithOne(t => t.AccountTag)

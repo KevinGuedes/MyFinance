@@ -1,9 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MyFinance.Application.Common.ApiResponses;
 using MyFinance.Application.UseCases.AccountTags.ApiService;
+using MyFinance.Application.UseCases.AccountTags.Commands.ArchiveAccountTag;
 using MyFinance.Application.UseCases.AccountTags.Commands.CreateAccountTag;
 using MyFinance.Application.UseCases.AccountTags.Commands.UpdateAccountTag;
 using MyFinance.Application.UseCases.AccountTags.DTOs;
+using MyFinance.Application.UseCases.BusinessUnits.Commands.ArchiveBusinessUnit;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace MyFinance.Presentation.Controllers
@@ -33,8 +35,30 @@ namespace MyFinance.Presentation.Controllers
         [SwaggerResponse(StatusCodes.Status404NotFound, "Account Tag not found", typeof(EntityNotFoundResponse))]
         [SwaggerResponse(StatusCodes.Status422UnprocessableEntity, "Server currently unable to process the Account Tag", typeof(UnprocessableEntityResponse))]
         public async Task<IActionResult> UpdateBusinessUnitAsync(
-            [FromBody, SwaggerRequestBody("Business Unit payload", Required = true)] UpdateAccountTagCommand command,
+            [FromBody, SwaggerRequestBody("Account Tag payload", Required = true)] UpdateAccountTagCommand command,
             CancellationToken cancellationToken)
             => ProcessResult(await _accountTagApiService.UpdateAccountTagAsync(command, cancellationToken));
+
+        [HttpPatch("{id:guid}")]
+        [SwaggerOperation(Summary = "Unarchives an existing Account Tag")]
+        [SwaggerResponse(StatusCodes.Status204NoContent, "Account Tag successfully unarchived")]
+        [SwaggerResponse(StatusCodes.Status400BadRequest, "Invalid Account Tag Id", typeof(BadRequestResponse))]
+        [SwaggerResponse(StatusCodes.Status404NotFound, "Account Tag not found", typeof(EntityNotFoundResponse))]
+        [SwaggerResponse(StatusCodes.Status422UnprocessableEntity, "Server currently unable to process the Account Tag", typeof(UnprocessableEntityResponse))]
+        public async Task<IActionResult> UnarchiveBusinessUnitAsync(
+            [FromRoute, SwaggerParameter("Id of the Account Tag to unarchive", Required = true)] Guid id,
+            CancellationToken cancellationToken)
+            => ProcessResult(await _accountTagApiService.UnarchiveAccountTagAsync(id, cancellationToken));
+
+        [HttpDelete]
+        [SwaggerOperation(Summary = "Logically deletes (archives) an existing Account Tag")]
+        [SwaggerResponse(StatusCodes.Status204NoContent, "Account Tag successfully archived")]
+        [SwaggerResponse(StatusCodes.Status400BadRequest, "Invalid payload", typeof(BadRequestResponse))]
+        [SwaggerResponse(StatusCodes.Status404NotFound, "Account Tag not found", typeof(EntityNotFoundResponse))]
+        [SwaggerResponse(StatusCodes.Status422UnprocessableEntity, "Server currently unable to process the Account Tag", typeof(UnprocessableEntityResponse))]
+        public async Task<IActionResult> ArchiveBusinessUnitAsync(
+            [FromBody, SwaggerRequestBody("Payload to archvie a Account Tag", Required = true)] ArchiveAccountTagCommand command,
+            CancellationToken cancellationToken)
+            => ProcessResult(await _accountTagApiService.ArchiveAccountTagAsync(command, cancellationToken));
     }
 }

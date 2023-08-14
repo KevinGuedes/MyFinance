@@ -14,8 +14,11 @@ public sealed class BusinessUnitConfiguration : EntityConfiguration<BusinessUnit
 
         builder.Property(bu => bu.Income).IsRequired().HasPrecision(17, 4);
         builder.Property(bu => bu.Outcome).IsRequired().HasPrecision(17, 4);
-        builder.Property(bu => bu.IsArchived).IsRequired();
         builder.Property(bu => bu.Description).IsRequired(false);
+        builder.Property(bu => bu.IsArchived).IsRequired();
+        builder.Property(bu => bu.ReasonToArchive).IsRequired(false);
+        builder.Property(bu => bu.ArchiveDate).IsRequired(false);
+
 
         builder.HasMany(bu => bu.MonthlyBalances)
             .WithOne(mb => mb.BusinessUnit)

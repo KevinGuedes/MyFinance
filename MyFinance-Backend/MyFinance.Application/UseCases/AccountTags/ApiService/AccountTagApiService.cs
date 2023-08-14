@@ -2,7 +2,9 @@
 using MediatR;
 using MyFinance.Application.Common.ApiService;
 using MyFinance.Application.MappingProfiles;
+using MyFinance.Application.UseCases.AccountTags.Commands.ArchiveAccountTag;
 using MyFinance.Application.UseCases.AccountTags.Commands.CreateAccountTag;
+using MyFinance.Application.UseCases.AccountTags.Commands.UnarchiveAccountTag;
 using MyFinance.Application.UseCases.AccountTags.Commands.UpdateAccountTag;
 using MyFinance.Application.UseCases.AccountTags.DTOs;
 
@@ -14,11 +16,11 @@ public class AccountTagApiService : BaseApiService, IAccountTagApiService
     {
     }
 
+    public Task<Result> ArchiveAccountTagAsync(ArchiveAccountTagCommand command, CancellationToken cancellationToken)
+        => _mediator.Send(command, cancellationToken);
 
-    public Task<Result> BindToBusinessUnitAsync(Guid businessUnitId, CancellationToken cancellationToken)
-    {
-        throw new NotImplementedException();
-    }
+    public Task<Result> UnarchiveAccountTagAsync(Guid id, CancellationToken cancellationToken)
+        => _mediator.Send(new UnarchiveAccountTagCommand(id), cancellationToken);
 
     public async Task<Result<AccountTagDTO>> CreateAccountTagAsync(CreateAccountTagCommand command, CancellationToken cancellationToken)
     {

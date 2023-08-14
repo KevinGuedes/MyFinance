@@ -32,8 +32,8 @@ public class UnarchiveBusinessUnitHandler : ICommandHandler<UnarchiveBusinessUni
         _logger.LogInformation("Unarchiving Business Unit with Id {BusinessUnitId}", command.Id);
         businessUnit.Unarchive();
         _businessUnitRepository.Update(businessUnit);
-
         _logger.LogInformation("Business Unit with Id {BusinessUnitId} successfully unarchived", command.Id);
+
         return Result.Ok();
     }
 }

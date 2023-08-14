@@ -4,6 +4,9 @@ public class AccountTag : Entity
 {
     public string Tag { get; private set; }
     public string? Description { get; private set; }
+    public bool IsArchived { get; private set; }
+    public string? ReasonToArchive { get; private set; }
+    public DateTime? ArchiveDate { get; private set; }
     public List<Transfer> Transfers { get; private set; }
     public List<BusinessUnit> BusinessUnits { get; private set; }
 
@@ -13,6 +16,9 @@ public class AccountTag : Entity
     {
         Tag = tag;
         Description = description;
+        IsArchived = false;
+        ReasonToArchive = null;
+        ArchiveDate = null;
         Transfers = new List<Transfer>();
         BusinessUnits = new List<BusinessUnit>();
     }
@@ -22,5 +28,21 @@ public class AccountTag : Entity
         SetUpdateDateToNow();
         Tag = tag;
         Description = description;
+    }
+
+    public void Archive(string reasonToArchive)
+    {
+        SetUpdateDateToNow();
+        ArchiveDate = DateTime.UtcNow;
+        IsArchived = true;
+        ReasonToArchive = reasonToArchive;
+    }
+
+    public void Unarchive()
+    {
+        SetUpdateDateToNow();
+        IsArchived = false;
+        ArchiveDate = null;
+        ReasonToArchive = null;
     }
 }
