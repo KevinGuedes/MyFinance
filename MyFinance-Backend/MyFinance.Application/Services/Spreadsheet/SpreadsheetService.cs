@@ -7,9 +7,9 @@ namespace MyFinance.Application.Services.Spreadsheet;
 
 public class SpreadsheetService : ISpreadsheetService
 {
-    public Tuple<string, XLWorkbook> GetBusinessUnitSummary(BusinessUnit businessUnit)
+    public Tuple<string, XLWorkbook> GetBusinessUnitSummary(BusinessUnit businessUnit, int year)
     {
-        var workbookName = string.Format("Summary - {0}.xlsx", businessUnit.Name);
+        var workbookName = string.Format("Summary - {0} - {1}.xlsx", businessUnit.Name, year);
         var wb = new XLWorkbook();
 
         GenerateBusinessUnitSummary(businessUnit, wb);

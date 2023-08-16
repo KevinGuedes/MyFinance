@@ -12,8 +12,8 @@ public class SummaryApiService : BaseApiService, ISummaryApiService
     {
     }
 
-    public async Task<Result<Tuple<string, byte[]>>> GetBusinessUnitSummaryAsync(Guid id, CancellationToken cancellationToken)
-        => MapSummaryResult(await _mediator.Send(new GetBusinessUnitSummaryQuery(id), cancellationToken));
+    public async Task<Result<Tuple<string, byte[]>>> GetBusinessUnitSummaryAsync(Guid id, int year, CancellationToken cancellationToken)
+        => MapSummaryResult(await _mediator.Send(new GetBusinessUnitSummaryQuery(id, year), cancellationToken));
 
     public async Task<Result<Tuple<string, byte[]>>> GetMonthlyBalanceSummaryAsync(Guid id, CancellationToken cancellationToken)
         => MapSummaryResult(await _mediator.Send(new GetMonthlyBalanceSummaryQuery(id), cancellationToken));

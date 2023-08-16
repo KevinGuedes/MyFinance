@@ -6,7 +6,7 @@ public sealed class GetMonthlyBalanceSummaryValidator : AbstractValidator<GetMon
 {
     public GetMonthlyBalanceSummaryValidator()
     {
-        RuleFor(command => command.Id)
+        RuleFor(query => query.Id)
             .NotEqual(Guid.Empty).WithMessage("{PropertyName} invalid");
     }
 }

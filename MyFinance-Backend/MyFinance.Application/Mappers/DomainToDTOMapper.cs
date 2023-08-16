@@ -55,7 +55,10 @@ public static class DomainToDTOMapper
         {
             Id = accountTag.Id,
             Tag = accountTag.Tag,
-            Description = accountTag.Description
+            Description = accountTag.Description,
+            IsArchived = accountTag.IsArchived,
+            ReasonToArchive = accountTag.ReasonToArchive,
+            ArchiveDate = accountTag.ArchiveDate
         };
 
     public static IEnumerable<AccountTagDTO> AccountTagToDTO(IEnumerable<AccountTag> businessUnits)

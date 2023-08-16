@@ -23,7 +23,7 @@ internal sealed class GetBusinessUnitSummaryHandler : IQueryHandler<GetBusinessU
     public async Task<Result<Tuple<string, XLWorkbook>>> Handle(GetBusinessUnitSummaryQuery query, CancellationToken cancellationToken)
     {
         _logger.LogInformation("Retrieving Business Unit with Id {BusinessUnitId} ", query.Id);
-        var businessUnit = await _businessUnitRepository.GetWithSummaryData(query.Id, cancellationToken);
+        var businessUnit = await _businessUnitRepository.GetWithSummaryData(query.Id, query.Year, cancellationToken);
 
         if (businessUnit is null)
         {
@@ -42,6 +42,6 @@ internal sealed class GetBusinessUnitSummaryHandler : IQueryHandler<GetBusinessU
             return Result.Fail(unprocessableEntityError);
         }
 
-        return Result.Ok(_spreadsheetService.GetBusinessUnitSummary(businessUnit));
+        return Result.Ok(_spreadsheetService.GetBusinessUnitSummary(businessUnit, query.Year));
     }
 }
