@@ -2,12 +2,9 @@
 
 namespace MyFinance.Infra.Data.UnitOfWork;
 
-public sealed class UnitOfWork : IUnitOfWork
+public sealed class UnitOfWork(MyFinanceDbContext myFinanceDbContext) : IUnitOfWork
 {
-    private readonly MyFinanceDbContext _myFinanceDbContext;
-
-    public UnitOfWork(MyFinanceDbContext myFinanceDbContext)
-        => _myFinanceDbContext = myFinanceDbContext;
+    private readonly MyFinanceDbContext _myFinanceDbContext = myFinanceDbContext;
 
     public Task SaveChangesAsync(CancellationToken cancellationToken)
         => _myFinanceDbContext.SaveChangesAsync(cancellationToken);

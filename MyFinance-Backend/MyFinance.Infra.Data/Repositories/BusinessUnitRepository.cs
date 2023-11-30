@@ -5,12 +5,9 @@ using MyFinance.Infra.Data.Context;
 
 namespace MyFinance.Infra.Data.Repositories;
 
-public sealed class BusinessUnitRepository : EntityRepository<BusinessUnit>, IBusinessUnitRepository
+public sealed class BusinessUnitRepository(MyFinanceDbContext myFinanceDbContext)
+    : EntityRepository<BusinessUnit>(myFinanceDbContext), IBusinessUnitRepository
 {
-    public BusinessUnitRepository(MyFinanceDbContext myFinanceDbContext) : base(myFinanceDbContext)
-    {
-    }
-
     public async Task<IEnumerable<BusinessUnit>> GetPaginatedAsync(
         int page,
         int pageSize,
@@ -25,7 +22,6 @@ public sealed class BusinessUnitRepository : EntityRepository<BusinessUnit>, IBu
 
     public Task<bool> ExistsByNameAsync(string name, CancellationToken cancellationToken)
         => _myFinanceDbContext.BusinessUnits
-            .AsNoTracking()
             .AnyAsync(bu => bu.Name == name, cancellationToken);
 
     public Task<BusinessUnit?> GetByNameAsync(string name, CancellationToken cancellationToken)
@@ -34,15 +30,16 @@ public sealed class BusinessUnitRepository : EntityRepository<BusinessUnit>, IBu
             .AsNoTracking()
             .FirstOrDefaultAsync(cancellationToken);
 
-    public Task<BusinessUnit?> GetWithSummaryData(Guid id, CancellationToken cancellationToken)
+    public Task<BusinessUnit?> GetWithSummaryData(Guid id, int year, CancellationToken cancellationToken)
         => _myFinanceDbContext.BusinessUnits
             .Include(bu => bu.MonthlyBalances
-                .Where(mb => mb.Transfers.Any())
+                .Where(mb => mb.Transfers.Any() && mb.ReferenceYear == year)
                 .OrderBy(mb => mb.ReferenceYear)
                 .ThenBy(mb => mb.ReferenceMonth))
             .ThenInclude(mb => mb.Transfers
                .OrderByDescending(t => t.CreationDate)
                .ThenByDescending(t => t.RelatedTo))
+            .ThenInclude(t => t.AccountTag)
             .AsNoTracking()
             .FirstOrDefaultAsync(bu => bu.Id == id, cancellationToken);
 }

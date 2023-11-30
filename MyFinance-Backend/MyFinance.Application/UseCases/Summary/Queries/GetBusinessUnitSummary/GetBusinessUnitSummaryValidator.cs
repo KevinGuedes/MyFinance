@@ -6,7 +6,10 @@ public sealed class GetBusinessUnitSummaryValidator : AbstractValidator<GetBusin
 {
     public GetBusinessUnitSummaryValidator()
     {
-        RuleFor(command => command.Id)
+        RuleFor(query => query.Id)
             .NotEqual(Guid.Empty).WithMessage("{PropertyName} invalid");
+
+        RuleFor(query => query.Year)
+            .InclusiveBetween(1900, 9999).WithMessage("Year must be between 1900 and 9999");
     }
 }

@@ -8,16 +8,15 @@ using MyFinance.Domain.Interfaces;
 
 namespace MyFinance.Application.UseCases.Summary.Queries.GetMonthlyBalanceSummary;
 
-internal sealed class GetMonthlyBalanceSummaryHandler : IQueryHandler<GetMonthlyBalanceSummaryQuery, Tuple<string, XLWorkbook>>
+internal sealed class GetMonthlyBalanceSummaryHandler(
+    ILogger<GetMonthlyBalanceSummaryHandler> logger,
+    IMonthlyBalanceRepository monthlyBalanceRepository,
+    ISpreadsheetService spreadsheetService)
+    : IQueryHandler<GetMonthlyBalanceSummaryQuery, Tuple<string, XLWorkbook>>
 {
-    private readonly ILogger<GetMonthlyBalanceSummaryHandler> _logger;
-    private readonly IMonthlyBalanceRepository _monthlyBalanceRepository;
-    private readonly ISpreadsheetService _spreadsheetService;
-    public GetMonthlyBalanceSummaryHandler(
-        ILogger<GetMonthlyBalanceSummaryHandler> logger,
-        IMonthlyBalanceRepository monthlyBalanceRepository,
-        ISpreadsheetService spreadsheetService)
-        => (_logger, _monthlyBalanceRepository, _spreadsheetService) = (logger, monthlyBalanceRepository, spreadsheetService);
+    private readonly ILogger<GetMonthlyBalanceSummaryHandler> _logger = logger;
+    private readonly IMonthlyBalanceRepository _monthlyBalanceRepository = monthlyBalanceRepository;
+    private readonly ISpreadsheetService _spreadsheetService = spreadsheetService;
 
     public async Task<Result<Tuple<string, XLWorkbook>>> Handle(GetMonthlyBalanceSummaryQuery query, CancellationToken cancellationToken)
     {

@@ -1,8 +1,5 @@
 ﻿namespace MyFinance.Application.Common.Errors;
 
-public class UnprocessableEntityError : BaseError
+public class UnprocessableEntityError(string message) : BaseError(message)
 {
-    public UnprocessableEntityError(string message) : base(message)
-    {
-    }
 }

@@ -3,16 +3,12 @@ using MyFinance.Domain.Entities;
 
 namespace MyFinance.Infra.Data.Context;
 
-public sealed class MyFinanceDbContext : DbContext
+public sealed class MyFinanceDbContext(DbContextOptions<MyFinanceDbContext> options) : DbContext(options)
 {
     public DbSet<BusinessUnit> BusinessUnits { get; set; }
     public DbSet<Transfer> Transfers { get; set; }
     public DbSet<MonthlyBalance> MonthlyBalances { get; set; }
-
-    public MyFinanceDbContext(DbContextOptions<MyFinanceDbContext> options)
-        : base(options)
-    {
-    }
+    public DbSet<AccountTag> AccountTags { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

@@ -2,10 +2,7 @@
 
 namespace MyFinance.Application.Common.ApiResponses;
 
-public sealed class EntityNotFoundResponse : BaseApiResponse<EntityNotFoundError>
+public sealed class EntityNotFoundResponse(EntityNotFoundError entityNotFoundError)
+    : BaseApiResponse<EntityNotFoundError>("Entity not found", entityNotFoundError)
 {
-    public EntityNotFoundResponse(EntityNotFoundError entityNotFoundError)
-        : base("Entity not found", entityNotFoundError)
-    {
-    }
 }

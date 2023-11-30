@@ -7,28 +7,22 @@ using MyFinance.Domain.Interfaces;
 
 namespace MyFinance.Application.UseCases.Transfers.Commands.UpdateTransfer;
 
-internal sealed class UpdateTransferHandler : ICommandHandler<UpdateTransferCommand, Transfer>
+internal sealed class UpdateTransferHandler(
+    ILogger<UpdateTransferHandler> logger,
+    IMonthlyBalanceRepository monthlyBalanceRepository,
+    IBusinessUnitRepository businessUnitRepository,
+    ITransferRepository transferRepository,
+    IAccountTagRepository accountTagRepository) : ICommandHandler<UpdateTransferCommand, Transfer>
 {
-    private readonly ILogger<UpdateTransferHandler> _logger;
-    private readonly IMonthlyBalanceRepository _monthlyBalanceRepository;
-    private readonly IBusinessUnitRepository _businessUnitRepository;
-    private readonly ITransferRepository _transferRepository;
-
-    public UpdateTransferHandler(
-        ILogger<UpdateTransferHandler> logger,
-        IMonthlyBalanceRepository monthlyBalanceRepository,
-        IBusinessUnitRepository businessUnitRepository,
-        ITransferRepository transferRepository)
-    {
-        _logger = logger;
-        _monthlyBalanceRepository = monthlyBalanceRepository;
-        _businessUnitRepository = businessUnitRepository;
-        _transferRepository = transferRepository;
-    }
+    private readonly ILogger<UpdateTransferHandler> _logger = logger;
+    private readonly IMonthlyBalanceRepository _monthlyBalanceRepository = monthlyBalanceRepository;
+    private readonly IBusinessUnitRepository _businessUnitRepository = businessUnitRepository;
+    private readonly ITransferRepository _transferRepository = transferRepository;
+    private readonly IAccountTagRepository _accountTagRepository = accountTagRepository;
 
     public async Task<Result<Transfer>> Handle(UpdateTransferCommand command, CancellationToken cancellationToken)
     {
-        var (transferId, newTransferValue, relatedTo, description, settlementDate, type) = command;
+        var (transferId, accountTagId, newTransferValue, relatedTo, description, settlementDate, type) = command;
 
         _logger.LogInformation("Retrieving current Monthly Balance of Transfer with Id {TransferId}", transferId);
         var transfer = await _transferRepository.GetByIdAsync(transferId, cancellationToken);
@@ -37,6 +31,16 @@ internal sealed class UpdateTransferHandler : ICommandHandler<UpdateTransferComm
         {
             _logger.LogWarning("Transfer with Id {TransferId} not found", transferId);
             var errorMessage = string.Format("Transfer with Id {0} not found", transferId);
+            var entityNotFoundError = new EntityNotFoundError(errorMessage);
+            return Result.Fail(entityNotFoundError);
+        }
+
+        _logger.LogInformation("Retriving Account Tag with Id {AccountTagId}", accountTagId);
+        var accountTag = await _accountTagRepository.GetByIdAsync(accountTagId, cancellationToken);
+        if (accountTag is null)
+        {
+            _logger.LogWarning("Account Tag with Id {AccountTagId} not found", accountTagId);
+            var errorMessage = string.Format("Account Tag with Id {0} not found", accountTagId);
             var entityNotFoundError = new EntityNotFoundError(errorMessage);
             return Result.Fail(entityNotFoundError);
         }
@@ -65,7 +69,14 @@ internal sealed class UpdateTransferHandler : ICommandHandler<UpdateTransferComm
             if (existingMonthlyBalance is null)
             {
                 var newMonthlyBalance = new MonthlyBalance(settlementDate, businessUnit);
-                transfer.Update(newTransferValue, relatedTo, description, settlementDate, type, newMonthlyBalance);
+                transfer.Update(
+                    newTransferValue,
+                    relatedTo,
+                    description,
+                    settlementDate,
+                    type,
+                    newMonthlyBalance,
+                    accountTag);
                 newMonthlyBalance.RegisterValue(transfer.Value, transfer.Type);
                 _monthlyBalanceRepository.Insert(newMonthlyBalance);
 
@@ -75,7 +86,14 @@ internal sealed class UpdateTransferHandler : ICommandHandler<UpdateTransferComm
             }
             else
             {
-                transfer.Update(newTransferValue, relatedTo, description, settlementDate, type, existingMonthlyBalance);
+                transfer.Update(
+                    newTransferValue,
+                    relatedTo,
+                    description,
+                    settlementDate,
+                    type,
+                    existingMonthlyBalance,
+                    accountTag);
                 existingMonthlyBalance.RegisterValue(transfer.Value, transfer.Type);
                 _monthlyBalanceRepository.Update(existingMonthlyBalance);
 
@@ -86,7 +104,14 @@ internal sealed class UpdateTransferHandler : ICommandHandler<UpdateTransferComm
         }
         else
         {
-            transfer.Update(newTransferValue, relatedTo, description, settlementDate, type, currentMonthlyBalance);
+            transfer.Update(
+                newTransferValue,
+                relatedTo,
+                description,
+                settlementDate,
+                type,
+                currentMonthlyBalance,
+                accountTag);
             currentMonthlyBalance.RegisterValue(transfer.Value, transfer.Type);
 
             _logger.LogInformation(

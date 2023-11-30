@@ -5,12 +5,10 @@ using MyFinance.Infra.Data.Context;
 
 namespace MyFinance.Infra.Data.Repositories;
 
-public abstract class EntityRepository<TEntity> : IEntityRepository<TEntity> where TEntity : Entity
+public abstract class EntityRepository<TEntity>(MyFinanceDbContext myFinanceDbContext) : IEntityRepository<TEntity>
+    where TEntity : Entity
 {
-    protected readonly MyFinanceDbContext _myFinanceDbContext;
-
-    protected EntityRepository(MyFinanceDbContext myFinanceDbContext)
-        => _myFinanceDbContext = myFinanceDbContext;
+    protected readonly MyFinanceDbContext _myFinanceDbContext = myFinanceDbContext;
 
     public virtual async Task<TEntity?> GetByIdAsync(Guid id, CancellationToken cancellationToken)
         => await _myFinanceDbContext.Set<TEntity>().FindAsync(new object[] { id }, cancellationToken);

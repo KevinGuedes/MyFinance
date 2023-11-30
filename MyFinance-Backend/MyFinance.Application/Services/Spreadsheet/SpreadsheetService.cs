@@ -7,19 +7,23 @@ namespace MyFinance.Application.Services.Spreadsheet;
 
 public class SpreadsheetService : ISpreadsheetService
 {
-    public Tuple<string, XLWorkbook> GetBusinessUnitSummary(BusinessUnit businessUnit)
+    public Tuple<string, XLWorkbook> GetBusinessUnitSummary(BusinessUnit businessUnit, int year)
     {
-        var workbookName = string.Format("Summary - {0}.xlsx", businessUnit.Name);
+        double yearlyIncome = 0;
+        double yearlyOutcome = 0;
+        var workbookName = string.Format("Summary - {0} - {1}.xlsx", businessUnit.Name, year);
         var wb = new XLWorkbook();
-
-        GenerateBusinessUnitSummary(businessUnit, wb);
 
         foreach (var monthlyBalance in businessUnit.MonthlyBalances)
         {
+            yearlyIncome += monthlyBalance.Income;
+            yearlyOutcome += monthlyBalance.Outcome;
             var referenceDate = new DateOnly(monthlyBalance.ReferenceYear, monthlyBalance.ReferenceMonth, 1);
             var wsName = referenceDate.ToString("y", new CultureInfo("en-US"));
             GenerateMonthlyBalanceSummary(monthlyBalance, wb, wsName);
         }
+
+        GenerateBusinessUnitSummary(businessUnit, wb, year, yearlyIncome, yearlyOutcome);
 
         return new(workbookName, wb);
     }
@@ -37,18 +41,23 @@ public class SpreadsheetService : ISpreadsheetService
         return new(workbookName, wb);
     }
 
-    private static void GenerateBusinessUnitSummary(BusinessUnit businessUnit, XLWorkbook wb)
+    private static void GenerateBusinessUnitSummary(
+        BusinessUnit businessUnit,
+        XLWorkbook wb,
+        int year,
+        double yearlyIncome,
+        double yearlyOutcome)
     {
-        var ws = wb.AddWorksheet(string.Format("Summary - {0}", businessUnit.Name));
+        var ws = wb.AddWorksheet(businessUnit.Name, 1);
 
         ws.Range(1, 1, 1, 3)
-               .SetValue(string.Format("Summary - {0}", businessUnit.Name))
-               .Merge()
-               .Style
-               .Font.SetBold()
-               .Fill.SetBackgroundColor(XLColor.CornflowerBlue)
-               .Alignment.SetHorizontal(XLAlignmentHorizontalValues.Center)
-               .Border.SetOutsideBorder(XLBorderStyleValues.Thin);
+            .SetValue(string.Format("Current Balance - {0}", businessUnit.Name))
+            .Merge()
+            .Style
+            .Font.SetBold()
+            .Fill.SetBackgroundColor(XLColor.CornflowerBlue)
+            .Alignment.SetHorizontal(XLAlignmentHorizontalValues.Center)
+            .Border.SetOutsideBorder(XLBorderStyleValues.Thin);
 
         ws.Cell(2, 1)
             .InsertData(new[] { "Income", "Outcome", "Balance" }, true)
@@ -57,25 +66,59 @@ public class SpreadsheetService : ISpreadsheetService
             .Alignment.SetHorizontal(XLAlignmentHorizontalValues.Center)
             .Border.SetOutsideBorder(XLBorderStyleValues.Thin);
 
-        var businessUnitData = new double[] {
+        var businessUnitCurrentData = new double[] {
             Math.Round(businessUnit.Income, 2),
             (-1 * Math.Round(businessUnit.Outcome, 2)),
             Math.Round(businessUnit.Balance, 2)
         };
 
-        var businessUnitDataRange = ws.Cell(3, 1).InsertData(businessUnitData, true);
-
-        businessUnitDataRange.LastRow()
+        var businessUnitCurrentDataRange = ws.Cell(3, 1).InsertData(businessUnitCurrentData, true);
+        businessUnitCurrentDataRange.Column(1).LastCell().Style.Font.SetFontColor(XLColor.Green);
+        businessUnitCurrentDataRange.Column(2).LastCell().Style.Font.SetFontColor(XLColor.Red);
+        var currentBalanceColor = GetBalanceColor(businessUnit.Balance);
+        businessUnitCurrentDataRange.Column(3).LastCell().Style.Font.SetFontColor(currentBalanceColor);
+        businessUnitCurrentDataRange.LastRow()
             .Style
             .NumberFormat.SetFormat("R$ #,##0.00")
             .Font.SetBold();
 
-        businessUnitDataRange.Column(1).LastCell().Style.Font.SetFontColor(XLColor.Green);
-        businessUnitDataRange.Column(2).LastCell().Style.Font.SetFontColor(XLColor.Red);
-        var balanceColor = businessUnit.Balance >= 0 ? XLColor.Green : XLColor.Red;
-        businessUnitDataRange.Column(3).LastCell().Style.Font.SetFontColor(balanceColor);
+        businessUnitCurrentDataRange.Style
+            .Alignment.SetHorizontal(XLAlignmentHorizontalValues.Center)
+            .Border.SetOutsideBorder(XLBorderStyleValues.Thin);
 
-        businessUnitDataRange.Style
+        ws.Range(1, 5, 1, 7)
+            .SetValue(string.Format("{0} Yearly Balance - {1}", year, businessUnit.Name))
+            .Merge()
+            .Style
+            .Font.SetBold()
+            .Fill.SetBackgroundColor(XLColor.CornflowerBlue)
+            .Alignment.SetHorizontal(XLAlignmentHorizontalValues.Center)
+            .Border.SetOutsideBorder(XLBorderStyleValues.Thin);
+
+        ws.Cell(2, 5)
+            .InsertData(new[] { "Income", "Outcome", "Balance" }, true)
+            .Style
+            .Font.SetBold()
+            .Alignment.SetHorizontal(XLAlignmentHorizontalValues.Center)
+            .Border.SetOutsideBorder(XLBorderStyleValues.Thin);
+
+        var yearlyBalance = yearlyIncome - yearlyOutcome;
+        var businessUnitYearlyData = new double[] {
+            Math.Round(yearlyIncome, 2),
+            (-1 * Math.Round(yearlyOutcome, 2)),
+            Math.Round(yearlyBalance, 2)
+        };
+
+        var bussinessUnitYearlyDataRange = ws.Cell(3, 5).InsertData(businessUnitYearlyData, true);
+        bussinessUnitYearlyDataRange.Column(1).LastCell().Style.Font.SetFontColor(XLColor.Green);
+        bussinessUnitYearlyDataRange.Column(2).LastCell().Style.Font.SetFontColor(XLColor.Red);
+        var yearlyBalanceColor = GetBalanceColor(yearlyBalance);
+        bussinessUnitYearlyDataRange.Column(3).LastCell().Style.Font.SetFontColor(yearlyBalanceColor);
+        bussinessUnitYearlyDataRange.LastRow()
+            .Style.NumberFormat.SetFormat("R$ #,##0.00")
+            .Font.SetBold();
+
+        bussinessUnitYearlyDataRange.Style
             .Alignment.SetHorizontal(XLAlignmentHorizontalValues.Center)
             .Border.SetOutsideBorder(XLBorderStyleValues.Thin);
 
@@ -85,8 +128,13 @@ public class SpreadsheetService : ISpreadsheetService
     private static void GenerateMonthlyBalanceSummary(MonthlyBalance monthlyBalance, XLWorkbook wb, string wsName)
     {
         var ws = wb.AddWorksheet(wsName);
+        var transferHeaders = new[] { "Value", "Related To", "Description", "Account Tag", "Settlement Date" };
+        var monthlyBalanceHeaders = new[] { "Income", "Outcome", "Balance" };
+        var numberOfColumnsForMonthlyBalanceData = monthlyBalanceHeaders.Length;
+        var lastColumnNumberForTransferData = transferHeaders.Length;
+        var spaceBetweenData = 2;
 
-        ws.Range(1, 1, 1, 4)
+        ws.Range(1, 1, 1, lastColumnNumberForTransferData)
                 .SetValue("Transfers")
                 .Merge()
                 .Style
@@ -96,7 +144,7 @@ public class SpreadsheetService : ISpreadsheetService
                 .Border.SetOutsideBorder(XLBorderStyleValues.Thin);
 
         ws.Cell(2, 1)
-            .InsertData(new[] { "Value", "Related To", "Description", "Settlement Date" }, true)
+            .InsertData(transferHeaders, true)
             .Style
             .Font.SetBold()
             .Alignment.SetHorizontal(XLAlignmentHorizontalValues.Center)
@@ -113,7 +161,8 @@ public class SpreadsheetService : ISpreadsheetService
                 Value = value,
                 transfer.RelatedTo,
                 transfer.Description,
-                SettlementDate = transfer.SettlementDate.ToString("dddd, dd MMMM yyyy HH:mm:ss"),
+                AccountTag = transfer.AccountTag.Tag,
+                SettlementDate = transfer.SettlementDate.ToString("dddd, dd MMMM yyyy HH:mm:ss")
             };
         });
 
@@ -131,8 +180,12 @@ public class SpreadsheetService : ISpreadsheetService
             .AddConditionalFormat()
             .WhenLessThan(0).Font.SetFontColor(XLColor.Red);
 
-        ws.Range(1, 6, 1, 8)
-            .SetValue(string.Format("Summary - {0}", wsName))
+        ws.Range(
+            1,
+            lastColumnNumberForTransferData + spaceBetweenData,
+            1,
+            lastColumnNumberForTransferData + 1 + numberOfColumnsForMonthlyBalanceData)
+            .SetValue(wsName)
             .Merge()
             .Style
             .Font.SetBold()
@@ -140,8 +193,8 @@ public class SpreadsheetService : ISpreadsheetService
             .Alignment.SetHorizontal(XLAlignmentHorizontalValues.Center)
             .Border.SetOutsideBorder(XLBorderStyleValues.Thin);
 
-        ws.Cell(2, 6)
-            .InsertData(new[] { "Income", "Outcome", "Balance" }, true)
+        ws.Cell(2, lastColumnNumberForTransferData + 2)
+            .InsertData(monthlyBalanceHeaders, true)
             .Style
             .Font.SetBold()
             .Alignment.SetHorizontal(XLAlignmentHorizontalValues.Center)
@@ -153,7 +206,7 @@ public class SpreadsheetService : ISpreadsheetService
             Math.Round(monthlyBalance.Balance, 2)
         };
 
-        var monthlyBalanceDataRange = ws.Cell(3, 6)
+        var monthlyBalanceDataRange = ws.Cell(3, lastColumnNumberForTransferData + spaceBetweenData)
             .InsertData(monthlyBalanceData, true);
 
         monthlyBalanceDataRange.LastRow()
@@ -163,7 +216,7 @@ public class SpreadsheetService : ISpreadsheetService
 
         monthlyBalanceDataRange.Column(1).LastCell().Style.Font.SetFontColor(XLColor.Green);
         monthlyBalanceDataRange.Column(2).LastCell().Style.Font.SetFontColor(XLColor.Red);
-        var balanceColor = monthlyBalance.Balance >= 0 ? XLColor.Green : XLColor.Red;
+        var balanceColor = GetBalanceColor(monthlyBalance.Balance);
         monthlyBalanceDataRange.Column(3).LastCell().Style.Font.SetFontColor(balanceColor);
 
         monthlyBalanceDataRange.Style
@@ -172,8 +225,14 @@ public class SpreadsheetService : ISpreadsheetService
 
         ws.Columns().AdjustToContents();
         ws.Column(1).Width = 12;
-        ws.Column(6).Width = 12;
-        ws.Column(7).Width = 12;
-        ws.Column(8).Width = 12;
+
+        var lastColumnNumber = lastColumnNumberForTransferData + spaceBetweenData + numberOfColumnsForMonthlyBalanceData;
+        for (int i = lastColumnNumberForTransferData + spaceBetweenData; i < lastColumnNumber; i++)
+        {
+            ws.Column(i).Width = 12;
+        }
     }
+
+    private static XLColor GetBalanceColor(double balance)
+        => balance >= 0 ? XLColor.Green : XLColor.Red;
 }

@@ -9,12 +9,9 @@ namespace MyFinance.Presentation.Controllers;
 [Route("api/[controller]")]
 [ApiController]
 [SwaggerTag("Read Monthly Balances")]
-public class MonthlyBalanceController : BaseController
+public class MonthlyBalanceController(IMonthlyBalanceApiService monthlyBalanceApiService) : BaseController
 {
-    private readonly IMonthlyBalanceApiService _monthlyBalanceApiService;
-
-    public MonthlyBalanceController(IMonthlyBalanceApiService monthlyBalanceApiService)
-        => _monthlyBalanceApiService = monthlyBalanceApiService;
+    private readonly IMonthlyBalanceApiService _monthlyBalanceApiService = monthlyBalanceApiService;
 
     [HttpGet]
     [SwaggerOperation(Summary = "Lists all existing Monthly Balances according to query parameters")]

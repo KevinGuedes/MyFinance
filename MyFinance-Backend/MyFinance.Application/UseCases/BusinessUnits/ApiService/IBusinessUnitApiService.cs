@@ -13,5 +13,4 @@ public interface IBusinessUnitApiService
     Task<Result<BusinessUnitDTO>> UpdateBusinessUnitAsync(UpdateBusinessUnitCommand command, CancellationToken cancellationToken);
     Task<Result> ArchiveBusinessUnitAsync(ArchiveBusinessUnitCommand command, CancellationToken cancellationToken);
     Task<Result> UnarchiveBusinessUnitAsync(Guid id, CancellationToken cancellationToken);
-
 }

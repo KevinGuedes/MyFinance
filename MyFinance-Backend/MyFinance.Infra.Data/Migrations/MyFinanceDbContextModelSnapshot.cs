@@ -17,10 +17,46 @@ namespace MyFinance.Infra.Data.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "7.0.9")
+                .HasAnnotation("ProductVersion", "7.0.10")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+
+            modelBuilder.Entity("MyFinance.Domain.Entities.AccountTag", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime?>("ArchiveDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("CreationDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsArchived")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("ReasonToArchive")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Tag")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime?>("UpdateDate")
+                        .IsConcurrencyToken()
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Tag")
+                        .IsUnique();
+
+                    b.ToTable("AccountTags");
+                });
 
             modelBuilder.Entity("MyFinance.Domain.Entities.BusinessUnit", b =>
                 {
@@ -107,6 +143,9 @@ namespace MyFinance.Infra.Data.Migrations
                     b.Property<Guid>("Id")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<Guid>("AccountTagId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<DateTime>("CreationDate")
                         .HasColumnType("datetime2");
 
@@ -138,6 +177,8 @@ namespace MyFinance.Infra.Data.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("AccountTagId");
+
                     b.HasIndex("MonthlyBalanceId");
 
                     b.ToTable("Transfers");
@@ -156,13 +197,26 @@ namespace MyFinance.Infra.Data.Migrations
 
             modelBuilder.Entity("MyFinance.Domain.Entities.Transfer", b =>
                 {
+                    b.HasOne("MyFinance.Domain.Entities.AccountTag", "AccountTag")
+                        .WithMany("Transfers")
+                        .HasForeignKey("AccountTagId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("MyFinance.Domain.Entities.MonthlyBalance", "MonthlyBalance")
                         .WithMany("Transfers")
                         .HasForeignKey("MonthlyBalanceId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.Navigation("AccountTag");
+
                     b.Navigation("MonthlyBalance");
+                });
+
+            modelBuilder.Entity("MyFinance.Domain.Entities.AccountTag", b =>
+                {
+                    b.Navigation("Transfers");
                 });
 
             modelBuilder.Entity("MyFinance.Domain.Entities.BusinessUnit", b =>

@@ -2,10 +2,7 @@
 
 namespace MyFinance.Application.Common.ApiResponses;
 
-public sealed class UnprocessableEntityResponse : BaseApiResponse<UnprocessableEntityError>
+public sealed class UnprocessableEntityResponse(UnprocessableEntityError unprocessableEntityError)
+    : BaseApiResponse<UnprocessableEntityError>("Unable to process entity data", unprocessableEntityError)
 {
-    public UnprocessableEntityResponse(UnprocessableEntityError unprocessableEntityError)
-        : base("Unable to process entity data", unprocessableEntityError)
-    {
-    }
 }

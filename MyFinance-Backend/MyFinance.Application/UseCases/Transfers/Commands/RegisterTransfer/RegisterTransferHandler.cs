@@ -7,36 +7,39 @@ using MyFinance.Domain.Interfaces;
 
 namespace MyFinance.Application.UseCases.Transfers.Commands.RegisterTransfer;
 
-internal sealed class RegisterTransferHandler : ICommandHandler<RegisterTransferCommand, Transfer>
+internal sealed class RegisterTransferHandler(
+    ILogger<RegisterTransferHandler> logger,
+    IMonthlyBalanceRepository monthlyBalanceRepository,
+    IBusinessUnitRepository businessUnitRepository,
+    ITransferRepository transferRepository,
+    IAccountTagRepository accountTagRepository) : ICommandHandler<RegisterTransferCommand, Transfer>
 {
-    private readonly ILogger<RegisterTransferHandler> _logger;
-    private readonly IMonthlyBalanceRepository _monthlyBalanceRepository;
-    private readonly IBusinessUnitRepository _businessUnitRepository;
-    private readonly ITransferRepository _transferRepository;
-
-    public RegisterTransferHandler(
-        ILogger<RegisterTransferHandler> logger,
-        IMonthlyBalanceRepository monthlyBalanceRepository,
-        IBusinessUnitRepository businessUnitRepository,
-        ITransferRepository transferRepository)
-    {
-        _logger = logger;
-        _monthlyBalanceRepository = monthlyBalanceRepository;
-        _businessUnitRepository = businessUnitRepository;
-        _transferRepository = transferRepository;
-    }
+    private readonly ILogger<RegisterTransferHandler> _logger = logger;
+    private readonly IMonthlyBalanceRepository _monthlyBalanceRepository = monthlyBalanceRepository;
+    private readonly IBusinessUnitRepository _businessUnitRepository = businessUnitRepository;
+    private readonly ITransferRepository _transferRepository = transferRepository;
+    private readonly IAccountTagRepository _accountTagRepository = accountTagRepository;
 
     public async Task<Result<Transfer>> Handle(RegisterTransferCommand command, CancellationToken cancellationToken)
     {
-        var (businessUnitId, value, relatedTo, description, settlementDate, type) = command;
+        var (businessUnitId, accountTagId, value, relatedTo, description, settlementDate, type) = command;
 
         _logger.LogInformation("Retriving Business Unit with Id {BusinessUnitId}", businessUnitId);
         var businessUnit = await _businessUnitRepository.GetByIdAsync(businessUnitId, cancellationToken);
-
         if (businessUnit is null)
         {
             _logger.LogWarning("Business Unit with Id {BusinessUnitId} not found", businessUnitId);
             var errorMessage = string.Format("Business Unit with Id {0} not found", businessUnitId);
+            var entityNotFoundError = new EntityNotFoundError(errorMessage);
+            return Result.Fail(entityNotFoundError);
+        }
+
+        _logger.LogInformation("Retriving Account Tag with Id {AccountTagId}", accountTagId);
+        var accountTag = await _accountTagRepository.GetByIdAsync(accountTagId, cancellationToken);
+        if (accountTag is null)
+        {
+            _logger.LogWarning("Account Tag with Id {AccountTagId} not found", accountTagId);
+            var errorMessage = string.Format("Account Tag with Id {0} not found", accountTagId);
             var entityNotFoundError = new EntityNotFoundError(errorMessage);
             return Result.Fail(entityNotFoundError);
         }
@@ -66,7 +69,7 @@ internal sealed class RegisterTransferHandler : ICommandHandler<RegisterTransfer
         }
 
         _logger.LogInformation("Creating new Transfer", businessUnitId);
-        var transfer = new Transfer(value, relatedTo, description, settlementDate, type, monthlyBalance);
+        var transfer = new Transfer(value, relatedTo, description, settlementDate, type, monthlyBalance, accountTag);
         _transferRepository.Insert(transfer);
         _logger.LogInformation("New transfer(s) successfully registered");
 

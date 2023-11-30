@@ -6,24 +6,16 @@ using MyFinance.Domain.Interfaces;
 
 namespace MyFinance.Application.UseCases.Transfers.Commands.DeleteTransfer;
 
-internal sealed class DeleteTransferHandler : ICommandHandler<DeleteTransferCommand>
+internal sealed class DeleteTransferHandler(
+    ILogger<DeleteTransferHandler> logger,
+    IMonthlyBalanceRepository monthlyBalanceRepository,
+    IBusinessUnitRepository businessUnitRepository,
+    ITransferRepository transferRepository) : ICommandHandler<DeleteTransferCommand>
 {
-    private readonly ILogger<DeleteTransferHandler> _logger;
-    private readonly IMonthlyBalanceRepository _monthlyBalanceRepository;
-    private readonly IBusinessUnitRepository _businessUnitRepository;
-    private readonly ITransferRepository _transferRepository;
-
-    public DeleteTransferHandler(
-        ILogger<DeleteTransferHandler> logger,
-        IMonthlyBalanceRepository monthlyBalanceRepository,
-        IBusinessUnitRepository businessUnitRepository,
-        ITransferRepository transferRepository)
-    {
-        _logger = logger;
-        _monthlyBalanceRepository = monthlyBalanceRepository;
-        _businessUnitRepository = businessUnitRepository;
-        _transferRepository = transferRepository;
-    }
+    private readonly ILogger<DeleteTransferHandler> _logger = logger;
+    private readonly IMonthlyBalanceRepository _monthlyBalanceRepository = monthlyBalanceRepository;
+    private readonly IBusinessUnitRepository _businessUnitRepository = businessUnitRepository;
+    private readonly ITransferRepository _transferRepository = transferRepository;
 
     public async Task<Result> Handle(DeleteTransferCommand command, CancellationToken cancellationToken)
     {

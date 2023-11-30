@@ -23,7 +23,7 @@ public class MonthlyBalance : Entity
         ReferenceYear = referenceDate.Year;
         BusinessUnit = businessUnit;
         BusinessUnitId = businessUnit.Id;
-        Transfers = new List<Transfer>();
+        Transfers = [];
     }
 
     public void RegisterValue(double transferValue, TransferType transferType)
