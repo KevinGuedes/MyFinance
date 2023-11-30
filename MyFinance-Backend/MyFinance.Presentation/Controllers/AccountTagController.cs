@@ -5,8 +5,6 @@ using MyFinance.Application.UseCases.AccountTags.Commands.ArchiveAccountTag;
 using MyFinance.Application.UseCases.AccountTags.Commands.CreateAccountTag;
 using MyFinance.Application.UseCases.AccountTags.Commands.UpdateAccountTag;
 using MyFinance.Application.UseCases.AccountTags.DTOs;
-using MyFinance.Application.UseCases.BusinessUnits.Commands.ArchiveBusinessUnit;
-using MyFinance.Application.UseCases.BusinessUnits.DTOs;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace MyFinance.Presentation.Controllers
@@ -14,11 +12,9 @@ namespace MyFinance.Presentation.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [SwaggerTag("Create and update Account Tags")]
-    public class AccountTagController : BaseController
+    public class AccountTagController(IAccountTagApiService accountTagApiService) : BaseController
     {
-        private readonly IAccountTagApiService _accountTagApiService;
-        public AccountTagController(IAccountTagApiService accountTagApiService)
-            => _accountTagApiService = accountTagApiService;
+        private readonly IAccountTagApiService _accountTagApiService = accountTagApiService;
 
         [HttpPost]
         [SwaggerOperation(Summary = "Registers a new Account Tag")]

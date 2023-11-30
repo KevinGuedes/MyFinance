@@ -6,15 +6,12 @@ using MyFinance.Domain.Interfaces;
 
 namespace MyFinance.Application.UseCases.BusinessUnits.Commands.ArchiveBusinessUnit
 {
-    internal sealed class ArchiveBusinessUnitHandler : ICommandHandler<ArchiveBusinessUnitCommand>
+    internal sealed class ArchiveBusinessUnitHandler(
+        ILogger<ArchiveBusinessUnitHandler> logger,
+        IBusinessUnitRepository businessUnitRepository) : ICommandHandler<ArchiveBusinessUnitCommand>
     {
-        private readonly ILogger<ArchiveBusinessUnitHandler> _logger;
-        private readonly IBusinessUnitRepository _businessUnitRepository;
-
-        public ArchiveBusinessUnitHandler(
-            ILogger<ArchiveBusinessUnitHandler> logger,
-            IBusinessUnitRepository businessUnitRepository)
-            => (_logger, _businessUnitRepository) = (logger, businessUnitRepository);
+        private readonly ILogger<ArchiveBusinessUnitHandler> _logger = logger;
+        private readonly IBusinessUnitRepository _businessUnitRepository = businessUnitRepository;
 
         public async Task<Result> Handle(ArchiveBusinessUnitCommand command, CancellationToken cancellationToken)
         {

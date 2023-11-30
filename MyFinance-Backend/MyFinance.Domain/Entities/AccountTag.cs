@@ -18,7 +18,7 @@ public class AccountTag : Entity
         IsArchived = false;
         ReasonToArchive = null;
         ArchiveDate = null;
-        Transfers = new List<Transfer>();
+        Transfers = [];
     }
 
     public void Update(string tag, string? description)

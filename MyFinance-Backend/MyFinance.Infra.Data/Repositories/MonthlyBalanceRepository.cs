@@ -5,12 +5,9 @@ using MyFinance.Infra.Data.Context;
 
 namespace MyFinance.Infra.Data.Repositories;
 
-public sealed class MonthlyBalanceRepository : EntityRepository<MonthlyBalance>, IMonthlyBalanceRepository
+public sealed class MonthlyBalanceRepository(MyFinanceDbContext myFinanceDbContext) 
+    : EntityRepository<MonthlyBalance>(myFinanceDbContext), IMonthlyBalanceRepository
 {
-    public MonthlyBalanceRepository(MyFinanceDbContext myFinanceDbContext) : base(myFinanceDbContext)
-    {
-    }
-
     public Task<MonthlyBalance?> GetByReferenceDateAndBusinessUnitId(
         DateTime referenceDate,
         Guid businessUnitId,

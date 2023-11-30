@@ -6,15 +6,12 @@ using MyFinance.Domain.Interfaces;
 
 namespace MyFinance.Application.UseCases.AccountTags.Commands.CreateAccountTag;
 
-internal sealed class CreateAccountTagHandler : ICommandHandler<CreateAccountTagCommand, AccountTag>
+internal sealed class CreateAccountTagHandler(
+    ILogger<CreateAccountTagHandler> logger,
+    IAccountTagRepository accountTagRepository) : ICommandHandler<CreateAccountTagCommand, AccountTag>
 {
-    private readonly ILogger<CreateAccountTagHandler> _logger;
-    private readonly IAccountTagRepository _accountTagRepository;
-
-    public CreateAccountTagHandler(
-        ILogger<CreateAccountTagHandler> logger,
-        IAccountTagRepository accountTagRepository)
-        => (_logger, _accountTagRepository) = (logger, accountTagRepository);
+    private readonly ILogger<CreateAccountTagHandler> _logger = logger;
+    private readonly IAccountTagRepository _accountTagRepository = accountTagRepository;
 
     public Task<Result<AccountTag>> Handle(CreateAccountTagCommand command, CancellationToken cancellationToken)
     {

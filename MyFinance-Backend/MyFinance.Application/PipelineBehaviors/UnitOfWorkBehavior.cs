@@ -6,15 +6,15 @@ using MyFinance.Infra.Data.UnitOfWork;
 
 namespace MyFinance.Application.PipelineBehaviors;
 
-public sealed class UnitOfWorkBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
+public sealed class UnitOfWorkBehavior<TRequest, TResponse>(
+    ILogger<UnitOfWorkBehavior<TRequest, TResponse>> logger, 
+    IUnitOfWork unitOfWork)
+    : IPipelineBehavior<TRequest, TResponse>
     where TRequest : IBaseCommand
     where TResponse : ResultBase
 {
-    private readonly ILogger<UnitOfWorkBehavior<TRequest, TResponse>> _logger;
-    private readonly IUnitOfWork _unitOfWork;
-
-    public UnitOfWorkBehavior(ILogger<UnitOfWorkBehavior<TRequest, TResponse>> logger, IUnitOfWork unitOfWork)
-        => (_logger, _unitOfWork) = (logger, unitOfWork);
+    private readonly ILogger<UnitOfWorkBehavior<TRequest, TResponse>> _logger = logger;
+    private readonly IUnitOfWork _unitOfWork = unitOfWork;
 
     public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
     {

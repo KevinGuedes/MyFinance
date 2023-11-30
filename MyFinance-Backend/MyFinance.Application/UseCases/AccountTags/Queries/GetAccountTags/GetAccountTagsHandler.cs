@@ -6,15 +6,12 @@ using MyFinance.Domain.Interfaces;
 
 namespace MyFinance.Application.UseCases.AccountTags.Queries.GetAccountTags;
 
-internal sealed class GetAccountTagsHandler : IQueryHandler<GetAccountTagsQuery, IEnumerable<AccountTag>>
+internal sealed class GetAccountTagsHandler(
+    ILogger<GetAccountTagsHandler> logger,
+    IAccountTagRepository accountTagRepository) : IQueryHandler<GetAccountTagsQuery, IEnumerable<AccountTag>>
 {
-    private readonly ILogger<GetAccountTagsHandler> _logger;
-    private readonly IAccountTagRepository _accountTagRepository;
-
-    public GetAccountTagsHandler(
-        ILogger<GetAccountTagsHandler> logger,
-        IAccountTagRepository accountTagRepository)
-        => (_logger, _accountTagRepository) = (logger, accountTagRepository);
+    private readonly ILogger<GetAccountTagsHandler> _logger = logger;
+    private readonly IAccountTagRepository _accountTagRepository = accountTagRepository;
 
     public async Task<Result<IEnumerable<AccountTag>>> Handle(GetAccountTagsQuery query, CancellationToken cancellationToken)
     {

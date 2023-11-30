@@ -11,12 +11,8 @@ using MyFinance.Application.UseCases.AccountTags.Queries.GetAccountTags;
 
 namespace MyFinance.Application.UseCases.AccountTags.ApiService;
 
-public class AccountTagApiService : BaseApiService, IAccountTagApiService
+public class AccountTagApiService(IMediator mediator) : BaseApiService(mediator), IAccountTagApiService
 {
-    public AccountTagApiService(IMediator mediator) : base(mediator)
-    {
-    }
-
     public async Task<Result<IEnumerable<AccountTagDTO>>> GetAccountTagsAsync(
         int page,
         int pageSize,

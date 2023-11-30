@@ -7,13 +7,8 @@ using MyFinance.Application.UseCases.MonthlyBalances.Queries.GetMonthlyBalances;
 
 namespace MyFinance.Application.UseCases.MonthlyBalances.ApiService;
 
-public class MonthlyBalanceApiService : BaseApiService, IMonthlyBalanceApiService
+public class MonthlyBalanceApiService(IMediator mediator) : BaseApiService(mediator), IMonthlyBalanceApiService
 {
-
-    public MonthlyBalanceApiService(IMediator mediator) : base(mediator)
-    {
-    }
-
     public async Task<Result<IEnumerable<MonthlyBalanceDTO>>> GetMonthlyBalancesAsync(
         Guid businessUnitId,
         int page,

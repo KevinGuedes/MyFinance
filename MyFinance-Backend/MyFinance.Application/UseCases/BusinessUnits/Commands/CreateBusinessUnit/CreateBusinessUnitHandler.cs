@@ -6,15 +6,12 @@ using MyFinance.Domain.Interfaces;
 
 namespace MyFinance.Application.UseCases.BusinessUnits.Commands.CreateBusinessUnit;
 
-internal sealed class CreateBusinessUnitHandler : ICommandHandler<CreateBusinessUnitCommand, BusinessUnit>
+internal sealed class CreateBusinessUnitHandler(
+    ILogger<CreateBusinessUnitHandler> logger,
+    IBusinessUnitRepository businessUnitRepository) : ICommandHandler<CreateBusinessUnitCommand, BusinessUnit>
 {
-    private readonly ILogger<CreateBusinessUnitHandler> _logger;
-    private readonly IBusinessUnitRepository _businessUnitRepository;
-
-    public CreateBusinessUnitHandler(
-        ILogger<CreateBusinessUnitHandler> logger,
-        IBusinessUnitRepository businessUnitRepository)
-        => (_logger, _businessUnitRepository) = (logger, businessUnitRepository);
+    private readonly ILogger<CreateBusinessUnitHandler> _logger = logger;
+    private readonly IBusinessUnitRepository _businessUnitRepository = businessUnitRepository;
 
     public Task<Result<BusinessUnit>> Handle(CreateBusinessUnitCommand command, CancellationToken cancellationToken)
     {

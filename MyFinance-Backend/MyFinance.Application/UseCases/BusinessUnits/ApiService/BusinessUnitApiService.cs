@@ -11,12 +11,8 @@ using MyFinance.Application.UseCases.BusinessUnits.Queries.GetBusinessUnits;
 
 namespace MyFinance.Application.UseCases.BusinessUnits.ApiService;
 
-public class BusinessUnitApiService : BaseApiService, IBusinessUnitApiService
+public class BusinessUnitApiService(IMediator mediator) : BaseApiService(mediator), IBusinessUnitApiService
 {
-    public BusinessUnitApiService(IMediator mediator) : base(mediator)
-    {
-    }
-
     public async Task<Result<IEnumerable<BusinessUnitDTO>>> GetBusinessUnitsAsync(
         int page,
         int pageSize,

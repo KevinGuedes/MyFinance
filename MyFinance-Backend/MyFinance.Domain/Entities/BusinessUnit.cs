@@ -25,7 +25,7 @@ public class BusinessUnit : Entity
         IsArchived = false;
         ReasonToArchive = null;
         ArchiveDate = null;
-        MonthlyBalances = new List<MonthlyBalance>();
+        MonthlyBalances = [];
     }
 
     public void Update(string name, string? description)

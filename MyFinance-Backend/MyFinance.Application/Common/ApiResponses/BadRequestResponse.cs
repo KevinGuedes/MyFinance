@@ -2,11 +2,8 @@
 
 namespace MyFinance.Application.Common.ApiResponses;
 
-public sealed class BadRequestResponse : BaseApiResponse<InvalidRequestError>
+public sealed class BadRequestResponse(InvalidRequestError invalidRequestError) 
+    : BaseApiResponse<InvalidRequestError>("One or more validation errors occurred", invalidRequestError)
 {
-    public Dictionary<string, string[]> ValidationErrors { get; private set; }
-
-    public BadRequestResponse(InvalidRequestError invalidRequestError)
-        : base("One or more validation errors occurred", invalidRequestError)
-        => ValidationErrors = invalidRequestError.ValidationErrors;
+    public Dictionary<string, string[]> ValidationErrors { get; private set; } = invalidRequestError.ValidationErrors;
 }

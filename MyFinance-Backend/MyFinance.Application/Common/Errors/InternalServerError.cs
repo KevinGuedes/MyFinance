@@ -1,9 +1,6 @@
 ﻿namespace MyFinance.Application.Common.Errors;
 
-public sealed class InternalServerError : BaseError
+public sealed class InternalServerError(string message = "Unexpected behavior when trying to handle request") 
+    : BaseError(message)
 {
-    public InternalServerError(string message = "Unexpected behavior when trying to handle request")
-        : base(message)
-    {
-    }
 }

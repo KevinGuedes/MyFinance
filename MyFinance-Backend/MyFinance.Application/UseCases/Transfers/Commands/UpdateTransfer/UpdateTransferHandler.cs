@@ -7,27 +7,18 @@ using MyFinance.Domain.Interfaces;
 
 namespace MyFinance.Application.UseCases.Transfers.Commands.UpdateTransfer;
 
-internal sealed class UpdateTransferHandler : ICommandHandler<UpdateTransferCommand, Transfer>
+internal sealed class UpdateTransferHandler(
+    ILogger<UpdateTransferHandler> logger,
+    IMonthlyBalanceRepository monthlyBalanceRepository,
+    IBusinessUnitRepository businessUnitRepository,
+    ITransferRepository transferRepository,
+    IAccountTagRepository accountTagRepository) : ICommandHandler<UpdateTransferCommand, Transfer>
 {
-    private readonly ILogger<UpdateTransferHandler> _logger;
-    private readonly IMonthlyBalanceRepository _monthlyBalanceRepository;
-    private readonly IBusinessUnitRepository _businessUnitRepository;
-    private readonly ITransferRepository _transferRepository;
-    private readonly IAccountTagRepository _accountTagRepository;
-
-    public UpdateTransferHandler(
-        ILogger<UpdateTransferHandler> logger,
-        IMonthlyBalanceRepository monthlyBalanceRepository,
-        IBusinessUnitRepository businessUnitRepository,
-        ITransferRepository transferRepository,
-        IAccountTagRepository accountTagRepository)
-    {
-        _logger = logger;
-        _monthlyBalanceRepository = monthlyBalanceRepository;
-        _businessUnitRepository = businessUnitRepository;
-        _transferRepository = transferRepository;
-        _accountTagRepository = accountTagRepository;
-    }
+    private readonly ILogger<UpdateTransferHandler> _logger = logger;
+    private readonly IMonthlyBalanceRepository _monthlyBalanceRepository = monthlyBalanceRepository;
+    private readonly IBusinessUnitRepository _businessUnitRepository = businessUnitRepository;
+    private readonly ITransferRepository _transferRepository = transferRepository;
+    private readonly IAccountTagRepository _accountTagRepository = accountTagRepository;
 
     public async Task<Result<Transfer>> Handle(UpdateTransferCommand command, CancellationToken cancellationToken)
     {

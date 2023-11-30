@@ -7,17 +7,14 @@ using MyFinance.Domain.Interfaces;
 
 namespace MyFinance.Application.UseCases.MonthlyBalances.Queries.GetMonthlyBalances;
 
-internal sealed class GetMonthlyBalancesHandler : IQueryHandler<GetMonthlyBalancesQuery, IEnumerable<MonthlyBalance>>
+internal sealed class GetMonthlyBalancesHandler(
+    ILogger<GetMonthlyBalancesHandler> logger,
+    IBusinessUnitRepository businessUnitRepository,
+    IMonthlyBalanceRepository monthlyBalanceRepository) : IQueryHandler<GetMonthlyBalancesQuery, IEnumerable<MonthlyBalance>>
 {
-    private readonly ILogger<GetMonthlyBalancesHandler> _logger;
-    private readonly IBusinessUnitRepository _businessUnitRepository;
-    private readonly IMonthlyBalanceRepository _monthlyBalanceRepository;
-
-    public GetMonthlyBalancesHandler(
-        ILogger<GetMonthlyBalancesHandler> logger,
-        IBusinessUnitRepository businessUnitRepository,
-        IMonthlyBalanceRepository monthlyBalanceRepository)
-        => (_logger, _businessUnitRepository, _monthlyBalanceRepository) = (logger, businessUnitRepository, monthlyBalanceRepository);
+    private readonly ILogger<GetMonthlyBalancesHandler> _logger = logger;
+    private readonly IBusinessUnitRepository _businessUnitRepository = businessUnitRepository;
+    private readonly IMonthlyBalanceRepository _monthlyBalanceRepository = monthlyBalanceRepository;
 
     public async Task<Result<IEnumerable<MonthlyBalance>>> Handle(GetMonthlyBalancesQuery query, CancellationToken cancellationToken)
     {

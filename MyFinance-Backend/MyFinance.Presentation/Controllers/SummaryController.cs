@@ -8,13 +8,10 @@ namespace MyFinance.Presentation.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [SwaggerTag("Gets Summary Spreadsheets for Business Units and Monthly Balances")]
-    public class SummaryController : BaseController
+    public class SummaryController(ISummaryApiService summaryApiService) : BaseController
     {
         private const string SPREADSHEET_CONTENT_TYPE = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
-        private readonly ISummaryApiService _summaryApiService;
-
-        public SummaryController(ISummaryApiService summaryApiService)
-            => _summaryApiService = summaryApiService;
+        private readonly ISummaryApiService _summaryApiService = summaryApiService;
 
         [HttpGet("BusinessUnit/{id:guid}")]
         [SwaggerOperation(Summary = "Get the Summary Spreadsheet for the given Business Unit")]

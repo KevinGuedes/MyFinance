@@ -7,17 +7,15 @@ using MyFinance.Application.Common.RequestHandling;
 
 namespace MyFinance.Application.PipelineBehaviors;
 
-public sealed class RequestValidationBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
+public sealed class RequestValidationBehavior<TRequest, TResponse>(
+    ILogger<RequestValidationBehavior<TRequest, TResponse>> logger,
+    IEnumerable<IValidator<TRequest>> validators)
+    : IPipelineBehavior<TRequest, TResponse>
     where TRequest : IBaseAppRequest
     where TResponse : ResultBase, new()
 {
-    private readonly ILogger<RequestValidationBehavior<TRequest, TResponse>> _logger;
-    private readonly IEnumerable<IValidator<TRequest>> _validators;
-
-    public RequestValidationBehavior(
-        ILogger<RequestValidationBehavior<TRequest, TResponse>> logger,
-        IEnumerable<IValidator<TRequest>> validators)
-        => (_logger, _validators) = (logger, validators);
+    private readonly ILogger<RequestValidationBehavior<TRequest, TResponse>> _logger = logger;
+    private readonly IEnumerable<IValidator<TRequest>> _validators = validators;
 
     public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
     {

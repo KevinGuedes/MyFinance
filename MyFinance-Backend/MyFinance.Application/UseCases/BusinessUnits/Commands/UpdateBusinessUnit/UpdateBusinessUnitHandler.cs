@@ -7,15 +7,12 @@ using MyFinance.Domain.Interfaces;
 
 namespace MyFinance.Application.UseCases.BusinessUnits.Commands.UpdateBusinessUnit;
 
-internal sealed class UpdateBusinessUnitHandler : ICommandHandler<UpdateBusinessUnitCommand, BusinessUnit>
+internal sealed class UpdateBusinessUnitHandler(
+    ILogger<UpdateBusinessUnitHandler> logger,
+    IBusinessUnitRepository businessUnitRepository) : ICommandHandler<UpdateBusinessUnitCommand, BusinessUnit>
 {
-    private readonly ILogger<UpdateBusinessUnitHandler> _logger;
-    private readonly IBusinessUnitRepository _businessUnitRepository;
-
-    public UpdateBusinessUnitHandler(
-        ILogger<UpdateBusinessUnitHandler> logger,
-        IBusinessUnitRepository businessUnitRepository)
-        => (_logger, _businessUnitRepository) = (logger, businessUnitRepository);
+    private readonly ILogger<UpdateBusinessUnitHandler> _logger = logger;
+    private readonly IBusinessUnitRepository _businessUnitRepository = businessUnitRepository;
 
     public async Task<Result<BusinessUnit>> Handle(UpdateBusinessUnitCommand command, CancellationToken cancellationToken)
     {

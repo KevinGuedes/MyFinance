@@ -6,14 +6,12 @@ using MyFinance.Domain.Interfaces;
 
 namespace MyFinance.Application.UseCases.AccountTags.Commands.UnarchiveAccountTag;
 
-internal sealed class UnarchiveAccountTagHandler : ICommandHandler<UnarchiveAccountTagCommand>
+internal sealed class UnarchiveAccountTagHandler(
+    ILogger<UnarchiveAccountTagHandler> logger,
+    IAccountTagRepository accountTagRepository) : ICommandHandler<UnarchiveAccountTagCommand>
 {
-    private readonly ILogger<UnarchiveAccountTagHandler> _logger;
-    private readonly IAccountTagRepository _accountTagRepository;
-    public UnarchiveAccountTagHandler(
-       ILogger<UnarchiveAccountTagHandler> logger,
-       IAccountTagRepository accountTagRepository)
-       => (_logger, _accountTagRepository) = (logger, accountTagRepository);
+    private readonly ILogger<UnarchiveAccountTagHandler> _logger = logger;
+    private readonly IAccountTagRepository _accountTagRepository = accountTagRepository;
 
     public async Task<Result> Handle(UnarchiveAccountTagCommand command, CancellationToken cancellationToken)
     {

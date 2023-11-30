@@ -8,17 +8,15 @@ using MyFinance.Domain.Interfaces;
 
 namespace MyFinance.Application.UseCases.Summary.Queries.GetBusinessUnitSummary;
 
-internal sealed class GetBusinessUnitSummaryHandler : IQueryHandler<GetBusinessUnitSummaryQuery, Tuple<string, XLWorkbook>>
+internal sealed class GetBusinessUnitSummaryHandler(
+    ILogger<GetBusinessUnitSummaryHandler> logger,
+    IBusinessUnitRepository businessUnitRepository,
+    ISpreadsheetService spreadsheetService)
+    : IQueryHandler<GetBusinessUnitSummaryQuery, Tuple<string, XLWorkbook>>
 {
-    private readonly ILogger<GetBusinessUnitSummaryHandler> _logger;
-    private readonly IBusinessUnitRepository _businessUnitRepository;
-    private readonly ISpreadsheetService _spreadsheetService;
-
-    public GetBusinessUnitSummaryHandler(
-        ILogger<GetBusinessUnitSummaryHandler> logger,
-        IBusinessUnitRepository businessUnitRepository,
-        ISpreadsheetService spreadsheetService)
-        => (_logger, _businessUnitRepository, _spreadsheetService) = (logger, businessUnitRepository, spreadsheetService);
+    private readonly ILogger<GetBusinessUnitSummaryHandler> _logger = logger;
+    private readonly IBusinessUnitRepository _businessUnitRepository = businessUnitRepository;
+    private readonly ISpreadsheetService _spreadsheetService = spreadsheetService;
 
     public async Task<Result<Tuple<string, XLWorkbook>>> Handle(GetBusinessUnitSummaryQuery query, CancellationToken cancellationToken)
     {

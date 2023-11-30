@@ -12,12 +12,9 @@ namespace MyFinance.Presentation.Controllers;
 [Route("api/[controller]")]
 [ApiController]
 [SwaggerTag("Create, read and update Business Units")]
-public class BusinessUnitController : BaseController
+public class BusinessUnitController(IBusinessUnitApiService businessUnitApiService) : BaseController
 {
-    private readonly IBusinessUnitApiService _businessUnitApiService;
-
-    public BusinessUnitController(IBusinessUnitApiService businessUnitApiService)
-        => _businessUnitApiService = businessUnitApiService;
+    private readonly IBusinessUnitApiService _businessUnitApiService = businessUnitApiService;
 
     [HttpPost]
     [SwaggerOperation(Summary = "Creates a new Business Unit")]

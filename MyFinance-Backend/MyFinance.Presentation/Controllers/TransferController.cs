@@ -11,12 +11,9 @@ namespace MyFinance.Presentation.Controllers;
 [Route("api/[controller]")]
 [ApiController]
 [SwaggerTag("Create, update and delete Transfers")]
-public class TransferController : BaseController
+public class TransferController(ITransferApiService transferApiService) : BaseController
 {
-    private readonly ITransferApiService _transferApiService;
-
-    public TransferController(ITransferApiService transferApiService)
-        => _transferApiService = transferApiService;
+    private readonly ITransferApiService _transferApiService = transferApiService;
 
     [HttpPost]
     [SwaggerOperation(Summary = "Registers a new Transfer")]

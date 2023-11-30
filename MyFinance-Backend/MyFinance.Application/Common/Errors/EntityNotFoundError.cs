@@ -1,8 +1,5 @@
 ﻿namespace MyFinance.Application.Common.Errors;
 
-public class EntityNotFoundError : BaseError
+public class EntityNotFoundError(string message) : BaseError(message)
 {
-    public EntityNotFoundError(string message) : base(message)
-    {
-    }
 }

@@ -6,15 +6,13 @@ using MyFinance.Domain.Interfaces;
 
 namespace MyFinance.Application.UseCases.AccountTags.Commands.ArchiveAccountTag;
 
-internal sealed class ArchiveAccountTagHandler : ICommandHandler<ArchiveAccountTagCommand>
+internal sealed class ArchiveAccountTagHandler(
+    ILogger<ArchiveAccountTagHandler> logger,
+    IAccountTagRepository accountTagRepository) : ICommandHandler<ArchiveAccountTagCommand>
 {
-    private readonly ILogger<ArchiveAccountTagHandler> _logger;
-    private readonly IAccountTagRepository _accountTagRepository;
-    public ArchiveAccountTagHandler(
-       ILogger<ArchiveAccountTagHandler> logger,
-       IAccountTagRepository accountTagRepository)
-       => (_logger, _accountTagRepository) = (logger, accountTagRepository);
-
+    private readonly ILogger<ArchiveAccountTagHandler> _logger = logger;
+    private readonly IAccountTagRepository _accountTagRepository = accountTagRepository;
+  
     public async Task<Result> Handle(ArchiveAccountTagCommand command, CancellationToken cancellationToken)
     {
         _logger.LogInformation("Retriving Account Tag with Id {AccountTagId}", command.Id);

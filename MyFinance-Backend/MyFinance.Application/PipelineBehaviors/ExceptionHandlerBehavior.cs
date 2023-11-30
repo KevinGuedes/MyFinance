@@ -7,14 +7,12 @@ using MyFinance.Application.Common.RequestHandling;
 
 namespace MyFinance.Application.PipelineBehaviors;
 
-public sealed class ExceptionHandlerBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
+public sealed class ExceptionHandlerBehavior<TRequest, TResponse>(ILogger<ExceptionHandlerBehavior<TRequest, TResponse>> logger) 
+    : IPipelineBehavior<TRequest, TResponse>
     where TRequest : IBaseAppRequest
     where TResponse : ResultBase, new()
 {
-    private readonly ILogger<ExceptionHandlerBehavior<TRequest, TResponse>> _logger;
-
-    public ExceptionHandlerBehavior(ILogger<ExceptionHandlerBehavior<TRequest, TResponse>> logger)
-        => _logger = logger;
+    private readonly ILogger<ExceptionHandlerBehavior<TRequest, TResponse>> _logger = logger;
 
     public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
     {

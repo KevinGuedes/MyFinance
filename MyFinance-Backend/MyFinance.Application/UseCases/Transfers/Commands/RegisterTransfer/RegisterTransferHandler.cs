@@ -7,27 +7,18 @@ using MyFinance.Domain.Interfaces;
 
 namespace MyFinance.Application.UseCases.Transfers.Commands.RegisterTransfer;
 
-internal sealed class RegisterTransferHandler : ICommandHandler<RegisterTransferCommand, Transfer>
+internal sealed class RegisterTransferHandler(
+    ILogger<RegisterTransferHandler> logger,
+    IMonthlyBalanceRepository monthlyBalanceRepository,
+    IBusinessUnitRepository businessUnitRepository,
+    ITransferRepository transferRepository,
+    IAccountTagRepository accountTagRepository) : ICommandHandler<RegisterTransferCommand, Transfer>
 {
-    private readonly ILogger<RegisterTransferHandler> _logger;
-    private readonly IMonthlyBalanceRepository _monthlyBalanceRepository;
-    private readonly IBusinessUnitRepository _businessUnitRepository;
-    private readonly ITransferRepository _transferRepository;
-    private readonly IAccountTagRepository _accountTagRepository;
-
-    public RegisterTransferHandler(
-        ILogger<RegisterTransferHandler> logger,
-        IMonthlyBalanceRepository monthlyBalanceRepository,
-        IBusinessUnitRepository businessUnitRepository,
-        ITransferRepository transferRepository,
-        IAccountTagRepository accountTagRepository)
-    {
-        _logger = logger;
-        _monthlyBalanceRepository = monthlyBalanceRepository;
-        _businessUnitRepository = businessUnitRepository;
-        _transferRepository = transferRepository;
-        _accountTagRepository = accountTagRepository;   
-    }
+    private readonly ILogger<RegisterTransferHandler> _logger = logger;
+    private readonly IMonthlyBalanceRepository _monthlyBalanceRepository = monthlyBalanceRepository;
+    private readonly IBusinessUnitRepository _businessUnitRepository = businessUnitRepository;
+    private readonly ITransferRepository _transferRepository = transferRepository;
+    private readonly IAccountTagRepository _accountTagRepository = accountTagRepository;
 
     public async Task<Result<Transfer>> Handle(RegisterTransferCommand command, CancellationToken cancellationToken)
     {

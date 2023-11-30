@@ -2,8 +2,7 @@
 
 namespace MyFinance.Application.Common.ApiResponses;
 
-public sealed class InternalServerErrorResponse : BaseApiResponse<InternalServerError>
+public sealed class InternalServerErrorResponse(InternalServerError internalServerError) 
+    : BaseApiResponse<InternalServerError>("MyFinance API went rogue! Sorry.", internalServerError)
 {
-    public InternalServerErrorResponse(InternalServerError internalServerError)
-        : base("MyFinance API went rogue! Sorry.", internalServerError) { }
 }

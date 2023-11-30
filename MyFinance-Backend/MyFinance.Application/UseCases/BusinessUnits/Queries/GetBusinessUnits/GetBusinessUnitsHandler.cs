@@ -6,15 +6,12 @@ using MyFinance.Domain.Interfaces;
 
 namespace MyFinance.Application.UseCases.BusinessUnits.Queries.GetBusinessUnits;
 
-internal sealed class GetBusinessUnitsHandler : IQueryHandler<GetBusinessUnitsQuery, IEnumerable<BusinessUnit>>
+internal sealed class GetBusinessUnitsHandler(
+    ILogger<GetBusinessUnitsHandler> logger,
+    IBusinessUnitRepository businessUnitRepository) : IQueryHandler<GetBusinessUnitsQuery, IEnumerable<BusinessUnit>>
 {
-    private readonly ILogger<GetBusinessUnitsHandler> _logger;
-    private readonly IBusinessUnitRepository _businessUnitRepository;
-
-    public GetBusinessUnitsHandler(
-        ILogger<GetBusinessUnitsHandler> logger,
-        IBusinessUnitRepository businessUnitRepository)
-        => (_logger, _businessUnitRepository) = (logger, businessUnitRepository);
+    private readonly ILogger<GetBusinessUnitsHandler> _logger = logger;
+    private readonly IBusinessUnitRepository _businessUnitRepository = businessUnitRepository;
 
     public async Task<Result<IEnumerable<BusinessUnit>>> Handle(GetBusinessUnitsQuery query, CancellationToken cancellationToken)
     {
