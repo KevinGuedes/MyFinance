@@ -19,7 +19,7 @@ public sealed class CreateAccountTagValidator : AbstractValidator<CreateAccountT
                 .NotEmpty().WithMessage("{PropertyName} must not be empty")
                 .Length(10, 200).WithMessage("{PropertyName} must have between 10 and 200 characters");
         });
-            
+
         RuleFor(command => command.Tag)
             .Cascade(CascadeMode.Stop)
             .NotNull().WithMessage("{PropertyName} must not be null")

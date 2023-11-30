@@ -5,7 +5,7 @@ using MyFinance.Infra.Data.Context;
 
 namespace MyFinance.Infra.Data.Repositories;
 
-public sealed class BusinessUnitRepository(MyFinanceDbContext myFinanceDbContext) 
+public sealed class BusinessUnitRepository(MyFinanceDbContext myFinanceDbContext)
     : EntityRepository<BusinessUnit>(myFinanceDbContext), IBusinessUnitRepository
 {
     public async Task<IEnumerable<BusinessUnit>> GetPaginatedAsync(

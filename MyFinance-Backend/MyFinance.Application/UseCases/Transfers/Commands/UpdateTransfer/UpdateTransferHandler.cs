@@ -110,7 +110,7 @@ internal sealed class UpdateTransferHandler(
                 description,
                 settlementDate,
                 type,
-                currentMonthlyBalance, 
+                currentMonthlyBalance,
                 accountTag);
             currentMonthlyBalance.RegisterValue(transfer.Value, transfer.Type);
 

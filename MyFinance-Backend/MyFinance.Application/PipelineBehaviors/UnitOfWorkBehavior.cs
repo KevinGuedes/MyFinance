@@ -7,7 +7,7 @@ using MyFinance.Infra.Data.UnitOfWork;
 namespace MyFinance.Application.PipelineBehaviors;
 
 public sealed class UnitOfWorkBehavior<TRequest, TResponse>(
-    ILogger<UnitOfWorkBehavior<TRequest, TResponse>> logger, 
+    ILogger<UnitOfWorkBehavior<TRequest, TResponse>> logger,
     IUnitOfWork unitOfWork)
     : IPipelineBehavior<TRequest, TResponse>
     where TRequest : IBaseCommand

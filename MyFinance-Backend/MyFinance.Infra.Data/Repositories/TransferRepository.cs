@@ -5,7 +5,7 @@ using MyFinance.Infra.Data.Context;
 
 namespace MyFinance.Infra.Data.Repositories;
 
-public sealed class TransferRepository(MyFinanceDbContext myFinanceDbContext) 
+public sealed class TransferRepository(MyFinanceDbContext myFinanceDbContext)
     : EntityRepository<Transfer>(myFinanceDbContext), ITransferRepository
 {
     public override async Task<Transfer?> GetByIdAsync(Guid id, CancellationToken cancellationToken)

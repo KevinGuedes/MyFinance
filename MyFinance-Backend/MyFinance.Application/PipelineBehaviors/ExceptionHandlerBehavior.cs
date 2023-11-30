@@ -7,7 +7,7 @@ using MyFinance.Application.Common.RequestHandling;
 
 namespace MyFinance.Application.PipelineBehaviors;
 
-public sealed class ExceptionHandlerBehavior<TRequest, TResponse>(ILogger<ExceptionHandlerBehavior<TRequest, TResponse>> logger) 
+public sealed class ExceptionHandlerBehavior<TRequest, TResponse>(ILogger<ExceptionHandlerBehavior<TRequest, TResponse>> logger)
     : IPipelineBehavior<TRequest, TResponse>
     where TRequest : IBaseAppRequest
     where TResponse : ResultBase, new()

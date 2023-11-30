@@ -227,7 +227,7 @@ public class SpreadsheetService : ISpreadsheetService
         ws.Column(1).Width = 12;
 
         var lastColumnNumber = lastColumnNumberForTransferData + spaceBetweenData + numberOfColumnsForMonthlyBalanceData;
-        for(int i = lastColumnNumberForTransferData + spaceBetweenData; i < lastColumnNumber; i++)
+        for (int i = lastColumnNumberForTransferData + spaceBetweenData; i < lastColumnNumber; i++)
         {
             ws.Column(i).Width = 12;
         }
