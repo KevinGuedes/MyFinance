@@ -4,12 +4,14 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using MyFinance.Application.PipelineBehaviors;
+using MyFinance.Application.Services.PasswordHasher;
 using MyFinance.Application.Services.Spreadsheet;
 using MyFinance.Application.UseCases.AccountTags.ApiService;
 using MyFinance.Application.UseCases.BusinessUnits.ApiService;
 using MyFinance.Application.UseCases.MonthlyBalances.ApiService;
 using MyFinance.Application.UseCases.Summary.ApiService;
 using MyFinance.Application.UseCases.Transfers.ApiService;
+using MyFinance.Application.UseCases.Users.ApiService;
 using MyFinance.Domain.Interfaces;
 using MyFinance.Infra.Data.Context;
 using MyFinance.Infra.Data.Repositories;
@@ -32,7 +34,9 @@ public static class DependencyInjections
     }
 
     private static void AddServices(IServiceCollection services)
-        => services.AddScoped<ISpreadsheetService, SpreadsheetService>();
+        => services
+            .AddScoped<ISpreadsheetService, SpreadsheetService>()
+            .AddScoped<IPasswordHasher, PasswordHasher>();
 
     private static void AddApiServices(IServiceCollection services)
         => services
@@ -40,7 +44,8 @@ public static class DependencyInjections
             .AddScoped<IMonthlyBalanceApiService, MonthlyBalanceApiService>()
             .AddScoped<ITransferApiService, TransferApiService>()
             .AddScoped<ISummaryApiService, SummaryApiService>()
-            .AddScoped<IAccountTagApiService, AccountTagApiService>();
+            .AddScoped<IAccountTagApiService, AccountTagApiService>()
+            .AddScoped<IUserApiService, UserApiService>();
 
     private static void AddPersistence(IServiceCollection services, IConfiguration configuration)
     {
