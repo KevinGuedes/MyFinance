@@ -2,7 +2,7 @@
 
 namespace MyFinance.Application.UseCases.MonthlyBalances.DTOs;
 
-public sealed class MonthlyBalanceDTO : BaseDTO
+public sealed class MonthlyBalanceDTO : EntityDTO
 {
     public required double Income { get; init; }
     public required double Outcome { get; init; }

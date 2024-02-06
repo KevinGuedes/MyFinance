@@ -2,9 +2,10 @@
 using MyFinance.Application.UseCases.BusinessUnits.DTOs;
 using MyFinance.Application.UseCases.MonthlyBalances.DTOs;
 using MyFinance.Application.UseCases.Transfers.DTOs;
+using MyFinance.Application.UseCases.Users.DTOs;
 using MyFinance.Domain.Entities;
 
-namespace MyFinance.Application.MappingProfiles;
+namespace MyFinance.Application.Mappers;
 
 public static class DomainToDTOMapper
 {
@@ -63,4 +64,13 @@ public static class DomainToDTOMapper
 
     public static IEnumerable<AccountTagDTO> AccountTagToDTO(IEnumerable<AccountTag> businessUnits)
         => businessUnits.Select(AccountTagToDTO);
+
+    public static UserDTO UserToDTO(User user)
+        => new()
+        {
+            Id = user.Id,
+            Name = user.Name,
+            Email = user.Email,
+            BusinessUnits = user.BusinessUnits
+        };
 }

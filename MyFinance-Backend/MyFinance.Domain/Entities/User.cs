@@ -9,11 +9,10 @@ public class User : Entity
 
     protected User() { }
 
-    public User(string name, string email, string passwordHash, List<BusinessUnit> businessUnits)
+    public User(string name, string email, string passwordHash)
     {
         Name = name;
         Email = email;
         PasswordHash = passwordHash;
-        BusinessUnits = businessUnits;
     }
 }

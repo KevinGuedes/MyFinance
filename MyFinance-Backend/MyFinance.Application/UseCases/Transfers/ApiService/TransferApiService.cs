@@ -1,7 +1,7 @@
 ﻿using FluentResults;
 using MediatR;
 using MyFinance.Application.Common.ApiService;
-using MyFinance.Application.MappingProfiles;
+using MyFinance.Application.Mappers;
 using MyFinance.Application.UseCases.Transfers.Commands.DeleteTransfer;
 using MyFinance.Application.UseCases.Transfers.Commands.RegisterTransfer;
 using MyFinance.Application.UseCases.Transfers.Commands.UpdateTransfer;
@@ -9,12 +9,8 @@ using MyFinance.Application.UseCases.Transfers.DTOs;
 
 namespace MyFinance.Application.UseCases.Transfers.ApiService;
 
-public class TransferApiService : BaseApiService, ITransferApiService
+public sealed class TransferApiService(IMediator mediator) : BaseApiService(mediator), ITransferApiService
 {
-    public TransferApiService(IMediator mediator) : base(mediator)
-    {
-    }
-
     public async Task<Result<TransferDTO>> RegisterTransferAsync(
         RegisterTransferCommand command,
         CancellationToken cancellationToken)

@@ -1,13 +1,13 @@
 ﻿using FluentResults;
 using MediatR;
 using MyFinance.Application.Common.ApiService;
-using MyFinance.Application.MappingProfiles;
+using MyFinance.Application.Mappers;
 using MyFinance.Application.UseCases.MonthlyBalances.DTOs;
 using MyFinance.Application.UseCases.MonthlyBalances.Queries.GetMonthlyBalances;
 
 namespace MyFinance.Application.UseCases.MonthlyBalances.ApiService;
 
-public class MonthlyBalanceApiService(IMediator mediator) : BaseApiService(mediator), IMonthlyBalanceApiService
+public sealed class MonthlyBalanceApiService(IMediator mediator) : BaseApiService(mediator), IMonthlyBalanceApiService
 {
     public async Task<Result<IEnumerable<MonthlyBalanceDTO>>> GetMonthlyBalancesAsync(
         Guid businessUnitId,

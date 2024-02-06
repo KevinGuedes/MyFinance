@@ -1,7 +1,7 @@
 ﻿using FluentResults;
 using MediatR;
 using MyFinance.Application.Common.ApiService;
-using MyFinance.Application.MappingProfiles;
+using MyFinance.Application.Mappers;
 using MyFinance.Application.UseCases.AccountTags.Commands.ArchiveAccountTag;
 using MyFinance.Application.UseCases.AccountTags.Commands.CreateAccountTag;
 using MyFinance.Application.UseCases.AccountTags.Commands.UnarchiveAccountTag;
@@ -11,7 +11,7 @@ using MyFinance.Application.UseCases.AccountTags.Queries.GetAccountTags;
 
 namespace MyFinance.Application.UseCases.AccountTags.ApiService;
 
-public class AccountTagApiService(IMediator mediator) : BaseApiService(mediator), IAccountTagApiService
+public sealed class AccountTagApiService(IMediator mediator) : BaseApiService(mediator), IAccountTagApiService
 {
     public async Task<Result<IEnumerable<AccountTagDTO>>> GetAccountTagsAsync(
         int page,

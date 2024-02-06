@@ -6,7 +6,7 @@ using MyFinance.Application.UseCases.Summary.Queries.GetMonthlyBalanceSummary;
 
 namespace MyFinance.Application.UseCases.Summary.ApiService;
 
-public class SummaryApiService(IMediator mediator) : BaseApiService(mediator), ISummaryApiService
+public sealed class SummaryApiService(IMediator mediator) : BaseApiService(mediator), ISummaryApiService
 {
     public async Task<Result<Tuple<string, byte[]>>> GetBusinessUnitSummaryAsync(Guid id, int year, CancellationToken cancellationToken)
         => MapSummaryResult(await _mediator.Send(new GetBusinessUnitSummaryQuery(id, year), cancellationToken));

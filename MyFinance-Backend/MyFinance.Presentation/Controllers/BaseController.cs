@@ -6,6 +6,8 @@ using Swashbuckle.AspNetCore.Annotations;
 
 namespace MyFinance.Presentation.Controllers;
 
+[Route("api/[controller]")]
+[ApiController]
 [Produces("application/json")]
 [SwaggerResponse(StatusCodes.Status500InternalServerError, "Backend went rogue", typeof(InternalServerErrorResponse))]
 public abstract class BaseController : ControllerBase

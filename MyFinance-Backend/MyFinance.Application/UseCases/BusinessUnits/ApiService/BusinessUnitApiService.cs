@@ -1,7 +1,7 @@
 ﻿using FluentResults;
 using MediatR;
 using MyFinance.Application.Common.ApiService;
-using MyFinance.Application.MappingProfiles;
+using MyFinance.Application.Mappers;
 using MyFinance.Application.UseCases.BusinessUnits.Commands.ArchiveBusinessUnit;
 using MyFinance.Application.UseCases.BusinessUnits.Commands.CreateBusinessUnit;
 using MyFinance.Application.UseCases.BusinessUnits.Commands.UnarchiveBusinessUnit;
@@ -11,7 +11,7 @@ using MyFinance.Application.UseCases.BusinessUnits.Queries.GetBusinessUnits;
 
 namespace MyFinance.Application.UseCases.BusinessUnits.ApiService;
 
-public class BusinessUnitApiService(IMediator mediator) : BaseApiService(mediator), IBusinessUnitApiService
+public sealed class BusinessUnitApiService(IMediator mediator) : BaseApiService(mediator), IBusinessUnitApiService
 {
     public async Task<Result<IEnumerable<BusinessUnitDTO>>> GetBusinessUnitsAsync(
         int page,

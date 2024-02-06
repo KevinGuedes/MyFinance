@@ -9,6 +9,7 @@ public sealed class MyFinanceDbContext(DbContextOptions<MyFinanceDbContext> opti
     public DbSet<Transfer> Transfers { get; set; }
     public DbSet<MonthlyBalance> MonthlyBalances { get; set; }
     public DbSet<AccountTag> AccountTags { get; set; }
+    public DbSet<User> Users { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

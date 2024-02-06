@@ -4,7 +4,6 @@ using MyFinance.Application.Common.Errors;
 
 namespace MyFinance.Presentation.Controllers;
 
-[ApiController]
 [ApiExplorerSettings(IgnoreApi = true)]
 public class ErrorController : BaseController
 {

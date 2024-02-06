@@ -9,8 +9,6 @@ using Swashbuckle.AspNetCore.Annotations;
 
 namespace MyFinance.Presentation.Controllers;
 
-[Route("api/[controller]")]
-[ApiController]
 [SwaggerTag("Create, read and update Business Units")]
 public class BusinessUnitController(IBusinessUnitApiService businessUnitApiService) : BaseController
 {

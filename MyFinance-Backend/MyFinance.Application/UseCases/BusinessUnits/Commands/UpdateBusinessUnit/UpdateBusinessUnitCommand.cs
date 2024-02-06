@@ -6,6 +6,6 @@ namespace MyFinance.Application.UseCases.BusinessUnits.Commands.UpdateBusinessUn
 public sealed record UpdateBusinessUnitCommand(
     Guid Id,
     string Name,
-    string? Description) : ICommand<BusinessUnit>
+    string Description) : ICommand<BusinessUnit>
 {
 }

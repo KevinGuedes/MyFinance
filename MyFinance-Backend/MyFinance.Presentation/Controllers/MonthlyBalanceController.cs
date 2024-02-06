@@ -6,8 +6,6 @@ using Swashbuckle.AspNetCore.Annotations;
 
 namespace MyFinance.Presentation.Controllers;
 
-[Route("api/[controller]")]
-[ApiController]
 [SwaggerTag("Read Monthly Balances")]
 public class MonthlyBalanceController(IMonthlyBalanceApiService monthlyBalanceApiService) : BaseController
 {

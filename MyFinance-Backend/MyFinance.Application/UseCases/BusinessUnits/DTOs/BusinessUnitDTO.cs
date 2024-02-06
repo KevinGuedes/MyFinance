@@ -2,7 +2,7 @@
 
 namespace MyFinance.Application.UseCases.BusinessUnits.DTOs;
 
-public sealed class BusinessUnitDTO : BaseDTO
+public sealed class BusinessUnitDTO : EntityDTO
 {
     public required string Name { get; init; }
     public required double Income { get; init; }

@@ -8,8 +8,6 @@ using Swashbuckle.AspNetCore.Annotations;
 
 namespace MyFinance.Presentation.Controllers;
 
-[Route("api/[controller]")]
-[ApiController]
 [SwaggerTag("Create, update and delete Transfers")]
 public class TransferController(ITransferApiService transferApiService) : BaseController
 {

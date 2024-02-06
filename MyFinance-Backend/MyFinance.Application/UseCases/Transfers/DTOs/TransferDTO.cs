@@ -3,7 +3,7 @@ using MyFinance.Domain.Enums;
 
 namespace MyFinance.Application.UseCases.Transfers.DTOs;
 
-public sealed class TransferDTO : BaseDTO
+public sealed class TransferDTO : EntityDTO
 {
     public required string RelatedTo { get; init; }
     public required string Description { get; init; }

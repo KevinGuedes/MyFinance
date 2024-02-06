@@ -5,7 +5,7 @@ namespace MyFinance.Domain.Entities;
 public class BusinessUnit : Entity
 {
     public string Name { get; private set; } = null!;
-    public string? Description { get; private set; }
+    public string Description { get; private set; } = null!;
     public double Income { get; private set; }
     public double Outcome { get; private set; }
     public double Balance { get => Income - Outcome; }
@@ -18,7 +18,7 @@ public class BusinessUnit : Entity
 
     public BusinessUnit() { }
 
-    public BusinessUnit(string name, string? description, User user)
+    public BusinessUnit(string name, string description, User? user)
     {
         Name = name;
         Income = 0;
@@ -32,7 +32,7 @@ public class BusinessUnit : Entity
         UserId = user.Id;
     }
 
-    public void Update(string name, string? description)
+    public void Update(string name, string description)
     {
         SetUpdateDateToNow();
         Name = name;
