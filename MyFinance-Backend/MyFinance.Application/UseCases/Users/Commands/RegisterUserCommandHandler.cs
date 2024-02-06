@@ -6,6 +6,7 @@ using MyFinance.Domain.Entities;
 using MyFinance.Domain.Interfaces;
 
 namespace MyFinance.Application.UseCases.Users.Commands;
+
 internal sealed class RegisterUserCommandHandler(
     ILogger<RegisterUserCommandHandler> logger, 
     IUserRepository userRepository,
