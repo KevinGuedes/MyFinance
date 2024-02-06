@@ -13,10 +13,12 @@ public class BusinessUnit : Entity
     public string? ReasonToArchive { get; private set; }
     public DateTime? ArchiveDate { get; private set; }
     public List<MonthlyBalance> MonthlyBalances { get; private set; } = [];
+    public Guid UserId { get; private set; }
+    public User User { get; private set; } = null!;
 
     public BusinessUnit() { }
 
-    public BusinessUnit(string name, string? description)
+    public BusinessUnit(string name, string? description, User user)
     {
         Name = name;
         Income = 0;
@@ -26,6 +28,8 @@ public class BusinessUnit : Entity
         ReasonToArchive = null;
         ArchiveDate = null;
         MonthlyBalances = [];
+        User = user;
+        UserId = user.Id;
     }
 
     public void Update(string name, string? description)
