@@ -4,7 +4,7 @@ namespace MyFinance.Domain.Entities;
 
 public class BusinessUnit : Entity
 {
-    public string Name { get; private set; }
+    public string Name { get; private set; } = null!;
     public string? Description { get; private set; }
     public double Income { get; private set; }
     public double Outcome { get; private set; }
@@ -12,7 +12,7 @@ public class BusinessUnit : Entity
     public bool IsArchived { get; private set; }
     public string? ReasonToArchive { get; private set; }
     public DateTime? ArchiveDate { get; private set; }
-    public List<MonthlyBalance> MonthlyBalances { get; private set; }
+    public List<MonthlyBalance> MonthlyBalances { get; private set; } = [];
 
     public BusinessUnit() { }
 

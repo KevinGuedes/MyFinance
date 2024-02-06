@@ -2,12 +2,12 @@
 
 public class AccountTag : Entity
 {
-    public string Tag { get; private set; }
+    public string Tag { get; private set; } = null!;
     public string? Description { get; private set; }
     public bool IsArchived { get; private set; }
     public string? ReasonToArchive { get; private set; }
     public DateTime? ArchiveDate { get; private set; }
-    public List<Transfer> Transfers { get; private set; }
+    public List<Transfer> Transfers { get; private set; } = [];
 
     protected AccountTag() { }
 

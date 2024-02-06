@@ -10,8 +10,8 @@ public class MonthlyBalance : Entity
     public double Outcome { get; private set; }
     public double Balance { get => Income - Outcome; }
     public Guid BusinessUnitId { get; private set; }
-    public BusinessUnit BusinessUnit { get; private set; }
-    public List<Transfer> Transfers { get; private set; }
+    public BusinessUnit BusinessUnit { get; private set; } = null!;
+    public List<Transfer> Transfers { get; private set; } = [];
 
     protected MonthlyBalance() { }
 
