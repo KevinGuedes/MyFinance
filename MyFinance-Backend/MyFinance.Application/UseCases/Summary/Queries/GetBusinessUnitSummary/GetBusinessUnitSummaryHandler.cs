@@ -31,7 +31,7 @@ internal sealed class GetBusinessUnitSummaryHandler(
             return Result.Fail(entityNotFoundError);
         }
 
-        var hasMonthlyBalancesForProcessing = businessUnit.MonthlyBalances.Any();
+        var hasMonthlyBalancesForProcessing = businessUnit.MonthlyBalances.Count is not 0;
         if (!hasMonthlyBalancesForProcessing)
         {
             _logger.LogWarning("Business Unit with Id {BusinessUnitId} has no Monthly Balances with Transfers to summarize", query.Id);

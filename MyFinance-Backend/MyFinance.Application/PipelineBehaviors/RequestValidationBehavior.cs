@@ -21,7 +21,7 @@ public sealed class RequestValidationBehavior<TRequest, TResponse>(
     {
         var requestName = request.GetType().Name;
 
-        if (!_validators.Any())
+        if (_validators.Count() is 0)
         {
             _logger.LogWarning("[{RequestName}] No validators found", requestName);
             return await next();
@@ -43,7 +43,7 @@ public sealed class RequestValidationBehavior<TRequest, TResponse>(
                 })
             .ToDictionary(dictionaryData => dictionaryData.Key, dictionaryData => dictionaryData.Values);
 
-        if (errors.Any())
+        if (errors.Count is not 0)
         {
             _logger.LogWarning("[{RequestName}] Invalid request data", requestName);
             var response = new TResponse();

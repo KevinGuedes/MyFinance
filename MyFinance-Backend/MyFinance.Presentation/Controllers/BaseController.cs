@@ -57,12 +57,12 @@ public abstract class BaseController : ControllerBase
         return StatusCode(StatusCodes.Status500InternalServerError, internalServerErrorResponse);
     }
 
-    private IActionResult BuildBadRequestResponse(InvalidRequestError invalidRequestError)
+    private BadRequestObjectResult BuildBadRequestResponse(InvalidRequestError invalidRequestError)
         => BadRequest(new BadRequestResponse(invalidRequestError));
 
-    private IActionResult BuildNotFoundResponse(EntityNotFoundError entityNotFoundError)
+    private NotFoundObjectResult BuildNotFoundResponse(EntityNotFoundError entityNotFoundError)
         => NotFound(new EntityNotFoundResponse(entityNotFoundError));
 
-    private IActionResult BuildUnprocessableEntityResponse(UnprocessableEntityError unprocessableEntityError)
+    private UnprocessableEntityObjectResult BuildUnprocessableEntityResponse(UnprocessableEntityError unprocessableEntityError)
         => UnprocessableEntity(new UnprocessableEntityResponse(unprocessableEntityError));
 }
