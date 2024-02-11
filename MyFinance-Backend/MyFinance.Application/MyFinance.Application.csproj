@@ -24,5 +24,6 @@
   <ItemGroup>
     <ProjectReference Include="..\MyFinance.Domain\MyFinance.Domain.csproj" />
     <ProjectReference Include="..\MyFinance.Infra.Data\MyFinance.Infra.Data.csproj" />
+    <ProjectReference Include="..\MyFinance.Infra.Services\MyFinance.Infra.Services.csproj" />
   </ItemGroup>
 </Project>

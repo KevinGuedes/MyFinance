@@ -9,6 +9,9 @@ public sealed class UserConfiguration : EntityConfiguration<User>
         base.Configure(builder);
 
         builder.HasIndex(user => user.Email).IsUnique();
+        builder.Property(user => user.Email)
+            .HasMaxLength(256)
+            .IsRequired();
 
         builder.Property(user => user.PasswordHash).IsRequired();
         builder.Property(transfer => transfer.Name)

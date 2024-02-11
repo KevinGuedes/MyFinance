@@ -1,7 +1,7 @@
 ﻿using ClosedXML.Excel;
 using MyFinance.Domain.Entities;
 
-namespace MyFinance.Application.Services.Spreadsheet;
+namespace MyFinance.Infra.Services.Spreadsheet;
 
 public interface ISpreadsheetService
 {

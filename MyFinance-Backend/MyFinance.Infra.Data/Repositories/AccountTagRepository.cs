@@ -12,7 +12,7 @@ public sealed class AccountTagRepository(MyFinanceDbContext myFinanceDbContext)
        int page,
        int pageSize,
        CancellationToken cancellationToken)
-       => await _myFinanceDbContext.AccountTags
+        => await _myFinanceDbContext.AccountTags
             .OrderByDescending(bu => bu.CreationDate)
             .ThenByDescending(bu => bu.Tag)
             .Skip((page - 1) * pageSize)

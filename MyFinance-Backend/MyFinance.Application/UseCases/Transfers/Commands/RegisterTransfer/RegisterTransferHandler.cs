@@ -68,10 +68,10 @@ internal sealed class RegisterTransferHandler(
             _monthlyBalanceRepository.Update(monthlyBalance);
         }
 
-        _logger.LogInformation("Creating new Transfer", businessUnitId);
+        _logger.LogInformation("Creating new Transfer");
         var transfer = new Transfer(value, relatedTo, description, settlementDate, type, monthlyBalance, accountTag);
         _transferRepository.Insert(transfer);
-        _logger.LogInformation("New transfer(s) successfully registered");
+        _logger.LogInformation("New transfer successfully registered");
 
         return Result.Ok(transfer);
     }

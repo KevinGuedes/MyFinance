@@ -18,7 +18,7 @@ public class BusinessUnit : Entity
 
     public BusinessUnit() { }
 
-    public BusinessUnit(string name, string description, User? user)
+    public BusinessUnit(string name, string description, User user)
     {
         Name = name;
         Income = 0;

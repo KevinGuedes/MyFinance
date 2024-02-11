@@ -1,11 +1,10 @@
 ﻿using MyFinance.Application.Common.RequestHandling.Commands;
-using MyFinance.Domain.Entities;
 
-namespace MyFinance.Application.UseCases.Users.Commands;
+namespace MyFinance.Application.UseCases.Users.Commands.RegisterUser;
 
 public sealed record RegisterUserCommand(
     string Name,
     string Email,
-    string PlainTextPassword) : ICommand<User>
+    string PlainTextPassword) : ICommand
 {
 }

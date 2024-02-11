@@ -23,7 +23,14 @@ public sealed class UnitOfWorkBehavior<TRequest, TResponse>(
         try
         {
             _logger.LogInformation("[{RequestName}] Listening to database changes", requestName);
+
             var response = await next();
+
+            if(!_unitOfWork.HasChanges())
+            {
+                _logger.LogInformation("[{RequestName}] No database changes detected", requestName);
+                return response;
+            }
 
             if (response.IsSuccess)
             {
@@ -36,9 +43,9 @@ public sealed class UnitOfWorkBehavior<TRequest, TResponse>(
 
             return response;
         }
-        catch
+        catch(Exception exception)
         {
-            _logger.LogWarning("[{RequestName}] Changes not commited due to exception throwed", requestName);
+            _logger.LogCritical(exception, "[{RequestName}] Changes not commited due to exception", requestName);
             throw;
         }
     }

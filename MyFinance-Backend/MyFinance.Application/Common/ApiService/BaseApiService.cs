@@ -23,19 +23,4 @@ public abstract class BaseApiService(IMediator mediator)
         if (result.IsSuccess) return result.ToResult(mapper);
         return result.ToResult<IEnumerable<TTarget>>();
     }
-
-    protected static Result<Tuple<string, byte[]>> MapSummaryResult(Result<Tuple<string, XLWorkbook>> result)
-    {
-        if (result.IsFailed) return result.ToResult<Tuple<string, byte[]>>();
-
-        return result.ToResult<Tuple<string, byte[]>>(value =>
-        {
-            var (workbookName, workbook) = value;
-            using var stream = new MemoryStream();
-            workbook.SaveAs(stream);
-            stream.Close();
-
-            return new(workbookName, stream.ToArray());
-        });
-    }
 }

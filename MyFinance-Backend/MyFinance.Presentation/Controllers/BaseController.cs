@@ -6,8 +6,8 @@ using Swashbuckle.AspNetCore.Annotations;
 
 namespace MyFinance.Presentation.Controllers;
 
-[Route("api/[controller]")]
 [ApiController]
+[Route("api/[controller]")]
 [Produces("application/json")]
 [SwaggerResponse(StatusCodes.Status500InternalServerError, "Backend went rogue", typeof(InternalServerErrorResponse))]
 public abstract class BaseController : ControllerBase
@@ -49,15 +49,21 @@ public abstract class BaseController : ControllerBase
         var unprocessableEntityError = errors.OfType<UnprocessableEntityError>().FirstOrDefault();
         if (unprocessableEntityError is not null) return BuildUnprocessableEntityResponse(unprocessableEntityError);
 
+        var unauthorizedError = errors.OfType<UnauthorizedError>().FirstOrDefault();
+        if (unauthorizedError is not null) return BuildUnauthorizedResponse(unauthorizedError);
+
+        var conflictError = errors.OfType<ConflictError>().FirstOrDefault();
+        if (conflictError is not null) return BuildConflictResponse(conflictError);
+
         var internalServerError = new InternalServerError();
         return BuildInternalServerErrorResponse(internalServerError);
     }
 
-    protected IActionResult BuildInternalServerErrorResponse(InternalServerError internalServerError)
-    {
-        var internalServerErrorResponse = new InternalServerErrorResponse(internalServerError);
-        return StatusCode(StatusCodes.Status500InternalServerError, internalServerErrorResponse);
-    }
+    private ConflictObjectResult BuildConflictResponse(ConflictError conflictError)
+        => Conflict(new ConflictResponse(conflictError));
+
+    private UnauthorizedObjectResult BuildUnauthorizedResponse(UnauthorizedError unauthorizedError)
+        => Unauthorized(new UnauthorizedResponse(unauthorizedError));
 
     private BadRequestObjectResult BuildBadRequestResponse(InvalidRequestError invalidRequestError)
         => BadRequest(new BadRequestResponse(invalidRequestError));
@@ -67,4 +73,10 @@ public abstract class BaseController : ControllerBase
 
     private UnprocessableEntityObjectResult BuildUnprocessableEntityResponse(UnprocessableEntityError unprocessableEntityError)
         => UnprocessableEntity(new UnprocessableEntityResponse(unprocessableEntityError));
+
+    protected IActionResult BuildInternalServerErrorResponse(InternalServerError internalServerError)
+    {
+        var internalServerErrorResponse = new InternalServerErrorResponse(internalServerError);
+        return StatusCode(StatusCodes.Status500InternalServerError, internalServerErrorResponse);
+    }
 }

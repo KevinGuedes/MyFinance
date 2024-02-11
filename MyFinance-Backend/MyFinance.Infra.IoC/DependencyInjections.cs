@@ -1,11 +1,10 @@
 ﻿using FluentValidation;
 using FluentValidation.AspNetCore;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using MyFinance.Application.PipelineBehaviors;
-using MyFinance.Application.Services.PasswordHasher;
-using MyFinance.Application.Services.Spreadsheet;
 using MyFinance.Application.UseCases.AccountTags.ApiService;
 using MyFinance.Application.UseCases.BusinessUnits.ApiService;
 using MyFinance.Application.UseCases.MonthlyBalances.ApiService;
@@ -16,6 +15,10 @@ using MyFinance.Domain.Interfaces;
 using MyFinance.Infra.Data.Context;
 using MyFinance.Infra.Data.Repositories;
 using MyFinance.Infra.Data.UnitOfWork;
+using MyFinance.Infra.Services.Auth;
+using MyFinance.Infra.Services.CurrentUserProvider;
+using MyFinance.Infra.Services.PasswordHasher;
+using MyFinance.Infra.Services.Spreadsheet;
 using System.Reflection;
 
 namespace MyFinance.Infra.IoC;
@@ -24,19 +27,42 @@ public static class DependencyInjections
 {
     public static void AddDependencies(this IServiceCollection services, IConfiguration configuration)
     {
-        AddServices(services);
+        AddAuth(services);
         AddApiServices(services);
         AddPersistence(services, configuration);
+        AddServices(services);
 
         var applicationLayerAssembly = Assembly.Load("MyFinance.Application");
         AddValidators(services, applicationLayerAssembly);
         AddMediatR(services, applicationLayerAssembly);
     }
 
+    private static void AddAuth(IServiceCollection services)
+    {
+        services.AddHttpContextAccessor();
+
+        services
+            .AddAuthentication()
+            .AddCookie(options =>
+            {
+                options.Cookie.Name = "MyFinance.Cookie";
+                options.Cookie.HttpOnly = true;
+                options.Cookie.SameSite = SameSiteMode.Strict;
+                options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+                options.SlidingExpiration = true;
+                options.Cookie.IsEssential = true;
+                options.ExpireTimeSpan = TimeSpan.FromSeconds(60);
+            });
+
+        services.AddAuthorization();
+    }
+
     private static void AddServices(IServiceCollection services)
         => services
             .AddScoped<ISpreadsheetService, SpreadsheetService>()
-            .AddScoped<IPasswordHasher, PasswordHasher>();
+            .AddScoped<IPasswordHasher, PasswordHasher>()
+            .AddScoped<IAuthService, AuthService>()
+            .AddScoped<ICurrentUserProvider, CurrentUserProvider>();
 
     private static void AddApiServices(IServiceCollection services)
         => services

@@ -3,10 +3,13 @@ using MyFinance.Domain.Entities;
 using MyFinance.Domain.Enums;
 using System.Globalization;
 
-namespace MyFinance.Application.Services.Spreadsheet;
+namespace MyFinance.Infra.Services.Spreadsheet;
 
-public class SpreadsheetService : ISpreadsheetService
+public sealed class SpreadsheetService : ISpreadsheetService
 {
+    private static readonly string[] summaryColumnNames = ["Income", "Outcome", "Balance"];
+    private static readonly string[] transferColumnNames = ["Value", "Related To", "Description", "Account Tag", "Settlement Date"];
+
     public Tuple<string, XLWorkbook> GetBusinessUnitSummary(BusinessUnit businessUnit, int year)
     {
         double yearlyIncome = 0;
@@ -60,7 +63,7 @@ public class SpreadsheetService : ISpreadsheetService
             .Border.SetOutsideBorder(XLBorderStyleValues.Thin);
 
         ws.Cell(2, 1)
-            .InsertData(new[] { "Income", "Outcome", "Balance" }, true)
+            .InsertData(summaryColumnNames, true)
             .Style
             .Font.SetBold()
             .Alignment.SetHorizontal(XLAlignmentHorizontalValues.Center)
@@ -96,7 +99,7 @@ public class SpreadsheetService : ISpreadsheetService
             .Border.SetOutsideBorder(XLBorderStyleValues.Thin);
 
         ws.Cell(2, 5)
-            .InsertData(new[] { "Income", "Outcome", "Balance" }, true)
+            .InsertData(summaryColumnNames, true)
             .Style
             .Font.SetBold()
             .Alignment.SetHorizontal(XLAlignmentHorizontalValues.Center)
@@ -128,10 +131,8 @@ public class SpreadsheetService : ISpreadsheetService
     private static void GenerateMonthlyBalanceSummary(MonthlyBalance monthlyBalance, XLWorkbook wb, string wsName)
     {
         var ws = wb.AddWorksheet(wsName);
-        var transferHeaders = new[] { "Value", "Related To", "Description", "Account Tag", "Settlement Date" };
-        var monthlyBalanceHeaders = new[] { "Income", "Outcome", "Balance" };
-        var numberOfColumnsForMonthlyBalanceData = monthlyBalanceHeaders.Length;
-        var lastColumnNumberForTransferData = transferHeaders.Length;
+        var numberOfColumnsForMonthlyBalanceData = summaryColumnNames.Length;
+        var lastColumnNumberForTransferData = transferColumnNames.Length;
         var spaceBetweenData = 2;
 
         ws.Range(1, 1, 1, lastColumnNumberForTransferData)
@@ -144,7 +145,7 @@ public class SpreadsheetService : ISpreadsheetService
                 .Border.SetOutsideBorder(XLBorderStyleValues.Thin);
 
         ws.Cell(2, 1)
-            .InsertData(transferHeaders, true)
+            .InsertData(transferColumnNames, true)
             .Style
             .Font.SetBold()
             .Alignment.SetHorizontal(XLAlignmentHorizontalValues.Center)
@@ -194,7 +195,7 @@ public class SpreadsheetService : ISpreadsheetService
             .Border.SetOutsideBorder(XLBorderStyleValues.Thin);
 
         ws.Cell(2, lastColumnNumberForTransferData + 2)
-            .InsertData(monthlyBalanceHeaders, true)
+            .InsertData(summaryColumnNames, true)
             .Style
             .Font.SetBold()
             .Alignment.SetHorizontal(XLAlignmentHorizontalValues.Center)
