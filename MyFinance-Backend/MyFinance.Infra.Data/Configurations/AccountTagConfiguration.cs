@@ -16,10 +16,5 @@ public sealed class AccountTagConfiguration : EntityConfiguration<AccountTag>
         builder.Property(bu => bu.IsArchived).IsRequired();
         builder.Property(bu => bu.ReasonToArchive).IsRequired(false);
         builder.Property(bu => bu.ArchiveDate).IsRequired(false);
-
-        builder.HasMany(at => at.Transfers)
-            .WithOne(t => t.AccountTag)
-            .HasForeignKey(t => t.AccountTagId)
-            .IsRequired();
     }
 }

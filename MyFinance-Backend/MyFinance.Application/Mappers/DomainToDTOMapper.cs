@@ -70,7 +70,6 @@ public static class DomainToDTOMapper
         {
             Id = user.Id,
             Name = user.Name,
-            Email = user.Email,
-            BusinessUnits = user.BusinessUnits
+            Email = user.Email
         };
 }

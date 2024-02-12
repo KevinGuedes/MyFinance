@@ -2,7 +2,7 @@
 
 namespace MyFinance.Domain.Entities;
 
-public class BusinessUnit : Entity
+public class BusinessUnit : UserOwnedEntity
 {
     public string Name { get; private set; } = null!;
     public string Description { get; private set; } = null!;
@@ -13,12 +13,10 @@ public class BusinessUnit : Entity
     public string? ReasonToArchive { get; private set; }
     public DateTime? ArchiveDate { get; private set; }
     public List<MonthlyBalance> MonthlyBalances { get; private set; } = [];
-    public Guid UserId { get; private set; }
-    public User User { get; private set; } = null!;
 
-    public BusinessUnit() { }
+    private BusinessUnit() { }
 
-    public BusinessUnit(string name, string description, User user)
+    public BusinessUnit(string name, string description, Guid userId) : base(userId)
     {
         Name = name;
         Income = 0;
@@ -28,8 +26,6 @@ public class BusinessUnit : Entity
         ReasonToArchive = null;
         ArchiveDate = null;
         MonthlyBalances = [];
-        User = user;
-        UserId = user.Id;
     }
 
     public void Update(string name, string description)

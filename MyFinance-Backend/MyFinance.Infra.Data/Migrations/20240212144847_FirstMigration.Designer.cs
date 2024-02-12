@@ -11,7 +11,7 @@ using MyFinance.Infra.Data.Context;
 namespace MyFinance.Infra.Data.Migrations
 {
     [DbContext(typeof(MyFinanceDbContext))]
-    [Migration("20240206210724_FirstMigration")]
+    [Migration("20240212144847_FirstMigration")]
     partial class FirstMigration
     {
         /// <inheritdoc />
@@ -48,10 +48,15 @@ namespace MyFinance.Infra.Data.Migrations
                         .IsConcurrencyToken()
                         .HasColumnType("TEXT");
 
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("TEXT");
+
                     b.HasKey("Id");
 
                     b.HasIndex("Tag")
                         .IsUnique();
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("AccountTags");
                 });
@@ -135,9 +140,14 @@ namespace MyFinance.Infra.Data.Migrations
                         .IsConcurrencyToken()
                         .HasColumnType("TEXT");
 
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("TEXT");
+
                     b.HasKey("Id");
 
                     b.HasIndex("BusinessUnitId");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("MonthlyBalances");
                 });
@@ -175,6 +185,9 @@ namespace MyFinance.Infra.Data.Migrations
                         .IsConcurrencyToken()
                         .HasColumnType("TEXT");
 
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("TEXT");
+
                     b.Property<double>("Value")
                         .HasPrecision(17, 4)
                         .HasColumnType("REAL");
@@ -184,6 +197,8 @@ namespace MyFinance.Infra.Data.Migrations
                     b.HasIndex("AccountTagId");
 
                     b.HasIndex("MonthlyBalanceId");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("Transfers");
                 });
@@ -198,6 +213,7 @@ namespace MyFinance.Infra.Data.Migrations
 
                     b.Property<string>("Email")
                         .IsRequired()
+                        .HasMaxLength(256)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Name")
@@ -221,15 +237,22 @@ namespace MyFinance.Infra.Data.Migrations
                     b.ToTable("Users");
                 });
 
+            modelBuilder.Entity("MyFinance.Domain.Entities.AccountTag", b =>
+                {
+                    b.HasOne("MyFinance.Domain.Entities.User", null)
+                        .WithMany("AccountTags")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("MyFinance.Domain.Entities.BusinessUnit", b =>
                 {
-                    b.HasOne("MyFinance.Domain.Entities.User", "User")
+                    b.HasOne("MyFinance.Domain.Entities.User", null)
                         .WithMany("BusinessUnits")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("MyFinance.Domain.Entities.MonthlyBalance", b =>
@@ -237,6 +260,12 @@ namespace MyFinance.Infra.Data.Migrations
                     b.HasOne("MyFinance.Domain.Entities.BusinessUnit", "BusinessUnit")
                         .WithMany("MonthlyBalances")
                         .HasForeignKey("BusinessUnitId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("MyFinance.Domain.Entities.User", null)
+                        .WithMany("MonthlyBalances")
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -254,6 +283,12 @@ namespace MyFinance.Infra.Data.Migrations
                     b.HasOne("MyFinance.Domain.Entities.MonthlyBalance", "MonthlyBalance")
                         .WithMany("Transfers")
                         .HasForeignKey("MonthlyBalanceId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("MyFinance.Domain.Entities.User", null)
+                        .WithMany("Transfers")
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -279,7 +314,13 @@ namespace MyFinance.Infra.Data.Migrations
 
             modelBuilder.Entity("MyFinance.Domain.Entities.User", b =>
                 {
+                    b.Navigation("AccountTags");
+
                     b.Navigation("BusinessUnits");
+
+                    b.Navigation("MonthlyBalances");
+
+                    b.Navigation("Transfers");
                 });
 #pragma warning restore 612, 618
         }

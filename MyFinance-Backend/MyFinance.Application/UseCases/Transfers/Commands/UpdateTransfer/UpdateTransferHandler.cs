@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Logging;
 using MyFinance.Application.Common.Errors;
 using MyFinance.Application.Common.RequestHandling.Commands;
+using MyFinance.Application.Services.CurrentUserProvider;
 using MyFinance.Domain.Entities;
 using MyFinance.Domain.Interfaces;
 
@@ -12,16 +13,19 @@ internal sealed class UpdateTransferHandler(
     IMonthlyBalanceRepository monthlyBalanceRepository,
     IBusinessUnitRepository businessUnitRepository,
     ITransferRepository transferRepository,
-    IAccountTagRepository accountTagRepository) : ICommandHandler<UpdateTransferCommand, Transfer>
+    IAccountTagRepository accountTagRepository,
+    ICurrentUserProvider currentUserProvider) : ICommandHandler<UpdateTransferCommand, Transfer>
 {
     private readonly ILogger<UpdateTransferHandler> _logger = logger;
     private readonly IMonthlyBalanceRepository _monthlyBalanceRepository = monthlyBalanceRepository;
     private readonly IBusinessUnitRepository _businessUnitRepository = businessUnitRepository;
     private readonly ITransferRepository _transferRepository = transferRepository;
     private readonly IAccountTagRepository _accountTagRepository = accountTagRepository;
+    private readonly ICurrentUserProvider _currentUserProvider = currentUserProvider;
 
     public async Task<Result<Transfer>> Handle(UpdateTransferCommand command, CancellationToken cancellationToken)
     {
+        var currentUser = _currentUserProvider.GetCurrentUser();
         var (transferId, accountTagId, newTransferValue, relatedTo, description, settlementDate, type) = command;
 
         _logger.LogInformation("Retrieving current Monthly Balance of Transfer with Id {TransferId}", transferId);
@@ -68,7 +72,7 @@ internal sealed class UpdateTransferHandler(
 
             if (existingMonthlyBalance is null)
             {
-                var newMonthlyBalance = new MonthlyBalance(settlementDate, businessUnit);
+                var newMonthlyBalance = new MonthlyBalance(settlementDate, businessUnit, currentUser.Id);
                 transfer.Update(
                     newTransferValue,
                     relatedTo,

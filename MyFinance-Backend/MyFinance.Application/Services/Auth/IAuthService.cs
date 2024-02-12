@@ -1,7 +1,9 @@
-﻿namespace MyFinance.Application.Services.Auth;
+﻿using MyFinance.Domain.Entities;
+
+namespace MyFinance.Application.Services.Auth;
 
 public interface IAuthService
 {
-    Task SignInAsync(string userEmail);
+    Task SignInAsync(User user);
     Task SignOutAsync();
 }

@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
@@ -11,6 +12,22 @@ namespace MyFinance.Infra.Data.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
+                name: "Users",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
+                    Name = table.Column<string>(type: "TEXT", maxLength: 256, nullable: false),
+                    Email = table.Column<string>(type: "TEXT", maxLength: 256, nullable: false),
+                    PasswordHash = table.Column<string>(type: "TEXT", nullable: false),
+                    CreationDate = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    UpdateDate = table.Column<DateTime>(type: "TEXT", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Users", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "AccountTags",
                 columns: table => new
                 {
@@ -21,27 +38,18 @@ namespace MyFinance.Infra.Data.Migrations
                     ReasonToArchive = table.Column<string>(type: "TEXT", nullable: true),
                     ArchiveDate = table.Column<DateTime>(type: "TEXT", nullable: true),
                     CreationDate = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    UpdateDate = table.Column<DateTime>(type: "TEXT", nullable: true)
+                    UpdateDate = table.Column<DateTime>(type: "TEXT", nullable: true),
+                    UserId = table.Column<Guid>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AccountTags", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Users",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
-                    Name = table.Column<string>(type: "TEXT", maxLength: 256, nullable: false),
-                    Email = table.Column<string>(type: "TEXT", nullable: false),
-                    PasswordHash = table.Column<string>(type: "TEXT", nullable: false),
-                    CreationDate = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    UpdateDate = table.Column<DateTime>(type: "TEXT", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Users", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_AccountTags_Users_UserId",
+                        column: x => x.UserId,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -56,9 +64,9 @@ namespace MyFinance.Infra.Data.Migrations
                     IsArchived = table.Column<bool>(type: "INTEGER", nullable: false),
                     ReasonToArchive = table.Column<string>(type: "TEXT", nullable: true),
                     ArchiveDate = table.Column<DateTime>(type: "TEXT", nullable: true),
-                    UserId = table.Column<Guid>(type: "TEXT", nullable: false),
                     CreationDate = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    UpdateDate = table.Column<DateTime>(type: "TEXT", nullable: true)
+                    UpdateDate = table.Column<DateTime>(type: "TEXT", nullable: true),
+                    UserId = table.Column<Guid>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -82,7 +90,8 @@ namespace MyFinance.Infra.Data.Migrations
                     Outcome = table.Column<double>(type: "REAL", precision: 17, scale: 4, nullable: false),
                     BusinessUnitId = table.Column<Guid>(type: "TEXT", nullable: false),
                     CreationDate = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    UpdateDate = table.Column<DateTime>(type: "TEXT", nullable: true)
+                    UpdateDate = table.Column<DateTime>(type: "TEXT", nullable: true),
+                    UserId = table.Column<Guid>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -91,6 +100,12 @@ namespace MyFinance.Infra.Data.Migrations
                         name: "FK_MonthlyBalances_BusinessUnits_BusinessUnitId",
                         column: x => x.BusinessUnitId,
                         principalTable: "BusinessUnits",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_MonthlyBalances_Users_UserId",
+                        column: x => x.UserId,
+                        principalTable: "Users",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -108,7 +123,8 @@ namespace MyFinance.Infra.Data.Migrations
                     MonthlyBalanceId = table.Column<Guid>(type: "TEXT", nullable: false),
                     AccountTagId = table.Column<Guid>(type: "TEXT", nullable: false),
                     CreationDate = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    UpdateDate = table.Column<DateTime>(type: "TEXT", nullable: true)
+                    UpdateDate = table.Column<DateTime>(type: "TEXT", nullable: true),
+                    UserId = table.Column<Guid>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -125,6 +141,12 @@ namespace MyFinance.Infra.Data.Migrations
                         principalTable: "MonthlyBalances",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Transfers_Users_UserId",
+                        column: x => x.UserId,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
@@ -132,6 +154,11 @@ namespace MyFinance.Infra.Data.Migrations
                 table: "AccountTags",
                 column: "Tag",
                 unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AccountTags_UserId",
+                table: "AccountTags",
+                column: "UserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_BusinessUnits_Name",
@@ -150,6 +177,11 @@ namespace MyFinance.Infra.Data.Migrations
                 column: "BusinessUnitId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_MonthlyBalances_UserId",
+                table: "MonthlyBalances",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Transfers_AccountTagId",
                 table: "Transfers",
                 column: "AccountTagId");
@@ -158,6 +190,11 @@ namespace MyFinance.Infra.Data.Migrations
                 name: "IX_Transfers_MonthlyBalanceId",
                 table: "Transfers",
                 column: "MonthlyBalanceId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Transfers_UserId",
+                table: "Transfers",
+                column: "UserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Users_Email",

@@ -51,7 +51,7 @@ public static class DependencyInjections
                 options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
                 options.SlidingExpiration = true;
                 options.Cookie.IsEssential = true;
-                options.ExpireTimeSpan = TimeSpan.FromSeconds(60);
+                options.ExpireTimeSpan = TimeSpan.FromMinutes(20);
             });
 
         services.AddAuthorization();

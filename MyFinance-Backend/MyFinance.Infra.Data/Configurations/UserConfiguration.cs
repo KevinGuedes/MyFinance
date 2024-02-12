@@ -17,10 +17,5 @@ public sealed class UserConfiguration : EntityConfiguration<User>
         builder.Property(transfer => transfer.Name)
             .HasMaxLength(256)
             .IsRequired();
-
-        builder.HasMany(user => user.BusinessUnits)
-            .WithOne(bu => bu.User)
-            .HasForeignKey(bu => bu.UserId)
-            .IsRequired();
     }
 }

@@ -1,6 +1,6 @@
 ﻿namespace MyFinance.Domain.Entities;
 
-public class AccountTag : Entity
+public class AccountTag : UserOwnedEntity
 {
     public string Tag { get; private set; } = null!;
     public string? Description { get; private set; }
@@ -9,9 +9,9 @@ public class AccountTag : Entity
     public DateTime? ArchiveDate { get; private set; }
     public List<Transfer> Transfers { get; private set; } = [];
 
-    protected AccountTag() { }
+    private AccountTag() { }
 
-    public AccountTag(string tag, string? description)
+    public AccountTag(string tag, string? description, Guid userId) : base(userId)
     {
         Tag = tag;
         Description = description;

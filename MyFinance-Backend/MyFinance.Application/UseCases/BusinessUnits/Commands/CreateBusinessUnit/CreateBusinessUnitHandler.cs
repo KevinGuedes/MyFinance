@@ -16,16 +16,16 @@ internal sealed class CreateBusinessUnitHandler(
     private readonly IBusinessUnitRepository _businessUnitRepository = businessUnitRepository;
     private readonly ICurrentUserProvider _currentUserProvider = currentUserProvider;
 
-    public async Task<Result<BusinessUnit>> Handle(CreateBusinessUnitCommand command, CancellationToken cancellationToken)
+    public Task<Result<BusinessUnit>> Handle(CreateBusinessUnitCommand command, CancellationToken cancellationToken)
     {
         _logger.LogInformation("Retrieving current User");
-        var user = await _currentUserProvider.GetCurrentUserAsync(cancellationToken);
+        var currentUser = _currentUserProvider.GetCurrentUser();
 
         _logger.LogInformation("Creating new Business Unit");
-        var businessUnit = new BusinessUnit(command.Name, command.Description, user!);
+        var businessUnit = new BusinessUnit(command.Name, command.Description, currentUser.Id!);
         _businessUnitRepository.Insert(businessUnit);
         _logger.LogInformation("Business Unit successfully created");
 
-        return Result.Ok(businessUnit);
+        return Task.FromResult(Result.Ok(businessUnit));
     }
 }

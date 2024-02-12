@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Http;
+using MyFinance.Domain.Entities;
 using System.Security.Claims;
 
 namespace MyFinance.Application.Services.Auth;
@@ -9,11 +10,13 @@ public sealed class AuthService(IHttpContextAccessor httpContextAccessor) : IAut
 {
     private readonly IHttpContextAccessor _httpContextAccessor = httpContextAccessor;
 
-    public async Task SignInAsync(string userEmail)
+    public async Task SignInAsync(User user)
     {
         var claims = new List<Claim>
         {
-            new(ClaimTypes.Email, userEmail),
+            new(ClaimTypes.Email, user.Email),
+            new(ClaimTypes.Name, user.Name),
+            new("id", user.Id.ToString()),
         };
 
         var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);

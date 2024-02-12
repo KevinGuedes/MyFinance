@@ -30,7 +30,7 @@ public sealed class SignInCommandHandler(
             return HandleInvalidCredentials();
 
         _logger.LogInformation("Signing in user");
-        await _authService.SignInAsync(user.Email);
+        await _authService.SignInAsync(user);
         _logger.LogInformation("User successfully signed in");
 
         return Result.Ok();

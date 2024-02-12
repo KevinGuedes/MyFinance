@@ -14,10 +14,5 @@ public sealed class MonthlyBalanceConfiguration : EntityConfiguration<MonthlyBal
         builder.Property(mb => mb.ReferenceYear).IsRequired();
         builder.Property(mb => mb.ReferenceMonth).IsRequired();
         builder.Ignore(mb => mb.Balance);
-
-        builder.HasMany(mb => mb.Transfers)
-            .WithOne(t => t.MonthlyBalance)
-            .HasForeignKey(t => t.MonthlyBalanceId)
-            .IsRequired();
     }
 }

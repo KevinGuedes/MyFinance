@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Logging;
 using MyFinance.Application.Common.Errors;
 using MyFinance.Application.Common.RequestHandling.Commands;
+using MyFinance.Application.Services.CurrentUserProvider;
 using MyFinance.Domain.Entities;
 using MyFinance.Domain.Interfaces;
 
@@ -12,16 +13,19 @@ internal sealed class RegisterTransferHandler(
     IMonthlyBalanceRepository monthlyBalanceRepository,
     IBusinessUnitRepository businessUnitRepository,
     ITransferRepository transferRepository,
-    IAccountTagRepository accountTagRepository) : ICommandHandler<RegisterTransferCommand, Transfer>
+    IAccountTagRepository accountTagRepository,
+    ICurrentUserProvider currentUserProvider) : ICommandHandler<RegisterTransferCommand, Transfer>
 {
     private readonly ILogger<RegisterTransferHandler> _logger = logger;
     private readonly IMonthlyBalanceRepository _monthlyBalanceRepository = monthlyBalanceRepository;
     private readonly IBusinessUnitRepository _businessUnitRepository = businessUnitRepository;
     private readonly ITransferRepository _transferRepository = transferRepository;
     private readonly IAccountTagRepository _accountTagRepository = accountTagRepository;
+    private readonly ICurrentUserProvider _currentUserProvider = currentUserProvider;
 
     public async Task<Result<Transfer>> Handle(RegisterTransferCommand command, CancellationToken cancellationToken)
     {
+        var currentUser = _currentUserProvider.GetCurrentUser();
         var (businessUnitId, accountTagId, value, relatedTo, description, settlementDate, type) = command;
 
         _logger.LogInformation("Retriving Business Unit with Id {BusinessUnitId}", businessUnitId);
@@ -57,7 +61,7 @@ internal sealed class RegisterTransferHandler(
         if (monthlyBalance is null)
         {
             _logger.LogInformation("Creating new Monthly Balance");
-            monthlyBalance = new MonthlyBalance(settlementDate, businessUnit);
+            monthlyBalance = new MonthlyBalance(settlementDate, businessUnit, currentUser.Id);
             monthlyBalance.RegisterValue(value, type);
             _monthlyBalanceRepository.Insert(monthlyBalance);
         }
@@ -69,7 +73,7 @@ internal sealed class RegisterTransferHandler(
         }
 
         _logger.LogInformation("Creating new Transfer");
-        var transfer = new Transfer(value, relatedTo, description, settlementDate, type, monthlyBalance, accountTag);
+        var transfer = new Transfer(value, relatedTo, description, settlementDate, type, monthlyBalance, accountTag, currentUser.Id);
         _transferRepository.Insert(transfer);
         _logger.LogInformation("New transfer successfully registered");
 

@@ -1,21 +1,18 @@
 ﻿using Microsoft.AspNetCore.Http;
-using MyFinance.Domain.Entities;
-using MyFinance.Domain.Interfaces;
 using System.Security.Claims;
 
 namespace MyFinance.Application.Services.CurrentUserProvider;
 
-public sealed class CurrentUserProvider(
-    IHttpContextAccessor httpContextAccessor,
-    IUserRepository userRepository) : ICurrentUserProvider
+public sealed class CurrentUserProvider(IHttpContextAccessor httpContextAccessor) : ICurrentUserProvider
 {
     private readonly IHttpContextAccessor _httpContextAccessor = httpContextAccessor;
-    private readonly IUserRepository _userRepository = userRepository;
 
-    public Task<User?> GetCurrentUserAsync(CancellationToken cancellationToken)
+    public CurrentUser GetCurrentUser()
     {
-        var userEmail = GetValueByClaimType(ClaimTypes.Email);
-        return _userRepository.GetByEmailAsync(userEmail, cancellationToken);
+        var id = Guid.Parse(GetValueByClaimType("id"));
+        var name = GetValueByClaimType(ClaimTypes.Name);
+        var email = GetValueByClaimType(ClaimTypes.Email);
+        return new(id, name, email);
     }
 
     private string GetValueByClaimType(string claimType)

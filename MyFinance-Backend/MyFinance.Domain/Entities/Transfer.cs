@@ -2,7 +2,7 @@
 
 namespace MyFinance.Domain.Entities;
 
-public class Transfer : Entity
+public class Transfer : UserOwnedEntity
 {
     public double Value { get; private set; }
     public string RelatedTo { get; private set; } = null!;
@@ -14,7 +14,7 @@ public class Transfer : Entity
     public Guid AccountTagId { get; private set; }
     public AccountTag AccountTag { get; private set; } = null!;
 
-    protected Transfer() { }
+    private Transfer() { }
 
     public Transfer(
         double value,
@@ -23,7 +23,8 @@ public class Transfer : Entity
         DateTime settlementDate,
         TransferType type,
         MonthlyBalance monthlyBalance,
-        AccountTag accountTag)
+        AccountTag accountTag,
+        Guid userId) : base(userId)
     {
         Value = value;
         RelatedTo = relatedTo;

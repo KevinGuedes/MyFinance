@@ -2,7 +2,7 @@
 
 namespace MyFinance.Domain.Entities;
 
-public class MonthlyBalance : Entity
+public class MonthlyBalance : UserOwnedEntity
 {
     public int ReferenceYear { get; init; }
     public int ReferenceMonth { get; init; }
@@ -13,9 +13,9 @@ public class MonthlyBalance : Entity
     public BusinessUnit BusinessUnit { get; private set; } = null!;
     public List<Transfer> Transfers { get; private set; } = [];
 
-    protected MonthlyBalance() { }
+    private MonthlyBalance() { }
 
-    public MonthlyBalance(DateTime referenceDate, BusinessUnit businessUnit)
+    public MonthlyBalance(DateTime referenceDate, BusinessUnit businessUnit, Guid userId) : base(userId)
     {
         Income = 0;
         Outcome = 0;
