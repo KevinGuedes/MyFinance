@@ -1,4 +1,4 @@
-﻿namespace MyFinance.Services.PasswordHasher;
+﻿namespace MyFinance.Application.Services.PasswordHasher;
 
 public interface IPasswordHasher
 {

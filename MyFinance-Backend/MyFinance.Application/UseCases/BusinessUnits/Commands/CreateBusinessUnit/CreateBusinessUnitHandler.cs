@@ -1,9 +1,9 @@
 ﻿using FluentResults;
 using Microsoft.Extensions.Logging;
 using MyFinance.Application.Common.RequestHandling.Commands;
+using MyFinance.Application.Services.CurrentUserProvider;
 using MyFinance.Domain.Entities;
 using MyFinance.Domain.Interfaces;
-using MyFinance.Infra.Services.CurrentUserProvider;
 
 namespace MyFinance.Application.UseCases.BusinessUnits.Commands.CreateBusinessUnit;
 

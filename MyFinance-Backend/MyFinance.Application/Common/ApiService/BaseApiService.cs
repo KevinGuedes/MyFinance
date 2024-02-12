@@ -1,5 +1,4 @@
-﻿using ClosedXML.Excel;
-using FluentResults;
+﻿using FluentResults;
 using MediatR;
 
 namespace MyFinance.Application.Common.ApiService;
@@ -12,7 +11,8 @@ public abstract class BaseApiService(IMediator mediator)
         Result<TSource> result,
         Func<TSource, TTarget> mapper)
     {
-        if (result.IsSuccess) return result.ToResult(mapper);
+        if (result.IsSuccess)
+            return result.ToResult(mapper);
         return result.ToResult<TTarget>();
     }
 
@@ -20,7 +20,8 @@ public abstract class BaseApiService(IMediator mediator)
         Result<IEnumerable<TSource>> result,
         Func<IEnumerable<TSource>, IEnumerable<TTarget>> mapper)
     {
-        if (result.IsSuccess) return result.ToResult(mapper);
+        if (result.IsSuccess)
+            return result.ToResult(mapper);
         return result.ToResult<IEnumerable<TTarget>>();
     }
 }

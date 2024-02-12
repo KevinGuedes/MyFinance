@@ -13,7 +13,8 @@ public class ErrorController : BaseController
         var internalServerError = new InternalServerError();
 
         var exception = HttpContext.Features.Get<IExceptionHandlerFeature>();
-        if (exception is not null) internalServerError.CausedBy(exception.Error);
+        if (exception is not null)
+            internalServerError.CausedBy(exception.Error);
 
         return BuildInternalServerErrorResponse(internalServerError);
     }

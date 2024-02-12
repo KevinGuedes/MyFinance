@@ -1,6 +1,6 @@
 ﻿using MyFinance.Domain.Entities;
 
-namespace MyFinance.Services.CurrentUserProvider;
+namespace MyFinance.Application.Services.CurrentUserProvider;
 
 public interface ICurrentUserProvider
 {

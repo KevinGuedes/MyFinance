@@ -26,7 +26,7 @@ public sealed class UnitOfWorkBehavior<TRequest, TResponse>(
 
             var response = await next();
 
-            if(!_unitOfWork.HasChanges())
+            if (!_unitOfWork.HasChanges())
             {
                 _logger.LogInformation("[{RequestName}] No database changes detected", requestName);
                 return response;
@@ -43,7 +43,7 @@ public sealed class UnitOfWorkBehavior<TRequest, TResponse>(
 
             return response;
         }
-        catch(Exception exception)
+        catch (Exception exception)
         {
             _logger.LogCritical(exception, "[{RequestName}] Changes not commited due to exception", requestName);
             throw;

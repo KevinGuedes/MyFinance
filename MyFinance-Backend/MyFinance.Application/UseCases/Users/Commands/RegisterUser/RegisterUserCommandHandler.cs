@@ -1,11 +1,9 @@
 ﻿using FluentResults;
 using Microsoft.Extensions.Logging;
-using MyFinance.Application.Common.Errors;
 using MyFinance.Application.Common.RequestHandling.Commands;
+using MyFinance.Application.Services.PasswordHasher;
 using MyFinance.Domain.Entities;
 using MyFinance.Domain.Interfaces;
-using MyFinance.Infra.Services.Auth;
-using MyFinance.Infra.Services.PasswordHasher;
 
 namespace MyFinance.Application.UseCases.Users.Commands.RegisterUser;
 

@@ -26,13 +26,15 @@ public abstract class BaseController : ControllerBase
 
     protected IActionResult ProcessResult(Result result)
     {
-        if (result.IsSuccess) return NoContent();
+        if (result.IsSuccess)
+            return NoContent();
         return HandleFailureResult(result.Errors);
     }
 
     protected IActionResult ProcessFileResult(Result<Tuple<string, byte[]>> result, string contentType)
     {
-        if (result.IsFailed) return HandleFailureResult(result.Errors);
+        if (result.IsFailed)
+            return HandleFailureResult(result.Errors);
 
         var (fileName, fileContent) = result.Value;
         return File(fileContent, contentType, fileName, true);
@@ -41,19 +43,24 @@ public abstract class BaseController : ControllerBase
     protected IActionResult HandleFailureResult(List<IError> errors)
     {
         var invalidRequestError = errors.OfType<InvalidRequestError>().FirstOrDefault();
-        if (invalidRequestError is not null) return BuildBadRequestResponse(invalidRequestError);
+        if (invalidRequestError is not null)
+            return BuildBadRequestResponse(invalidRequestError);
 
         var entityNotFoundError = errors.OfType<EntityNotFoundError>().FirstOrDefault();
-        if (entityNotFoundError is not null) return BuildNotFoundResponse(entityNotFoundError);
+        if (entityNotFoundError is not null)
+            return BuildNotFoundResponse(entityNotFoundError);
 
         var unprocessableEntityError = errors.OfType<UnprocessableEntityError>().FirstOrDefault();
-        if (unprocessableEntityError is not null) return BuildUnprocessableEntityResponse(unprocessableEntityError);
+        if (unprocessableEntityError is not null)
+            return BuildUnprocessableEntityResponse(unprocessableEntityError);
 
         var unauthorizedError = errors.OfType<UnauthorizedError>().FirstOrDefault();
-        if (unauthorizedError is not null) return BuildUnauthorizedResponse(unauthorizedError);
+        if (unauthorizedError is not null)
+            return BuildUnauthorizedResponse(unauthorizedError);
 
         var conflictError = errors.OfType<ConflictError>().FirstOrDefault();
-        if (conflictError is not null) return BuildConflictResponse(conflictError);
+        if (conflictError is not null)
+            return BuildConflictResponse(conflictError);
 
         var internalServerError = new InternalServerError();
         return BuildInternalServerErrorResponse(internalServerError);

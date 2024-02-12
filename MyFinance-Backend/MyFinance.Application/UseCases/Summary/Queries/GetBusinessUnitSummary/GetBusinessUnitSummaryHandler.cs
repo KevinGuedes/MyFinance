@@ -3,8 +3,8 @@ using FluentResults;
 using Microsoft.Extensions.Logging;
 using MyFinance.Application.Common.Errors;
 using MyFinance.Application.Common.RequestHandling.Queries;
+using MyFinance.Application.Services.Spreadsheet;
 using MyFinance.Domain.Interfaces;
-using MyFinance.Infra.Services.Spreadsheet;
 
 namespace MyFinance.Application.UseCases.Summary.Queries.GetBusinessUnitSummary;
 

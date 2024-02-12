@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Http;
 using System.Security.Claims;
 
-namespace MyFinance.Services.Auth;
+namespace MyFinance.Application.Services.Auth;
 
 public sealed class AuthService(IHttpContextAccessor httpContextAccessor) : IAuthService
 {
@@ -21,8 +21,8 @@ public sealed class AuthService(IHttpContextAccessor httpContextAccessor) : IAut
         var authProperties = new AuthenticationProperties { IsPersistent = true };
 
         await _httpContextAccessor.HttpContext.SignInAsync(
-                CookieAuthenticationDefaults.AuthenticationScheme, 
-                principal, 
+                CookieAuthenticationDefaults.AuthenticationScheme,
+                principal,
                 authProperties);
     }
 

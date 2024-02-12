@@ -31,7 +31,8 @@ public sealed class UpdateBusinessUnitValidator : AbstractValidator<UpdateBusine
            .MustAsync(async (command, newBusinessUnitName, cancellationToken) =>
            {
                var existingBusinessUnit = await _businessUnitRepository.GetByNameAsync(newBusinessUnitName, cancellationToken);
-               if (existingBusinessUnit is null) return true;
+               if (existingBusinessUnit is null)
+                   return true;
 
                var isValidName = existingBusinessUnit.Id == command.Id;
                return isValidName;

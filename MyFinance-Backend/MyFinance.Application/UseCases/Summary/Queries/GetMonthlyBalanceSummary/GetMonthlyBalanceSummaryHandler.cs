@@ -3,7 +3,7 @@ using FluentResults;
 using Microsoft.Extensions.Logging;
 using MyFinance.Application.Common.Errors;
 using MyFinance.Application.Common.RequestHandling.Queries;
-using MyFinance.Infra.Services.Spreadsheet;
+using MyFinance.Application.Services.Spreadsheet;
 using MyFinance.Domain.Interfaces;
 
 namespace MyFinance.Application.UseCases.Summary.Queries.GetMonthlyBalanceSummary;

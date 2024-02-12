@@ -29,14 +29,18 @@ public class MonthlyBalance : Entity
     public void RegisterValue(double transferValue, TransferType transferType)
     {
         SetUpdateDateToNow();
-        if (transferType == TransferType.Profit) Income += transferValue;
-        else Outcome += transferValue;
+        if (transferType == TransferType.Profit)
+            Income += transferValue;
+        else
+            Outcome += transferValue;
     }
 
     public void CancelValue(double transferValue, TransferType transferType)
     {
         SetUpdateDateToNow();
-        if (transferType == TransferType.Profit) Income -= transferValue;
-        else Outcome -= transferValue;
+        if (transferType == TransferType.Profit)
+            Income -= transferValue;
+        else
+            Outcome -= transferValue;
     }
 }

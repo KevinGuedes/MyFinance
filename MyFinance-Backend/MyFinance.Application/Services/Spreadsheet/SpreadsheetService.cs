@@ -3,7 +3,7 @@ using MyFinance.Domain.Entities;
 using MyFinance.Domain.Enums;
 using System.Globalization;
 
-namespace MyFinance.Services.Spreadsheet;
+namespace MyFinance.Application.Services.Spreadsheet;
 
 public sealed class SpreadsheetService : ISpreadsheetService
 {

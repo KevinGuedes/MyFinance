@@ -3,10 +3,10 @@ using MyFinance.Domain.Entities;
 using MyFinance.Domain.Interfaces;
 using System.Security.Claims;
 
-namespace MyFinance.Services.CurrentUserProvider;
+namespace MyFinance.Application.Services.CurrentUserProvider;
 
 public sealed class CurrentUserProvider(
-    IHttpContextAccessor httpContextAccessor, 
+    IHttpContextAccessor httpContextAccessor,
     IUserRepository userRepository) : ICurrentUserProvider
 {
     private readonly IHttpContextAccessor _httpContextAccessor = httpContextAccessor;
@@ -18,7 +18,7 @@ public sealed class CurrentUserProvider(
         return _userRepository.GetByEmailAsync(userEmail, cancellationToken);
     }
 
-    private string GetValueByClaimType(string claimType) 
+    private string GetValueByClaimType(string claimType)
         => _httpContextAccessor.HttpContext!.User.Claims
             .Single(claim => claim.Type == claimType)
             .Value;

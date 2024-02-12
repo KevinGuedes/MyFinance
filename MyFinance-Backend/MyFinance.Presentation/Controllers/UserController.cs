@@ -26,7 +26,7 @@ public class UserController(IUserApiService userApiService) : BaseController
     [AllowAnonymous]
     [HttpPost("SignIn")]
     [SwaggerOperation(Summary = "Signs in an existing User")]
-    [SwaggerResponse(StatusCodes.Status204NoContent,"User successfully signed in")]
+    [SwaggerResponse(StatusCodes.Status204NoContent, "User successfully signed in")]
     [SwaggerResponse(StatusCodes.Status401Unauthorized, "Invalid credentials", typeof(UnauthorizedResponse))]
     [SwaggerResponse(StatusCodes.Status404NotFound, "User not found", typeof(EntityNotFoundResponse))]
     public async Task<IActionResult> SignInAsync(

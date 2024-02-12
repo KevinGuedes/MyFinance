@@ -1,6 +1,6 @@
 ﻿using BC = BCrypt.Net.BCrypt;
 
-namespace MyFinance.Services.PasswordHasher;
+namespace MyFinance.Application.Services.PasswordHasher;
 
 public sealed class PasswordHasher : IPasswordHasher
 {

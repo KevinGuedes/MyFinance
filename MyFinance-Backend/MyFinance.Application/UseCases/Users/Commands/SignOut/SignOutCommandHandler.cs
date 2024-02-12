@@ -1,7 +1,7 @@
 ﻿using FluentResults;
 using Microsoft.Extensions.Logging;
 using MyFinance.Application.Common.RequestHandling.Commands;
-using MyFinance.Infra.Services.Auth;
+using MyFinance.Application.Services.Auth;
 
 namespace MyFinance.Application.UseCases.Users.Commands.SignOut;
 

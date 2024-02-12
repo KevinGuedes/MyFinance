@@ -2,9 +2,9 @@
 using Microsoft.Extensions.Logging;
 using MyFinance.Application.Common.Errors;
 using MyFinance.Application.Common.RequestHandling.Commands;
+using MyFinance.Application.Services.Auth;
+using MyFinance.Application.Services.PasswordHasher;
 using MyFinance.Domain.Interfaces;
-using MyFinance.Infra.Services.Auth;
-using MyFinance.Infra.Services.PasswordHasher;
 
 namespace MyFinance.Application.UseCases.Users.Commands.SignIn;
 
@@ -22,10 +22,12 @@ public sealed class SignInCommandHandler(
     public async Task<Result> Handle(SignInCommand request, CancellationToken cancellationToken)
     {
         var user = await _userRepository.GetByEmailAsync(request.Email, cancellationToken);
-        if (user is null) return HandleInvalidCredentials();
+        if (user is null)
+            return HandleInvalidCredentials();
 
         var isPasswordValid = _passwordHasher.VerifyPassword(request.PlainTextPassword, user.PasswordHash);
-        if (!isPasswordValid) return HandleInvalidCredentials();
+        if (!isPasswordValid)
+            return HandleInvalidCredentials();
 
         _logger.LogInformation("Signing in user");
         await _authService.SignInAsync(user.Email);

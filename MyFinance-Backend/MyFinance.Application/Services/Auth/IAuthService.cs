@@ -1,4 +1,4 @@
-﻿namespace MyFinance.Services.Auth;
+﻿namespace MyFinance.Application.Services.Auth;
 
 public interface IAuthService
 {
