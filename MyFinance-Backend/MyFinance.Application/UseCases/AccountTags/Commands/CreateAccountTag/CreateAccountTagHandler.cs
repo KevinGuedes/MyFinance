@@ -18,10 +18,10 @@ internal sealed class CreateAccountTagHandler(
 
     public Task<Result<AccountTag>> Handle(CreateAccountTagCommand command, CancellationToken cancellationToken)
     {
-        var currentUser = _currentUserProvider.GetCurrentUser();
+        var currentUserId = _currentUserProvider.GetCurrentUserId();
 
         _logger.LogInformation("Creating new Account Tag Unit");
-        var accountTag = new AccountTag(command.Tag, command.Description, currentUser.Id);
+        var accountTag = new AccountTag(command.Tag, command.Description, currentUserId);
         _accountTagRepository.Insert(accountTag);
         _logger.LogInformation("Account Tag successfully created");
 

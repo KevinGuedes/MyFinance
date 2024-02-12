@@ -25,7 +25,7 @@ internal sealed class UpdateTransferHandler(
 
     public async Task<Result<Transfer>> Handle(UpdateTransferCommand command, CancellationToken cancellationToken)
     {
-        var currentUser = _currentUserProvider.GetCurrentUser();
+        var currentUserId = _currentUserProvider.GetCurrentUserId();
         var (transferId, accountTagId, newTransferValue, relatedTo, description, settlementDate, type) = command;
 
         _logger.LogInformation("Retrieving current Monthly Balance of Transfer with Id {TransferId}", transferId);
@@ -72,7 +72,7 @@ internal sealed class UpdateTransferHandler(
 
             if (existingMonthlyBalance is null)
             {
-                var newMonthlyBalance = new MonthlyBalance(settlementDate, businessUnit, currentUser.Id);
+                var newMonthlyBalance = new MonthlyBalance(settlementDate, businessUnit, currentUserId);
                 transfer.Update(
                     newTransferValue,
                     relatedTo,

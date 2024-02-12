@@ -25,7 +25,7 @@ internal sealed class RegisterTransferHandler(
 
     public async Task<Result<Transfer>> Handle(RegisterTransferCommand command, CancellationToken cancellationToken)
     {
-        var currentUser = _currentUserProvider.GetCurrentUser();
+        var currentUserId = _currentUserProvider.GetCurrentUserId();
         var (businessUnitId, accountTagId, value, relatedTo, description, settlementDate, type) = command;
 
         _logger.LogInformation("Retriving Business Unit with Id {BusinessUnitId}", businessUnitId);
@@ -61,7 +61,7 @@ internal sealed class RegisterTransferHandler(
         if (monthlyBalance is null)
         {
             _logger.LogInformation("Creating new Monthly Balance");
-            monthlyBalance = new MonthlyBalance(settlementDate, businessUnit, currentUser.Id);
+            monthlyBalance = new MonthlyBalance(settlementDate, businessUnit, currentUserId);
             monthlyBalance.RegisterValue(value, type);
             _monthlyBalanceRepository.Insert(monthlyBalance);
         }
@@ -73,7 +73,7 @@ internal sealed class RegisterTransferHandler(
         }
 
         _logger.LogInformation("Creating new Transfer");
-        var transfer = new Transfer(value, relatedTo, description, settlementDate, type, monthlyBalance, accountTag, currentUser.Id);
+        var transfer = new Transfer(value, relatedTo, description, settlementDate, type, monthlyBalance, accountTag, currentUserId);
         _transferRepository.Insert(transfer);
         _logger.LogInformation("New transfer successfully registered");
 

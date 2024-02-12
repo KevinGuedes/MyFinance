@@ -19,10 +19,10 @@ internal sealed class CreateBusinessUnitHandler(
     public Task<Result<BusinessUnit>> Handle(CreateBusinessUnitCommand command, CancellationToken cancellationToken)
     {
         _logger.LogInformation("Retrieving current User");
-        var currentUser = _currentUserProvider.GetCurrentUser();
+        var currentUserId = _currentUserProvider.GetCurrentUserId();
 
         _logger.LogInformation("Creating new Business Unit");
-        var businessUnit = new BusinessUnit(command.Name, command.Description, currentUser.Id!);
+        var businessUnit = new BusinessUnit(command.Name, command.Description, currentUserId);
         _businessUnitRepository.Insert(businessUnit);
         _logger.LogInformation("Business Unit successfully created");
 
