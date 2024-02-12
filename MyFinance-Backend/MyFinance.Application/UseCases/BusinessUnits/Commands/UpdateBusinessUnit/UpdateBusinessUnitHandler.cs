@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Logging;
 using MyFinance.Application.Common.Errors;
 using MyFinance.Application.Common.RequestHandling.Commands;
+using MyFinance.Application.Services.CurrentUserProvider;
 using MyFinance.Domain.Entities;
 using MyFinance.Domain.Interfaces;
 
@@ -9,15 +10,19 @@ namespace MyFinance.Application.UseCases.BusinessUnits.Commands.UpdateBusinessUn
 
 internal sealed class UpdateBusinessUnitHandler(
     ILogger<UpdateBusinessUnitHandler> logger,
-    IBusinessUnitRepository businessUnitRepository) : ICommandHandler<UpdateBusinessUnitCommand, BusinessUnit>
+    IBusinessUnitRepository businessUnitRepository,
+    ICurrentUserProvider currentUserProvider) : ICommandHandler<UpdateBusinessUnitCommand, BusinessUnit>
 {
     private readonly ILogger<UpdateBusinessUnitHandler> _logger = logger;
     private readonly IBusinessUnitRepository _businessUnitRepository = businessUnitRepository;
+    private readonly ICurrentUserProvider _currentUserProvider = currentUserProvider;
 
     public async Task<Result<BusinessUnit>> Handle(UpdateBusinessUnitCommand command, CancellationToken cancellationToken)
     {
+        var currentUserId = _currentUserProvider.GetCurrentUserId();
+
         _logger.LogInformation("Retrieving Business Unit with Id {BusinessUnitId} from database", command.Id);
-        var businessUnit = await _businessUnitRepository.GetByIdAsync(command.Id, cancellationToken);
+        var businessUnit = await _businessUnitRepository.GetByIdAsync(command.Id, currentUserId, cancellationToken);
 
         if (businessUnit is null)
         {

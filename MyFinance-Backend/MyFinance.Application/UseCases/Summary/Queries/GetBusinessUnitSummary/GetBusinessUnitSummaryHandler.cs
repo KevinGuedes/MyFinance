@@ -3,6 +3,7 @@ using FluentResults;
 using Microsoft.Extensions.Logging;
 using MyFinance.Application.Common.Errors;
 using MyFinance.Application.Common.RequestHandling.Queries;
+using MyFinance.Application.Services.CurrentUserProvider;
 using MyFinance.Application.Services.Spreadsheet;
 using MyFinance.Domain.Interfaces;
 
@@ -11,17 +12,25 @@ namespace MyFinance.Application.UseCases.Summary.Queries.GetBusinessUnitSummary;
 internal sealed class GetBusinessUnitSummaryHandler(
     ILogger<GetBusinessUnitSummaryHandler> logger,
     IBusinessUnitRepository businessUnitRepository,
-    ISpreadsheetService spreadsheetService)
+    ISpreadsheetService spreadsheetService,
+    ICurrentUserProvider currentUserProvider)
     : IQueryHandler<GetBusinessUnitSummaryQuery, Tuple<string, XLWorkbook>>
 {
     private readonly ILogger<GetBusinessUnitSummaryHandler> _logger = logger;
     private readonly IBusinessUnitRepository _businessUnitRepository = businessUnitRepository;
     private readonly ISpreadsheetService _spreadsheetService = spreadsheetService;
+    private readonly ICurrentUserProvider _currentUserProvider = currentUserProvider;
 
     public async Task<Result<Tuple<string, XLWorkbook>>> Handle(GetBusinessUnitSummaryQuery query, CancellationToken cancellationToken)
     {
+        var currentUserId = _currentUserProvider.GetCurrentUserId();
+
         _logger.LogInformation("Retrieving Business Unit with Id {BusinessUnitId} ", query.Id);
-        var businessUnit = await _businessUnitRepository.GetWithSummaryData(query.Id, query.Year, cancellationToken);
+        var businessUnit = await _businessUnitRepository.GetWithSummaryData(
+            query.Id, 
+            query.Year,
+            currentUserId,
+            cancellationToken);
 
         if (businessUnit is null)
         {

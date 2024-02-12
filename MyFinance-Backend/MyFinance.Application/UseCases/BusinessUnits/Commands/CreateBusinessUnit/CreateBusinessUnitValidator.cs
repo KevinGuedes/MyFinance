@@ -1,4 +1,5 @@
 ﻿using FluentValidation;
+using MyFinance.Application.Services.CurrentUserProvider;
 using MyFinance.Domain.Interfaces;
 
 namespace MyFinance.Application.UseCases.BusinessUnits.Commands.CreateBusinessUnit;
@@ -6,10 +7,12 @@ namespace MyFinance.Application.UseCases.BusinessUnits.Commands.CreateBusinessUn
 public sealed class CreateBusinessUnitValidator : AbstractValidator<CreateBusinessUnitCommand>
 {
     private readonly IBusinessUnitRepository _businessUnitRepository;
+    private readonly ICurrentUserProvider _currentUserProvider;
 
-    public CreateBusinessUnitValidator(IBusinessUnitRepository businessUnitRepository)
+    public CreateBusinessUnitValidator(IBusinessUnitRepository businessUnitRepository, ICurrentUserProvider currentUserProvider)
     {
         _businessUnitRepository = businessUnitRepository;
+        _currentUserProvider = currentUserProvider;
         ClassLevelCascadeMode = CascadeMode.Stop;
 
         When(command => command.Description is not null, () =>
@@ -27,7 +30,8 @@ public sealed class CreateBusinessUnitValidator : AbstractValidator<CreateBusine
            .Length(3, 30).WithMessage("{PropertyName} must have between 3 and 30 characters")
            .MustAsync(async (businessUnitName, cancellationToken) =>
            {
-               var exists = await _businessUnitRepository.ExistsByNameAsync(businessUnitName, cancellationToken);
+               var currentUserId = _currentUserProvider.GetCurrentUserId();
+               var exists = await _businessUnitRepository.ExistsByNameAsync(businessUnitName, currentUserId, cancellationToken);
                return !exists;
            }).WithMessage("This {PropertyName} has already been taken");
     }

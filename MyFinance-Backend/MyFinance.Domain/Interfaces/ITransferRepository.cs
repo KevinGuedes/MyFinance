@@ -2,6 +2,6 @@
 
 namespace MyFinance.Domain.Interfaces;
 
-public interface ITransferRepository : IEntityRepository<Transfer>
+public interface ITransferRepository : IUserOwnedEntityRepository<Transfer>
 {
 }

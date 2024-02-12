@@ -6,13 +6,15 @@ using MyFinance.Infra.Data.Context;
 namespace MyFinance.Infra.Data.Repositories;
 
 public sealed class MonthlyBalanceRepository(MyFinanceDbContext myFinanceDbContext)
-    : EntityRepository<MonthlyBalance>(myFinanceDbContext), IMonthlyBalanceRepository
+    : UserOwnedEntityRepository<MonthlyBalance>(myFinanceDbContext), IMonthlyBalanceRepository
 {
     public Task<MonthlyBalance?> GetByReferenceDateAndBusinessUnitId(
         DateTime referenceDate,
         Guid businessUnitId,
+        Guid userId,
         CancellationToken cancellationToken)
         => _myFinanceDbContext.MonthlyBalances
+            .Where(mb => mb.UserId == userId)
             .FirstOrDefaultAsync(
                 mb => mb.ReferenceYear == referenceDate.Year &&
                 mb.ReferenceMonth == referenceDate.Month &&
@@ -23,9 +25,10 @@ public sealed class MonthlyBalanceRepository(MyFinanceDbContext myFinanceDbConte
         Guid businessUnitId,
         int page,
         int pageSize,
+        Guid userId,
         CancellationToken cancellationToken)
         => await _myFinanceDbContext.MonthlyBalances
-            .Where(mb => mb.BusinessUnitId == businessUnitId)
+            .Where(mb => mb.BusinessUnitId == businessUnitId && mb.UserId == userId)
             .OrderByDescending(mb => mb.ReferenceYear)
             .ThenByDescending(mb => mb.ReferenceMonth)
             .Skip((page - 1) * pageSize)
@@ -33,8 +36,12 @@ public sealed class MonthlyBalanceRepository(MyFinanceDbContext myFinanceDbConte
             .AsNoTracking()
             .ToListAsync(cancellationToken);
 
-    public Task<MonthlyBalance?> GetWithSummaryData(Guid id, CancellationToken cancellationToken)
+    public Task<MonthlyBalance?> GetWithSummaryData(
+        Guid id,
+        Guid userId,
+        CancellationToken cancellationToken)
        => _myFinanceDbContext.MonthlyBalances
+            .Where(mb => mb.UserId == userId)
             .Include(mb => mb.BusinessUnit)
             .Include(mb => mb.Transfers
                 .OrderByDescending(t => t.CreationDate)

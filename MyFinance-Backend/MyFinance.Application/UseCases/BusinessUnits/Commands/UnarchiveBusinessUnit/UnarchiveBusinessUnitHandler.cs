@@ -2,21 +2,26 @@
 using Microsoft.Extensions.Logging;
 using MyFinance.Application.Common.Errors;
 using MyFinance.Application.Common.RequestHandling.Commands;
+using MyFinance.Application.Services.CurrentUserProvider;
 using MyFinance.Domain.Interfaces;
 
 namespace MyFinance.Application.UseCases.BusinessUnits.Commands.UnarchiveBusinessUnit;
 
 public class UnarchiveBusinessUnitHandler(
     ILogger<UnarchiveBusinessUnitHandler> logger,
-    IBusinessUnitRepository businessUnitRepository) : ICommandHandler<UnarchiveBusinessUnitCommand>
+    IBusinessUnitRepository businessUnitRepository,
+    ICurrentUserProvider currentUserProvider) : ICommandHandler<UnarchiveBusinessUnitCommand>
 {
     private readonly ILogger<UnarchiveBusinessUnitHandler> _logger = logger;
     private readonly IBusinessUnitRepository _businessUnitRepository = businessUnitRepository;
+    private readonly ICurrentUserProvider _currentUserProvider = currentUserProvider;
 
     public async Task<Result> Handle(UnarchiveBusinessUnitCommand command, CancellationToken cancellationToken)
     {
+        var currentUserId = _currentUserProvider.GetCurrentUserId();
+
         _logger.LogInformation("Retrieving Business Unit with Id {BusinessUnitId}", command.Id);
-        var businessUnit = await _businessUnitRepository.GetByIdAsync(command.Id, cancellationToken);
+        var businessUnit = await _businessUnitRepository.GetByIdAsync(command.Id, currentUserId, cancellationToken);
 
         if (businessUnit is null)
         {

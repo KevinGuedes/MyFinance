@@ -1,4 +1,5 @@
 ﻿using FluentValidation;
+using MyFinance.Application.Services.CurrentUserProvider;
 using MyFinance.Domain.Interfaces;
 
 namespace MyFinance.Application.UseCases.BusinessUnits.Commands.UpdateBusinessUnit;
@@ -6,10 +7,12 @@ namespace MyFinance.Application.UseCases.BusinessUnits.Commands.UpdateBusinessUn
 public sealed class UpdateBusinessUnitValidator : AbstractValidator<UpdateBusinessUnitCommand>
 {
     private readonly IBusinessUnitRepository _businessUnitRepository;
+    private readonly ICurrentUserProvider _currentUserProvider;
 
-    public UpdateBusinessUnitValidator(IBusinessUnitRepository businessUnitRepository)
+    public UpdateBusinessUnitValidator(IBusinessUnitRepository businessUnitRepository, ICurrentUserProvider currentUserProvider)
     {
         _businessUnitRepository = businessUnitRepository;
+        _currentUserProvider = currentUserProvider;
         ClassLevelCascadeMode = CascadeMode.Stop;
 
         When(command => command.Description is not null, () =>
@@ -30,7 +33,13 @@ public sealed class UpdateBusinessUnitValidator : AbstractValidator<UpdateBusine
            .Length(3, 30).WithMessage("{PropertyName} must have between 3 and 30 characters")
            .MustAsync(async (command, newBusinessUnitName, cancellationToken) =>
            {
-               var existingBusinessUnit = await _businessUnitRepository.GetByNameAsync(newBusinessUnitName, cancellationToken);
+               var currentUserId = _currentUserProvider.GetCurrentUserId();
+
+               var existingBusinessUnit = await _businessUnitRepository.GetByNameAsync(
+                   newBusinessUnitName,
+                   currentUserId,
+                   cancellationToken);
+
                if (existingBusinessUnit is null)
                    return true;
 

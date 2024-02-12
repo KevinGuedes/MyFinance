@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Logging;
 using MyFinance.Application.Common.Errors;
 using MyFinance.Application.Common.RequestHandling.Commands;
+using MyFinance.Application.Services.CurrentUserProvider;
 using MyFinance.Domain.Interfaces;
 
 namespace MyFinance.Application.UseCases.Transfers.Commands.DeleteTransfer;
@@ -10,17 +11,21 @@ internal sealed class DeleteTransferHandler(
     ILogger<DeleteTransferHandler> logger,
     IMonthlyBalanceRepository monthlyBalanceRepository,
     IBusinessUnitRepository businessUnitRepository,
-    ITransferRepository transferRepository) : ICommandHandler<DeleteTransferCommand>
+    ITransferRepository transferRepository,
+    ICurrentUserProvider currentUserProvider) : ICommandHandler<DeleteTransferCommand>
 {
     private readonly ILogger<DeleteTransferHandler> _logger = logger;
     private readonly IMonthlyBalanceRepository _monthlyBalanceRepository = monthlyBalanceRepository;
     private readonly IBusinessUnitRepository _businessUnitRepository = businessUnitRepository;
     private readonly ITransferRepository _transferRepository = transferRepository;
+    private readonly ICurrentUserProvider _currentUserProvider = currentUserProvider;
 
     public async Task<Result> Handle(DeleteTransferCommand command, CancellationToken cancellationToken)
     {
+        var currentUserId = _currentUserProvider.GetCurrentUserId();
+
         _logger.LogInformation("Retrieving data required to delete Transfer with Id {TransferId}", command.Id);
-        var transfer = await _transferRepository.GetByIdAsync(command.Id, cancellationToken);
+        var transfer = await _transferRepository.GetByIdAsync(command.Id, currentUserId, cancellationToken);
 
         if (transfer is null)
         {

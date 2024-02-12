@@ -1,4 +1,5 @@
 ﻿using FluentValidation;
+using MyFinance.Application.Services.CurrentUserProvider;
 using MyFinance.Application.UseCases.AccountTags.Commands.UpdateAccountTag;
 using MyFinance.Domain.Interfaces;
 
@@ -7,10 +8,12 @@ namespace MyFinance.Application.UseCases.BusinessUnits.Commands.UpdateBusinessUn
 public sealed class UpdateAccountTagValidator : AbstractValidator<UpdateAccountTagCommand>
 {
     private readonly IAccountTagRepository _accountTagRepository;
+    private readonly ICurrentUserProvider _currentUserProvider;
 
-    public UpdateAccountTagValidator(IAccountTagRepository accountTagRepository)
+    public UpdateAccountTagValidator(IAccountTagRepository accountTagRepository, ICurrentUserProvider currentUserProvider)
     {
         _accountTagRepository = accountTagRepository;
+        _currentUserProvider = currentUserProvider;
         ClassLevelCascadeMode = CascadeMode.Stop;
 
         When(command => command.Description is not null, () =>
@@ -31,7 +34,9 @@ public sealed class UpdateAccountTagValidator : AbstractValidator<UpdateAccountT
             .Length(2, 6).WithMessage("{PropertyName} must have between 2 and 6 characters")
             .MustAsync(async (command, tag, cancellationToken) =>
             {
-                var existingBusinessUnit = await _accountTagRepository.GetByTagAsync(tag, cancellationToken);
+                var currentUserId = _currentUserProvider.GetCurrentUserId();
+
+                var existingBusinessUnit = await _accountTagRepository.GetByTagAsync(tag, currentUserId, cancellationToken);
                 if (existingBusinessUnit is null)
                     return true;
 

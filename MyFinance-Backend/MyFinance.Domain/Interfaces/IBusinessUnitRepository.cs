@@ -2,10 +2,10 @@
 
 namespace MyFinance.Domain.Interfaces;
 
-public interface IBusinessUnitRepository : IEntityRepository<BusinessUnit>
+public interface IBusinessUnitRepository : IUserOwnedEntityRepository<BusinessUnit>
 {
-    Task<IEnumerable<BusinessUnit>> GetPaginatedAsync(int page, int pageSize, CancellationToken cancellationToken);
-    Task<bool> ExistsByNameAsync(string name, CancellationToken cancellationToken);
-    Task<BusinessUnit?> GetByNameAsync(string name, CancellationToken cancellationToken);
-    Task<BusinessUnit?> GetWithSummaryData(Guid id, int year, CancellationToken cancellationToken);
+    Task<IEnumerable<BusinessUnit>> GetPaginatedAsync(int page, int pageSize, Guid userId, CancellationToken cancellationToken);
+    Task<bool> ExistsByNameAsync(string name, Guid userId, CancellationToken cancellationToken);
+    Task<BusinessUnit?> GetByNameAsync(string name, Guid userId, CancellationToken cancellationToken);
+    Task<BusinessUnit?> GetWithSummaryData(Guid id, int year, Guid userId, CancellationToken cancellationToken);
 }

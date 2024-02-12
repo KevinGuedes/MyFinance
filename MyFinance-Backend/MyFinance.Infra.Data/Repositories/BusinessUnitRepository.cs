@@ -6,13 +6,15 @@ using MyFinance.Infra.Data.Context;
 namespace MyFinance.Infra.Data.Repositories;
 
 public sealed class BusinessUnitRepository(MyFinanceDbContext myFinanceDbContext)
-    : EntityRepository<BusinessUnit>(myFinanceDbContext), IBusinessUnitRepository
+    : UserOwnedEntityRepository<BusinessUnit>(myFinanceDbContext), IBusinessUnitRepository
 {
     public async Task<IEnumerable<BusinessUnit>> GetPaginatedAsync(
         int page,
         int pageSize,
+        Guid userId,
         CancellationToken cancellationToken)
         => await _myFinanceDbContext.BusinessUnits
+            .Where(bu => bu.UserId == userId)
             .OrderByDescending(bu => bu.CreationDate)
             .ThenByDescending(bu => bu.Name)
             .Skip((page - 1) * pageSize)
@@ -20,18 +22,20 @@ public sealed class BusinessUnitRepository(MyFinanceDbContext myFinanceDbContext
             .AsNoTracking()
             .ToListAsync(cancellationToken);
 
-    public Task<bool> ExistsByNameAsync(string name, CancellationToken cancellationToken)
+    public Task<bool> ExistsByNameAsync(string name, Guid userId, CancellationToken cancellationToken)
         => _myFinanceDbContext.BusinessUnits
+            .Where(bu => bu.UserId == userId)
             .AnyAsync(bu => bu.Name == name, cancellationToken);
 
-    public Task<BusinessUnit?> GetByNameAsync(string name, CancellationToken cancellationToken)
+    public Task<BusinessUnit?> GetByNameAsync(string name, Guid userId, CancellationToken cancellationToken)
         => _myFinanceDbContext.BusinessUnits
-            .Where(bu => bu.Name == name)
+            .Where(bu => bu.Name == name && bu.UserId == userId)
             .AsNoTracking()
             .FirstOrDefaultAsync(cancellationToken);
 
-    public Task<BusinessUnit?> GetWithSummaryData(Guid id, int year, CancellationToken cancellationToken)
+    public Task<BusinessUnit?> GetWithSummaryData(Guid id, int year, Guid userId, CancellationToken cancellationToken)
         => _myFinanceDbContext.BusinessUnits
+            .Where(bu => bu.UserId == userId)
             .Include(bu => bu.MonthlyBalances
                 .Where(mb => mb.Transfers.Count != 0 && mb.ReferenceYear == year)
                 .OrderBy(mb => mb.ReferenceYear)

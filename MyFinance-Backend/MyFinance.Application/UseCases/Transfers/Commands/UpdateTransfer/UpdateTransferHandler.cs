@@ -29,7 +29,7 @@ internal sealed class UpdateTransferHandler(
         var (transferId, accountTagId, newTransferValue, relatedTo, description, settlementDate, type) = command;
 
         _logger.LogInformation("Retrieving current Monthly Balance of Transfer with Id {TransferId}", transferId);
-        var transfer = await _transferRepository.GetByIdAsync(transferId, cancellationToken);
+        var transfer = await _transferRepository.GetByIdAsync(transferId, currentUserId, cancellationToken);
 
         if (transfer is null)
         {
@@ -40,7 +40,7 @@ internal sealed class UpdateTransferHandler(
         }
 
         _logger.LogInformation("Retriving Account Tag with Id {AccountTagId}", accountTagId);
-        var accountTag = await _accountTagRepository.GetByIdAsync(accountTagId, cancellationToken);
+        var accountTag = await _accountTagRepository.GetByIdAsync(accountTagId, currentUserId, cancellationToken);
         if (accountTag is null)
         {
             _logger.LogWarning("Account Tag with Id {AccountTagId} not found", accountTagId);
@@ -68,6 +68,7 @@ internal sealed class UpdateTransferHandler(
             var existingMonthlyBalance = await _monthlyBalanceRepository.GetByReferenceDateAndBusinessUnitId(
                 settlementDate,
                 businessUnit.Id,
+                currentUserId,
                 cancellationToken);
 
             if (existingMonthlyBalance is null)

@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Logging;
 using MyFinance.Application.Common.Errors;
 using MyFinance.Application.Common.RequestHandling.Commands;
+using MyFinance.Application.Services.CurrentUserProvider;
 using MyFinance.Domain.Entities;
 using MyFinance.Domain.Interfaces;
 
@@ -9,15 +10,19 @@ namespace MyFinance.Application.UseCases.AccountTags.Commands.UpdateAccountTag;
 
 internal sealed class UpdateAccountTagHandler(
     ILogger<UpdateAccountTagHandler> logger,
-    IAccountTagRepository accountTagRepository) : ICommandHandler<UpdateAccountTagCommand, AccountTag>
+    IAccountTagRepository accountTagRepository,
+    ICurrentUserProvider currentUserProvider) : ICommandHandler<UpdateAccountTagCommand, AccountTag>
 {
     private readonly ILogger<UpdateAccountTagHandler> _logger = logger;
     private readonly IAccountTagRepository _accountTagRepository = accountTagRepository;
+    private readonly ICurrentUserProvider _currentUserProvider = currentUserProvider;
 
     public async Task<Result<AccountTag>> Handle(UpdateAccountTagCommand command, CancellationToken cancellationToken)
     {
+        var currentUserId = _currentUserProvider.GetCurrentUserId();
+
         _logger.LogInformation("Retriving Account Tag with Id {AccountTagId}", command.Id);
-        var accountTag = await _accountTagRepository.GetByIdAsync(command.Id, cancellationToken);
+        var accountTag = await _accountTagRepository.GetByIdAsync(command.Id, currentUserId, cancellationToken);
         if (accountTag is null)
         {
             _logger.LogWarning("Account Tag with Id {AccountTagId} not found", command.Id);

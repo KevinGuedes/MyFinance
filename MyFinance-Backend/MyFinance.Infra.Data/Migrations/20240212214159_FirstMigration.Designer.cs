@@ -11,7 +11,7 @@ using MyFinance.Infra.Data.Context;
 namespace MyFinance.Infra.Data.Migrations
 {
     [DbContext(typeof(MyFinanceDbContext))]
-    [Migration("20240212144847_FirstMigration")]
+    [Migration("20240212214159_FirstMigration")]
     partial class FirstMigration
     {
         /// <inheritdoc />

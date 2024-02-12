@@ -29,7 +29,7 @@ internal sealed class RegisterTransferHandler(
         var (businessUnitId, accountTagId, value, relatedTo, description, settlementDate, type) = command;
 
         _logger.LogInformation("Retriving Business Unit with Id {BusinessUnitId}", businessUnitId);
-        var businessUnit = await _businessUnitRepository.GetByIdAsync(businessUnitId, cancellationToken);
+        var businessUnit = await _businessUnitRepository.GetByIdAsync(businessUnitId, currentUserId, cancellationToken);
         if (businessUnit is null)
         {
             _logger.LogWarning("Business Unit with Id {BusinessUnitId} not found", businessUnitId);
@@ -39,7 +39,7 @@ internal sealed class RegisterTransferHandler(
         }
 
         _logger.LogInformation("Retriving Account Tag with Id {AccountTagId}", accountTagId);
-        var accountTag = await _accountTagRepository.GetByIdAsync(accountTagId, cancellationToken);
+        var accountTag = await _accountTagRepository.GetByIdAsync(accountTagId, currentUserId, cancellationToken);
         if (accountTag is null)
         {
             _logger.LogWarning("Account Tag with Id {AccountTagId} not found", accountTagId);
@@ -56,6 +56,7 @@ internal sealed class RegisterTransferHandler(
         var monthlyBalance = await _monthlyBalanceRepository.GetByReferenceDateAndBusinessUnitId(
             settlementDate,
             businessUnitId,
+            currentUserId,
             cancellationToken);
 
         if (monthlyBalance is null)
