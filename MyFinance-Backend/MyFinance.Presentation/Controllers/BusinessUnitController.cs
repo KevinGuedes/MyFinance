@@ -38,7 +38,8 @@ public class BusinessUnitController(IBusinessUnitApiService businessUnitApiServi
     [SwaggerResponse(StatusCodes.Status200OK, "Updated Business Unit", typeof(BusinessUnitDTO))]
     [SwaggerResponse(StatusCodes.Status400BadRequest, "Invalid payload", typeof(BadRequestResponse))]
     [SwaggerResponse(StatusCodes.Status404NotFound, "Business Unit not found", typeof(EntityNotFoundResponse))]
-    [SwaggerResponse(StatusCodes.Status422UnprocessableEntity, "Server currently unable to process the Business Unit", typeof(UnprocessableEntityResponse))]
+    [SwaggerResponse(StatusCodes.Status409Conflict, "The Business Unit was updated after the request was sent", typeof(UnprocessableEntityResponse))]
+
     public async Task<IActionResult> UpdateBusinessUnitAsync(
         [FromBody, SwaggerRequestBody("Business Unit payload", Required = true)] UpdateBusinessUnitCommand command,
         CancellationToken cancellationToken)
@@ -49,7 +50,8 @@ public class BusinessUnitController(IBusinessUnitApiService businessUnitApiServi
     [SwaggerResponse(StatusCodes.Status204NoContent, "Business Unit successfully unarchived")]
     [SwaggerResponse(StatusCodes.Status400BadRequest, "Invalid Business Unit Id", typeof(BadRequestResponse))]
     [SwaggerResponse(StatusCodes.Status404NotFound, "Business Unit not found", typeof(EntityNotFoundResponse))]
-    [SwaggerResponse(StatusCodes.Status422UnprocessableEntity, "Server currently unable to process the Business Unit", typeof(UnprocessableEntityResponse))]
+    [SwaggerResponse(StatusCodes.Status409Conflict, "The Business Unit was updated after the request was sent", typeof(UnprocessableEntityResponse))]
+
     public async Task<IActionResult> UnarchiveBusinessUnitAsync(
         [FromRoute, SwaggerParameter("Id of the Business Unit to unarchive", Required = true)] Guid id,
         CancellationToken cancellationToken)
@@ -60,7 +62,8 @@ public class BusinessUnitController(IBusinessUnitApiService businessUnitApiServi
     [SwaggerResponse(StatusCodes.Status204NoContent, "Business Unit successfully archived")]
     [SwaggerResponse(StatusCodes.Status400BadRequest, "Invalid payload", typeof(BadRequestResponse))]
     [SwaggerResponse(StatusCodes.Status404NotFound, "Business Unit not found", typeof(EntityNotFoundResponse))]
-    [SwaggerResponse(StatusCodes.Status422UnprocessableEntity, "Server currently unable to process the Business Unit", typeof(UnprocessableEntityResponse))]
+    [SwaggerResponse(StatusCodes.Status409Conflict, "The Business Unit was updated after the request was sent", typeof(UnprocessableEntityResponse))]
+
     public async Task<IActionResult> ArchiveBusinessUnitAsync(
         [FromBody, SwaggerRequestBody("Payload to archvie a Business Unit", Required = true)] ArchiveBusinessUnitCommand command,
         CancellationToken cancellationToken)
