@@ -5,6 +5,7 @@ namespace MyFinance.Application.UseCases.Users.Commands.RegisterUser;
 public sealed record RegisterUserCommand(
     string Name,
     string Email,
-    string PlainTextPassword) : ICommand
+    string PlainTextPassword,
+    string PlainTextConfirmationPassword) : ICommand
 {
 }

@@ -21,6 +21,9 @@ public sealed class RegisterUserCommandValidator : AbstractValidator<RegisterUse
             .NotNull().WithMessage("{PropertyName} must not be null")
             .MinimumLength(16).WithMessage("{PropertyName} must have at least 16 characters");
 
+        RuleFor(command => command.PlainTextConfirmationPassword)
+            .Equal(command => command.PlainTextPassword).WithMessage("The {PropertyName} and {ComparisonProperty} do not match");
+
         RuleFor(command => command.Email)
             .Cascade(CascadeMode.Stop)
             .NotNull().WithMessage("{PropertyName} must not be null")
