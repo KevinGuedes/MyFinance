@@ -5,7 +5,7 @@ using MyFinance.Application.Common.Errors;
 namespace MyFinance.Presentation.Controllers;
 
 [ApiExplorerSettings(IgnoreApi = true)]
-public class ErrorController : BaseController
+public class ErrorController : ApiController
 {
     [Route("/error")]
     public IActionResult BuildErrorResponse()

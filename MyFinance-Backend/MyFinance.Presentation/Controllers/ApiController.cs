@@ -10,7 +10,7 @@ namespace MyFinance.Presentation.Controllers;
 [Route("api/[controller]")]
 [Produces("application/json")]
 [SwaggerResponse(StatusCodes.Status500InternalServerError, "Backend went rogue", typeof(InternalServerErrorResponse))]
-public abstract class BaseController : ControllerBase
+public abstract class ApiController : ControllerBase
 {
     protected IActionResult ProcessResult<TResponse>(Result<TResponse> result, bool isCreatedEntity = false)
     {

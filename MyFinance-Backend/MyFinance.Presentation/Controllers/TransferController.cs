@@ -9,7 +9,7 @@ using Swashbuckle.AspNetCore.Annotations;
 namespace MyFinance.Presentation.Controllers;
 
 [SwaggerTag("Create, update and delete Transfers")]
-public class TransferController(ITransferApiService transferApiService) : BaseController
+public class TransferController(ITransferApiService transferApiService) : ApiController
 {
     private readonly ITransferApiService _transferApiService = transferApiService;
 

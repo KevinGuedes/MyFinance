@@ -6,7 +6,7 @@ using Swashbuckle.AspNetCore.Annotations;
 namespace MyFinance.Presentation.Controllers;
 
 [SwaggerTag("Gets Summary Spreadsheets for Business Units and Monthly Balances")]
-public class SummaryController(ISummaryApiService summaryApiService) : BaseController
+public class SummaryController(ISummaryApiService summaryApiService) : ApiController
 {
     private const string SPREADSHEET_CONTENT_TYPE = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
     private readonly ISummaryApiService _summaryApiService = summaryApiService;

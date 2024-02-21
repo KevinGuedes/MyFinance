@@ -33,6 +33,6 @@ public sealed class RegisterUserCommandValidator : AbstractValidator<RegisterUse
             {
                 var exists = await _userRepository.ExistsByEmailAsync(email, cancellationToken);
                 return !exists;
-            }).WithMessage("This {PropertyName} has already been taken");
+            }).WithMessage("The {PropertyName} {PropertyValue} has already been taken");
     }
 }

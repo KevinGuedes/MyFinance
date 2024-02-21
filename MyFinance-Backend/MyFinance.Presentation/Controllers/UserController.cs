@@ -9,7 +9,7 @@ using Swashbuckle.AspNetCore.Annotations;
 namespace MyFinance.Presentation.Controllers;
 
 [SwaggerTag("Manages user related operations")]
-public class UserController(IUserApiService userApiService) : BaseController
+public class UserController(IUserApiService userApiService) : ApiController
 {
     private readonly IUserApiService _userService = userApiService;
 
