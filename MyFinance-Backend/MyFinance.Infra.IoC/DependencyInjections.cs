@@ -78,7 +78,7 @@ public static class DependencyInjections
         var migrationsAssemblyName = typeof(MyFinanceDbContext).Assembly.FullName;
         services.AddDbContext<MyFinanceDbContext>(
             options => options
-            .UseSqlite(configuration.GetConnectionString("Lite"),
+            .UseSqlServer(configuration.GetConnectionString("MyFinanceDb"),
             sqlServerOptions => sqlServerOptions
                 .UseQuerySplittingBehavior(QuerySplittingBehavior.SingleQuery)
                 .MigrationsAssembly(migrationsAssemblyName)));

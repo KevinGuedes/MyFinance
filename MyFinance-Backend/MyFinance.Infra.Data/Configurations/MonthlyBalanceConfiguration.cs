@@ -9,8 +9,8 @@ public sealed class MonthlyBalanceConfiguration : EntityConfiguration<MonthlyBal
     {
         base.Configure(builder);
 
-        builder.Property(mb => mb.Income).IsRequired().HasPrecision(17, 4);
-        builder.Property(mb => mb.Outcome).IsRequired().HasPrecision(17, 4);
+        builder.Property(mb => mb.Income).IsRequired().HasPrecision(17, 2);
+        builder.Property(mb => mb.Outcome).IsRequired().HasPrecision(17, 2);
         builder.Property(mb => mb.ReferenceYear).IsRequired();
         builder.Property(mb => mb.ReferenceMonth).IsRequired();
         builder.Ignore(mb => mb.Balance);

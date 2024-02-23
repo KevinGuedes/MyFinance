@@ -10,11 +10,11 @@ public sealed class AccountTagConfiguration : EntityConfiguration<AccountTag>
         base.Configure(builder);
 
         builder.HasIndex(at => at.Tag).IsUnique();
-        builder.Property(at => at.Tag).IsRequired();
+        builder.Property(at => at.Tag).IsRequired().HasMaxLength(10);
 
-        builder.Property(at => at.Description).IsRequired(false);
-        builder.Property(bu => bu.IsArchived).IsRequired();
-        builder.Property(bu => bu.ReasonToArchive).IsRequired(false);
+        builder.Property(at => at.Description).IsRequired(false).HasMaxLength(300);
+        builder.Property(bu => bu.ReasonToArchive).IsRequired(false).HasMaxLength(300);
         builder.Property(bu => bu.ArchiveDate).IsRequired(false);
+        builder.Property(bu => bu.IsArchived).IsRequired();
     }
 }

@@ -10,9 +10,9 @@ public sealed class TransferConfiguration : EntityConfiguration<Transfer>
         base.Configure(builder);
 
         builder.Property(transfer => transfer.SettlementDate).IsRequired();
-        builder.Property(transfer => transfer.Description).IsRequired();
-        builder.Property(transfer => transfer.RelatedTo).IsRequired();
+        builder.Property(transfer => transfer.Description).IsRequired().HasMaxLength(300);
+        builder.Property(transfer => transfer.RelatedTo).IsRequired().HasMaxLength(300);
         builder.Property(transfer => transfer.Type).HasConversion<string>().IsRequired();
-        builder.Property(transfer => transfer.Value).IsRequired().HasPrecision(17, 4);
+        builder.Property(transfer => transfer.Value).IsRequired().HasPrecision(17, 2);
     }
 }

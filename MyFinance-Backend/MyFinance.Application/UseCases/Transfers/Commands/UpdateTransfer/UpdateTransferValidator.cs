@@ -13,12 +13,12 @@ public sealed class UpdateTransferValidator : AbstractValidator<UpdateTransferCo
         RuleFor(command => command.RelatedTo)
             .NotEmpty().WithMessage("{PropertyName} must not be empty")
             .NotNull().WithMessage("{PropertyName} must not be null")
-            .Length(3, 50).WithMessage("{PropertyName} must have between 3 and 50 characters");
+            .MaximumLength(300).WithMessage("{PropertyName} must have a maximum of 300 characters");
 
         RuleFor(command => command.Description)
             .NotEmpty().WithMessage("{PropertyName} must not be empty")
             .NotNull().WithMessage("{PropertyName} must not be null")
-            .Length(10, 140).WithMessage("{PropertyName} must have between 10 and 140 characters");
+            .MaximumLength(300).WithMessage("{PropertyName} must have a maximum of 300 characters");
 
         RuleFor(command => command.Type)
             .IsInEnum().WithMessage("Invalid {PropertyName}");

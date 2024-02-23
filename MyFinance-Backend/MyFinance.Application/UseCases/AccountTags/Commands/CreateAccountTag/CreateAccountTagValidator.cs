@@ -15,19 +15,14 @@ public sealed class CreateAccountTagValidator : AbstractValidator<CreateAccountT
         _currentUserProvider = currentUserProvider;
         ClassLevelCascadeMode = CascadeMode.Stop;
 
-        When(command => command.Description is not null, () =>
-        {
-            RuleFor(command => command.Description)
-                .NotNull().WithMessage("{PropertyName} must not be null")
-                .NotEmpty().WithMessage("{PropertyName} must not be empty")
-                .Length(10, 200).WithMessage("{PropertyName} must have between 10 and 200 characters");
-        });
+        RuleFor(command => command.Description)
+            .MaximumLength(300).WithMessage("{PropertyName} must have a maximum of 300 characters");
 
         RuleFor(command => command.Tag)
             .Cascade(CascadeMode.Stop)
             .NotNull().WithMessage("{PropertyName} must not be null")
             .NotEmpty().WithMessage("{PropertyName} must not be empty")
-            .Length(2, 6).WithMessage("{PropertyName} must have between 2 and 6 characters")
+            .Length(3, 10).WithMessage("{PropertyName} must have between 3 and 10 characters")
             .MustAsync(async (tag, cancellationToken) =>
             {
                 var currentUserId = _currentUserProvider.GetCurrentUserId();

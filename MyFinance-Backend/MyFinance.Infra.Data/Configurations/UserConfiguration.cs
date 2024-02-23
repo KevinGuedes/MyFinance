@@ -15,7 +15,7 @@ public sealed class UserConfiguration : EntityConfiguration<User>
 
         builder.Property(user => user.PasswordHash).IsRequired();
         builder.Property(transfer => transfer.Name)
-            .HasMaxLength(256)
+            .HasMaxLength(100)
             .IsRequired();
     }
 }

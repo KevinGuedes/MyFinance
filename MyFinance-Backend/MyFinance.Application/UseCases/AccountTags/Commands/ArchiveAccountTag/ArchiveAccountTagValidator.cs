@@ -7,9 +7,7 @@ public sealed class ArchiveAccountTagValidator : AbstractValidator<ArchiveAccoun
     public ArchiveAccountTagValidator()
     {
         RuleFor(command => command.ReasonToArchive)
-            .NotNull().WithMessage("{PropertyName} must not be null")
-            .NotEmpty().WithMessage("{PropertyName} must not be empty")
-            .Length(10, 200).WithMessage("{PropertyName} must have between 10 and 200 characters");
+            .MaximumLength(300).WithMessage("{PropertyName} must have a maximum of 300 characters");
 
         RuleFor(command => command.Id)
             .NotEqual(Guid.Empty).WithMessage("{PropertyName} invalid");

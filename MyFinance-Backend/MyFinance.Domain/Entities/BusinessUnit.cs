@@ -5,7 +5,7 @@ namespace MyFinance.Domain.Entities;
 public class BusinessUnit : UserOwnedEntity
 {
     public string Name { get; private set; } = null!;
-    public string Description { get; private set; } = null!;
+    public string? Description { get; private set; }
     public double Income { get; private set; }
     public double Outcome { get; private set; }
     public double Balance { get => Income - Outcome; }
