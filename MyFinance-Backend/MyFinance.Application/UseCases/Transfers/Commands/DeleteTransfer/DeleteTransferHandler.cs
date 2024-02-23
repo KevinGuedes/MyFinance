@@ -30,7 +30,7 @@ internal sealed class DeleteTransferHandler(
         if (transfer is null)
         {
             _logger.LogWarning("Transfer with Id {BusinessUnitId} not found", command.Id);
-            var errorMessage = string.Format("Transfer with Id {0} not found", command.Id);
+            var errorMessage = $"Transfer with Id {command.Id} not found";
             var entityNotFoundError = new EntityNotFoundError(errorMessage);
             return Result.Fail(entityNotFoundError);
         }
@@ -49,7 +49,7 @@ internal sealed class DeleteTransferHandler(
         _logger.LogInformation("Deleting Transfer with Id {TransferId}", command.Id);
         _transferRepository.Delete(transfer);
 
-        _logger.LogInformation("Transfer with Id {TransferId} sucessfully deleted", transfer.Id);
+        _logger.LogInformation("Transfer with Id {TransferId} successfully deleted", transfer.Id);
         return Result.Ok();
     }
 }

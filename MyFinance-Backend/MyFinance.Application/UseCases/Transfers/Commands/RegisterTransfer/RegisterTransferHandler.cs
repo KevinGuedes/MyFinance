@@ -28,22 +28,22 @@ internal sealed class RegisterTransferHandler(
         var currentUserId = _currentUserProvider.GetCurrentUserId();
         var (businessUnitId, accountTagId, value, relatedTo, description, settlementDate, type) = command;
 
-        _logger.LogInformation("Retriving Business Unit with Id {BusinessUnitId}", businessUnitId);
+        _logger.LogInformation("Retrieving Business Unit with Id {BusinessUnitId}", businessUnitId);
         var businessUnit = await _businessUnitRepository.GetByIdAsync(businessUnitId, currentUserId, cancellationToken);
         if (businessUnit is null)
         {
             _logger.LogWarning("Business Unit with Id {BusinessUnitId} not found", businessUnitId);
-            var errorMessage = string.Format("Business Unit with Id {0} not found", businessUnitId);
+            var errorMessage = $"Business Unit with Id {businessUnitId} not found";
             var entityNotFoundError = new EntityNotFoundError(errorMessage);
             return Result.Fail(entityNotFoundError);
         }
 
-        _logger.LogInformation("Retriving Account Tag with Id {AccountTagId}", accountTagId);
+        _logger.LogInformation("Retrieving Account Tag with Id {AccountTagId}", accountTagId);
         var accountTag = await _accountTagRepository.GetByIdAsync(accountTagId, currentUserId, cancellationToken);
         if (accountTag is null)
         {
             _logger.LogWarning("Account Tag with Id {AccountTagId} not found", accountTagId);
-            var errorMessage = string.Format("Account Tag with Id {0} not found", accountTagId);
+            var errorMessage = $"Account Tag with Id {accountTagId} not found";
             var entityNotFoundError = new EntityNotFoundError(errorMessage);
             return Result.Fail(entityNotFoundError);
         }

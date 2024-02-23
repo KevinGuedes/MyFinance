@@ -34,17 +34,17 @@ internal sealed class UpdateTransferHandler(
         if (transfer is null)
         {
             _logger.LogWarning("Transfer with Id {TransferId} not found", transferId);
-            var errorMessage = string.Format("Transfer with Id {0} not found", transferId);
+            var errorMessage = $"Transfer with Id {transferId} not found";
             var entityNotFoundError = new EntityNotFoundError(errorMessage);
             return Result.Fail(entityNotFoundError);
         }
 
-        _logger.LogInformation("Retriving Account Tag with Id {AccountTagId}", accountTagId);
+        _logger.LogInformation("Retrieving Account Tag with Id {AccountTagId}", accountTagId);
         var accountTag = await _accountTagRepository.GetByIdAsync(accountTagId, currentUserId, cancellationToken);
         if (accountTag is null)
         {
             _logger.LogWarning("Account Tag with Id {AccountTagId} not found", accountTagId);
-            var errorMessage = string.Format("Account Tag with Id {0} not found", accountTagId);
+            var errorMessage = $"Account Tag with Id {accountTagId} not found";
             var entityNotFoundError = new EntityNotFoundError(errorMessage);
             return Result.Fail(entityNotFoundError);
         }
@@ -64,7 +64,7 @@ internal sealed class UpdateTransferHandler(
             _logger.LogInformation("Adding Transfer with Id {TransferId} to another Monthly Balance", transfer.Id);
             currentMonthlyBalance.Transfers.Remove(transfer);
 
-            _logger.LogInformation("Checking if there is a axisting Monthly Balance");
+            _logger.LogInformation("Checking if there is a existing Monthly Balance");
             var existingMonthlyBalance = await _monthlyBalanceRepository.GetByReferenceDateAndBusinessUnitId(
                 settlementDate,
                 businessUnit.Id,

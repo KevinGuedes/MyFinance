@@ -36,12 +36,12 @@ public sealed class SpreadsheetService : ISpreadsheetService
         var referenceDate = new DateOnly(monthlyBalance.ReferenceYear, monthlyBalance.ReferenceMonth, 1);
         var wsName = referenceDate.ToString("y", new CultureInfo("en-US"));
         var businessUnitName = monthlyBalance.BusinessUnit.Name;
-        var workbookName = string.Format("Summary - {0} - {1}.xlsx", businessUnitName, wsName);
+        var workbookName = $"Summary - {businessUnitName} - {wsName}.xlsx";
         var wb = new XLWorkbook();
 
         GenerateMonthlyBalanceSummary(monthlyBalance, wb, wsName);
 
-        return new(workbookName, wb);
+        return new Tuple<string, XLWorkbook>(workbookName, wb);
     }
 
     private static void GenerateBusinessUnitSummary(
@@ -54,7 +54,7 @@ public sealed class SpreadsheetService : ISpreadsheetService
         var ws = wb.AddWorksheet(businessUnit.Name, 1);
 
         ws.Range(1, 1, 1, 3)
-            .SetValue(string.Format("Current Balance - {0}", businessUnit.Name))
+            .SetValue($"Current Balance - {businessUnit.Name}")
             .Merge()
             .Style
             .Font.SetBold()
@@ -90,7 +90,7 @@ public sealed class SpreadsheetService : ISpreadsheetService
             .Border.SetOutsideBorder(XLBorderStyleValues.Thin);
 
         ws.Range(1, 5, 1, 7)
-            .SetValue(string.Format("{0} Yearly Balance - {1}", year, businessUnit.Name))
+            .SetValue($"{year} Yearly Balance - {businessUnit.Name}")
             .Merge()
             .Style
             .Font.SetBold()
@@ -112,16 +112,16 @@ public sealed class SpreadsheetService : ISpreadsheetService
             Math.Round(yearlyBalance, 2)
         };
 
-        var bussinessUnitYearlyDataRange = ws.Cell(3, 5).InsertData(businessUnitYearlyData, true);
-        bussinessUnitYearlyDataRange.Column(1).LastCell().Style.Font.SetFontColor(XLColor.Green);
-        bussinessUnitYearlyDataRange.Column(2).LastCell().Style.Font.SetFontColor(XLColor.Red);
+        var businessUnitYearlyDataRange = ws.Cell(3, 5).InsertData(businessUnitYearlyData, true);
+        businessUnitYearlyDataRange.Column(1).LastCell().Style.Font.SetFontColor(XLColor.Green);
+        businessUnitYearlyDataRange.Column(2).LastCell().Style.Font.SetFontColor(XLColor.Red);
         var yearlyBalanceColor = GetBalanceColor(yearlyBalance);
-        bussinessUnitYearlyDataRange.Column(3).LastCell().Style.Font.SetFontColor(yearlyBalanceColor);
-        bussinessUnitYearlyDataRange.LastRow()
+        businessUnitYearlyDataRange.Column(3).LastCell().Style.Font.SetFontColor(yearlyBalanceColor);
+        businessUnitYearlyDataRange.LastRow()
             .Style.NumberFormat.SetFormat("R$ #,##0.00")
             .Font.SetBold();
 
-        bussinessUnitYearlyDataRange.Style
+        businessUnitYearlyDataRange.Style
             .Alignment.SetHorizontal(XLAlignmentHorizontalValues.Center)
             .Border.SetOutsideBorder(XLBorderStyleValues.Thin);
 
@@ -133,7 +133,7 @@ public sealed class SpreadsheetService : ISpreadsheetService
         var ws = wb.AddWorksheet(wsName);
         var numberOfColumnsForMonthlyBalanceData = summaryColumnNames.Length;
         var lastColumnNumberForTransferData = transferColumnNames.Length;
-        var spaceBetweenData = 2;
+        const int spaceBetweenData = 2;
 
         ws.Range(1, 1, 1, lastColumnNumberForTransferData)
                 .SetValue("Transfers")
@@ -228,7 +228,7 @@ public sealed class SpreadsheetService : ISpreadsheetService
         ws.Column(1).Width = 12;
 
         var lastColumnNumber = lastColumnNumberForTransferData + spaceBetweenData + numberOfColumnsForMonthlyBalanceData;
-        for (int i = lastColumnNumberForTransferData + spaceBetweenData; i < lastColumnNumber; i++)
+        for (var i = lastColumnNumberForTransferData + spaceBetweenData; i < lastColumnNumber; i++)
         {
             ws.Column(i).Width = 12;
         }
