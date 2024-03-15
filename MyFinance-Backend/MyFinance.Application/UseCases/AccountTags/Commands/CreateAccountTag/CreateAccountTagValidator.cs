@@ -9,7 +9,8 @@ public sealed class CreateAccountTagValidator : AbstractValidator<CreateAccountT
     private readonly IAccountTagRepository _accountTagRepository;
     private readonly ICurrentUserProvider _currentUserProvider;
 
-    public CreateAccountTagValidator(IAccountTagRepository accountTagRepository, ICurrentUserProvider currentUserProvider)
+    public CreateAccountTagValidator(IAccountTagRepository accountTagRepository,
+        ICurrentUserProvider currentUserProvider)
     {
         _accountTagRepository = accountTagRepository;
         _currentUserProvider = currentUserProvider;

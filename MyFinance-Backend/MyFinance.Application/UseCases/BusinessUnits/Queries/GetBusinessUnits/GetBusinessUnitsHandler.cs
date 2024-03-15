@@ -12,17 +12,18 @@ internal sealed class GetBusinessUnitsHandler(
     IBusinessUnitRepository businessUnitRepository,
     ICurrentUserProvider currentUserProvider) : IQueryHandler<GetBusinessUnitsQuery, IEnumerable<BusinessUnit>>
 {
-    private readonly ILogger<GetBusinessUnitsHandler> _logger = logger;
     private readonly IBusinessUnitRepository _businessUnitRepository = businessUnitRepository;
     private readonly ICurrentUserProvider _currentUserProvider = currentUserProvider;
+    private readonly ILogger<GetBusinessUnitsHandler> _logger = logger;
 
-    public async Task<Result<IEnumerable<BusinessUnit>>> Handle(GetBusinessUnitsQuery query, CancellationToken cancellationToken)
+    public async Task<Result<IEnumerable<BusinessUnit>>> Handle(GetBusinessUnitsQuery query,
+        CancellationToken cancellationToken)
     {
         var currentUserId = _currentUserProvider.GetCurrentUserId();
 
         _logger.LogInformation("Retrieving Business Units from database");
         var businessUnits = await _businessUnitRepository.GetPaginatedAsync(
-            query.Page, 
+            query.Page,
             query.PageSize,
             currentUserId,
             cancellationToken);

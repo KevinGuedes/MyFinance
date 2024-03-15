@@ -19,7 +19,8 @@ public class UserController(IUserApiService userApiService) : ApiController
     [SwaggerResponse(StatusCodes.Status204NoContent, "User successfully created")]
     [SwaggerResponse(StatusCodes.Status400BadRequest, "Invalid payload", typeof(BadRequestResponse))]
     public async Task<IActionResult> RegisterUserAsync(
-        [FromBody, SwaggerRequestBody("User's payload", Required = true)] RegisterUserCommand command,
+        [FromBody] [SwaggerRequestBody("User's payload", Required = true)]
+        RegisterUserCommand command,
         CancellationToken cancellationToken)
         => ProcessResult(await _userService.RegisterUserAsync(command, cancellationToken));
 
@@ -30,7 +31,8 @@ public class UserController(IUserApiService userApiService) : ApiController
     [SwaggerResponse(StatusCodes.Status401Unauthorized, "Invalid credentials", typeof(UnauthorizedResponse))]
     [SwaggerResponse(StatusCodes.Status404NotFound, "User not found", typeof(EntityNotFoundResponse))]
     public async Task<IActionResult> SignInAsync(
-        [FromBody, SwaggerRequestBody("User's sign in credentials", Required = true)] SignInCommand command,
+        [FromBody] [SwaggerRequestBody("User's sign in credentials", Required = true)]
+        SignInCommand command,
         CancellationToken cancellationToken)
         => ProcessResult(await _userService.SignInAsync(command, cancellationToken));
 

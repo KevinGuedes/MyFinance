@@ -12,9 +12,9 @@ public class UnarchiveBusinessUnitHandler(
     IBusinessUnitRepository businessUnitRepository,
     ICurrentUserProvider currentUserProvider) : ICommandHandler<UnarchiveBusinessUnitCommand>
 {
-    private readonly ILogger<UnarchiveBusinessUnitHandler> _logger = logger;
     private readonly IBusinessUnitRepository _businessUnitRepository = businessUnitRepository;
     private readonly ICurrentUserProvider _currentUserProvider = currentUserProvider;
+    private readonly ILogger<UnarchiveBusinessUnitHandler> _logger = logger;
 
     public async Task<Result> Handle(UnarchiveBusinessUnitCommand command, CancellationToken cancellationToken)
     {

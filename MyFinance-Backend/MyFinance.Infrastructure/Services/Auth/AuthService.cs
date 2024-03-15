@@ -17,7 +17,7 @@ public sealed class AuthService(IHttpContextAccessor httpContextAccessor) : IAut
         {
             new(ClaimTypes.Email, user.Email),
             new(ClaimTypes.Name, user.Name),
-            new("id", user.Id.ToString()),
+            new("id", user.Id.ToString())
         };
 
         var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
@@ -25,9 +25,9 @@ public sealed class AuthService(IHttpContextAccessor httpContextAccessor) : IAut
         var authProperties = new AuthenticationProperties { IsPersistent = true };
 
         await _httpContextAccessor.HttpContext!.SignInAsync(
-                CookieAuthenticationDefaults.AuthenticationScheme,
-                principal,
-                authProperties);
+            CookieAuthenticationDefaults.AuthenticationScheme,
+            principal,
+            authProperties);
     }
 
     public Task SignOutAsync()

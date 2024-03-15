@@ -41,7 +41,8 @@ public sealed class BusinessUnitApiService(IMediator mediator) : BaseApiService(
         return MapResult(result, DomainToDTOMapper.BusinessUnitToDTO);
     }
 
-    public Task<Result> ArchiveBusinessUnitAsync(ArchiveBusinessUnitCommand command, CancellationToken cancellationToken)
+    public Task<Result> ArchiveBusinessUnitAsync(ArchiveBusinessUnitCommand command,
+        CancellationToken cancellationToken)
         => _mediator.Send(command, cancellationToken);
 
     public Task<Result> UnarchiveBusinessUnitAsync(Guid id, CancellationToken cancellationToken)

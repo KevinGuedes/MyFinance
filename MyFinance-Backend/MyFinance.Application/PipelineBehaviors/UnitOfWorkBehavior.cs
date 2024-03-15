@@ -16,7 +16,8 @@ public sealed class UnitOfWorkBehavior<TRequest, TResponse>(
     private readonly ILogger<UnitOfWorkBehavior<TRequest, TResponse>> _logger = logger;
     private readonly IUnitOfWork _unitOfWork = unitOfWork;
 
-    public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
+    public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next,
+        CancellationToken cancellationToken)
     {
         var requestName = request.GetType().Name;
 
@@ -39,7 +40,9 @@ public sealed class UnitOfWorkBehavior<TRequest, TResponse>(
                 _logger.LogInformation("[{RequestName}] Database changes successfully saved", requestName);
             }
             else
+            {
                 _logger.LogWarning("[{RequestName}] Changes not commited due to failure response", requestName);
+            }
 
             return response;
         }

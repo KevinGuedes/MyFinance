@@ -7,6 +7,6 @@ public sealed class UnarchiveAccountTagValidator : AbstractValidator<UnarchiveAc
     public UnarchiveAccountTagValidator()
     {
         RuleFor(command => command.Id)
-           .NotEqual(Guid.Empty).WithMessage("{PropertyName} invalid");
+            .NotEqual(Guid.Empty).WithMessage("{PropertyName} invalid");
     }
 }

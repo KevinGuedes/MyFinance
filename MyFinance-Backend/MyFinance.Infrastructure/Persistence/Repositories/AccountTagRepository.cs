@@ -9,10 +9,10 @@ public sealed class AccountTagRepository(MyFinanceDbContext myFinanceDbContext)
     : UserOwnedEntityRepository<AccountTag>(myFinanceDbContext), IAccountTagRepository
 {
     public async Task<IEnumerable<AccountTag>> GetPaginatedAsync(
-       int page,
-       int pageSize,
-       Guid userId, 
-       CancellationToken cancellationToken)
+        int page,
+        int pageSize,
+        Guid userId,
+        CancellationToken cancellationToken)
         => await _myFinanceDbContext.AccountTags
             .Where(at => at.UserId == userId)
             .OrderByDescending(bu => bu.CreationDate)
@@ -24,7 +24,7 @@ public sealed class AccountTagRepository(MyFinanceDbContext myFinanceDbContext)
 
     public Task<bool> ExistsByTagAsync(
         string tag,
-        Guid userId, 
+        Guid userId,
         CancellationToken cancellationToken)
         => _myFinanceDbContext.AccountTags
             .Where(at => at.UserId == userId)

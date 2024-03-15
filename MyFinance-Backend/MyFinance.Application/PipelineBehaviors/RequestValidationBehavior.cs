@@ -17,7 +17,8 @@ public sealed class RequestValidationBehavior<TRequest, TResponse>(
     private readonly ILogger<RequestValidationBehavior<TRequest, TResponse>> _logger = logger;
     private readonly IEnumerable<IValidator<TRequest>> _validators = validators;
 
-    public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
+    public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next,
+        CancellationToken cancellationToken)
     {
         var requestName = request.GetType().Name;
 
@@ -29,7 +30,8 @@ public sealed class RequestValidationBehavior<TRequest, TResponse>(
 
         _logger.LogInformation("[{RequestName}] Validating request data", requestName);
         var context = new ValidationContext<TRequest>(request);
-        var validationResults = await Task.WhenAll(_validators.Select(validators => validators.ValidateAsync(context, cancellationToken)));
+        var validationResults =
+            await Task.WhenAll(_validators.Select(validators => validators.ValidateAsync(context, cancellationToken)));
         var errors = validationResults
             .SelectMany(validationResult => validationResult.Errors)
             .Where(validationResult => validationResult is not null)

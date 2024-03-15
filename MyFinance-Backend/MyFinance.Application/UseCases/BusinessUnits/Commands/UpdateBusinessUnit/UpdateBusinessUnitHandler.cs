@@ -13,11 +13,12 @@ internal sealed class UpdateBusinessUnitHandler(
     IBusinessUnitRepository businessUnitRepository,
     ICurrentUserProvider currentUserProvider) : ICommandHandler<UpdateBusinessUnitCommand, BusinessUnit>
 {
-    private readonly ILogger<UpdateBusinessUnitHandler> _logger = logger;
     private readonly IBusinessUnitRepository _businessUnitRepository = businessUnitRepository;
     private readonly ICurrentUserProvider _currentUserProvider = currentUserProvider;
+    private readonly ILogger<UpdateBusinessUnitHandler> _logger = logger;
 
-    public async Task<Result<BusinessUnit>> Handle(UpdateBusinessUnitCommand command, CancellationToken cancellationToken)
+    public async Task<Result<BusinessUnit>> Handle(UpdateBusinessUnitCommand command,
+        CancellationToken cancellationToken)
     {
         var currentUserId = _currentUserProvider.GetCurrentUserId();
 

@@ -1,15 +1,17 @@
-﻿using ClosedXML.Excel;
+﻿using System.Globalization;
+using ClosedXML.Excel;
 using MyFinance.Application.Abstractions.Services;
 using MyFinance.Domain.Entities;
 using MyFinance.Domain.Enums;
-using System.Globalization;
 
 namespace MyFinance.Infrastructure.Services.Spreadsheet;
 
 public sealed class SpreadsheetService : ISpreadsheetService
 {
     private static readonly string[] summaryColumnNames = ["Income", "Outcome", "Balance"];
-    private static readonly string[] transferColumnNames = ["Value", "Related To", "Description", "Account Tag", "Settlement Date"];
+
+    private static readonly string[] transferColumnNames =
+        ["Value", "Related To", "Description", "Account Tag", "Settlement Date"];
 
     public Tuple<string, byte[]> GetBusinessUnitSummary(BusinessUnit businessUnit, int year)
     {
@@ -29,7 +31,7 @@ public sealed class SpreadsheetService : ISpreadsheetService
 
         GenerateBusinessUnitSummary(businessUnit, wb, year, yearlyIncome, yearlyOutcome);
 
-        return new(workbookName, ConvertWorkbookToByteArray(wb));
+        return new Tuple<string, byte[]>(workbookName, ConvertWorkbookToByteArray(wb));
     }
 
     public Tuple<string, byte[]> GetMonthlyBalanceSummary(MonthlyBalance monthlyBalance)
@@ -42,7 +44,7 @@ public sealed class SpreadsheetService : ISpreadsheetService
 
         GenerateMonthlyBalanceSummary(monthlyBalance, wb, wsName);
 
-        return new(workbookName, ConvertWorkbookToByteArray(wb));
+        return new Tuple<string, byte[]>(workbookName, ConvertWorkbookToByteArray(wb));
     }
 
     private static void GenerateBusinessUnitSummary(
@@ -70,9 +72,10 @@ public sealed class SpreadsheetService : ISpreadsheetService
             .Alignment.SetHorizontal(XLAlignmentHorizontalValues.Center)
             .Border.SetOutsideBorder(XLBorderStyleValues.Thin);
 
-        var businessUnitCurrentData = new double[] {
+        var businessUnitCurrentData = new[]
+        {
             Math.Round(businessUnit.Income, 2),
-            (-1 * Math.Round(businessUnit.Outcome, 2)),
+            -1 * Math.Round(businessUnit.Outcome, 2),
             Math.Round(businessUnit.Balance, 2)
         };
 
@@ -107,9 +110,10 @@ public sealed class SpreadsheetService : ISpreadsheetService
             .Border.SetOutsideBorder(XLBorderStyleValues.Thin);
 
         var yearlyBalance = yearlyIncome - yearlyOutcome;
-        var businessUnitYearlyData = new double[] {
+        var businessUnitYearlyData = new[]
+        {
             Math.Round(yearlyIncome, 2),
-            (-1 * Math.Round(yearlyOutcome, 2)),
+            -1 * Math.Round(yearlyOutcome, 2),
             Math.Round(yearlyBalance, 2)
         };
 
@@ -137,13 +141,13 @@ public sealed class SpreadsheetService : ISpreadsheetService
         const int spaceBetweenData = 2;
 
         ws.Range(1, 1, 1, lastColumnNumberForTransferData)
-                .SetValue("Transfers")
-                .Merge()
-                .Style
-                .Font.SetBold()
-                .Fill.SetBackgroundColor(XLColor.CornflowerBlue)
-                .Alignment.SetHorizontal(XLAlignmentHorizontalValues.Center)
-                .Border.SetOutsideBorder(XLBorderStyleValues.Thin);
+            .SetValue("Transfers")
+            .Merge()
+            .Style
+            .Font.SetBold()
+            .Fill.SetBackgroundColor(XLColor.CornflowerBlue)
+            .Alignment.SetHorizontal(XLAlignmentHorizontalValues.Center)
+            .Border.SetOutsideBorder(XLBorderStyleValues.Thin);
 
         ws.Cell(2, 1)
             .InsertData(transferColumnNames, true)
@@ -154,9 +158,9 @@ public sealed class SpreadsheetService : ISpreadsheetService
 
         var transfersData = monthlyBalance.Transfers.Select(transfer =>
         {
-            var value = transfer.Type == TransferType.Profit ?
-                Math.Round(transfer.Value, 2) :
-                (-1 * Math.Round(transfer.Value, 2));
+            var value = transfer.Type == TransferType.Profit
+                ? Math.Round(transfer.Value, 2)
+                : -1 * Math.Round(transfer.Value, 2);
 
             return new
             {
@@ -183,10 +187,10 @@ public sealed class SpreadsheetService : ISpreadsheetService
             .WhenLessThan(0).Font.SetFontColor(XLColor.Red);
 
         ws.Range(
-            1,
-            lastColumnNumberForTransferData + spaceBetweenData,
-            1,
-            lastColumnNumberForTransferData + 1 + numberOfColumnsForMonthlyBalanceData)
+                1,
+                lastColumnNumberForTransferData + spaceBetweenData,
+                1,
+                lastColumnNumberForTransferData + 1 + numberOfColumnsForMonthlyBalanceData)
             .SetValue(wsName)
             .Merge()
             .Style
@@ -202,9 +206,10 @@ public sealed class SpreadsheetService : ISpreadsheetService
             .Alignment.SetHorizontal(XLAlignmentHorizontalValues.Center)
             .Border.SetOutsideBorder(XLBorderStyleValues.Thin);
 
-        var monthlyBalanceData = new double[] {
+        var monthlyBalanceData = new[]
+        {
             Math.Round(monthlyBalance.Income, 2),
-            (-1 * Math.Round(monthlyBalance.Outcome, 2)),
+            -1 * Math.Round(monthlyBalance.Outcome, 2),
             Math.Round(monthlyBalance.Balance, 2)
         };
 
@@ -228,11 +233,10 @@ public sealed class SpreadsheetService : ISpreadsheetService
         ws.Columns().AdjustToContents();
         ws.Column(1).Width = 12;
 
-        var lastColumnNumber = lastColumnNumberForTransferData + spaceBetweenData + numberOfColumnsForMonthlyBalanceData;
+        var lastColumnNumber =
+            lastColumnNumberForTransferData + spaceBetweenData + numberOfColumnsForMonthlyBalanceData;
         for (var i = lastColumnNumberForTransferData + spaceBetweenData; i < lastColumnNumber; i++)
-        {
             ws.Column(i).Width = 12;
-        }
     }
 
     private static byte[] ConvertWorkbookToByteArray(XLWorkbook workbook)

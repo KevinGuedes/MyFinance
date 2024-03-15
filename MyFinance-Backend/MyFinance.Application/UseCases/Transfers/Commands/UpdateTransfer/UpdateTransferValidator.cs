@@ -24,9 +24,9 @@ public sealed class UpdateTransferValidator : AbstractValidator<UpdateTransferCo
             .IsInEnum().WithMessage("Invalid {PropertyName}");
 
         RuleFor(command => command.Id)
-             .NotEqual(Guid.Empty).WithMessage("{PropertyName} invalid");
+            .NotEqual(Guid.Empty).WithMessage("{PropertyName} invalid");
 
         RuleFor(command => command.AccountTagId)
-             .NotEqual(Guid.Empty).WithMessage("{PropertyName} invalid");
+            .NotEqual(Guid.Empty).WithMessage("{PropertyName} invalid");
     }
 }

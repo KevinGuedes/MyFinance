@@ -34,7 +34,7 @@ public static class DomainToDTOMapper
             Outcome = monthlyBalance.Outcome,
             Balance = monthlyBalance.Balance,
             ReferenceMonth = monthlyBalance.ReferenceMonth,
-            ReferenceYear = monthlyBalance.ReferenceYear,
+            ReferenceYear = monthlyBalance.ReferenceYear
         };
 
     public static IEnumerable<MonthlyBalanceDTO> MonthlyBalanceToDTO(IEnumerable<MonthlyBalance> monthlyBalances)

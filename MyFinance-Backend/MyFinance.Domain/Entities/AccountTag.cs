@@ -2,14 +2,9 @@
 
 public class AccountTag : UserOwnedEntity
 {
-    public string Tag { get; private set; } = null!;
-    public string? Description { get; private set; }
-    public bool IsArchived { get; private set; }
-    public string? ReasonToArchive { get; private set; }
-    public DateTime? ArchiveDate { get; private set; }
-    public List<Transfer> Transfers { get; private set; } = [];
-
-    private AccountTag() { }
+    private AccountTag()
+    {
+    }
 
     public AccountTag(string tag, string? description, Guid userId) : base(userId)
     {
@@ -20,6 +15,13 @@ public class AccountTag : UserOwnedEntity
         ArchiveDate = null;
         Transfers = [];
     }
+
+    public string Tag { get; private set; } = null!;
+    public string? Description { get; private set; }
+    public bool IsArchived { get; private set; }
+    public string? ReasonToArchive { get; private set; }
+    public DateTime? ArchiveDate { get; private set; }
+    public List<Transfer> Transfers { get; private set; } = [];
 
     public void Update(string tag, string? description)
     {

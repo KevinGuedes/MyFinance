@@ -9,7 +9,8 @@ public sealed class UpdateBusinessUnitValidator : AbstractValidator<UpdateBusine
     private readonly IBusinessUnitRepository _businessUnitRepository;
     private readonly ICurrentUserProvider _currentUserProvider;
 
-    public UpdateBusinessUnitValidator(IBusinessUnitRepository businessUnitRepository, ICurrentUserProvider currentUserProvider)
+    public UpdateBusinessUnitValidator(IBusinessUnitRepository businessUnitRepository,
+        ICurrentUserProvider currentUserProvider)
     {
         _businessUnitRepository = businessUnitRepository;
         _currentUserProvider = currentUserProvider;
@@ -22,24 +23,24 @@ public sealed class UpdateBusinessUnitValidator : AbstractValidator<UpdateBusine
             .NotEqual(Guid.Empty).WithMessage("{PropertyName} invalid");
 
         RuleFor(command => command.Name)
-           .Cascade(CascadeMode.Stop)
-           .NotNull().WithMessage("{PropertyName} must not be null")
-           .NotEmpty().WithMessage("{PropertyName} must not be empty")
-           .MaximumLength(100).WithMessage("{PropertyName} must have a maximum of 100 characters")
-           .MustAsync(async (command, newBusinessUnitName, cancellationToken) =>
-           {
-               var currentUserId = _currentUserProvider.GetCurrentUserId();
+            .Cascade(CascadeMode.Stop)
+            .NotNull().WithMessage("{PropertyName} must not be null")
+            .NotEmpty().WithMessage("{PropertyName} must not be empty")
+            .MaximumLength(100).WithMessage("{PropertyName} must have a maximum of 100 characters")
+            .MustAsync(async (command, newBusinessUnitName, cancellationToken) =>
+            {
+                var currentUserId = _currentUserProvider.GetCurrentUserId();
 
-               var existingBusinessUnit = await _businessUnitRepository.GetByNameAsync(
-                   newBusinessUnitName,
-                   currentUserId,
-                   cancellationToken);
+                var existingBusinessUnit = await _businessUnitRepository.GetByNameAsync(
+                    newBusinessUnitName,
+                    currentUserId,
+                    cancellationToken);
 
-               if (existingBusinessUnit is null)
-                   return true;
+                if (existingBusinessUnit is null)
+                    return true;
 
-               var isValidName = existingBusinessUnit.Id == command.Id;
-               return isValidName;
-           }).WithMessage("The {PropertyName} {PropertyValue} has already been taken");
+                var isValidName = existingBusinessUnit.Id == command.Id;
+                return isValidName;
+            }).WithMessage("The {PropertyName} {PropertyValue} has already been taken");
     }
 }

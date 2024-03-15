@@ -13,8 +13,8 @@ internal sealed class RegisterUserCommandHandler(
     IPasswordHasher passwordHasher) : ICommandHandler<RegisterUserCommand>
 {
     private readonly ILogger<RegisterUserCommandHandler> _logger = logger;
-    private readonly IUserRepository _userRepository = userRepository;
     private readonly IPasswordHasher _passwordHasher = passwordHasher;
+    private readonly IUserRepository _userRepository = userRepository;
 
     public Task<Result> Handle(RegisterUserCommand request, CancellationToken cancellationToken)
     {

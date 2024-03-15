@@ -13,10 +13,10 @@ public sealed class SignInCommandHandler(
     IAuthService authService,
     IPasswordHasher passwordHasher) : ICommandHandler<SignInCommand>
 {
-    private readonly ILogger<SignInCommandHandler> _logger = logger;
-    private readonly IUserRepository _userRepository = userRepository;
     private readonly IAuthService _authService = authService;
+    private readonly ILogger<SignInCommandHandler> _logger = logger;
     private readonly IPasswordHasher _passwordHasher = passwordHasher;
+    private readonly IUserRepository _userRepository = userRepository;
 
     public async Task<Result> Handle(SignInCommand request, CancellationToken cancellationToken)
     {

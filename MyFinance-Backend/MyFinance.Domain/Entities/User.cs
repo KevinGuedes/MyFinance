@@ -2,11 +2,9 @@
 
 public class User : Entity
 {
-    public string Name { get; set; } = null!;
-    public string Email { get; set; } = null!;
-    public string PasswordHash { get; set; } = null!;
-
-    private User() { }
+    private User()
+    {
+    }
 
     public User(string name, string email, string passwordHash)
     {
@@ -14,4 +12,8 @@ public class User : Entity
         Email = email;
         PasswordHash = passwordHash;
     }
+
+    public string Name { get; set; } = null!;
+    public string Email { get; set; } = null!;
+    public string PasswordHash { get; set; } = null!;
 }

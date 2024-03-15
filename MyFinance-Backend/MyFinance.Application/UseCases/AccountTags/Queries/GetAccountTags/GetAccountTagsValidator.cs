@@ -7,7 +7,7 @@ public sealed class GetAccountTagsValidator : AbstractValidator<GetAccountTagsQu
     public GetAccountTagsValidator()
     {
         RuleFor(query => query.Page)
-           .GreaterThan(0).WithMessage("{PropertyName} must be greater than 0");
+            .GreaterThan(0).WithMessage("{PropertyName} must be greater than 0");
 
         RuleFor(query => query.PageSize)
             .GreaterThan(0).WithMessage("{PropertyName} must be greater than 0");

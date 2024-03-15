@@ -15,11 +15,7 @@ public abstract class ApiController : ControllerBase
     protected IActionResult ProcessResult<TResponse>(Result<TResponse> result, bool isCreatedEntity = false)
     {
         if (result.IsSuccess)
-        {
-            return isCreatedEntity ?
-                StatusCode(StatusCodes.Status201Created, result.Value) :
-                Ok(result.Value);
-        }
+            return isCreatedEntity ? StatusCode(StatusCodes.Status201Created, result.Value) : Ok(result.Value);
 
         return HandleFailureResult(result.Errors);
     }
@@ -78,7 +74,8 @@ public abstract class ApiController : ControllerBase
     private NotFoundObjectResult BuildNotFoundResponse(EntityNotFoundError entityNotFoundError)
         => NotFound(new EntityNotFoundResponse(entityNotFoundError));
 
-    private UnprocessableEntityObjectResult BuildUnprocessableEntityResponse(UnprocessableEntityError unprocessableEntityError)
+    private UnprocessableEntityObjectResult BuildUnprocessableEntityResponse(
+        UnprocessableEntityError unprocessableEntityError)
         => UnprocessableEntity(new UnprocessableEntityResponse(unprocessableEntityError));
 
     protected IActionResult BuildInternalServerErrorResponse(InternalServerError internalServerError)

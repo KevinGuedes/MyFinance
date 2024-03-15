@@ -9,7 +9,8 @@ public sealed class UpdateAccountTagValidator : AbstractValidator<UpdateAccountT
     private readonly IAccountTagRepository _accountTagRepository;
     private readonly ICurrentUserProvider _currentUserProvider;
 
-    public UpdateAccountTagValidator(IAccountTagRepository accountTagRepository, ICurrentUserProvider currentUserProvider)
+    public UpdateAccountTagValidator(IAccountTagRepository accountTagRepository,
+        ICurrentUserProvider currentUserProvider)
     {
         _accountTagRepository = accountTagRepository;
         _currentUserProvider = currentUserProvider;
@@ -18,7 +19,8 @@ public sealed class UpdateAccountTagValidator : AbstractValidator<UpdateAccountT
         RuleFor(command => command.Description)
             .NotNull().WithMessage("{PropertyName} must not be null")
             .NotEmpty().WithMessage("{PropertyName} must not be empty")
-            .MaximumLength(300).WithMessage("{PropertyName} must have a maximum of 300 charactersmust have a maximum of 300 characters");
+            .MaximumLength(300)
+            .WithMessage("{PropertyName} must have a maximum of 300 charactersmust have a maximum of 300 characters");
 
         RuleFor(command => command.Id)
             .NotEqual(Guid.Empty).WithMessage("{PropertyName} invalid");
@@ -32,7 +34,8 @@ public sealed class UpdateAccountTagValidator : AbstractValidator<UpdateAccountT
             {
                 var currentUserId = _currentUserProvider.GetCurrentUserId();
 
-                var existingBusinessUnit = await _accountTagRepository.GetByTagAsync(tag, currentUserId, cancellationToken);
+                var existingBusinessUnit =
+                    await _accountTagRepository.GetByTagAsync(tag, currentUserId, cancellationToken);
                 if (existingBusinessUnit is null)
                     return true;
 

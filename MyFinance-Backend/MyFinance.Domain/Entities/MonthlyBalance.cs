@@ -4,16 +4,9 @@ namespace MyFinance.Domain.Entities;
 
 public class MonthlyBalance : UserOwnedEntity
 {
-    public int ReferenceYear { get; init; }
-    public int ReferenceMonth { get; init; }
-    public double Income { get; private set; }
-    public double Outcome { get; private set; }
-    public double Balance { get => Income - Outcome; }
-    public Guid BusinessUnitId { get; private set; }
-    public BusinessUnit BusinessUnit { get; private set; } = null!;
-    public List<Transfer> Transfers { get; private set; } = [];
-
-    private MonthlyBalance() { }
+    private MonthlyBalance()
+    {
+    }
 
     public MonthlyBalance(DateTime referenceDate, BusinessUnit businessUnit, Guid userId) : base(userId)
     {
@@ -25,6 +18,15 @@ public class MonthlyBalance : UserOwnedEntity
         BusinessUnitId = businessUnit.Id;
         Transfers = [];
     }
+
+    public int ReferenceYear { get; init; }
+    public int ReferenceMonth { get; init; }
+    public double Income { get; private set; }
+    public double Outcome { get; private set; }
+    public double Balance => Income - Outcome;
+    public Guid BusinessUnitId { get; private set; }
+    public BusinessUnit BusinessUnit { get; private set; } = null!;
+    public List<Transfer> Transfers { get; private set; } = [];
 
     public void RegisterValue(double transferValue, TransferType transferType)
     {

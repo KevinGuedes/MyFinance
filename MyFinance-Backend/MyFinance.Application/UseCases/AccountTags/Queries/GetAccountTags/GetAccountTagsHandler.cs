@@ -12,17 +12,18 @@ internal sealed class GetAccountTagsHandler(
     IAccountTagRepository accountTagRepository,
     ICurrentUserProvider currentUserProvider) : IQueryHandler<GetAccountTagsQuery, IEnumerable<AccountTag>>
 {
-    private readonly ILogger<GetAccountTagsHandler> _logger = logger;
     private readonly IAccountTagRepository _accountTagRepository = accountTagRepository;
     private readonly ICurrentUserProvider _currentUserProvider = currentUserProvider;
+    private readonly ILogger<GetAccountTagsHandler> _logger = logger;
 
-    public async Task<Result<IEnumerable<AccountTag>>> Handle(GetAccountTagsQuery query, CancellationToken cancellationToken)
+    public async Task<Result<IEnumerable<AccountTag>>> Handle(GetAccountTagsQuery query,
+        CancellationToken cancellationToken)
     {
         var currentUserId = _currentUserProvider.GetCurrentUserId();
 
         _logger.LogInformation("Retrieving Account Tags from database");
         var accountTags = await _accountTagRepository.GetPaginatedAsync(
-            query.Page, 
+            query.Page,
             query.PageSize,
             currentUserId,
             cancellationToken);

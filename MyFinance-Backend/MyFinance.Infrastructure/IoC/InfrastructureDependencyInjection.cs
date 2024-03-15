@@ -52,11 +52,11 @@ public static class InfrastructureDependencyInjection
     {
         var migrationsAssemblyName = typeof(MyFinanceDbContext).Assembly.FullName;
         services.AddDbContext<MyFinanceDbContext>(
-            optionsAction: options => options
-            .UseSqlite(configuration.GetConnectionString("Lite"),
-            sqlServerOptions => sqlServerOptions
-                .UseQuerySplittingBehavior(QuerySplittingBehavior.SingleQuery)
-                .MigrationsAssembly(migrationsAssemblyName)));
+            options => options
+                .UseSqlite(configuration.GetConnectionString("Lite"),
+                    sqlServerOptions => sqlServerOptions
+                        .UseQuerySplittingBehavior(QuerySplittingBehavior.SingleQuery)
+                        .MigrationsAssembly(migrationsAssemblyName)));
 
         return services
             .AddScoped<IUnitOfWork, UnitOfWork>()

@@ -12,9 +12,9 @@ internal sealed class CreateBusinessUnitHandler(
     IBusinessUnitRepository businessUnitRepository,
     ICurrentUserProvider currentUserProvider) : ICommandHandler<CreateBusinessUnitCommand, BusinessUnit>
 {
-    private readonly ILogger<CreateBusinessUnitHandler> _logger = logger;
     private readonly IBusinessUnitRepository _businessUnitRepository = businessUnitRepository;
     private readonly ICurrentUserProvider _currentUserProvider = currentUserProvider;
+    private readonly ILogger<CreateBusinessUnitHandler> _logger = logger;
 
     public Task<Result<BusinessUnit>> Handle(CreateBusinessUnitCommand command, CancellationToken cancellationToken)
     {

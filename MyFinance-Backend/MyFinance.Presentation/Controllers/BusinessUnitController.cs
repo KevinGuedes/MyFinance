@@ -19,17 +19,21 @@ public class BusinessUnitController(IBusinessUnitApiService businessUnitApiServi
     [SwaggerResponse(StatusCodes.Status201Created, "Created Business Unit", typeof(BusinessUnitDTO))]
     [SwaggerResponse(StatusCodes.Status400BadRequest, "Invalid payload", typeof(BadRequestResponse))]
     public async Task<IActionResult> CreateBusinessUnitAsync(
-        [FromBody, SwaggerRequestBody("Business unit payload", Required = true)] CreateBusinessUnitCommand command,
+        [FromBody] [SwaggerRequestBody("Business unit payload", Required = true)]
+        CreateBusinessUnitCommand command,
         CancellationToken cancellationToken)
         => ProcessResult(await _businessUnitApiService.CreateBusinessUnitAsync(command, cancellationToken), true);
 
     [HttpGet]
     [SwaggerOperation(Summary = "Lists all Business Units with pagination")]
-    [SwaggerResponse(StatusCodes.Status200OK, "List of all existing Business Units with pagination", typeof(IEnumerable<BusinessUnitDTO>))]
+    [SwaggerResponse(StatusCodes.Status200OK, "List of all existing Business Units with pagination",
+        typeof(IEnumerable<BusinessUnitDTO>))]
     [SwaggerResponse(StatusCodes.Status400BadRequest, "Invalid query parameters", typeof(BadRequestResponse))]
     public async Task<IActionResult> GetBusinessUnitsAsync(
-        [FromQuery, SwaggerParameter("Page number", Required = true)] int page,
-        [FromQuery, SwaggerParameter("Units per page", Required = true)] int pageSize,
+        [FromQuery] [SwaggerParameter("Page number", Required = true)]
+        int page,
+        [FromQuery] [SwaggerParameter("Units per page", Required = true)]
+        int pageSize,
         CancellationToken cancellationToken)
         => ProcessResult(await _businessUnitApiService.GetBusinessUnitsAsync(page, pageSize, cancellationToken));
 
@@ -38,10 +42,11 @@ public class BusinessUnitController(IBusinessUnitApiService businessUnitApiServi
     [SwaggerResponse(StatusCodes.Status200OK, "Updated Business Unit", typeof(BusinessUnitDTO))]
     [SwaggerResponse(StatusCodes.Status400BadRequest, "Invalid payload", typeof(BadRequestResponse))]
     [SwaggerResponse(StatusCodes.Status404NotFound, "Business Unit not found", typeof(EntityNotFoundResponse))]
-    [SwaggerResponse(StatusCodes.Status409Conflict, "The Business Unit was updated after the request was sent", typeof(UnprocessableEntityResponse))]
-
+    [SwaggerResponse(StatusCodes.Status409Conflict, "The Business Unit was updated after the request was sent",
+        typeof(UnprocessableEntityResponse))]
     public async Task<IActionResult> UpdateBusinessUnitAsync(
-        [FromBody, SwaggerRequestBody("Business Unit payload", Required = true)] UpdateBusinessUnitCommand command,
+        [FromBody] [SwaggerRequestBody("Business Unit payload", Required = true)]
+        UpdateBusinessUnitCommand command,
         CancellationToken cancellationToken)
         => ProcessResult(await _businessUnitApiService.UpdateBusinessUnitAsync(command, cancellationToken));
 
@@ -50,10 +55,11 @@ public class BusinessUnitController(IBusinessUnitApiService businessUnitApiServi
     [SwaggerResponse(StatusCodes.Status204NoContent, "Business Unit successfully unarchived")]
     [SwaggerResponse(StatusCodes.Status400BadRequest, "Invalid Business Unit Id", typeof(BadRequestResponse))]
     [SwaggerResponse(StatusCodes.Status404NotFound, "Business Unit not found", typeof(EntityNotFoundResponse))]
-    [SwaggerResponse(StatusCodes.Status409Conflict, "The Business Unit was updated after the request was sent", typeof(UnprocessableEntityResponse))]
-
+    [SwaggerResponse(StatusCodes.Status409Conflict, "The Business Unit was updated after the request was sent",
+        typeof(UnprocessableEntityResponse))]
     public async Task<IActionResult> UnarchiveBusinessUnitAsync(
-        [FromRoute, SwaggerParameter("Id of the Business Unit to unarchive", Required = true)] Guid id,
+        [FromRoute] [SwaggerParameter("Id of the Business Unit to unarchive", Required = true)]
+        Guid id,
         CancellationToken cancellationToken)
         => ProcessResult(await _businessUnitApiService.UnarchiveBusinessUnitAsync(id, cancellationToken));
 
@@ -62,10 +68,11 @@ public class BusinessUnitController(IBusinessUnitApiService businessUnitApiServi
     [SwaggerResponse(StatusCodes.Status204NoContent, "Business Unit successfully archived")]
     [SwaggerResponse(StatusCodes.Status400BadRequest, "Invalid payload", typeof(BadRequestResponse))]
     [SwaggerResponse(StatusCodes.Status404NotFound, "Business Unit not found", typeof(EntityNotFoundResponse))]
-    [SwaggerResponse(StatusCodes.Status409Conflict, "The Business Unit was updated after the request was sent", typeof(UnprocessableEntityResponse))]
-
+    [SwaggerResponse(StatusCodes.Status409Conflict, "The Business Unit was updated after the request was sent",
+        typeof(UnprocessableEntityResponse))]
     public async Task<IActionResult> ArchiveBusinessUnitAsync(
-        [FromBody, SwaggerRequestBody("Payload to archvie a Business Unit", Required = true)] ArchiveBusinessUnitCommand command,
+        [FromBody] [SwaggerRequestBody("Payload to archvie a Business Unit", Required = true)]
+        ArchiveBusinessUnitCommand command,
         CancellationToken cancellationToken)
         => ProcessResult(await _businessUnitApiService.ArchiveBusinessUnitAsync(command, cancellationToken));
 }

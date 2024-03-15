@@ -14,11 +14,11 @@ internal sealed class DeleteTransferHandler(
     ITransferRepository transferRepository,
     ICurrentUserProvider currentUserProvider) : ICommandHandler<DeleteTransferCommand>
 {
+    private readonly IBusinessUnitRepository _businessUnitRepository = businessUnitRepository;
+    private readonly ICurrentUserProvider _currentUserProvider = currentUserProvider;
     private readonly ILogger<DeleteTransferHandler> _logger = logger;
     private readonly IMonthlyBalanceRepository _monthlyBalanceRepository = monthlyBalanceRepository;
-    private readonly IBusinessUnitRepository _businessUnitRepository = businessUnitRepository;
     private readonly ITransferRepository _transferRepository = transferRepository;
-    private readonly ICurrentUserProvider _currentUserProvider = currentUserProvider;
 
     public async Task<Result> Handle(DeleteTransferCommand command, CancellationToken cancellationToken)
     {

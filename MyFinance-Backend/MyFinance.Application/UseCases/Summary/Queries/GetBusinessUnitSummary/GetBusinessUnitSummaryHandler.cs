@@ -14,18 +14,19 @@ internal sealed class GetBusinessUnitSummaryHandler(
     ICurrentUserProvider currentUserProvider)
     : IQueryHandler<GetBusinessUnitSummaryQuery, Tuple<string, byte[]>>
 {
-    private readonly ILogger<GetBusinessUnitSummaryHandler> _logger = logger;
     private readonly IBusinessUnitRepository _businessUnitRepository = businessUnitRepository;
-    private readonly ISpreadsheetService _spreadsheetService = spreadsheetService;
     private readonly ICurrentUserProvider _currentUserProvider = currentUserProvider;
+    private readonly ILogger<GetBusinessUnitSummaryHandler> _logger = logger;
+    private readonly ISpreadsheetService _spreadsheetService = spreadsheetService;
 
-    public async Task<Result<Tuple<string, byte[]>>> Handle(GetBusinessUnitSummaryQuery query, CancellationToken cancellationToken)
+    public async Task<Result<Tuple<string, byte[]>>> Handle(GetBusinessUnitSummaryQuery query,
+        CancellationToken cancellationToken)
     {
         var currentUserId = _currentUserProvider.GetCurrentUserId();
 
         _logger.LogInformation("Retrieving Business Unit with Id {BusinessUnitId} ", query.Id);
         var businessUnit = await _businessUnitRepository.GetWithSummaryData(
-            query.Id, 
+            query.Id,
             query.Year,
             currentUserId,
             cancellationToken);
@@ -41,8 +42,11 @@ internal sealed class GetBusinessUnitSummaryHandler(
         var hasMonthlyBalancesForProcessing = businessUnit.MonthlyBalances.Count is not 0;
         if (!hasMonthlyBalancesForProcessing)
         {
-            _logger.LogWarning("Business Unit with Id {BusinessUnitId} has no Monthly Balances with Transfers to summarize", query.Id);
-            var errorMessage = string.Format("Business Unit with Id {0} has no Monthly Balances with Transfers to summarize", query.Id);
+            _logger.LogWarning(
+                "Business Unit with Id {BusinessUnitId} has no Monthly Balances with Transfers to summarize", query.Id);
+            var errorMessage =
+                string.Format("Business Unit with Id {0} has no Monthly Balances with Transfers to summarize",
+                    query.Id);
             var unprocessableEntityError = new UnprocessableEntityError(errorMessage);
             return Result.Fail(unprocessableEntityError);
         }

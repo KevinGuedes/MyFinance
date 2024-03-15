@@ -13,9 +13,9 @@ internal sealed class UpdateAccountTagHandler(
     IAccountTagRepository accountTagRepository,
     ICurrentUserProvider currentUserProvider) : ICommandHandler<UpdateAccountTagCommand, AccountTag>
 {
-    private readonly ILogger<UpdateAccountTagHandler> _logger = logger;
     private readonly IAccountTagRepository _accountTagRepository = accountTagRepository;
     private readonly ICurrentUserProvider _currentUserProvider = currentUserProvider;
+    private readonly ILogger<UpdateAccountTagHandler> _logger = logger;
 
     public async Task<Result<AccountTag>> Handle(UpdateAccountTagCommand command, CancellationToken cancellationToken)
     {

@@ -41,8 +41,8 @@ public sealed class BusinessUnitRepository(MyFinanceDbContext myFinanceDbContext
                 .OrderBy(mb => mb.ReferenceYear)
                 .ThenBy(mb => mb.ReferenceMonth))
             .ThenInclude(mb => mb.Transfers
-               .OrderByDescending(t => t.CreationDate)
-               .ThenByDescending(t => t.RelatedTo))
+                .OrderByDescending(t => t.CreationDate)
+                .ThenByDescending(t => t.RelatedTo))
             .ThenInclude(t => t.AccountTag)
             .AsNoTracking()
             .FirstOrDefaultAsync(bu => bu.Id == id, cancellationToken);

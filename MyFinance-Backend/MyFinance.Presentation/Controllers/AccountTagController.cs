@@ -19,17 +19,21 @@ public class AccountTagController(IAccountTagApiService accountTagApiService) : 
     [SwaggerResponse(StatusCodes.Status201Created, "Account Tag registered", typeof(AccountTagDTO))]
     [SwaggerResponse(StatusCodes.Status400BadRequest, "Invalid payload", typeof(BadRequestResponse))]
     public async Task<IActionResult> RegisterTransfersAsync(
-        [FromBody, SwaggerRequestBody("Account Tag's payload", Required = true)] CreateAccountTagCommand command,
+        [FromBody] [SwaggerRequestBody("Account Tag's payload", Required = true)]
+        CreateAccountTagCommand command,
         CancellationToken cancellationToken)
         => ProcessResult(await _accountTagApiService.CreateAccountTagAsync(command, cancellationToken), true);
 
     [HttpGet]
     [SwaggerOperation(Summary = "Lists all Account Tags with pagination")]
-    [SwaggerResponse(StatusCodes.Status200OK, "List of all existing Account Tags with pagination", typeof(IEnumerable<AccountTagDTO>))]
+    [SwaggerResponse(StatusCodes.Status200OK, "List of all existing Account Tags with pagination",
+        typeof(IEnumerable<AccountTagDTO>))]
     [SwaggerResponse(StatusCodes.Status400BadRequest, "Invalid query parameters", typeof(BadRequestResponse))]
     public async Task<IActionResult> GetBusinessUnitsAsync(
-        [FromQuery, SwaggerParameter("Page number", Required = true)] int page,
-        [FromQuery, SwaggerParameter("Units per page", Required = true)] int pageSize,
+        [FromQuery] [SwaggerParameter("Page number", Required = true)]
+        int page,
+        [FromQuery] [SwaggerParameter("Units per page", Required = true)]
+        int pageSize,
         CancellationToken cancellationToken)
         => ProcessResult(await _accountTagApiService.GetAccountTagsAsync(page, pageSize, cancellationToken));
 
@@ -38,9 +42,11 @@ public class AccountTagController(IAccountTagApiService accountTagApiService) : 
     [SwaggerResponse(StatusCodes.Status200OK, "Updated Account Tag", typeof(AccountTagDTO))]
     [SwaggerResponse(StatusCodes.Status400BadRequest, "Invalid payload", typeof(BadRequestResponse))]
     [SwaggerResponse(StatusCodes.Status404NotFound, "Account Tag not found", typeof(EntityNotFoundResponse))]
-    [SwaggerResponse(StatusCodes.Status409Conflict, "The Account Tag was updated after the request was sent", typeof(UnprocessableEntityResponse))]
+    [SwaggerResponse(StatusCodes.Status409Conflict, "The Account Tag was updated after the request was sent",
+        typeof(UnprocessableEntityResponse))]
     public async Task<IActionResult> UpdateBusinessUnitAsync(
-        [FromBody, SwaggerRequestBody("Account Tag payload", Required = true)] UpdateAccountTagCommand command,
+        [FromBody] [SwaggerRequestBody("Account Tag payload", Required = true)]
+        UpdateAccountTagCommand command,
         CancellationToken cancellationToken)
         => ProcessResult(await _accountTagApiService.UpdateAccountTagAsync(command, cancellationToken));
 
@@ -49,9 +55,11 @@ public class AccountTagController(IAccountTagApiService accountTagApiService) : 
     [SwaggerResponse(StatusCodes.Status204NoContent, "Account Tag successfully unarchived")]
     [SwaggerResponse(StatusCodes.Status400BadRequest, "Invalid Account Tag Id", typeof(BadRequestResponse))]
     [SwaggerResponse(StatusCodes.Status404NotFound, "Account Tag not found", typeof(EntityNotFoundResponse))]
-    [SwaggerResponse(StatusCodes.Status409Conflict, "The Account Tag was updated after the request was sent", typeof(UnprocessableEntityResponse))]
+    [SwaggerResponse(StatusCodes.Status409Conflict, "The Account Tag was updated after the request was sent",
+        typeof(UnprocessableEntityResponse))]
     public async Task<IActionResult> UnarchiveBusinessUnitAsync(
-        [FromRoute, SwaggerParameter("Id of the Account Tag to unarchive", Required = true)] Guid id,
+        [FromRoute] [SwaggerParameter("Id of the Account Tag to unarchive", Required = true)]
+        Guid id,
         CancellationToken cancellationToken)
         => ProcessResult(await _accountTagApiService.UnarchiveAccountTagAsync(id, cancellationToken));
 
@@ -60,9 +68,11 @@ public class AccountTagController(IAccountTagApiService accountTagApiService) : 
     [SwaggerResponse(StatusCodes.Status204NoContent, "Account Tag successfully archived")]
     [SwaggerResponse(StatusCodes.Status400BadRequest, "Invalid payload", typeof(BadRequestResponse))]
     [SwaggerResponse(StatusCodes.Status404NotFound, "Account Tag not found", typeof(EntityNotFoundResponse))]
-    [SwaggerResponse(StatusCodes.Status409Conflict, "The Account Tag was updated after the request was sent", typeof(UnprocessableEntityResponse))]
+    [SwaggerResponse(StatusCodes.Status409Conflict, "The Account Tag was updated after the request was sent",
+        typeof(UnprocessableEntityResponse))]
     public async Task<IActionResult> ArchiveBusinessUnitAsync(
-        [FromBody, SwaggerRequestBody("Payload to archvie a Account Tag", Required = true)] ArchiveAccountTagCommand command,
+        [FromBody] [SwaggerRequestBody("Payload to archvie a Account Tag", Required = true)]
+        ArchiveAccountTagCommand command,
         CancellationToken cancellationToken)
         => ProcessResult(await _accountTagApiService.ArchiveAccountTagAsync(command, cancellationToken));
 }

@@ -31,13 +31,15 @@ public sealed class AccountTagApiService(IMediator mediator) : BaseApiService(me
     public Task<Result> UnarchiveAccountTagAsync(Guid id, CancellationToken cancellationToken)
         => _mediator.Send(new UnarchiveAccountTagCommand(id), cancellationToken);
 
-    public async Task<Result<AccountTagDTO>> CreateAccountTagAsync(CreateAccountTagCommand command, CancellationToken cancellationToken)
+    public async Task<Result<AccountTagDTO>> CreateAccountTagAsync(CreateAccountTagCommand command,
+        CancellationToken cancellationToken)
     {
         var result = await _mediator.Send(command, cancellationToken);
         return MapResult(result, DomainToDTOMapper.AccountTagToDTO);
     }
 
-    public async Task<Result<AccountTagDTO>> UpdateAccountTagAsync(UpdateAccountTagCommand command, CancellationToken cancellationToken)
+    public async Task<Result<AccountTagDTO>> UpdateAccountTagAsync(UpdateAccountTagCommand command,
+        CancellationToken cancellationToken)
     {
         var result = await _mediator.Send(command, cancellationToken);
         return MapResult(result, DomainToDTOMapper.AccountTagToDTO);

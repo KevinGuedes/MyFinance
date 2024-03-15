@@ -10,19 +10,21 @@ namespace MyFinance.Application.UseCases.Summary.Queries.GetMonthlyBalanceSummar
 internal sealed class GetMonthlyBalanceSummaryHandler(
     ILogger<GetMonthlyBalanceSummaryHandler> logger,
     IMonthlyBalanceRepository monthlyBalanceRepository,
-    ISpreadsheetService spreadsheetService, 
+    ISpreadsheetService spreadsheetService,
     ICurrentUserProvider currentUserProvider)
     : IQueryHandler<GetMonthlyBalanceSummaryQuery, Tuple<string, byte[]>>
 {
+    private readonly ICurrentUserProvider _currentUserProvider = currentUserProvider;
     private readonly ILogger<GetMonthlyBalanceSummaryHandler> _logger = logger;
     private readonly IMonthlyBalanceRepository _monthlyBalanceRepository = monthlyBalanceRepository;
     private readonly ISpreadsheetService _spreadsheetService = spreadsheetService;
-    private readonly ICurrentUserProvider _currentUserProvider = currentUserProvider;
 
-    public async Task<Result<Tuple<string, byte[]>>> Handle(GetMonthlyBalanceSummaryQuery query, CancellationToken cancellationToken)
+    public async Task<Result<Tuple<string, byte[]>>> Handle(GetMonthlyBalanceSummaryQuery query,
+        CancellationToken cancellationToken)
     {
         var currentUserId = _currentUserProvider.GetCurrentUserId();
-        var monthlyBalance = await _monthlyBalanceRepository.GetWithSummaryData(query.Id, currentUserId, cancellationToken);
+        var monthlyBalance =
+            await _monthlyBalanceRepository.GetWithSummaryData(query.Id, currentUserId, cancellationToken);
 
         if (monthlyBalance is null)
         {
@@ -43,5 +45,4 @@ internal sealed class GetMonthlyBalanceSummaryHandler(
 
         return Result.Ok(_spreadsheetService.GetMonthlyBalanceSummary(monthlyBalance));
     }
-
 }

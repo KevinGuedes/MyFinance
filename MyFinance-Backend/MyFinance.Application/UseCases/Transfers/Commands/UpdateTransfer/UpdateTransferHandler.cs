@@ -16,12 +16,12 @@ internal sealed class UpdateTransferHandler(
     IAccountTagRepository accountTagRepository,
     ICurrentUserProvider currentUserProvider) : ICommandHandler<UpdateTransferCommand, Transfer>
 {
+    private readonly IAccountTagRepository _accountTagRepository = accountTagRepository;
+    private readonly IBusinessUnitRepository _businessUnitRepository = businessUnitRepository;
+    private readonly ICurrentUserProvider _currentUserProvider = currentUserProvider;
     private readonly ILogger<UpdateTransferHandler> _logger = logger;
     private readonly IMonthlyBalanceRepository _monthlyBalanceRepository = monthlyBalanceRepository;
-    private readonly IBusinessUnitRepository _businessUnitRepository = businessUnitRepository;
     private readonly ITransferRepository _transferRepository = transferRepository;
-    private readonly IAccountTagRepository _accountTagRepository = accountTagRepository;
-    private readonly ICurrentUserProvider _currentUserProvider = currentUserProvider;
 
     public async Task<Result<Transfer>> Handle(UpdateTransferCommand command, CancellationToken cancellationToken)
     {
@@ -86,8 +86,8 @@ internal sealed class UpdateTransferHandler(
                 _monthlyBalanceRepository.Insert(newMonthlyBalance);
 
                 _logger.LogInformation(
-                   "Transfer with Id {TransferId} added to new Monthly Balance with Id {MonthlyBalanceId}",
-                   transfer.Id, newMonthlyBalance.Id);
+                    "Transfer with Id {TransferId} added to new Monthly Balance with Id {MonthlyBalanceId}",
+                    transfer.Id, newMonthlyBalance.Id);
             }
             else
             {
@@ -103,8 +103,8 @@ internal sealed class UpdateTransferHandler(
                 _monthlyBalanceRepository.Update(existingMonthlyBalance);
 
                 _logger.LogInformation(
-                   "Transfer with Id {TransferId} added to existing Monthly Balance with Id {MonthlyBalanceId}",
-                   transfer.Id, existingMonthlyBalance.Id);
+                    "Transfer with Id {TransferId} added to existing Monthly Balance with Id {MonthlyBalanceId}",
+                    transfer.Id, existingMonthlyBalance.Id);
             }
         }
         else

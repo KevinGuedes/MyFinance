@@ -12,9 +12,9 @@ internal sealed class UnarchiveAccountTagHandler(
     IAccountTagRepository accountTagRepository,
     ICurrentUserProvider currentUserProvider) : ICommandHandler<UnarchiveAccountTagCommand>
 {
-    private readonly ILogger<UnarchiveAccountTagHandler> _logger = logger;
     private readonly IAccountTagRepository _accountTagRepository = accountTagRepository;
     private readonly ICurrentUserProvider _currentUserProvider = currentUserProvider;
+    private readonly ILogger<UnarchiveAccountTagHandler> _logger = logger;
 
     public async Task<Result> Handle(UnarchiveAccountTagCommand command, CancellationToken cancellationToken)
     {

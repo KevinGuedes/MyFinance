@@ -4,6 +4,7 @@ using MyFinance.Domain.Entities;
 using MyFinance.Infrastructure.Persistence.Context;
 
 namespace MyFinance.Infrastructure.Persistence.Repositories;
+
 public class UserRepository(MyFinanceDbContext myFinanceDbContext)
     : EntityRepository<User>(myFinanceDbContext), IUserRepository
 {

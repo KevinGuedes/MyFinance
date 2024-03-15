@@ -4,17 +4,9 @@ namespace MyFinance.Domain.Entities;
 
 public class BusinessUnit : UserOwnedEntity
 {
-    public string Name { get; private set; } = null!;
-    public string? Description { get; private set; }
-    public double Income { get; private set; }
-    public double Outcome { get; private set; }
-    public double Balance { get => Income - Outcome; }
-    public bool IsArchived { get; private set; }
-    public string? ReasonToArchive { get; private set; }
-    public DateTime? ArchiveDate { get; private set; }
-    public List<MonthlyBalance> MonthlyBalances { get; private set; } = [];
-
-    private BusinessUnit() { }
+    private BusinessUnit()
+    {
+    }
 
     public BusinessUnit(string name, string? description, Guid userId) : base(userId)
     {
@@ -27,6 +19,16 @@ public class BusinessUnit : UserOwnedEntity
         ArchiveDate = null;
         MonthlyBalances = [];
     }
+
+    public string Name { get; private set; } = null!;
+    public string? Description { get; private set; }
+    public double Income { get; private set; }
+    public double Outcome { get; private set; }
+    public double Balance => Income - Outcome;
+    public bool IsArchived { get; private set; }
+    public string? ReasonToArchive { get; private set; }
+    public DateTime? ArchiveDate { get; private set; }
+    public List<MonthlyBalance> MonthlyBalances { get; private set; } = [];
 
     public void Update(string name, string? description)
     {

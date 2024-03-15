@@ -12,9 +12,9 @@ internal sealed class CreateAccountTagHandler(
     IAccountTagRepository accountTagRepository,
     ICurrentUserProvider currentUserProvider) : ICommandHandler<CreateAccountTagCommand, AccountTag>
 {
-    private readonly ILogger<CreateAccountTagHandler> _logger = logger;
     private readonly IAccountTagRepository _accountTagRepository = accountTagRepository;
     private readonly ICurrentUserProvider _currentUserProvider = currentUserProvider;
+    private readonly ILogger<CreateAccountTagHandler> _logger = logger;
 
     public Task<Result<AccountTag>> Handle(CreateAccountTagCommand command, CancellationToken cancellationToken)
     {

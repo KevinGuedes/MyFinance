@@ -9,10 +9,11 @@ namespace MyFinance.Application.UseCases.Summary.ApiService;
 
 public sealed class SummaryApiService(IMediator mediator) : BaseApiService(mediator), ISummaryApiService
 {
-    public Task<Result<Tuple<string, byte[]>>> GetBusinessUnitSummaryAsync(Guid id, int year, CancellationToken cancellationToken)
+    public Task<Result<Tuple<string, byte[]>>> GetBusinessUnitSummaryAsync(Guid id, int year,
+        CancellationToken cancellationToken)
         => _mediator.Send(new GetBusinessUnitSummaryQuery(id, year), cancellationToken);
 
-    public Task<Result<Tuple<string, byte[]>>> GetMonthlyBalanceSummaryAsync(Guid id, CancellationToken cancellationToken)
+    public Task<Result<Tuple<string, byte[]>>> GetMonthlyBalanceSummaryAsync(Guid id,
+        CancellationToken cancellationToken)
         => _mediator.Send(new GetMonthlyBalanceSummaryQuery(id), cancellationToken);
-      
 }

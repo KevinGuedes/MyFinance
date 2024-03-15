@@ -9,8 +9,8 @@ public sealed class SignOutCommandHandler(
     ILogger<SignOutCommandHandler> logger,
     IAuthService authService) : ICommandHandler<SignOutCommand>
 {
-    private readonly ILogger<SignOutCommandHandler> _logger = logger;
     private readonly IAuthService _authService = authService;
+    private readonly ILogger<SignOutCommandHandler> _logger = logger;
 
     public async Task<Result> Handle(SignOutCommand request, CancellationToken cancellationToken)
     {

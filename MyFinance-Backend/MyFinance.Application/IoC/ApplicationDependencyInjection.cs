@@ -1,4 +1,5 @@
-﻿using FluentValidation;
+﻿using System.Reflection;
+using FluentValidation;
 using FluentValidation.AspNetCore;
 using Microsoft.Extensions.DependencyInjection;
 using MyFinance.Application.Abstractions.ApiServices;
@@ -9,7 +10,6 @@ using MyFinance.Application.UseCases.MonthlyBalances.ApiService;
 using MyFinance.Application.UseCases.Summary.ApiService;
 using MyFinance.Application.UseCases.Transfers.ApiService;
 using MyFinance.Application.UseCases.Users.ApiService;
-using System.Reflection;
 
 namespace MyFinance.Application.IoC;
 
@@ -36,7 +36,7 @@ public static class ApplicationDependencyInjection
             .AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
 
     private static IServiceCollection AddMediatR(this IServiceCollection services)
-       => services
+        => services
             .AddMediatR(cfg =>
             {
                 cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly());

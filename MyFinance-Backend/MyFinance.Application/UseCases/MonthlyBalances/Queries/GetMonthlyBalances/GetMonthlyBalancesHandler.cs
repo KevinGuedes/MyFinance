@@ -14,16 +14,18 @@ internal sealed class GetMonthlyBalancesHandler(
     IMonthlyBalanceRepository monthlyBalanceRepository,
     ICurrentUserProvider currentUserProvider) : IQueryHandler<GetMonthlyBalancesQuery, IEnumerable<MonthlyBalance>>
 {
-    private readonly ILogger<GetMonthlyBalancesHandler> _logger = logger;
     private readonly IBusinessUnitRepository _businessUnitRepository = businessUnitRepository;
+    private readonly ICurrentUserProvider _currentUserProvider = currentUserProvider;
+    private readonly ILogger<GetMonthlyBalancesHandler> _logger = logger;
     private readonly IMonthlyBalanceRepository _monthlyBalanceRepository = monthlyBalanceRepository;
-    private readonly ICurrentUserProvider _currentUserProvider = currentUserProvider;   
 
-    public async Task<Result<IEnumerable<MonthlyBalance>>> Handle(GetMonthlyBalancesQuery query, CancellationToken cancellationToken)
+    public async Task<Result<IEnumerable<MonthlyBalance>>> Handle(GetMonthlyBalancesQuery query,
+        CancellationToken cancellationToken)
     {
         var currentUserId = _currentUserProvider.GetCurrentUserId();
 
-        _logger.LogInformation("Retrieving Business Unit with Id {BusinessUnitId} to retrieve its Monthly Balances", query.BusinessUnitId);
+        _logger.LogInformation("Retrieving Business Unit with Id {BusinessUnitId} to retrieve its Monthly Balances",
+            query.BusinessUnitId);
         var isValidBusinessUnit = await _businessUnitRepository.ExistsByIdAsync(
             query.BusinessUnitId,
             currentUserId,

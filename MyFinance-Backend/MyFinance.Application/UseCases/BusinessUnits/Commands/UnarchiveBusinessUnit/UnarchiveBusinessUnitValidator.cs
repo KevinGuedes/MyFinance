@@ -7,6 +7,6 @@ public sealed class UnarchiveBusinessUnitValidator : AbstractValidator<Unarchive
     public UnarchiveBusinessUnitValidator()
     {
         RuleFor(command => command.Id)
-           .NotEqual(Guid.Empty).WithMessage("{PropertyName} invalid");
+            .NotEqual(Guid.Empty).WithMessage("{PropertyName} invalid");
     }
 }

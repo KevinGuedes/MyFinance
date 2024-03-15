@@ -5,7 +5,7 @@ using MyFinance.Infrastructure.Persistence.Context;
 
 namespace MyFinance.Infrastructure.Persistence.Repositories;
 
-public abstract class EntityRepository<TEntity>(MyFinanceDbContext myFinanceDbContext) 
+public abstract class EntityRepository<TEntity>(MyFinanceDbContext myFinanceDbContext)
     : IEntityRepository<TEntity>
     where TEntity : Entity
 {

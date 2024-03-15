@@ -17,8 +17,8 @@ public sealed class MonthlyBalanceRepository(MyFinanceDbContext myFinanceDbConte
             .Where(mb => mb.UserId == userId)
             .FirstOrDefaultAsync(
                 mb => mb.ReferenceYear == referenceDate.Year &&
-                mb.ReferenceMonth == referenceDate.Month &&
-                mb.BusinessUnitId == businessUnitId,
+                      mb.ReferenceMonth == referenceDate.Month &&
+                      mb.BusinessUnitId == businessUnitId,
                 cancellationToken);
 
     public async Task<IEnumerable<MonthlyBalance>> GetPaginatedByBusinessUnitIdAsync(
@@ -40,7 +40,7 @@ public sealed class MonthlyBalanceRepository(MyFinanceDbContext myFinanceDbConte
         Guid id,
         Guid userId,
         CancellationToken cancellationToken)
-       => _myFinanceDbContext.MonthlyBalances
+        => _myFinanceDbContext.MonthlyBalances
             .Where(mb => mb.UserId == userId)
             .Include(mb => mb.BusinessUnit)
             .Include(mb => mb.Transfers

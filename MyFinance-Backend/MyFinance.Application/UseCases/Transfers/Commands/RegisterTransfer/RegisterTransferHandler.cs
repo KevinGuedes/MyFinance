@@ -16,12 +16,12 @@ internal sealed class RegisterTransferHandler(
     IAccountTagRepository accountTagRepository,
     ICurrentUserProvider currentUserProvider) : ICommandHandler<RegisterTransferCommand, Transfer>
 {
+    private readonly IAccountTagRepository _accountTagRepository = accountTagRepository;
+    private readonly IBusinessUnitRepository _businessUnitRepository = businessUnitRepository;
+    private readonly ICurrentUserProvider _currentUserProvider = currentUserProvider;
     private readonly ILogger<RegisterTransferHandler> _logger = logger;
     private readonly IMonthlyBalanceRepository _monthlyBalanceRepository = monthlyBalanceRepository;
-    private readonly IBusinessUnitRepository _businessUnitRepository = businessUnitRepository;
     private readonly ITransferRepository _transferRepository = transferRepository;
-    private readonly IAccountTagRepository _accountTagRepository = accountTagRepository;
-    private readonly ICurrentUserProvider _currentUserProvider = currentUserProvider;
 
     public async Task<Result<Transfer>> Handle(RegisterTransferCommand command, CancellationToken cancellationToken)
     {
@@ -74,7 +74,8 @@ internal sealed class RegisterTransferHandler(
         }
 
         _logger.LogInformation("Creating new Transfer");
-        var transfer = new Transfer(value, relatedTo, description, settlementDate, type, monthlyBalance, accountTag, currentUserId);
+        var transfer = new Transfer(value, relatedTo, description, settlementDate, type, monthlyBalance, accountTag,
+            currentUserId);
         _transferRepository.Insert(transfer);
         _logger.LogInformation("New transfer successfully registered");
 

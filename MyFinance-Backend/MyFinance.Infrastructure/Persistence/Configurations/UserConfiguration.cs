@@ -2,6 +2,7 @@
 using MyFinance.Domain.Entities;
 
 namespace MyFinance.Infrastructure.Persistence.Configurations;
+
 public sealed class UserConfiguration : EntityConfiguration<User>
 {
     public override void Configure(EntityTypeBuilder<User> builder)

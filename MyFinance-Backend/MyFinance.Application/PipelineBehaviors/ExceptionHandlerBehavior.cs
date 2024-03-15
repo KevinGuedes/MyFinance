@@ -7,14 +7,16 @@ using MyFinance.Application.Common.Errors;
 
 namespace MyFinance.Application.PipelineBehaviors;
 
-public sealed class ExceptionHandlerBehavior<TRequest, TResponse>(ILogger<ExceptionHandlerBehavior<TRequest, TResponse>> logger)
+public sealed class ExceptionHandlerBehavior<TRequest, TResponse>(
+    ILogger<ExceptionHandlerBehavior<TRequest, TResponse>> logger)
     : IPipelineBehavior<TRequest, TResponse>
     where TRequest : IBaseAppRequest
     where TResponse : ResultBase, new()
 {
     private readonly ILogger<ExceptionHandlerBehavior<TRequest, TResponse>> _logger = logger;
 
-    public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
+    public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next,
+        CancellationToken cancellationToken)
     {
         var requestName = request.GetType().Name;
 
@@ -34,7 +36,8 @@ public sealed class ExceptionHandlerBehavior<TRequest, TResponse>(ILogger<Except
         {
             _logger.LogError(exception, "[{RequestName}] Entity has been updated previously", requestName);
 
-            var conflictError = new ConflictError("The regarding entity has already been update. Check the updated data and try again");
+            var conflictError =
+                new ConflictError("The regarding entity has already been update. Check the updated data and try again");
             var failedResult = Result.Fail(conflictError.CausedBy(exception));
             var response = new TResponse();
             response.Reasons.AddRange(failedResult.Reasons);

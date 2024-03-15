@@ -2,10 +2,12 @@
 
 public abstract class UserOwnedEntity : Entity
 {
-    public Guid UserId { get; private set; }
-
-    private protected UserOwnedEntity() { }
+    private protected UserOwnedEntity()
+    {
+    }
 
     private protected UserOwnedEntity(Guid userId)
         => UserId = userId;
+
+    public Guid UserId { get; private set; }
 }

@@ -17,9 +17,12 @@ public class MonthlyBalanceController(IMonthlyBalanceApiService monthlyBalanceAp
     [SwaggerResponse(StatusCodes.Status400BadRequest, "Invalid query parameters", typeof(BadRequestResponse))]
     [SwaggerResponse(StatusCodes.Status404NotFound, "Business Unit not found", typeof(EntityNotFoundResponse))]
     public async Task<IActionResult> GetBusinessUnitsAsync(
-        [FromQuery, SwaggerParameter("Business Unit Id", Required = true)] Guid businessUnitId,
-        [FromQuery, SwaggerParameter("Page number", Required = true)] int page,
-        [FromQuery, SwaggerParameter("Units per page", Required = true)] int pageSize,
+        [FromQuery] [SwaggerParameter("Business Unit Id", Required = true)]
+        Guid businessUnitId,
+        [FromQuery] [SwaggerParameter("Page number", Required = true)]
+        int page,
+        [FromQuery] [SwaggerParameter("Units per page", Required = true)]
+        int pageSize,
         CancellationToken cancellationToken)
         => ProcessResult(await _monthlyBalanceApiService.GetMonthlyBalancesAsync(
             businessUnitId,

@@ -2,6 +2,7 @@
 using MyFinance.Application.Abstractions.Persistence.Repositories;
 
 namespace MyFinance.Application.UseCases.Users.Commands.RegisterUser;
+
 public sealed class RegisterUserCommandValidator : AbstractValidator<RegisterUserCommand>
 {
     private readonly IUserRepository _userRepository;
@@ -22,7 +23,8 @@ public sealed class RegisterUserCommandValidator : AbstractValidator<RegisterUse
             .MinimumLength(16).WithMessage("{PropertyName} must have at least 16 characters");
 
         RuleFor(command => command.PlainTextConfirmationPassword)
-            .Equal(command => command.PlainTextPassword).WithMessage("The {PropertyName} and {ComparisonProperty} do not match");
+            .Equal(command => command.PlainTextPassword)
+            .WithMessage("The {PropertyName} and {ComparisonProperty} do not match");
 
         RuleFor(command => command.Email)
             .Cascade(CascadeMode.Stop)
