@@ -1,5 +1,5 @@
 ﻿using FluentValidation;
-using MyFinance.Domain.Interfaces;
+using MyFinance.Application.Abstractions.Persistence.Repositories;
 
 namespace MyFinance.Application.UseCases.Users.Commands.RegisterUser;
 public sealed class RegisterUserCommandValidator : AbstractValidator<RegisterUserCommand>

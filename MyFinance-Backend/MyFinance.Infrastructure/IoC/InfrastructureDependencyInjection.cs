@@ -2,12 +2,12 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using MyFinance.Application.Abstractions.Data;
+using MyFinance.Application.Abstractions.Persistence.Repositories;
+using MyFinance.Application.Abstractions.Persistence.UnitOfWork;
 using MyFinance.Application.Abstractions.Services;
-using MyFinance.Domain.Interfaces;
-using MyFinance.Infrastructure.Data.Context;
-using MyFinance.Infrastructure.Data.Repositories;
-using MyFinance.Infrastructure.Data.UnitOfWork;
+using MyFinance.Infrastructure.Persistence.Context;
+using MyFinance.Infrastructure.Persistence.Repositories;
+using MyFinance.Infrastructure.Persistence.UnitOfWork;
 using MyFinance.Infrastructure.Services.Auth;
 using MyFinance.Infrastructure.Services.CurrentUserProvider;
 using MyFinance.Infrastructure.Services.PasswordHasher;

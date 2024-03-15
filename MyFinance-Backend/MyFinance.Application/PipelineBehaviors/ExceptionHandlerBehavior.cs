@@ -34,8 +34,7 @@ public sealed class ExceptionHandlerBehavior<TRequest, TResponse>(ILogger<Except
         {
             _logger.LogError(exception, "[{RequestName}] Entity has been updated previously", requestName);
 
-            var message = "The regarding entity has already been update. Check the updated data and try again";
-            var conflictError = new ConflictError(message);
+            var conflictError = new ConflictError("The regarding entity has already been update. Check the updated data and try again");
             var failedResult = Result.Fail(conflictError.CausedBy(exception));
             var response = new TResponse();
             response.Reasons.AddRange(failedResult.Reasons);

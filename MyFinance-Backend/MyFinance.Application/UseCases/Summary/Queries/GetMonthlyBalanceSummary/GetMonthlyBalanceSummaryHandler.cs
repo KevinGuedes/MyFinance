@@ -1,9 +1,9 @@
 ﻿using FluentResults;
 using Microsoft.Extensions.Logging;
+using MyFinance.Application.Abstractions.Persistence.Repositories;
 using MyFinance.Application.Abstractions.RequestHandling.Queries;
 using MyFinance.Application.Abstractions.Services;
 using MyFinance.Application.Common.Errors;
-using MyFinance.Domain.Interfaces;
 
 namespace MyFinance.Application.UseCases.Summary.Queries.GetMonthlyBalanceSummary;
 
