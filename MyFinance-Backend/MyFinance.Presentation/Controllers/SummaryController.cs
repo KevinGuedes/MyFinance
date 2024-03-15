@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using MyFinance.Application.Abstractions.ApiServices;
 using MyFinance.Application.Common.ApiResponses;
-using MyFinance.Application.UseCases.Summary.ApiService;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace MyFinance.Presentation.Controllers;

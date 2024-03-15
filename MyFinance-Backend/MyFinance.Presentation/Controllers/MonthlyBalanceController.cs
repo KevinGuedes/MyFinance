@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using MyFinance.Application.Abstractions.ApiServices;
 using MyFinance.Application.Common.ApiResponses;
-using MyFinance.Application.UseCases.MonthlyBalances.ApiService;
 using MyFinance.Application.UseCases.MonthlyBalances.DTOs;
 using Swashbuckle.AspNetCore.Annotations;
 

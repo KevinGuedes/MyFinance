@@ -1,5 +1,6 @@
 ﻿using FluentResults;
 using MediatR;
+using MyFinance.Application.Abstractions.ApiServices;
 using MyFinance.Application.Common.ApiService;
 using MyFinance.Application.UseCases.Users.Commands.RegisterUser;
 using MyFinance.Application.UseCases.Users.Commands.SignIn;

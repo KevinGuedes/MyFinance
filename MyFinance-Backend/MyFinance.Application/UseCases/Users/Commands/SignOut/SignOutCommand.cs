@@ -1,4 +1,4 @@
-﻿using MyFinance.Application.Common.RequestHandling.Commands;
+﻿using MyFinance.Application.Abstractions.RequestHandling.Commands;
 
 namespace MyFinance.Application.UseCases.Users.Commands.SignOut;
 

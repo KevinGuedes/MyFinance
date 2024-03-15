@@ -16,7 +16,7 @@ public class BusinessUnit : UserOwnedEntity
 
     private BusinessUnit() { }
 
-    public BusinessUnit(string name, string description, Guid userId) : base(userId)
+    public BusinessUnit(string name, string? description, Guid userId) : base(userId)
     {
         Name = name;
         Income = 0;
@@ -28,14 +28,14 @@ public class BusinessUnit : UserOwnedEntity
         MonthlyBalances = [];
     }
 
-    public void Update(string name, string description)
+    public void Update(string name, string? description)
     {
         SetUpdateDateToNow();
         Name = name;
         Description = description;
     }
 
-    public void Archive(string reasonToArchive)
+    public void Archive(string? reasonToArchive)
     {
         SetUpdateDateToNow();
         ArchiveDate = DateTime.UtcNow;

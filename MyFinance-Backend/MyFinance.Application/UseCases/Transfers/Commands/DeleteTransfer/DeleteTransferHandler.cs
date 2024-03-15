@@ -1,8 +1,8 @@
 ﻿using FluentResults;
 using Microsoft.Extensions.Logging;
+using MyFinance.Application.Abstractions.RequestHandling.Commands;
+using MyFinance.Application.Abstractions.Services;
 using MyFinance.Application.Common.Errors;
-using MyFinance.Application.Common.RequestHandling.Commands;
-using MyFinance.Application.Services.CurrentUserProvider;
 using MyFinance.Domain.Interfaces;
 
 namespace MyFinance.Application.UseCases.Transfers.Commands.DeleteTransfer;

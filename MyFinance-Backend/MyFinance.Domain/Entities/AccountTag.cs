@@ -28,7 +28,7 @@ public class AccountTag : UserOwnedEntity
         Description = description;
     }
 
-    public void Archive(string reasonToArchive)
+    public void Archive(string? reasonToArchive)
     {
         SetUpdateDateToNow();
         ArchiveDate = DateTime.UtcNow;

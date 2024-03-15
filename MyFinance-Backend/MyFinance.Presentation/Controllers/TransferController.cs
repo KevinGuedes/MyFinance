@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using MyFinance.Application.Abstractions.ApiServices;
 using MyFinance.Application.Common.ApiResponses;
-using MyFinance.Application.UseCases.Transfers.ApiService;
 using MyFinance.Application.UseCases.Transfers.Commands.RegisterTransfer;
 using MyFinance.Application.UseCases.Transfers.Commands.UpdateTransfer;
 using MyFinance.Application.UseCases.Transfers.DTOs;

@@ -2,8 +2,8 @@
 using FluentValidation;
 using MediatR;
 using Microsoft.Extensions.Logging;
+using MyFinance.Application.Abstractions.RequestHandling;
 using MyFinance.Application.Common.Errors;
-using MyFinance.Application.Common.RequestHandling;
 
 namespace MyFinance.Application.PipelineBehaviors;
 

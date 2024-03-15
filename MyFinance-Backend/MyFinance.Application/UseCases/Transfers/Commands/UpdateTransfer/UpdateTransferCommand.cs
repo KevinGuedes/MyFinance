@@ -1,4 +1,4 @@
-﻿using MyFinance.Application.Common.RequestHandling.Commands;
+﻿using MyFinance.Application.Abstractions.RequestHandling.Commands;
 using MyFinance.Domain.Entities;
 using MyFinance.Domain.Enums;
 

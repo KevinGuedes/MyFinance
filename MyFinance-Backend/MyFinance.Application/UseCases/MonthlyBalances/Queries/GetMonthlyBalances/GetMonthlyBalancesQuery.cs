@@ -1,4 +1,4 @@
-﻿using MyFinance.Application.Common.RequestHandling.Queries;
+﻿using MyFinance.Application.Abstractions.RequestHandling.Queries;
 using MyFinance.Domain.Entities;
 
 namespace MyFinance.Application.UseCases.MonthlyBalances.Queries.GetMonthlyBalances;

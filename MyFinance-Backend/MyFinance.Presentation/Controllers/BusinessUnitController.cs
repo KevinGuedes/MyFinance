@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using MyFinance.Application.Abstractions.ApiServices;
 using MyFinance.Application.Common.ApiResponses;
-using MyFinance.Application.UseCases.BusinessUnits.ApiService;
 using MyFinance.Application.UseCases.BusinessUnits.Commands.ArchiveBusinessUnit;
 using MyFinance.Application.UseCases.BusinessUnits.Commands.CreateBusinessUnit;
 using MyFinance.Application.UseCases.BusinessUnits.Commands.UpdateBusinessUnit;

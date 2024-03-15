@@ -1,6 +1,6 @@
-﻿using ClosedXML.Excel;
-using FluentResults;
+﻿using FluentResults;
 using MediatR;
+using MyFinance.Application.Abstractions.ApiServices;
 using MyFinance.Application.Common.ApiService;
 using MyFinance.Application.UseCases.Summary.Queries.GetBusinessUnitSummary;
 using MyFinance.Application.UseCases.Summary.Queries.GetMonthlyBalanceSummary;
@@ -9,25 +9,10 @@ namespace MyFinance.Application.UseCases.Summary.ApiService;
 
 public sealed class SummaryApiService(IMediator mediator) : BaseApiService(mediator), ISummaryApiService
 {
-    public async Task<Result<Tuple<string, byte[]>>> GetBusinessUnitSummaryAsync(Guid id, int year, CancellationToken cancellationToken)
-        => MapSummaryResult(await _mediator.Send(new GetBusinessUnitSummaryQuery(id, year), cancellationToken));
+    public Task<Result<Tuple<string, byte[]>>> GetBusinessUnitSummaryAsync(Guid id, int year, CancellationToken cancellationToken)
+        => _mediator.Send(new GetBusinessUnitSummaryQuery(id, year), cancellationToken);
 
-    public async Task<Result<Tuple<string, byte[]>>> GetMonthlyBalanceSummaryAsync(Guid id, CancellationToken cancellationToken)
-        => MapSummaryResult(await _mediator.Send(new GetMonthlyBalanceSummaryQuery(id), cancellationToken));
-
-    public static Result<Tuple<string, byte[]>> MapSummaryResult(Result<Tuple<string, XLWorkbook>> result)
-    {
-        if (result.IsFailed)
-            return result.ToResult<Tuple<string, byte[]>>();
-
-        return result.ToResult<Tuple<string, byte[]>>(value =>
-        {
-            var (workbookName, workbook) = value;
-            using var stream = new MemoryStream();
-            workbook.SaveAs(stream);
-            stream.Close();
-
-            return new(workbookName, stream.ToArray());
-        });
-    }
+    public Task<Result<Tuple<string, byte[]>>> GetMonthlyBalanceSummaryAsync(Guid id, CancellationToken cancellationToken)
+        => _mediator.Send(new GetMonthlyBalanceSummaryQuery(id), cancellationToken);
+      
 }

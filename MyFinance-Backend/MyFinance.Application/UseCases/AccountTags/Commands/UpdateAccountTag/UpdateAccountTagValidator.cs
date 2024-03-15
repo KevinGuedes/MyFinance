@@ -1,9 +1,8 @@
 ﻿using FluentValidation;
-using MyFinance.Application.Services.CurrentUserProvider;
-using MyFinance.Application.UseCases.AccountTags.Commands.UpdateAccountTag;
+using MyFinance.Application.Abstractions.Services;
 using MyFinance.Domain.Interfaces;
 
-namespace MyFinance.Application.UseCases.BusinessUnits.Commands.UpdateBusinessUnit;
+namespace MyFinance.Application.UseCases.AccountTags.Commands.UpdateAccountTag;
 
 public sealed class UpdateAccountTagValidator : AbstractValidator<UpdateAccountTagCommand>
 {

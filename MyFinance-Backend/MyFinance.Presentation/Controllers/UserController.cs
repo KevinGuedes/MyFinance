@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using MyFinance.Application.Abstractions.ApiServices;
 using MyFinance.Application.Common.ApiResponses;
-using MyFinance.Application.UseCases.Users.ApiService;
 using MyFinance.Application.UseCases.Users.Commands.RegisterUser;
 using MyFinance.Application.UseCases.Users.Commands.SignIn;
 using Swashbuckle.AspNetCore.Annotations;

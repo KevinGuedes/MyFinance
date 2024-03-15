@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using MyFinance.Application.Abstractions.ApiServices;
 using MyFinance.Application.Common.ApiResponses;
-using MyFinance.Application.UseCases.AccountTags.ApiService;
 using MyFinance.Application.UseCases.AccountTags.Commands.ArchiveAccountTag;
 using MyFinance.Application.UseCases.AccountTags.Commands.CreateAccountTag;
 using MyFinance.Application.UseCases.AccountTags.Commands.UpdateAccountTag;
