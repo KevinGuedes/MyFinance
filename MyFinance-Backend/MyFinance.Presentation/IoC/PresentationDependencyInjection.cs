@@ -1,4 +1,5 @@
 ﻿using Microsoft.OpenApi.Models;
+using MyFinance.Presentation.Middlewares;
 
 namespace MyFinance.Presentation.IoC;
 
@@ -7,8 +8,11 @@ public static class PresentationDependencyInjection
     public static IServiceCollection AddPresentation(this IServiceCollection services)
     {
         services.AddControllers();
-        services.AddEndpointsApiExplorer();
-        services.AddCustomSwaggerConfiguration();
+        services
+            .AddEndpointsApiExplorer()
+            .AddCustomSwaggerConfiguration()
+            .AddProblemDetails()
+            .AddExceptionHandler<GlobalExceptionHandlerMiddleware>();
 
         return services;
     }

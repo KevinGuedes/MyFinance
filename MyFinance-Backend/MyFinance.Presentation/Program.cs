@@ -1,6 +1,5 @@
 using MyFinance.Application.IoC;
 using MyFinance.Infrastructure.IoC;
-using MyFinance.Presentation.Configurations;
 using MyFinance.Presentation.IoC;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -16,8 +15,15 @@ var app = builder.Build();
     if (app.Environment.IsDevelopment())
         app.UseDeveloperExceptionPage();
 
-    app.UseExceptionHandler("/error");
-    app.UseCustomSwaggerConfiguration();
+    app.UseExceptionHandler();
+    app
+        .UseSwagger()
+        .UseSwaggerUI(options =>
+        {
+            options.SwaggerEndpoint("/swagger/v1/swagger.json", "MyFinance API");
+            options.DocumentTitle = "MyFinance API";
+        });
+
     app.UseHttpsRedirection();
     app.UseAuthentication();
     app.UseAuthorization();
