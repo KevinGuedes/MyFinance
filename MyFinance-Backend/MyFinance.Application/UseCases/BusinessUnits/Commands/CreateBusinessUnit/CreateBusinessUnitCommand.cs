@@ -1,8 +1,9 @@
 ﻿using MyFinance.Application.Abstractions.RequestHandling.Commands;
-using MyFinance.Domain.Entities;
+using MyFinance.Contracts.BusinessUnit.Responses;
 
 namespace MyFinance.Application.UseCases.BusinessUnits.Commands.CreateBusinessUnit;
 
-public sealed record CreateBusinessUnitCommand(string Name, string? Description) : ICommand<BusinessUnit>
+public sealed record CreateBusinessUnitCommand(string Name, string? Description) 
+    : ICommand<BusinessUnitResponse>
 {
 }

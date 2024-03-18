@@ -4,37 +4,31 @@ using MyFinance.Application.Abstractions.Persistence.Repositories;
 using MyFinance.Application.Abstractions.RequestHandling.Commands;
 using MyFinance.Application.Abstractions.Services;
 using MyFinance.Application.Common.Errors;
-using MyFinance.Domain.Entities;
+using MyFinance.Contracts.AccountTag.Responses;
 
 namespace MyFinance.Application.UseCases.AccountTags.Commands.UpdateAccountTag;
 
-internal sealed class UpdateAccountTagHandler(
-    ILogger<UpdateAccountTagHandler> logger,
-    IAccountTagRepository accountTagRepository,
-    ICurrentUserProvider currentUserProvider) : ICommandHandler<UpdateAccountTagCommand, AccountTag>
+internal sealed class UpdateAccountTagHandler(IAccountTagRepository accountTagRepository, ICurrentUserProvider currentUserProvider) 
+    : ICommandHandler<UpdateAccountTagCommand, AccountTagResponse>
 {
     private readonly IAccountTagRepository _accountTagRepository = accountTagRepository;
     private readonly ICurrentUserProvider _currentUserProvider = currentUserProvider;
-    private readonly ILogger<UpdateAccountTagHandler> _logger = logger;
 
-    public async Task<Result<AccountTag>> Handle(UpdateAccountTagCommand command, CancellationToken cancellationToken)
+    public async Task<Result<AccountTagResponse>> Handle(UpdateAccountTagCommand command, CancellationToken cancellationToken)
     {
         var currentUserId = _currentUserProvider.GetCurrentUserId();
 
-        _logger.LogInformation("Retriving Account Tag with Id {AccountTagId}", command.Id);
         var accountTag = await _accountTagRepository.GetByIdAsync(command.Id, currentUserId, cancellationToken);
+       
         if (accountTag is null)
         {
-            _logger.LogWarning("Account Tag with Id {AccountTagId} not found", command.Id);
-            var errorMessage = string.Format("Account Tag with Id {0} not found", command.Id);
+            var errorMessage = $"Account Tag with Id {command.Id} not found";
             var entityNotFoundError = new EntityNotFoundError(errorMessage);
             return Result.Fail(entityNotFoundError);
         }
 
-        _logger.LogInformation("Updating Account Tag with Id {AccountTagId}", command.Id);
         accountTag.Update(command.Tag, command.Description);
         _accountTagRepository.Update(accountTag);
-        _logger.LogInformation("Account Tag with Id {AccountTagId} successfully updated", command.Id);
 
         return Result.Ok(accountTag);
     }

@@ -7,8 +7,8 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <Folder Include="BusinessUnit\" />
-      <Folder Include="Transfer\" />
+      <Folder Include="Transfer\Responses\" />
+      <Folder Include="Transfer\Requests\" />
     </ItemGroup>
 
 </Project>

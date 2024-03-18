@@ -17,7 +17,7 @@ public sealed class TransferApiService(IMediator mediator) : BaseApiService(medi
         CancellationToken cancellationToken)
     {
         var result = await _mediator.Send(command, cancellationToken);
-        return MapResult(result, DomainToDTOMapper.TransferToDTO);
+        return MapResult(result, DomainToResponseMapper.TransferToDTO);
     }
 
     public async Task<Result<TransferDTO>> UpdateTransferAsync(
@@ -25,7 +25,7 @@ public sealed class TransferApiService(IMediator mediator) : BaseApiService(medi
         CancellationToken cancellationToken)
     {
         var result = await _mediator.Send(command, cancellationToken);
-        return MapResult(result, DomainToDTOMapper.TransferToDTO);
+        return MapResult(result, DomainToResponseMapper.TransferToDTO);
     }
 
     public Task<Result> DeleteTransferAsync(Guid id, CancellationToken cancellationToken)

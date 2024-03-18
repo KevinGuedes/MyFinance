@@ -5,14 +5,17 @@ using MyFinance.Infrastructure.Persistence.Context;
 
 namespace MyFinance.Infrastructure.Persistence.Repositories;
 
-public abstract class EntityRepository<TEntity>(MyFinanceDbContext myFinanceDbContext)
+internal abstract class EntityRepository<TEntity>(MyFinanceDbContext myFinanceDbContext)
     : IEntityRepository<TEntity>
     where TEntity : Entity
 {
     protected readonly MyFinanceDbContext _myFinanceDbContext = myFinanceDbContext;
 
+    public Task<int> GetTotalCountAsync(CancellationToken cancellationToken)
+        => _myFinanceDbContext.Set<TEntity>().CountAsync(cancellationToken);
+
     public virtual async Task<TEntity?> GetByIdAsync(Guid id, CancellationToken cancellationToken)
-        => await _myFinanceDbContext.Set<TEntity>().FindAsync(new object[] { id }, cancellationToken);
+        => await _myFinanceDbContext.Set<TEntity>().FindAsync([id], cancellationToken);
 
     public Task<bool> ExistsByIdAsync(Guid id, CancellationToken cancellationToken)
         => _myFinanceDbContext.Set<TEntity>().AnyAsync(entity => entity.Id == id, cancellationToken);

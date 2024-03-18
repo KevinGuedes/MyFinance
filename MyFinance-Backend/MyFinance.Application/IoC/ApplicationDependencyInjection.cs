@@ -17,18 +17,8 @@ public static class ApplicationDependencyInjection
 {
     public static IServiceCollection AddApplication(this IServiceCollection services)
         => services
-            .AddApiServices()
             .AddValidators()
             .AddMediatR();
-
-    private static IServiceCollection AddApiServices(this IServiceCollection services)
-        => services
-            .AddScoped<IBusinessUnitService, BusinessUnitApiService>()
-            .AddScoped<IMonthlyBalanceService, MonthlyBalanceApiService>()
-            .AddScoped<ITransferService, TransferApiService>()
-            .AddScoped<ISummaryService, SummaryApiService>()
-            .AddScoped<IAccountTagService, AccountTagApiService>()
-            .AddScoped<IUserService, UserApiService>();
 
     public static IServiceCollection AddValidators(this IServiceCollection services)
         => services

@@ -3,6 +3,7 @@ using MyFinance.Application.UseCases.BusinessUnits.DTOs;
 using MyFinance.Application.UseCases.MonthlyBalances.DTOs;
 using MyFinance.Application.UseCases.Transfers.DTOs;
 using MyFinance.Application.UseCases.Users.DTOs;
+using MyFinance.Contracts.AccountTag.Responses;
 using MyFinance.Domain.Entities;
 
 namespace MyFinance.Application.Mappers;
@@ -50,20 +51,6 @@ public static class DomainToDTOMapper
             Type = transfer.Type,
             Value = transfer.Value
         };
-
-    public static AccountTagDTO AccountTagToDTO(AccountTag accountTag)
-        => new()
-        {
-            Id = accountTag.Id,
-            Tag = accountTag.Tag,
-            Description = accountTag.Description,
-            IsArchived = accountTag.IsArchived,
-            ReasonToArchive = accountTag.ReasonToArchive,
-            ArchiveDate = accountTag.ArchiveDate
-        };
-
-    public static IEnumerable<AccountTagDTO> AccountTagToDTO(IEnumerable<AccountTag> businessUnits)
-        => businessUnits.Select(AccountTagToDTO);
 
     public static UserDTO UserToDTO(User user)
         => new()

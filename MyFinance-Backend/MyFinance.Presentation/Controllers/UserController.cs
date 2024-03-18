@@ -1,18 +1,17 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using MyFinance.Application.Abstractions.ApiServices;
 using MyFinance.Application.Common.ApiResponses;
-using MyFinance.Application.UseCases.Users.Commands.RegisterUser;
-using MyFinance.Application.UseCases.Users.Commands.SignIn;
+using MyFinance.Application.Mappers;
+using MyFinance.Application.UseCases.Users.Commands.SignOut;
+using MyFinance.Contracts.User.Requests;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace MyFinance.Presentation.Controllers;
 
 [SwaggerTag("Manages user related operations")]
-public class UserController(IUserService userApiService) : ApiController
+public class UserController(IMediator mediator) : ApiController(mediator)
 {
-    private readonly IUserService _userService = userApiService;
-
     [AllowAnonymous]
     [HttpPost]
     [SwaggerOperation(Summary = "Registers a new User")]
@@ -20,9 +19,9 @@ public class UserController(IUserService userApiService) : ApiController
     [SwaggerResponse(StatusCodes.Status400BadRequest, "Invalid payload", typeof(BadRequestResponse))]
     public async Task<IActionResult> RegisterUserAsync(
         [FromBody] [SwaggerRequestBody("User's payload", Required = true)]
-        RegisterUserCommand command,
+        RegisterUserRequest request,
         CancellationToken cancellationToken)
-        => ProcessResult(await _userService.RegisterUserAsync(command, cancellationToken));
+        => ProcessResult(await _mediator.Send(UserMapper.RTC.Map(request), cancellationToken));
 
     [AllowAnonymous]
     [HttpPost("SignIn")]
@@ -32,13 +31,13 @@ public class UserController(IUserService userApiService) : ApiController
     [SwaggerResponse(StatusCodes.Status404NotFound, "User not found", typeof(EntityNotFoundResponse))]
     public async Task<IActionResult> SignInAsync(
         [FromBody] [SwaggerRequestBody("User's sign in credentials", Required = true)]
-        SignInCommand command,
+        SignInRequest request,
         CancellationToken cancellationToken)
-        => ProcessResult(await _userService.SignInAsync(command, cancellationToken));
+        => ProcessResult(await _mediator.Send(UserMapper.RTC.Map(request), cancellationToken));
 
     [HttpPost("SignOut")]
     [SwaggerOperation(Summary = "Signs out an existing User")]
     [SwaggerResponse(StatusCodes.Status204NoContent, "User successfully signed out")]
     public async Task<IActionResult> SignOutAsync(CancellationToken cancellationToken)
-        => ProcessResult(await _userService.SignOutAsync(cancellationToken));
+        => ProcessResult(await _mediator.Send(new SignOutCommand(), cancellationToken));
 }

@@ -18,6 +18,6 @@ public sealed class MonthlyBalanceApiService(IMediator mediator) : BaseApiServic
     {
         var query = new GetMonthlyBalancesQuery(businessUnitId, page, pageSize);
         var result = await _mediator.Send(query, cancellationToken);
-        return MapResult(result, DomainToDTOMapper.MonthlyBalanceToDTO);
+        return MapResult(result, DomainToResponseMapper.MonthlyBalanceToDTO);
     }
 }

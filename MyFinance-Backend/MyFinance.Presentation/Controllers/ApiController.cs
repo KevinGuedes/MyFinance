@@ -1,4 +1,5 @@
 ﻿using FluentResults;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using MyFinance.Application.Common.ApiResponses;
 using MyFinance.Application.Common.Errors;
@@ -10,8 +11,10 @@ namespace MyFinance.Presentation.Controllers;
 [Route("api/[controller]")]
 [Produces("application/json")]
 [SwaggerResponse(StatusCodes.Status500InternalServerError, "Backend went rogue", typeof(InternalServerErrorResponse))]
-public abstract class ApiController : ControllerBase
+public abstract class ApiController(IMediator mediator) : ControllerBase
 {
+    protected readonly IMediator _mediator = mediator;
+
     protected IActionResult ProcessResult<TResponse>(Result<TResponse> result, bool hasEntityBeenCreated = false)
     {
         if (result.IsFailed)

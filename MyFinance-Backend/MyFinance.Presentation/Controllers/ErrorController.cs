@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Diagnostics;
+﻿using FluentResults;
+using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using MyFinance.Application.Common.Errors;
 
@@ -16,6 +17,6 @@ public class ErrorController : ApiController
         if (exception is not null)
             internalServerError.CausedBy(exception.Error);
 
-        return BuildInternalServerErrorResponse(internalServerError);
+        return ProcessResult(Result.Fail(internalServerError));
     }
 }

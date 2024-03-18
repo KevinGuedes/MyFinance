@@ -1,9 +1,8 @@
-﻿using MyFinance.Application.Common.DTO;
+﻿namespace MyFinance.Contracts.AccountTag.Responses;
 
-namespace MyFinance.Application.UseCases.AccountTags.DTOs;
-
-public sealed class AccountTagDTO : EntityDTO
+public sealed class AccountTagResponse
 {
+    public required Guid Id { get; init; }
     public required string Tag { get; init; }
     public required string? Description { get; init; }
     public required bool IsArchived { get; init; }
