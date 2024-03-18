@@ -9,7 +9,7 @@ public sealed class BusinessUnitRepository(MyFinanceDbContext myFinanceDbContext
     : UserOwnedEntityRepository<BusinessUnit>(myFinanceDbContext), IBusinessUnitRepository
 {
     public async Task<IEnumerable<BusinessUnit>> GetPaginatedAsync(
-        int page,
+        int pageNumber,
         int pageSize,
         Guid userId,
         CancellationToken cancellationToken)
@@ -17,7 +17,7 @@ public sealed class BusinessUnitRepository(MyFinanceDbContext myFinanceDbContext
             .Where(bu => bu.UserId == userId)
             .OrderByDescending(bu => bu.CreationDate)
             .ThenByDescending(bu => bu.Name)
-            .Skip((page - 1) * pageSize)
+            .Skip((pageNumber - 1) * pageSize)
             .Take(pageSize)
             .AsNoTracking()
             .ToListAsync(cancellationToken);

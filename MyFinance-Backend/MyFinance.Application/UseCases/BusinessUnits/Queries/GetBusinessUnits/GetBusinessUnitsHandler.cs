@@ -8,7 +8,7 @@ using MyFinance.Contracts.Common;
 
 namespace MyFinance.Application.UseCases.BusinessUnits.Queries.GetBusinessUnits;
 
-internal sealed class GetBusinessUnitsHandler(IBusinessUnitRepository businessUnitRepository, ICurrentUserProvider currentUserProvider) 
+internal sealed class GetBusinessUnitsHandler(IBusinessUnitRepository businessUnitRepository, ICurrentUserProvider currentUserProvider)
     : IQueryHandler<GetBusinessUnitsQuery, PaginatedResponse<BusinessUnitResponse>>
 {
     private readonly IBusinessUnitRepository _businessUnitRepository = businessUnitRepository;
@@ -26,10 +26,10 @@ internal sealed class GetBusinessUnitsHandler(IBusinessUnitRepository businessUn
             cancellationToken);
 
         var response = new PaginatedResponse<BusinessUnitResponse>(
-             businessUnits.Select(BusinessUnitMapper.DTR.Map),
-             query.PageNumber,
-             query.PageSize,
-             0);
+            BusinessUnitMapper.DTR.Map(businessUnits),
+            query.PageNumber,
+            query.PageSize,
+            0);
 
         return Result.Ok(response);
     }

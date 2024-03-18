@@ -12,6 +12,6 @@ public static class UserMapper
             => new(request.Name, request.Email, request.PlainTextPassword, request.PlainTextConfirmationPassword);
 
         public static SignInCommand Map(SignInRequest request)
-           => new(request.Email, request.PlainTextPassword);
+            => new(request.Email, request.PlainTextPassword);
     }
 }

@@ -1,15 +1,8 @@
-﻿using System.Reflection;
-using FluentValidation;
+﻿using FluentValidation;
 using FluentValidation.AspNetCore;
 using Microsoft.Extensions.DependencyInjection;
-using MyFinance.Application.Abstractions.ApiServices;
 using MyFinance.Application.PipelineBehaviors;
-using MyFinance.Application.UseCases.AccountTags.ApiService;
-using MyFinance.Application.UseCases.BusinessUnits.ApiService;
-using MyFinance.Application.UseCases.MonthlyBalances.ApiService;
-using MyFinance.Application.UseCases.Summary.ApiService;
-using MyFinance.Application.UseCases.Transfers.ApiService;
-using MyFinance.Application.UseCases.Users.ApiService;
+using System.Reflection;
 
 namespace MyFinance.Application.IoC;
 

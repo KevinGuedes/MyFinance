@@ -1,9 +1,8 @@
-﻿using MyFinance.Application.Common.DTO;
+﻿namespace MyFinance.Contracts.MonthlyBalance.Responses;
 
-namespace MyFinance.Application.UseCases.MonthlyBalances.DTOs;
-
-public sealed class MonthlyBalanceDTO : EntityDTO
+public sealed class MonthlyBalanceResponse
 {
+    public required Guid Id { get; init; }
     public required double Income { get; init; }
     public required double Outcome { get; init; }
     public required double Balance { get; init; }

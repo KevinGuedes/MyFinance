@@ -7,6 +7,7 @@ using MyFinance.Application.UseCases.AccountTags.Queries.GetAccountTags;
 using MyFinance.Contracts.AccountTag;
 using MyFinance.Contracts.AccountTag.Requests;
 using MyFinance.Contracts.AccountTag.Responses;
+using MyFinance.Contracts.Common;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace MyFinance.Presentation.Controllers;
@@ -27,15 +28,15 @@ public class AccountTagController(IMediator mediator) : ApiController(mediator)
     [HttpGet]
     [SwaggerOperation(Summary = "Lists all Account Tags with pagination")]
     [SwaggerResponse(StatusCodes.Status200OK, "List of all existing Account Tags with pagination",
-        typeof(PaginatedAccountTagResponse))]
+        typeof(PaginatedResponse<AccountTagResponse>))]
     [SwaggerResponse(StatusCodes.Status400BadRequest, "Invalid query parameters", typeof(BadRequestResponse))]
     public async Task<IActionResult> GetBusinessUnitsAsync(
         [FromQuery] [SwaggerParameter("Page number", Required = true)]
-        int page,
+        int pageNumber,
         [FromQuery] [SwaggerParameter("Units per page", Required = true)]
         int pageSize,
         CancellationToken cancellationToken)
-        => ProcessResult(await _mediator.Send(new GetAccountTagsQuery(page, pageSize), cancellationToken));
+        => ProcessResult(await _mediator.Send(new GetAccountTagsQuery(pageNumber, pageSize), cancellationToken));
 
     [HttpPut]
     [SwaggerOperation(Summary = "Updates an existing Account Tag")]

@@ -6,7 +6,7 @@ public class GetBusinessUnitsValidator : AbstractValidator<GetBusinessUnitsQuery
 {
     public GetBusinessUnitsValidator()
     {
-        RuleFor(query => query.Page)
+        RuleFor(query => query.PageNumber)
             .GreaterThan(0).WithMessage("{PropertyName} must be greater than 0");
 
         RuleFor(query => query.PageSize)

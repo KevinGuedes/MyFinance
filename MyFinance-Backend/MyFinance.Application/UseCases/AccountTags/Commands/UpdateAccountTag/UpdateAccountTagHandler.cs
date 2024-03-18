@@ -4,6 +4,7 @@ using MyFinance.Application.Abstractions.Persistence.Repositories;
 using MyFinance.Application.Abstractions.RequestHandling.Commands;
 using MyFinance.Application.Abstractions.Services;
 using MyFinance.Application.Common.Errors;
+using MyFinance.Application.Mappers;
 using MyFinance.Contracts.AccountTag.Responses;
 
 namespace MyFinance.Application.UseCases.AccountTags.Commands.UpdateAccountTag;
@@ -30,6 +31,6 @@ internal sealed class UpdateAccountTagHandler(IAccountTagRepository accountTagRe
         accountTag.Update(command.Tag, command.Description);
         _accountTagRepository.Update(accountTag);
 
-        return Result.Ok(accountTag);
+        return Result.Ok(AccountTagMapper.DTR.Map(accountTag));
     }
 }

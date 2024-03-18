@@ -26,7 +26,7 @@ internal sealed class GetAccountTagsHandler(IAccountTagRepository accountTagRepo
             cancellationToken);
 
         var response = new PaginatedResponse<AccountTagResponse>(
-            accountTags.Select(AccountTagMapper.DTR.Map),
+            AccountTagMapper.DTR.Map(accountTags),
             query.PageNumber, 
             query.PageSize,
             0);

@@ -17,7 +17,7 @@ public interface IMonthlyBalanceRepository : IUserOwnedEntityRepository<MonthlyB
 
     Task<IEnumerable<MonthlyBalance>> GetPaginatedByBusinessUnitIdAsync(
         Guid businessUnitId,
-        int page,
+        int pageNumber,
         int pageSize,
         Guid userId,
         CancellationToken cancellationToken);
