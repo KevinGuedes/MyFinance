@@ -10,9 +10,9 @@ using Swashbuckle.AspNetCore.Annotations;
 namespace MyFinance.Presentation.Controllers;
 
 [SwaggerTag("Create, read and update Business Units")]
-public class BusinessUnitController(IBusinessUnitApiService businessUnitApiService) : ApiController
+public class BusinessUnitController(IBusinessUnitService businessUnitApiService) : ApiController
 {
-    private readonly IBusinessUnitApiService _businessUnitApiService = businessUnitApiService;
+    private readonly IBusinessUnitService _businessUnitApiService = businessUnitApiService;
 
     [HttpPost]
     [SwaggerOperation(Summary = "Creates a new Business Unit")]

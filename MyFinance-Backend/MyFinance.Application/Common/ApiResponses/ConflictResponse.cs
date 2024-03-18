@@ -3,6 +3,6 @@
 namespace MyFinance.Application.Common.ApiResponses;
 
 public sealed class ConflictResponse(ConflictError conflictError)
-    : BaseApiResponse<ConflictError>("A conflict has occurred", conflictError)
+    : BaseErrorResponse<ConflictError>("A conflict has occurred", conflictError)
 {
 }

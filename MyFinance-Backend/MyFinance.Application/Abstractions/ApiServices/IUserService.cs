@@ -4,7 +4,7 @@ using MyFinance.Application.UseCases.Users.Commands.SignIn;
 
 namespace MyFinance.Application.Abstractions.ApiServices;
 
-public interface IUserApiService
+public interface IUserService
 {
     Task<Result> RegisterUserAsync(RegisterUserCommand command, CancellationToken cancellationToken);
     Task<Result> SignInAsync(SignInCommand command, CancellationToken cancellationToken);

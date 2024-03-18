@@ -10,9 +10,9 @@ using Swashbuckle.AspNetCore.Annotations;
 namespace MyFinance.Presentation.Controllers;
 
 [SwaggerTag("Create and update Account Tags")]
-public class AccountTagController(IAccountTagApiService accountTagApiService) : ApiController
+public class AccountTagController(IAccountTagService accountTagApiService) : ApiController
 {
-    private readonly IAccountTagApiService _accountTagApiService = accountTagApiService;
+    private readonly IAccountTagService _accountTagApiService = accountTagApiService;
 
     [HttpPost]
     [SwaggerOperation(Summary = "Registers a new Account Tag")]

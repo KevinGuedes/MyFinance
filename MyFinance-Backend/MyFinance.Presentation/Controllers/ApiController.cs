@@ -12,20 +12,18 @@ namespace MyFinance.Presentation.Controllers;
 [SwaggerResponse(StatusCodes.Status500InternalServerError, "Backend went rogue", typeof(InternalServerErrorResponse))]
 public abstract class ApiController : ControllerBase
 {
-    protected IActionResult ProcessResult<TResponse>(Result<TResponse> result, bool isCreatedEntity = false)
+    protected IActionResult ProcessResult<TResponse>(Result<TResponse> result, bool hasEntityBeenCreated = false)
     {
-        if (result.IsSuccess)
-            return isCreatedEntity ? StatusCode(StatusCodes.Status201Created, result.Value) : Ok(result.Value);
+        if (result.IsFailed)
+            return HandleFailureResult(result.Errors);
 
-        return HandleFailureResult(result.Errors);
+        return hasEntityBeenCreated ? 
+            StatusCode(StatusCodes.Status201Created, result.Value) : 
+            Ok(result.Value);
     }
 
     protected IActionResult ProcessResult(Result result)
-    {
-        if (result.IsSuccess)
-            return NoContent();
-        return HandleFailureResult(result.Errors);
-    }
+        => result.IsSuccess ? NoContent() : HandleFailureResult(result.Errors);
 
     protected IActionResult ProcessFileResult(Result<Tuple<string, byte[]>> result, string contentType)
     {
@@ -37,30 +35,15 @@ public abstract class ApiController : ControllerBase
     }
 
     protected IActionResult HandleFailureResult(List<IError> errors)
-    {
-        var invalidRequestError = errors.OfType<InvalidRequestError>().FirstOrDefault();
-        if (invalidRequestError is not null)
-            return BuildBadRequestResponse(invalidRequestError);
-
-        var entityNotFoundError = errors.OfType<EntityNotFoundError>().FirstOrDefault();
-        if (entityNotFoundError is not null)
-            return BuildNotFoundResponse(entityNotFoundError);
-
-        var unprocessableEntityError = errors.OfType<UnprocessableEntityError>().FirstOrDefault();
-        if (unprocessableEntityError is not null)
-            return BuildUnprocessableEntityResponse(unprocessableEntityError);
-
-        var unauthorizedError = errors.OfType<UnauthorizedError>().FirstOrDefault();
-        if (unauthorizedError is not null)
-            return BuildUnauthorizedResponse(unauthorizedError);
-
-        var conflictError = errors.OfType<ConflictError>().FirstOrDefault();
-        if (conflictError is not null)
-            return BuildConflictResponse(conflictError);
-
-        var internalServerError = new InternalServerError();
-        return BuildInternalServerErrorResponse(internalServerError);
-    }
+        => errors.FirstOrDefault() switch
+            {
+                InvalidRequestError invalidRequestError => BuildBadRequestResponse(invalidRequestError),
+                EntityNotFoundError entityNotFoundError => BuildNotFoundResponse(entityNotFoundError),
+                UnprocessableEntityError unprocessableEntityError => BuildUnprocessableEntityResponse(unprocessableEntityError),
+                UnauthorizedError unauthorizedError => BuildUnauthorizedResponse(unauthorizedError),
+                ConflictError conflictError => BuildConflictResponse(conflictError),
+                _ => BuildInternalServerErrorResponse(new InternalServerError())
+            };
 
     private ConflictObjectResult BuildConflictResponse(ConflictError conflictError)
         => Conflict(new ConflictResponse(conflictError));
@@ -79,8 +62,7 @@ public abstract class ApiController : ControllerBase
         => UnprocessableEntity(new UnprocessableEntityResponse(unprocessableEntityError));
 
     protected IActionResult BuildInternalServerErrorResponse(InternalServerError internalServerError)
-    {
-        var internalServerErrorResponse = new InternalServerErrorResponse(internalServerError);
-        return StatusCode(StatusCodes.Status500InternalServerError, internalServerErrorResponse);
-    }
+        => StatusCode(
+            StatusCodes.Status500InternalServerError, 
+            new InternalServerErrorResponse(internalServerError));
 }

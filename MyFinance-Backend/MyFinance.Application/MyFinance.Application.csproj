@@ -7,22 +7,23 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <Compile Remove="EntitiesFlow\Transfers\Queries\**"/>
-        <EmbeddedResource Remove="EntitiesFlow\Transfers\Queries\**"/>
-        <None Remove="EntitiesFlow\Transfers\Queries\**"/>
+        <Compile Remove="EntitiesFlow\Transfers\Queries\**" />
+        <EmbeddedResource Remove="EntitiesFlow\Transfers\Queries\**" />
+        <None Remove="EntitiesFlow\Transfers\Queries\**" />
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="FluentResults" Version="3.15.2"/>
-        <PackageReference Include="FluentValidation" Version="11.9.0"/>
-        <PackageReference Include="FluentValidation.AspNetCore" Version="11.3.0"/>
-        <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="11.9.0"/>
-        <PackageReference Include="MediatR" Version="12.2.0"/>
-        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.3"/>
-        <PackageReference Include="Microsoft.Extensions.Logging" Version="8.0.0"/>
+        <PackageReference Include="FluentResults" Version="3.15.2" />
+        <PackageReference Include="FluentValidation" Version="11.9.0" />
+        <PackageReference Include="FluentValidation.AspNetCore" Version="11.3.0" />
+        <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="11.9.0" />
+        <PackageReference Include="MediatR" Version="12.2.0" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.3" />
+        <PackageReference Include="Microsoft.Extensions.Logging" Version="8.0.0" />
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\MyFinance.Domain\MyFinance.Domain.csproj"/>
+        <ProjectReference Include="..\MyFinance.Contracts\MyFinance.Contracts.csproj" />
+        <ProjectReference Include="..\MyFinance.Domain\MyFinance.Domain.csproj" />
     </ItemGroup>
 </Project>

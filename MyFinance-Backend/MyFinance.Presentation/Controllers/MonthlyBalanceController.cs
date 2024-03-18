@@ -7,9 +7,9 @@ using Swashbuckle.AspNetCore.Annotations;
 namespace MyFinance.Presentation.Controllers;
 
 [SwaggerTag("Read Monthly Balances")]
-public class MonthlyBalanceController(IMonthlyBalanceApiService monthlyBalanceApiService) : ApiController
+public class MonthlyBalanceController(IMonthlyBalanceService monthlyBalanceApiService) : ApiController
 {
-    private readonly IMonthlyBalanceApiService _monthlyBalanceApiService = monthlyBalanceApiService;
+    private readonly IMonthlyBalanceService _monthlyBalanceApiService = monthlyBalanceApiService;
 
     [HttpGet]
     [SwaggerOperation(Summary = "Lists all existing Monthly Balances according to query parameters")]

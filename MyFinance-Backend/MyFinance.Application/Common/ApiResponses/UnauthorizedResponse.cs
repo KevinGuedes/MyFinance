@@ -3,6 +3,6 @@
 namespace MyFinance.Application.Common.ApiResponses;
 
 public sealed class UnauthorizedResponse(UnauthorizedError unauthorizedError)
-    : BaseApiResponse<UnauthorizedError>("User unauthorized", unauthorizedError)
+    : BaseErrorResponse<UnauthorizedError>("User unauthorized", unauthorizedError)
 {
 }

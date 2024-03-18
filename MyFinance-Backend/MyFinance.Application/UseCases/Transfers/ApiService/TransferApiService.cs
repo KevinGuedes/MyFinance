@@ -10,7 +10,7 @@ using MyFinance.Application.UseCases.Transfers.DTOs;
 
 namespace MyFinance.Application.UseCases.Transfers.ApiService;
 
-public sealed class TransferApiService(IMediator mediator) : BaseApiService(mediator), ITransferApiService
+public sealed class TransferApiService(IMediator mediator) : BaseApiService(mediator), ITransferService
 {
     public async Task<Result<TransferDTO>> RegisterTransferAsync(
         RegisterTransferCommand command,

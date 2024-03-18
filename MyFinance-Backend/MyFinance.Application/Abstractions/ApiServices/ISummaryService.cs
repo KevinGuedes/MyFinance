@@ -2,7 +2,7 @@
 
 namespace MyFinance.Application.Abstractions.ApiServices;
 
-public interface ISummaryApiService
+public interface ISummaryService
 {
     Task<Result<Tuple<string, byte[]>>> GetBusinessUnitSummaryAsync(Guid id, int year,
         CancellationToken cancellationToken);

@@ -6,7 +6,7 @@ using MyFinance.Application.UseCases.AccountTags.DTOs;
 
 namespace MyFinance.Application.Abstractions.ApiServices;
 
-public interface IAccountTagApiService
+public interface IAccountTagService
 {
     Task<Result<IEnumerable<AccountTagDTO>>> GetAccountTagsAsync(int page, int pageSize,
         CancellationToken cancellationToken);

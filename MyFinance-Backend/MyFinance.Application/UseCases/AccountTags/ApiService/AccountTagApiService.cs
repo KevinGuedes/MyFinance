@@ -12,7 +12,7 @@ using MyFinance.Application.UseCases.AccountTags.Queries.GetAccountTags;
 
 namespace MyFinance.Application.UseCases.AccountTags.ApiService;
 
-public sealed class AccountTagApiService(IMediator mediator) : BaseApiService(mediator), IAccountTagApiService
+public sealed class AccountTagApiService(IMediator mediator) : BaseApiService(mediator), IAccountTagService
 {
     public async Task<Result<IEnumerable<AccountTagDTO>>> GetAccountTagsAsync(
         int page,

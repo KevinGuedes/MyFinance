@@ -5,7 +5,7 @@ using MyFinance.Application.UseCases.Transfers.DTOs;
 
 namespace MyFinance.Application.Abstractions.ApiServices;
 
-public interface ITransferApiService
+public interface ITransferService
 {
     Task<Result<TransferDTO>> RegisterTransferAsync(RegisterTransferCommand command,
         CancellationToken cancellationToken);

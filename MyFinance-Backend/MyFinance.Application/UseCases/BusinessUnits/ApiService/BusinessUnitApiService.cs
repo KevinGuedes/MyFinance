@@ -12,7 +12,7 @@ using MyFinance.Application.UseCases.BusinessUnits.Queries.GetBusinessUnits;
 
 namespace MyFinance.Application.UseCases.BusinessUnits.ApiService;
 
-public sealed class BusinessUnitApiService(IMediator mediator) : BaseApiService(mediator), IBusinessUnitApiService
+public sealed class BusinessUnitApiService(IMediator mediator) : BaseApiService(mediator), IBusinessUnitService
 {
     public async Task<Result<IEnumerable<BusinessUnitDTO>>> GetBusinessUnitsAsync(
         int page,

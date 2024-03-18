@@ -8,7 +8,7 @@ using MyFinance.Application.UseCases.Users.Commands.SignOut;
 
 namespace MyFinance.Application.UseCases.Users.ApiService;
 
-public sealed class UserApiService(IMediator mediator) : BaseApiService(mediator), IUserApiService
+public sealed class UserApiService(IMediator mediator) : BaseApiService(mediator), IUserService
 {
     public Task<Result> RegisterUserAsync(
         RegisterUserCommand command,

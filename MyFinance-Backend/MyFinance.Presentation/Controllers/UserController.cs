@@ -9,9 +9,9 @@ using Swashbuckle.AspNetCore.Annotations;
 namespace MyFinance.Presentation.Controllers;
 
 [SwaggerTag("Manages user related operations")]
-public class UserController(IUserApiService userApiService) : ApiController
+public class UserController(IUserService userApiService) : ApiController
 {
-    private readonly IUserApiService _userService = userApiService;
+    private readonly IUserService _userService = userApiService;
 
     [AllowAnonymous]
     [HttpPost]

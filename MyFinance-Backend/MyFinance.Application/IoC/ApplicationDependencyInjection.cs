@@ -23,12 +23,12 @@ public static class ApplicationDependencyInjection
 
     private static IServiceCollection AddApiServices(this IServiceCollection services)
         => services
-            .AddScoped<IBusinessUnitApiService, BusinessUnitApiService>()
-            .AddScoped<IMonthlyBalanceApiService, MonthlyBalanceApiService>()
-            .AddScoped<ITransferApiService, TransferApiService>()
-            .AddScoped<ISummaryApiService, SummaryApiService>()
-            .AddScoped<IAccountTagApiService, AccountTagApiService>()
-            .AddScoped<IUserApiService, UserApiService>();
+            .AddScoped<IBusinessUnitService, BusinessUnitApiService>()
+            .AddScoped<IMonthlyBalanceService, MonthlyBalanceApiService>()
+            .AddScoped<ITransferService, TransferApiService>()
+            .AddScoped<ISummaryService, SummaryApiService>()
+            .AddScoped<IAccountTagService, AccountTagApiService>()
+            .AddScoped<IUserService, UserApiService>();
 
     public static IServiceCollection AddValidators(this IServiceCollection services)
         => services

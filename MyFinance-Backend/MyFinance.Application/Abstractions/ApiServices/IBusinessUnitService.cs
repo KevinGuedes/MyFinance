@@ -6,7 +6,7 @@ using MyFinance.Application.UseCases.BusinessUnits.DTOs;
 
 namespace MyFinance.Application.Abstractions.ApiServices;
 
-public interface IBusinessUnitApiService
+public interface IBusinessUnitService
 {
     Task<Result<IEnumerable<BusinessUnitDTO>>> GetBusinessUnitsAsync(int page, int pageSize,
         CancellationToken cancellationToken);
