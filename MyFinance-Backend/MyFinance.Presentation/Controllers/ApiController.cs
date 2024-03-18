@@ -28,15 +28,6 @@ public abstract class ApiController(IMediator mediator) : ControllerBase
     protected IActionResult ProcessResult(Result result)
         => result.IsSuccess ? NoContent() : HandleFailureResult(result.Errors);
 
-    protected IActionResult ProcessFileResult(Result<Tuple<string, byte[]>> result, string contentType)
-    {
-        if (result.IsFailed)
-            return HandleFailureResult(result.Errors);
-
-        var (fileName, fileContent) = result.Value;
-        return File(fileContent, contentType, fileName, true);
-    }
-
     protected IActionResult HandleFailureResult(List<IError> errors)
         => errors.FirstOrDefault() switch
             {

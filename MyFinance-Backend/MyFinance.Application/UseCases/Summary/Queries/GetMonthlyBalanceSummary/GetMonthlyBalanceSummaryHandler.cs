@@ -1,25 +1,24 @@
 ﻿using FluentResults;
-using Microsoft.Extensions.Logging;
 using MyFinance.Application.Abstractions.Persistence.Repositories;
 using MyFinance.Application.Abstractions.RequestHandling.Queries;
 using MyFinance.Application.Abstractions.Services;
 using MyFinance.Application.Common.Errors;
+using MyFinance.Application.Mappers;
+using MyFinance.Contracts.Summary.Responses;
 
 namespace MyFinance.Application.UseCases.Summary.Queries.GetMonthlyBalanceSummary;
 
 internal sealed class GetMonthlyBalanceSummaryHandler(
-    ILogger<GetMonthlyBalanceSummaryHandler> logger,
     IMonthlyBalanceRepository monthlyBalanceRepository,
     ISpreadsheetService spreadsheetService,
     ICurrentUserProvider currentUserProvider)
-    : IQueryHandler<GetMonthlyBalanceSummaryQuery, Tuple<string, byte[]>>
+    : IQueryHandler<GetMonthlyBalanceSummaryQuery, SummaryResponse>
 {
     private readonly ICurrentUserProvider _currentUserProvider = currentUserProvider;
-    private readonly ILogger<GetMonthlyBalanceSummaryHandler> _logger = logger;
     private readonly IMonthlyBalanceRepository _monthlyBalanceRepository = monthlyBalanceRepository;
     private readonly ISpreadsheetService _spreadsheetService = spreadsheetService;
 
-    public async Task<Result<Tuple<string, byte[]>>> Handle(GetMonthlyBalanceSummaryQuery query,
+    public async Task<Result<SummaryResponse>> Handle(GetMonthlyBalanceSummaryQuery query,
         CancellationToken cancellationToken)
     {
         var currentUserId = _currentUserProvider.GetCurrentUserId();
@@ -28,8 +27,7 @@ internal sealed class GetMonthlyBalanceSummaryHandler(
 
         if (monthlyBalance is null)
         {
-            _logger.LogWarning("Monthly Balance with Id {MonthlyBalanceId} not found", query.Id);
-            var errorMessage = string.Format("Monthly Balance with Id {0} not found", query.Id);
+            var errorMessage = $"Monthly Balance with Id {query.Id} not found";
             var entityNotFoundError = new EntityNotFoundError(errorMessage);
             return Result.Fail(entityNotFoundError);
         }
@@ -37,12 +35,13 @@ internal sealed class GetMonthlyBalanceSummaryHandler(
         var hasTransfersForProcessing = monthlyBalance.Transfers.Count is not 0;
         if (!hasTransfersForProcessing)
         {
-            _logger.LogWarning("Monthly Balance with Id {MonthlyBalanceId} has no Transfers to summarize", query.Id);
-            var errorMessage = string.Format("Monthly Balance with Id {0} has no Transfers to summarize", query.Id);
+            var errorMessage = $"Monthly Balance with Id {query.Id} has no Transfers to summarize";
             var unprocessableEntityError = new UnprocessableEntityError(errorMessage);
             return Result.Fail(unprocessableEntityError);
         }
 
-        return Result.Ok(_spreadsheetService.GetMonthlyBalanceSummary(monthlyBalance));
+        var summaryData = _spreadsheetService.GetMonthlyBalanceSummary(monthlyBalance);
+
+        return Result.Ok(SummaryMapper.DTR.Map(summaryData));
     }
 }

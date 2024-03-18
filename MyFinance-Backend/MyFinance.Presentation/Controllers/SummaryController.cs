@@ -1,15 +1,18 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using MyFinance.Application.Abstractions.ApiServices;
+﻿using FluentResults;
+using MediatR;
+using Microsoft.AspNetCore.Mvc;
 using MyFinance.Application.Common.ApiResponses;
+using MyFinance.Application.UseCases.Summary.Queries.GetBusinessUnitSummary;
+using MyFinance.Application.UseCases.Summary.Queries.GetMonthlyBalanceSummary;
+using MyFinance.Contracts.Summary.Responses;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace MyFinance.Presentation.Controllers;
 
 [SwaggerTag("Gets Summary Spreadsheets for Business Units and Monthly Balances")]
-public class SummaryController(ISummaryService summaryApiService) : ApiController
+public class SummaryController(IMediator mediator) : ApiController(mediator)
 {
     private const string SPREADSHEET_CONTENT_TYPE = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
-    private readonly ISummaryService _summaryApiService = summaryApiService;
 
     [HttpGet("BusinessUnit/{id:guid}")]
     [SwaggerOperation(Summary = "Get the Summary Spreadsheet for the given Business Unit")]
@@ -27,7 +30,8 @@ public class SummaryController(ISummaryService summaryApiService) : ApiControlle
         [FromQuery] [SwaggerParameter("Year", Required = true)]
         int year,
         CancellationToken cancellationToken)
-        => ProcessFileResult(await _summaryApiService.GetBusinessUnitSummaryAsync(id, year, cancellationToken),
+        => ProcessSummaryResult(
+            await _mediator.Send(new GetBusinessUnitSummaryQuery(id, year), cancellationToken),
             SPREADSHEET_CONTENT_TYPE);
 
     [HttpGet("MonthlyBalance/{id:guid}")]
@@ -43,6 +47,16 @@ public class SummaryController(ISummaryService summaryApiService) : ApiControlle
     public async Task<IActionResult> GetMonthlyBalanceSummaryAsync(
         [FromRoute] [SwaggerParameter("Monthly Balance Id", Required = true)]
         Guid id, CancellationToken cancellationToken)
-        => ProcessFileResult(await _summaryApiService.GetMonthlyBalanceSummaryAsync(id, cancellationToken),
+        => ProcessSummaryResult(
+            await _mediator.Send(new GetMonthlyBalanceSummaryQuery(id), cancellationToken),
             SPREADSHEET_CONTENT_TYPE);
+
+    private IActionResult ProcessSummaryResult(Result<SummaryResponse> result, string contentType)
+    {
+        if (result.IsFailed)
+            return HandleFailureResult(result.Errors);
+
+        var (fileName, fileContent) = result.Value;
+        return File(fileContent, contentType, fileName, true);
+    }
 }
