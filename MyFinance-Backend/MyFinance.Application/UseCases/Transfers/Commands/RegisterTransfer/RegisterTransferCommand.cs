@@ -1,5 +1,5 @@
 ﻿using MyFinance.Application.Abstractions.RequestHandling.Commands;
-using MyFinance.Domain.Entities;
+using MyFinance.Contracts.Transfer.Responses;
 using MyFinance.Domain.Enums;
 
 namespace MyFinance.Application.UseCases.Transfers.Commands.RegisterTransfer;
@@ -11,6 +11,6 @@ public sealed record RegisterTransferCommand(
     string RelatedTo,
     string Description,
     DateTime SettlementDate,
-    TransferType Type) : ICommand<Transfer>
+    TransferType Type) : ICommand<TransferResponse>
 {
 }

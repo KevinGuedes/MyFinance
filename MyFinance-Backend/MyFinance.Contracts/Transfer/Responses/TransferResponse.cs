@@ -1,10 +1,10 @@
-﻿using MyFinance.Application.Common.DTO;
-using MyFinance.Domain.Enums;
+﻿using MyFinance.Domain.Enums;
 
-namespace MyFinance.Application.UseCases.Transfers.DTOs;
+namespace MyFinance.Contracts.Transfer.Responses;
 
-public sealed class TransferDTO : EntityDTO
+public sealed class TransferResponse
 {
+    public required Guid Id { get; init; }
     public required string RelatedTo { get; init; }
     public required string Description { get; init; }
     public required DateTime SettlementDate { get; init; }

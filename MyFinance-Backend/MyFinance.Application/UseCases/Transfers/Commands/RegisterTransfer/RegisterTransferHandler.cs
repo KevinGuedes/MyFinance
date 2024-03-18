@@ -4,55 +4,49 @@ using MyFinance.Application.Abstractions.Persistence.Repositories;
 using MyFinance.Application.Abstractions.RequestHandling.Commands;
 using MyFinance.Application.Abstractions.Services;
 using MyFinance.Application.Common.Errors;
+using MyFinance.Application.Mappers;
+using MyFinance.Contracts.Transfer.Responses;
 using MyFinance.Domain.Entities;
 
 namespace MyFinance.Application.UseCases.Transfers.Commands.RegisterTransfer;
 
 internal sealed class RegisterTransferHandler(
-    ILogger<RegisterTransferHandler> logger,
     IMonthlyBalanceRepository monthlyBalanceRepository,
     IBusinessUnitRepository businessUnitRepository,
     ITransferRepository transferRepository,
     IAccountTagRepository accountTagRepository,
-    ICurrentUserProvider currentUserProvider) : ICommandHandler<RegisterTransferCommand, Transfer>
+    ICurrentUserProvider currentUserProvider) : ICommandHandler<RegisterTransferCommand, TransferResponse>
 {
     private readonly IAccountTagRepository _accountTagRepository = accountTagRepository;
     private readonly IBusinessUnitRepository _businessUnitRepository = businessUnitRepository;
     private readonly ICurrentUserProvider _currentUserProvider = currentUserProvider;
-    private readonly ILogger<RegisterTransferHandler> _logger = logger;
     private readonly IMonthlyBalanceRepository _monthlyBalanceRepository = monthlyBalanceRepository;
     private readonly ITransferRepository _transferRepository = transferRepository;
 
-    public async Task<Result<Transfer>> Handle(RegisterTransferCommand command, CancellationToken cancellationToken)
+    public async Task<Result<TransferResponse>> Handle(RegisterTransferCommand command, CancellationToken cancellationToken)
     {
         var currentUserId = _currentUserProvider.GetCurrentUserId();
         var (businessUnitId, accountTagId, value, relatedTo, description, settlementDate, type) = command;
 
-        _logger.LogInformation("Retrieving Business Unit with Id {BusinessUnitId}", businessUnitId);
         var businessUnit = await _businessUnitRepository.GetByIdAsync(businessUnitId, currentUserId, cancellationToken);
         if (businessUnit is null)
         {
-            _logger.LogWarning("Business Unit with Id {BusinessUnitId} not found", businessUnitId);
             var errorMessage = $"Business Unit with Id {businessUnitId} not found";
             var entityNotFoundError = new EntityNotFoundError(errorMessage);
             return Result.Fail(entityNotFoundError);
         }
 
-        _logger.LogInformation("Retrieving Account Tag with Id {AccountTagId}", accountTagId);
         var accountTag = await _accountTagRepository.GetByIdAsync(accountTagId, currentUserId, cancellationToken);
         if (accountTag is null)
         {
-            _logger.LogWarning("Account Tag with Id {AccountTagId} not found", accountTagId);
             var errorMessage = $"Account Tag with Id {accountTagId} not found";
             var entityNotFoundError = new EntityNotFoundError(errorMessage);
             return Result.Fail(entityNotFoundError);
         }
 
-        _logger.LogInformation("Updating balance of Business Unit with Id {BusinessUnitId}", businessUnitId);
         businessUnit.RegisterValue(value, type);
         _businessUnitRepository.Update(businessUnit);
 
-        _logger.LogInformation("Checking if there is an existing Monthly Balance to register new Transfer");
         var monthlyBalance = await _monthlyBalanceRepository.GetByReferenceDateAndBusinessUnitId(
             settlementDate,
             businessUnitId,
@@ -61,24 +55,20 @@ internal sealed class RegisterTransferHandler(
 
         if (monthlyBalance is null)
         {
-            _logger.LogInformation("Creating new Monthly Balance");
             monthlyBalance = new MonthlyBalance(settlementDate, businessUnit, currentUserId);
             monthlyBalance.RegisterValue(value, type);
             _monthlyBalanceRepository.Insert(monthlyBalance);
         }
         else
         {
-            _logger.LogInformation("Updating balance of Monthly Balance with Id {MonthlyBalanceId}", monthlyBalance.Id);
             monthlyBalance.RegisterValue(value, type);
             _monthlyBalanceRepository.Update(monthlyBalance);
         }
 
-        _logger.LogInformation("Creating new Transfer");
         var transfer = new Transfer(value, relatedTo, description, settlementDate, type, monthlyBalance, accountTag,
             currentUserId);
         _transferRepository.Insert(transfer);
-        _logger.LogInformation("New transfer successfully registered");
 
-        return Result.Ok(transfer);
+        return Result.Ok(TransferMapper.DTR.Map(transfer));
     }
 }
