@@ -6,22 +6,18 @@ using MyFinance.Application.Common.Errors;
 
 namespace MyFinance.Application.UseCases.BusinessUnits.Commands.UnarchiveBusinessUnit;
 
-public class UnarchiveBusinessUnitHandler(IBusinessUnitRepository businessUnitRepository, ICurrentUserProvider currentUserProvider) 
+public class UnarchiveBusinessUnitHandler(IBusinessUnitRepository businessUnitRepository) 
     : ICommandHandler<UnarchiveBusinessUnitCommand>
 {
     private readonly IBusinessUnitRepository _businessUnitRepository = businessUnitRepository;
-    private readonly ICurrentUserProvider _currentUserProvider = currentUserProvider;
 
     public async Task<Result> Handle(UnarchiveBusinessUnitCommand command, CancellationToken cancellationToken)
     {
-        var currentUserId = _currentUserProvider.GetCurrentUserId();
-
-        var businessUnit = await _businessUnitRepository.GetByIdAsync(command.Id, currentUserId, cancellationToken);
+        var businessUnit = await _businessUnitRepository.GetByIdAsync(command.Id, command.CurrentUserId, cancellationToken);
 
         if (businessUnit is null)
         {
-            var errorMessage = $"Business Unit with Id {command.Id} not found";
-            var entityNotFoundError = new EntityNotFoundError(errorMessage);
+            var entityNotFoundError = new EntityNotFoundError($"Business Unit with Id {command.Id} not found");
             return Result.Fail(entityNotFoundError);
         }
 

@@ -1,7 +1,6 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using MyFinance.Application.Common.ApiResponses;
 using MyFinance.Application.Mappers;
 using MyFinance.Application.UseCases.Users.Commands.SignOut;
 using MyFinance.Contracts.User.Requests;
@@ -16,7 +15,7 @@ public class UserController(IMediator mediator) : ApiController(mediator)
     [HttpPost]
     [SwaggerOperation(Summary = "Registers a new User")]
     [SwaggerResponse(StatusCodes.Status204NoContent, "User successfully created")]
-    [SwaggerResponse(StatusCodes.Status400BadRequest, "Invalid payload", typeof(BadRequestResponse))]
+    [SwaggerResponse(StatusCodes.Status400BadRequest, "Invalid payload", typeof(ValidationProblemDetails))]
     public async Task<IActionResult> RegisterUserAsync(
         [FromBody] [SwaggerRequestBody("User's payload", Required = true)]
         RegisterUserRequest request,
@@ -27,8 +26,7 @@ public class UserController(IMediator mediator) : ApiController(mediator)
     [HttpPost("SignIn")]
     [SwaggerOperation(Summary = "Signs in an existing User")]
     [SwaggerResponse(StatusCodes.Status204NoContent, "User successfully signed in")]
-    [SwaggerResponse(StatusCodes.Status401Unauthorized, "Invalid credentials", typeof(UnauthorizedResponse))]
-    [SwaggerResponse(StatusCodes.Status404NotFound, "User not found", typeof(EntityNotFoundResponse))]
+    [SwaggerResponse(StatusCodes.Status401Unauthorized, "Invalid credentials", typeof(ProblemDetails))]
     public async Task<IActionResult> SignInAsync(
         [FromBody] [SwaggerRequestBody("User's sign in credentials", Required = true)]
         SignInRequest request,

@@ -30,7 +30,7 @@ public static class PresentationDependencyInjection
                     License = new OpenApiLicense { Name = "MIT" },
                     Contact = new OpenApiContact
                     {
-                        Name = "Kevin Santos Gudes",
+                        Name = "Kevin Santos Guedes",
                         Email = "kevinguedes1@gmail.com",
                         Url = new Uri("https://www.linkedin.com/in/kevinsantosguedes/")
                     }

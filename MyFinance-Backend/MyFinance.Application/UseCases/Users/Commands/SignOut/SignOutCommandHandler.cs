@@ -1,5 +1,4 @@
 ﻿using FluentResults;
-using Microsoft.Extensions.Logging;
 using MyFinance.Application.Abstractions.RequestHandling.Commands;
 using MyFinance.Application.Abstractions.Services;
 

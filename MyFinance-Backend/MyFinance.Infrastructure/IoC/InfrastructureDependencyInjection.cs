@@ -29,7 +29,7 @@ public static class InfrastructureDependencyInjection
             .AddAuthentication()
             .AddCookie(options =>
             {
-                options.Cookie.Name = "MyFinance.Cookie";
+                options.Cookie.Name = "MF-Access-Token";
                 options.Cookie.HttpOnly = true;
                 options.Cookie.SameSite = SameSiteMode.Strict;
                 options.Cookie.SecurePolicy = CookieSecurePolicy.Always;

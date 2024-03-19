@@ -24,6 +24,7 @@ public static class ApplicationDependencyInjection
             {
                 cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly());
                 cfg
+                    .AddOpenRequestPreProcessor(typeof(UserProviderBehavior<>))
                     .AddOpenBehavior(typeof(ExceptionHandlerBehavior<,>))
                     .AddOpenBehavior(typeof(RequestValidationBehavior<,>))
                     .AddOpenBehavior(typeof(UnitOfWorkBehavior<,>));

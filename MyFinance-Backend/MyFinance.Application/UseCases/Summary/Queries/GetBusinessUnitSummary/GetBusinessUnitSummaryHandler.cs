@@ -10,29 +10,24 @@ namespace MyFinance.Application.UseCases.Summary.Queries.GetBusinessUnitSummary;
 
 internal sealed class GetBusinessUnitSummaryHandler(
     IBusinessUnitRepository businessUnitRepository,
-    ISpreadsheetService spreadsheetService,
-    ICurrentUserProvider currentUserProvider)
+    ISpreadsheetService spreadsheetService)
     : IQueryHandler<GetBusinessUnitSummaryQuery, SummaryResponse>
 {
     private readonly IBusinessUnitRepository _businessUnitRepository = businessUnitRepository;
-    private readonly ICurrentUserProvider _currentUserProvider = currentUserProvider;
     private readonly ISpreadsheetService _spreadsheetService = spreadsheetService;
 
     public async Task<Result<SummaryResponse>> Handle(GetBusinessUnitSummaryQuery query,
         CancellationToken cancellationToken)
     {
-        var currentUserId = _currentUserProvider.GetCurrentUserId();
-
         var businessUnit = await _businessUnitRepository.GetWithSummaryData(
             query.Id,
             query.Year,
-            currentUserId,
+            query.CurrentUserId,
             cancellationToken);
 
         if (businessUnit is null)
         {
-            var errorMessage = $"Business Unit with Id {query.Id} not found";
-            var entityNotFoundError = new EntityNotFoundError(errorMessage);
+            var entityNotFoundError = new EntityNotFoundError($"Business Unit with Id {query.Id} not found");
             return Result.Fail(entityNotFoundError);
         }
 

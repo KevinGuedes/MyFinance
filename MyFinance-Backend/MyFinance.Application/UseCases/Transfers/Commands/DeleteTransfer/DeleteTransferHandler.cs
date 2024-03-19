@@ -10,24 +10,19 @@ namespace MyFinance.Application.UseCases.Transfers.Commands.DeleteTransfer;
 internal sealed class DeleteTransferHandler(
     IMonthlyBalanceRepository monthlyBalanceRepository,
     IBusinessUnitRepository businessUnitRepository,
-    ITransferRepository transferRepository,
-    ICurrentUserProvider currentUserProvider) : ICommandHandler<DeleteTransferCommand>
+    ITransferRepository transferRepository) : ICommandHandler<DeleteTransferCommand>
 {
     private readonly IBusinessUnitRepository _businessUnitRepository = businessUnitRepository;
-    private readonly ICurrentUserProvider _currentUserProvider = currentUserProvider;
     private readonly IMonthlyBalanceRepository _monthlyBalanceRepository = monthlyBalanceRepository;
     private readonly ITransferRepository _transferRepository = transferRepository;
 
     public async Task<Result> Handle(DeleteTransferCommand command, CancellationToken cancellationToken)
     {
-        var currentUserId = _currentUserProvider.GetCurrentUserId();
-
-        var transfer = await _transferRepository.GetByIdAsync(command.Id, currentUserId, cancellationToken);
+        var transfer = await _transferRepository.GetByIdAsync(command.Id, command.CurrentUserId, cancellationToken);
 
         if (transfer is null)
         {
-            var errorMessage = $"Transfer with Id {command.Id} not found";
-            var entityNotFoundError = new EntityNotFoundError(errorMessage);
+            var entityNotFoundError = new EntityNotFoundError($"Transfer with Id {command.Id} not found");
             return Result.Fail(entityNotFoundError);
         }
 

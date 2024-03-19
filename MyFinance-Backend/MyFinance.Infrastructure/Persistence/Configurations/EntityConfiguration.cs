@@ -9,7 +9,7 @@ public abstract class EntityConfiguration<TEntity> : IEntityTypeConfiguration<TE
     public virtual void Configure(EntityTypeBuilder<TEntity> builder)
     {
         builder.HasKey(e => e.Id);
-        builder.Property(e => e.Id).ValueGeneratedOnAdd();
+        builder.Property(e => e.Id).ValueGeneratedNever();
 
         builder.Property(e => e.CreationDate).IsRequired();
         builder.Property(e => e.UpdateDate).IsRequired(false);

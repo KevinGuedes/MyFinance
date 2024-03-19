@@ -13,21 +13,18 @@ internal sealed class UpdateTransferHandler(
     IMonthlyBalanceRepository monthlyBalanceRepository,
     IBusinessUnitRepository businessUnitRepository,
     ITransferRepository transferRepository,
-    IAccountTagRepository accountTagRepository,
-    ICurrentUserProvider currentUserProvider) : ICommandHandler<UpdateTransferCommand, TransferResponse>
+    IAccountTagRepository accountTagRepository) : ICommandHandler<UpdateTransferCommand, TransferResponse>
 {
     private readonly IAccountTagRepository _accountTagRepository = accountTagRepository;
     private readonly IBusinessUnitRepository _businessUnitRepository = businessUnitRepository;
-    private readonly ICurrentUserProvider _currentUserProvider = currentUserProvider;
     private readonly IMonthlyBalanceRepository _monthlyBalanceRepository = monthlyBalanceRepository;
     private readonly ITransferRepository _transferRepository = transferRepository;
 
     public async Task<Result<TransferResponse>> Handle(UpdateTransferCommand command, CancellationToken cancellationToken)
     {
-        var currentUserId = _currentUserProvider.GetCurrentUserId();
         var (transferId, accountTagId, newTransferValue, relatedTo, description, settlementDate, type) = command;
 
-        var transfer = await _transferRepository.GetByIdAsync(transferId, currentUserId, cancellationToken);
+        var transfer = await _transferRepository.GetByIdAsync(transferId, command.CurrentUserId, cancellationToken);
 
         if (transfer is null)
         {
@@ -36,7 +33,7 @@ internal sealed class UpdateTransferHandler(
             return Result.Fail(entityNotFoundError);
         }
 
-        var accountTag = await _accountTagRepository.GetByIdAsync(accountTagId, currentUserId, cancellationToken);
+        var accountTag = await _accountTagRepository.GetByIdAsync(accountTagId, command.CurrentUserId, cancellationToken);
         if (accountTag is null)
         {
             var errorMessage = $"Account Tag with Id {accountTagId} not found";
@@ -61,12 +58,12 @@ internal sealed class UpdateTransferHandler(
             var existingMonthlyBalance = await _monthlyBalanceRepository.GetByReferenceDateAndBusinessUnitId(
                 settlementDate,
                 businessUnit.Id,
-                currentUserId,
+                command.CurrentUserId,
                 cancellationToken);
 
             if (existingMonthlyBalance is null)
             {
-                var newMonthlyBalance = new MonthlyBalance(settlementDate, businessUnit, currentUserId);
+                var newMonthlyBalance = new MonthlyBalance(settlementDate, businessUnit, command.CurrentUserId);
                 transfer.Update(
                     newTransferValue,
                     relatedTo,

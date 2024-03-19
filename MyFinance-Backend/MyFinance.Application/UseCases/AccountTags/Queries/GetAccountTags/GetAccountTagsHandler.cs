@@ -1,31 +1,26 @@
 ﻿using FluentResults;
 using MyFinance.Application.Abstractions.Persistence.Repositories;
 using MyFinance.Application.Abstractions.RequestHandling.Queries;
-using MyFinance.Application.Abstractions.Services;
 using MyFinance.Application.Mappers;
 using MyFinance.Contracts.AccountTag.Responses;
 using MyFinance.Contracts.Common;
 
 namespace MyFinance.Application.UseCases.AccountTags.Queries.GetAccountTags;
 
-internal sealed class GetAccountTagsHandler(IAccountTagRepository accountTagRepository, ICurrentUserProvider currentUserProvider)
-    : IQueryHandler<GetAccountTagsQuery, PaginatedResponse<AccountTagResponse>>
+internal sealed class GetAccountTagsHandler(IAccountTagRepository accountTagRepository)
+    : IQueryHandler<GetAccountTagsQuery, Paginated<AccountTagResponse>>
 {
     private readonly IAccountTagRepository _accountTagRepository = accountTagRepository;
-    private readonly ICurrentUserProvider _currentUserProvider = currentUserProvider;
 
-    public async Task<Result<PaginatedResponse<AccountTagResponse>>> Handle(GetAccountTagsQuery query,
-        CancellationToken cancellationToken)
+    public async Task<Result<Paginated<AccountTagResponse>>> Handle(GetAccountTagsQuery query, CancellationToken cancellationToken)
     {
-        var currentUserId = _currentUserProvider.GetCurrentUserId();
-
         var accountTags = await _accountTagRepository.GetPaginatedAsync(
             query.PageNumber,
             query.PageSize,
-            currentUserId,
+            query.CurrentUserId,
             cancellationToken);
 
-        var response = new PaginatedResponse<AccountTagResponse>(
+        var response = new Paginated<AccountTagResponse>(
             AccountTagMapper.DTR.Map(accountTags),
             query.PageNumber, 
             query.PageSize,

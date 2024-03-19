@@ -1,6 +1,5 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using MyFinance.Application.Common.ApiResponses;
 using MyFinance.Application.UseCases.MonthlyBalances.Queries.GetMonthlyBalances;
 using MyFinance.Contracts.Common;
 using MyFinance.Contracts.MonthlyBalance.Responses;
@@ -13,9 +12,9 @@ public class MonthlyBalanceController(IMediator mediator) : ApiController(mediat
 {
     [HttpGet]
     [SwaggerOperation(Summary = "Lists all existing Monthly Balances according to query parameters")]
-    [SwaggerResponse(StatusCodes.Status200OK, "List of Monthly Balances", typeof(PaginatedResponse<MonthlyBalanceResponse>))]
-    [SwaggerResponse(StatusCodes.Status400BadRequest, "Invalid query parameters", typeof(BadRequestResponse))]
-    [SwaggerResponse(StatusCodes.Status404NotFound, "Business Unit not found", typeof(EntityNotFoundResponse))]
+    [SwaggerResponse(StatusCodes.Status200OK, "List of Monthly Balances", typeof(Paginated<MonthlyBalanceResponse>))]
+    [SwaggerResponse(StatusCodes.Status400BadRequest, "Invalid query parameters", typeof(ValidationProblemDetails))]
+    [SwaggerResponse(StatusCodes.Status404NotFound, "Business Unit not found", typeof(ProblemDetails))]
     public async Task<IActionResult> GetBusinessUnitsAsync(
         [FromQuery] [SwaggerParameter("Business Unit Id", Required = true)]
         Guid businessUnitId,

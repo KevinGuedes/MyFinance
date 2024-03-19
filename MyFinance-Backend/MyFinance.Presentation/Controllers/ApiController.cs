@@ -1,7 +1,6 @@
 ﻿using FluentResults;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using MyFinance.Application.Common.ApiResponses;
 using MyFinance.Application.Common.Errors;
 using Swashbuckle.AspNetCore.Annotations;
 
@@ -9,8 +8,9 @@ namespace MyFinance.Presentation.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-[Produces("application/json")]
-[SwaggerResponse(StatusCodes.Status500InternalServerError, "Backend went rogue", typeof(InternalServerErrorResponse))]
+[Produces("application/problem+json")]
+[Consumes("application/json")]
+[SwaggerResponse(StatusCodes.Status500InternalServerError, "Backend went rogue", typeof(ProblemDetails))]
 public abstract class ApiController(IMediator mediator) : ControllerBase
 {
     protected readonly IMediator _mediator = mediator;
@@ -20,8 +20,8 @@ public abstract class ApiController(IMediator mediator) : ControllerBase
         if (result.IsFailed)
             return HandleFailureResult(result.Errors);
 
-        return hasEntityBeenCreated ? 
-            StatusCode(StatusCodes.Status201Created, result.Value) : 
+        return hasEntityBeenCreated ?
+            StatusCode(StatusCodes.Status201Created, result.Value) :
             Ok(result.Value);
     }
 
@@ -29,34 +29,34 @@ public abstract class ApiController(IMediator mediator) : ControllerBase
         => result.IsSuccess ? NoContent() : HandleFailureResult(result.Errors);
 
     protected IActionResult HandleFailureResult(List<IError> errors)
-        => errors.FirstOrDefault() switch
-            {
-                InvalidRequestError invalidRequestError => BuildBadRequestResponse(invalidRequestError),
-                EntityNotFoundError entityNotFoundError => BuildNotFoundResponse(entityNotFoundError),
-                UnprocessableEntityError unprocessableEntityError => BuildUnprocessableEntityResponse(unprocessableEntityError),
-                UnauthorizedError unauthorizedError => BuildUnauthorizedResponse(unauthorizedError),
-                ConflictError conflictError => BuildConflictResponse(conflictError),
-                _ => BuildInternalServerErrorResponse(new InternalServerError())
-            };
+    {
+        return errors.FirstOrDefault() switch
+        {
+            InvalidRequestError invalidRequestError
+                => BuildValidationProblemResult(invalidRequestError),
+            EntityNotFoundError entityNotFoundError
+                => BuildProblemResult(StatusCodes.Status404NotFound, entityNotFoundError),
+            UnprocessableEntityError unprocessableEntityError
+                => BuildProblemResult(StatusCodes.Status422UnprocessableEntity, unprocessableEntityError),
+            UnauthorizedError unauthorizedError
+                => BuildProblemResult(StatusCodes.Status401Unauthorized, unauthorizedError),
+            ConflictError conflictError
+                => BuildProblemResult(StatusCodes.Status409Conflict, conflictError),
+            _
+                => BuildProblemResult(StatusCodes.Status500InternalServerError)
+        };
+    }
 
-    private ConflictObjectResult BuildConflictResponse(ConflictError conflictError)
-        => Conflict(new ConflictResponse(conflictError));
+    private ObjectResult BuildProblemResult(int statusCode, IError error)
+        => Problem(statusCode: statusCode, detail: error!.Message);
 
-    private UnauthorizedObjectResult BuildUnauthorizedResponse(UnauthorizedError unauthorizedError)
-        => Unauthorized(new UnauthorizedResponse(unauthorizedError));
+    private ObjectResult BuildProblemResult(int statusCode)
+       => Problem(statusCode: statusCode, detail: "MyFinance API went rogue! Sorry!");
 
-    private BadRequestObjectResult BuildBadRequestResponse(InvalidRequestError invalidRequestError)
-        => BadRequest(new BadRequestResponse(invalidRequestError));
-
-    private NotFoundObjectResult BuildNotFoundResponse(EntityNotFoundError entityNotFoundError)
-        => NotFound(new EntityNotFoundResponse(entityNotFoundError));
-
-    private UnprocessableEntityObjectResult BuildUnprocessableEntityResponse(
-        UnprocessableEntityError unprocessableEntityError)
-        => UnprocessableEntity(new UnprocessableEntityResponse(unprocessableEntityError));
-
-    protected IActionResult BuildInternalServerErrorResponse(InternalServerError internalServerError)
-        => StatusCode(
-            StatusCodes.Status500InternalServerError, 
-            new InternalServerErrorResponse(internalServerError));
+    private ActionResult BuildValidationProblemResult(InvalidRequestError invalidRequestError)
+    {
+        var validationErrors = invalidRequestError.ValidationErrors;
+        var validationProblemDetails = new ValidationProblemDetails(validationErrors);
+        return ValidationProblem(validationProblemDetails);
+    }
 }

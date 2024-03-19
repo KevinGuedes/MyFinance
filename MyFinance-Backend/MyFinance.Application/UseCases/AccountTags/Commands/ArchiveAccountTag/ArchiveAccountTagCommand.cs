@@ -1,7 +1,10 @@
-﻿using MyFinance.Application.Abstractions.RequestHandling.Commands;
+﻿using MyFinance.Application.Abstractions.RequestHandling;
+using MyFinance.Application.Abstractions.RequestHandling.Commands;
 
 namespace MyFinance.Application.UseCases.AccountTags.Commands.ArchiveAccountTag;
 
-public sealed record ArchiveAccountTagCommand(Guid Id, string? ReasonToArchive) : ICommand
+public sealed record ArchiveAccountTagCommand(Guid Id, string? ReasonToArchive)
+    : ICommand, IUserBasedRequest
 {
+    public Guid CurrentUserId { get; set; }
 }

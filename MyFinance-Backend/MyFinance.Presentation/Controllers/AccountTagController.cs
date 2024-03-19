@@ -1,6 +1,6 @@
 ﻿using MediatR;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
-using MyFinance.Application.Common.ApiResponses;
 using MyFinance.Application.Mappers;
 using MyFinance.Application.UseCases.AccountTags.Commands.UnarchiveAccountTag;
 using MyFinance.Application.UseCases.AccountTags.Queries.GetAccountTags;
@@ -18,7 +18,7 @@ public class AccountTagController(IMediator mediator) : ApiController(mediator)
     [HttpPost]
     [SwaggerOperation(Summary = "Registers a new Account Tag")]
     [SwaggerResponse(StatusCodes.Status201Created, "Account Tag registered", typeof(AccountTagResponse))]
-    [SwaggerResponse(StatusCodes.Status400BadRequest, "Invalid payload", typeof(BadRequestResponse))]
+    [SwaggerResponse(StatusCodes.Status400BadRequest, "Invalid payload", typeof(ValidationProblemDetails))]
     public async Task<IActionResult> RegisterTransfersAsync(
         [FromBody] [SwaggerRequestBody("Account Tag's payload", Required = true)]
         CreateAccountTagRequest request,
@@ -28,8 +28,8 @@ public class AccountTagController(IMediator mediator) : ApiController(mediator)
     [HttpGet]
     [SwaggerOperation(Summary = "Lists all Account Tags with pagination")]
     [SwaggerResponse(StatusCodes.Status200OK, "List of all existing Account Tags with pagination",
-        typeof(PaginatedResponse<AccountTagResponse>))]
-    [SwaggerResponse(StatusCodes.Status400BadRequest, "Invalid query parameters", typeof(BadRequestResponse))]
+        typeof(Paginated<AccountTagResponse>))]
+    [SwaggerResponse(StatusCodes.Status400BadRequest, "Invalid query parameters", typeof(ValidationProblemDetails))]
     public async Task<IActionResult> GetBusinessUnitsAsync(
         [FromQuery] [SwaggerParameter("Page number", Required = true)]
         int pageNumber,
@@ -41,10 +41,10 @@ public class AccountTagController(IMediator mediator) : ApiController(mediator)
     [HttpPut]
     [SwaggerOperation(Summary = "Updates an existing Account Tag")]
     [SwaggerResponse(StatusCodes.Status200OK, "Updated Account Tag", typeof(AccountTagResponse))]
-    [SwaggerResponse(StatusCodes.Status400BadRequest, "Invalid payload", typeof(BadRequestResponse))]
-    [SwaggerResponse(StatusCodes.Status404NotFound, "Account Tag not found", typeof(EntityNotFoundResponse))]
+    [SwaggerResponse(StatusCodes.Status400BadRequest, "Invalid payload", typeof(ValidationProblemDetails))]
+    [SwaggerResponse(StatusCodes.Status404NotFound, "Account Tag not found", typeof(ProblemDetails))]
     [SwaggerResponse(StatusCodes.Status409Conflict, "The Account Tag was updated after the request was sent",
-        typeof(UnprocessableEntityResponse))]
+        typeof(ProblemDetails))]
     public async Task<IActionResult> UpdateBusinessUnitAsync(
         [FromBody] [SwaggerRequestBody("Account Tag payload", Required = true)]
         UpdateAccountTagRequest request,
@@ -54,10 +54,10 @@ public class AccountTagController(IMediator mediator) : ApiController(mediator)
     [HttpPatch("{id:guid}")]
     [SwaggerOperation(Summary = "Unarchives an existing Account Tag")]
     [SwaggerResponse(StatusCodes.Status204NoContent, "Account Tag successfully unarchived")]
-    [SwaggerResponse(StatusCodes.Status400BadRequest, "Invalid Account Tag Id", typeof(BadRequestResponse))]
-    [SwaggerResponse(StatusCodes.Status404NotFound, "Account Tag not found", typeof(EntityNotFoundResponse))]
+    [SwaggerResponse(StatusCodes.Status400BadRequest, "Invalid Account Tag Id", typeof(ValidationProblemDetails))]
+    [SwaggerResponse(StatusCodes.Status404NotFound, "Account Tag not found", typeof(ProblemDetails))]
     [SwaggerResponse(StatusCodes.Status409Conflict, "The Account Tag was updated after the request was sent",
-        typeof(UnprocessableEntityResponse))]
+        typeof(ProblemDetails))]
     public async Task<IActionResult> UnarchiveBusinessUnitAsync(
         [FromRoute] [SwaggerParameter("Id of the Account Tag to unarchive", Required = true)]
         Guid id,
@@ -67,10 +67,10 @@ public class AccountTagController(IMediator mediator) : ApiController(mediator)
     [HttpDelete]
     [SwaggerOperation(Summary = "Logically deletes (archives) an existing Account Tag")]
     [SwaggerResponse(StatusCodes.Status204NoContent, "Account Tag successfully archived")]
-    [SwaggerResponse(StatusCodes.Status400BadRequest, "Invalid payload", typeof(BadRequestResponse))]
-    [SwaggerResponse(StatusCodes.Status404NotFound, "Account Tag not found", typeof(EntityNotFoundResponse))]
+    [SwaggerResponse(StatusCodes.Status400BadRequest, "Invalid payload", typeof(ValidationProblemDetails))]
+    [SwaggerResponse(StatusCodes.Status404NotFound, "Account Tag not found", typeof(ProblemDetails))]
     [SwaggerResponse(StatusCodes.Status409Conflict, "The Account Tag was updated after the request was sent",
-        typeof(UnprocessableEntityResponse))]
+        typeof(ProblemDetails))]
     public async Task<IActionResult> ArchiveBusinessUnitAsync(
         [FromBody] [SwaggerRequestBody("Payload to archvie a Account Tag", Required = true)]
         ArchiveAccountTagRequest request,

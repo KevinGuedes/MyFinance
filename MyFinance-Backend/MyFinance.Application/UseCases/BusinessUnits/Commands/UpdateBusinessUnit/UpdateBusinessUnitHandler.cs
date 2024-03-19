@@ -10,23 +10,19 @@ using MyFinance.Domain.Entities;
 
 namespace MyFinance.Application.UseCases.BusinessUnits.Commands.UpdateBusinessUnit;
 
-internal sealed class UpdateBusinessUnitHandler(IBusinessUnitRepository businessUnitRepository, ICurrentUserProvider currentUserProvider) 
+internal sealed class UpdateBusinessUnitHandler(IBusinessUnitRepository businessUnitRepository) 
     : ICommandHandler<UpdateBusinessUnitCommand, BusinessUnitResponse>
 {
     private readonly IBusinessUnitRepository _businessUnitRepository = businessUnitRepository;
-    private readonly ICurrentUserProvider _currentUserProvider = currentUserProvider;
 
     public async Task<Result<BusinessUnitResponse>> Handle(UpdateBusinessUnitCommand command,
         CancellationToken cancellationToken)
     {
-        var currentUserId = _currentUserProvider.GetCurrentUserId();
-
-        var businessUnit = await _businessUnitRepository.GetByIdAsync(command.Id, currentUserId, cancellationToken);
+        var businessUnit = await _businessUnitRepository.GetByIdAsync(command.Id, command.CurrentUserId, cancellationToken);
 
         if (businessUnit is null)
         {
-            var errorMessage = string.Format("Business Unit with Id {0} not found", command.Id);
-            var entityNotFoundError = new EntityNotFoundError(errorMessage);
+            var entityNotFoundError = new EntityNotFoundError($"Business Unit with Id {command.Id} not found");
             return Result.Fail(entityNotFoundError);
         }
 

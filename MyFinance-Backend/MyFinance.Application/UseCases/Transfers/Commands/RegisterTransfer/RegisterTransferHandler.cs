@@ -14,21 +14,18 @@ internal sealed class RegisterTransferHandler(
     IMonthlyBalanceRepository monthlyBalanceRepository,
     IBusinessUnitRepository businessUnitRepository,
     ITransferRepository transferRepository,
-    IAccountTagRepository accountTagRepository,
-    ICurrentUserProvider currentUserProvider) : ICommandHandler<RegisterTransferCommand, TransferResponse>
+    IAccountTagRepository accountTagRepository) : ICommandHandler<RegisterTransferCommand, TransferResponse>
 {
     private readonly IAccountTagRepository _accountTagRepository = accountTagRepository;
     private readonly IBusinessUnitRepository _businessUnitRepository = businessUnitRepository;
-    private readonly ICurrentUserProvider _currentUserProvider = currentUserProvider;
     private readonly IMonthlyBalanceRepository _monthlyBalanceRepository = monthlyBalanceRepository;
     private readonly ITransferRepository _transferRepository = transferRepository;
 
     public async Task<Result<TransferResponse>> Handle(RegisterTransferCommand command, CancellationToken cancellationToken)
     {
-        var currentUserId = _currentUserProvider.GetCurrentUserId();
         var (businessUnitId, accountTagId, value, relatedTo, description, settlementDate, type) = command;
 
-        var businessUnit = await _businessUnitRepository.GetByIdAsync(businessUnitId, currentUserId, cancellationToken);
+        var businessUnit = await _businessUnitRepository.GetByIdAsync(businessUnitId, command.CurrentUserId, cancellationToken);
         if (businessUnit is null)
         {
             var errorMessage = $"Business Unit with Id {businessUnitId} not found";
@@ -36,7 +33,7 @@ internal sealed class RegisterTransferHandler(
             return Result.Fail(entityNotFoundError);
         }
 
-        var accountTag = await _accountTagRepository.GetByIdAsync(accountTagId, currentUserId, cancellationToken);
+        var accountTag = await _accountTagRepository.GetByIdAsync(accountTagId, command.CurrentUserId, cancellationToken);
         if (accountTag is null)
         {
             var errorMessage = $"Account Tag with Id {accountTagId} not found";
@@ -50,12 +47,12 @@ internal sealed class RegisterTransferHandler(
         var monthlyBalance = await _monthlyBalanceRepository.GetByReferenceDateAndBusinessUnitId(
             settlementDate,
             businessUnitId,
-            currentUserId,
+            command.CurrentUserId,
             cancellationToken);
 
         if (monthlyBalance is null)
         {
-            monthlyBalance = new MonthlyBalance(settlementDate, businessUnit, currentUserId);
+            monthlyBalance = new MonthlyBalance(settlementDate, businessUnit, command.CurrentUserId);
             monthlyBalance.RegisterValue(value, type);
             _monthlyBalanceRepository.Insert(monthlyBalance);
         }
@@ -66,7 +63,7 @@ internal sealed class RegisterTransferHandler(
         }
 
         var transfer = new Transfer(value, relatedTo, description, settlementDate, type, monthlyBalance, accountTag,
-            currentUserId);
+            command.CurrentUserId);
         _transferRepository.Insert(transfer);
 
         return Result.Ok(TransferMapper.DTR.Map(transfer));

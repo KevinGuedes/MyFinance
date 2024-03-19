@@ -10,25 +10,21 @@ namespace MyFinance.Application.UseCases.Summary.Queries.GetMonthlyBalanceSummar
 
 internal sealed class GetMonthlyBalanceSummaryHandler(
     IMonthlyBalanceRepository monthlyBalanceRepository,
-    ISpreadsheetService spreadsheetService,
-    ICurrentUserProvider currentUserProvider)
+    ISpreadsheetService spreadsheetService)
     : IQueryHandler<GetMonthlyBalanceSummaryQuery, SummaryResponse>
 {
-    private readonly ICurrentUserProvider _currentUserProvider = currentUserProvider;
     private readonly IMonthlyBalanceRepository _monthlyBalanceRepository = monthlyBalanceRepository;
     private readonly ISpreadsheetService _spreadsheetService = spreadsheetService;
 
     public async Task<Result<SummaryResponse>> Handle(GetMonthlyBalanceSummaryQuery query,
         CancellationToken cancellationToken)
     {
-        var currentUserId = _currentUserProvider.GetCurrentUserId();
         var monthlyBalance =
-            await _monthlyBalanceRepository.GetWithSummaryData(query.Id, currentUserId, cancellationToken);
+            await _monthlyBalanceRepository.GetWithSummaryData(query.Id, query.CurrentUserId, cancellationToken);
 
         if (monthlyBalance is null)
         {
-            var errorMessage = $"Monthly Balance with Id {query.Id} not found";
-            var entityNotFoundError = new EntityNotFoundError(errorMessage);
+            var entityNotFoundError = new EntityNotFoundError($"Monthly Balance with Id {query.Id} not found");
             return Result.Fail(entityNotFoundError);
         }
 
