@@ -1,5 +1,4 @@
 ﻿using MediatR;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using MyFinance.Application.Mappers;
 using MyFinance.Application.UseCases.AccountTags.Commands.UnarchiveAccountTag;
@@ -13,6 +12,7 @@ using Swashbuckle.AspNetCore.Annotations;
 namespace MyFinance.Presentation.Controllers;
 
 [SwaggerTag("Create and update Account Tags")]
+[SwaggerResponse(StatusCodes.Status401Unauthorized, "Unauthorized")]
 public class AccountTagController(IMediator mediator) : ApiController(mediator)
 {
     [HttpPost]
