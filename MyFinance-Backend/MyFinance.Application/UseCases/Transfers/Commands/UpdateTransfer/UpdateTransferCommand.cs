@@ -1,5 +1,6 @@
 ﻿using MyFinance.Application.Abstractions.RequestHandling;
 using MyFinance.Application.Abstractions.RequestHandling.Commands;
+using MyFinance.Application.Common.RequestHandling;
 using MyFinance.Contracts.Transfer.Responses;
 using MyFinance.Domain.Enums;
 
@@ -13,7 +14,6 @@ public sealed record UpdateTransferCommand(
     string Description,
     DateTime SettlementDate,
     TransferType Type) 
-    : ICommand<TransferResponse>, IUserBasedRequest
+    : UserBasedRequest, ICommand<TransferResponse>
 {
-    public Guid CurrentUserId { get; set; }
 }
