@@ -27,7 +27,8 @@ public sealed class ExceptionHandlerBehavior<TRequest, TResponse>(
         }
         catch (DbUpdateConcurrencyException exception)
         {
-            _logger.LogError(exception, "Failed to handle {RequestName}. Entity has been updated previously", requestName);
+            _logger.LogError(exception, "Failed to handle {RequestName}. Entity has been updated previously",
+                requestName);
 
             var conflictError =
                 new ConflictError("The regarding entity has already been update. Check the updated data and try again");

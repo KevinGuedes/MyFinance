@@ -5,7 +5,7 @@ using MyFinance.Contracts.Common;
 
 namespace MyFinance.Application.UseCases.AccountTags.Queries.GetAccountTags;
 
-public sealed record GetAccountTagsQuery(int PageNumber, int PageSize) 
+public sealed record GetAccountTagsQuery(int PageNumber, int PageSize)
     : UserBasedRequest, IQuery<Paginated<AccountTagResponse>>
 {
 }

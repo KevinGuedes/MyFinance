@@ -13,8 +13,6 @@ using MyFinance.Infrastructure.Services.Auth;
 using MyFinance.Infrastructure.Services.CurrentUserProvider;
 using MyFinance.Infrastructure.Services.PasswordHasher;
 using MyFinance.Infrastructure.Services.Spreadsheet;
-using System.Net.Http;
-using System.Threading;
 
 namespace MyFinance.Infrastructure.IoC;
 
@@ -49,7 +47,7 @@ public static class InfrastructureDependencyInjection
                     };
                     httpContext.Response.StatusCode = problemDetails.Status.Value;
                     httpContext.Response.StatusCode = problemDetails.Status.Value;
-                    await httpContext.Response.WriteAsJsonAsync(problemDetails, default);
+                    await httpContext.Response.WriteAsJsonAsync(problemDetails);
                 };
 
                 options.Events.OnRedirectToAccessDenied = async httpContext =>
@@ -61,7 +59,7 @@ public static class InfrastructureDependencyInjection
                     };
 
                     httpContext.Response.StatusCode = StatusCodes.Status403Forbidden;
-                    await httpContext.Response.WriteAsJsonAsync(problemDetails, default);
+                    await httpContext.Response.WriteAsJsonAsync(problemDetails);
                 };
             });
 

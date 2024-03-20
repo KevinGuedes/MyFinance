@@ -1,8 +1,8 @@
-﻿using FluentValidation;
+﻿using System.Reflection;
+using FluentValidation;
 using FluentValidation.AspNetCore;
 using Microsoft.Extensions.DependencyInjection;
 using MyFinance.Application.PipelineBehaviors;
-using System.Reflection;
 
 namespace MyFinance.Application.IoC;
 

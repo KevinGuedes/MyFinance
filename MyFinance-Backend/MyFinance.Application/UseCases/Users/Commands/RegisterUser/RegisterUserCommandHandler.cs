@@ -6,7 +6,7 @@ using MyFinance.Domain.Entities;
 
 namespace MyFinance.Application.UseCases.Users.Commands.RegisterUser;
 
-internal sealed class RegisterUserCommandHandler(IUserRepository userRepository, IPasswordHasher passwordHasher) 
+internal sealed class RegisterUserCommandHandler(IUserRepository userRepository, IPasswordHasher passwordHasher)
     : ICommandHandler<RegisterUserCommand>
 {
     private readonly IPasswordHasher _passwordHasher = passwordHasher;

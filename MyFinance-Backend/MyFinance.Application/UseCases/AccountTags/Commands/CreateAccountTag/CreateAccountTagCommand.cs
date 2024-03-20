@@ -1,5 +1,4 @@
-﻿using MyFinance.Application.Abstractions.RequestHandling;
-using MyFinance.Application.Abstractions.RequestHandling.Commands;
+﻿using MyFinance.Application.Abstractions.RequestHandling.Commands;
 using MyFinance.Application.Common.RequestHandling;
 using MyFinance.Contracts.AccountTag.Responses;
 

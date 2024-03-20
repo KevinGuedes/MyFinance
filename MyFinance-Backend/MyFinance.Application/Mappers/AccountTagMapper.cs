@@ -33,7 +33,7 @@ public static class AccountTagMapper
             => new(request.Tag, request.Description);
 
         public static UpdateAccountTagCommand Map(UpdateAccountTagRequest request)
-             => new(request.Id, request.Tag, request.Description);
+            => new(request.Id, request.Tag, request.Description);
 
         public static ArchiveAccountTagCommand Map(ArchiveAccountTagRequest request)
             => new(request.Id, request.ReasonToArchive);

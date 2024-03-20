@@ -23,7 +23,7 @@ public class AccountTagController(IMediator mediator) : ApiController(mediator)
         [FromBody] [SwaggerRequestBody("Account Tag's payload", Required = true)]
         CreateAccountTagRequest request,
         CancellationToken cancellationToken)
-         => ProcessResult(await _mediator.Send(AccountTagMapper.RTC.Map(request), cancellationToken), true);
+        => ProcessResult(await _mediator.Send(AccountTagMapper.RTC.Map(request), cancellationToken), true);
 
     [HttpGet]
     [SwaggerOperation(Summary = "Lists all Account Tags with pagination")]

@@ -1,6 +1,5 @@
 ﻿using FluentResults;
 using MediatR;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using MyFinance.Application.Common.Errors;
@@ -23,9 +22,7 @@ public abstract class ApiController(IMediator mediator) : ControllerBase
         if (result.IsFailed)
             return HandleFailureResult(result.Errors);
 
-        return hasEntityBeenCreated ?
-            StatusCode(StatusCodes.Status201Created, result.Value) :
-            Ok(result.Value);
+        return hasEntityBeenCreated ? StatusCode(StatusCodes.Status201Created, result.Value) : Ok(result.Value);
     }
 
     protected IActionResult ProcessResult(Result result)
@@ -54,7 +51,8 @@ public abstract class ApiController(IMediator mediator) : ControllerBase
         => Problem(statusCode: statusCode, detail: error.Message, instance: HttpContext.Request.Path);
 
     private ObjectResult BuildProblemResult(int statusCode)
-        => Problem(statusCode: statusCode, detail: "MyFinance API went rogue! Sorry!", instance: HttpContext.Request.Path);
+        => Problem(statusCode: statusCode, detail: "MyFinance API went rogue! Sorry!",
+            instance: HttpContext.Request.Path);
 
     private ActionResult BuildValidationProblemResult(InvalidRequestError invalidRequestError)
     {
@@ -64,7 +62,7 @@ public abstract class ApiController(IMediator mediator) : ControllerBase
             .ValidationErrors
             .ToList()
             .ForEach(error => modelStateDictionary.AddModelError(error.PropertyName, error.ErrorMessage));
-        
+
         return ValidationProblem(instance: HttpContext.Request.Path, modelStateDictionary: modelStateDictionary);
     }
 }

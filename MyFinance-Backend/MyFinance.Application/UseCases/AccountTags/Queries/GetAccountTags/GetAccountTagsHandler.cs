@@ -12,7 +12,8 @@ internal sealed class GetAccountTagsHandler(IAccountTagRepository accountTagRepo
 {
     private readonly IAccountTagRepository _accountTagRepository = accountTagRepository;
 
-    public async Task<Result<Paginated<AccountTagResponse>>> Handle(GetAccountTagsQuery query, CancellationToken cancellationToken)
+    public async Task<Result<Paginated<AccountTagResponse>>> Handle(GetAccountTagsQuery query,
+        CancellationToken cancellationToken)
     {
         var accountTags = await _accountTagRepository.GetPaginatedAsync(
             query.PageNumber,
@@ -22,7 +23,7 @@ internal sealed class GetAccountTagsHandler(IAccountTagRepository accountTagRepo
 
         var response = new Paginated<AccountTagResponse>(
             AccountTagMapper.DTR.Map(accountTags),
-            query.PageNumber, 
+            query.PageNumber,
             query.PageSize,
             0);
 

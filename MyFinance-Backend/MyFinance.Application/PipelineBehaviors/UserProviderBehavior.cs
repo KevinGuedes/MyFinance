@@ -6,12 +6,12 @@ using MyFinance.Application.Abstractions.Services;
 namespace MyFinance.Application.PipelineBehaviors;
 
 public sealed class UserProviderBehavior<TRequest>(
-    ILogger<UserProviderBehavior<TRequest>> logger, 
-    ICurrentUserProvider currentUserProvider) 
+    ILogger<UserProviderBehavior<TRequest>> logger,
+    ICurrentUserProvider currentUserProvider)
     : IRequestPreProcessor<TRequest> where TRequest : IUserBasedRequest
 {
-    private readonly ILogger<UserProviderBehavior<TRequest>> _logger = logger;
     private readonly ICurrentUserProvider _currentUserProvider = currentUserProvider;
+    private readonly ILogger<UserProviderBehavior<TRequest>> _logger = logger;
 
     public Task Process(TRequest request, CancellationToken cancellationToken)
     {

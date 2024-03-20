@@ -4,7 +4,7 @@ using MyFinance.Contracts.Summary.Responses;
 
 namespace MyFinance.Application.UseCases.Summary.Queries.GetMonthlyBalanceSummary;
 
-public sealed record GetMonthlyBalanceSummaryQuery(Guid Id) 
+public sealed record GetMonthlyBalanceSummaryQuery(Guid Id)
     : UserBasedRequest, IQuery<SummaryResponse>
 {
 }

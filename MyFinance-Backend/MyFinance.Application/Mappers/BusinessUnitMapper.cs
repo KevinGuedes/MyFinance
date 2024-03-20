@@ -12,21 +12,21 @@ public class BusinessUnitMapper
     public static class DTR
     {
         public static BusinessUnitResponse Map(BusinessUnit businessUnit)
-           => new()
-           {
-               Id = businessUnit.Id,
-               Name = businessUnit.Name,
-               Income = businessUnit.Income,
-               Outcome = businessUnit.Outcome,
-               Balance = businessUnit.Balance,
-               Description = businessUnit.Description,
-               IsArchived = businessUnit.IsArchived,
-               ReasonToArchive = businessUnit.ReasonToArchive,
-               ArchiveDate = businessUnit.ArchiveDate
-           };
+            => new()
+            {
+                Id = businessUnit.Id,
+                Name = businessUnit.Name,
+                Income = businessUnit.Income,
+                Outcome = businessUnit.Outcome,
+                Balance = businessUnit.Balance,
+                Description = businessUnit.Description,
+                IsArchived = businessUnit.IsArchived,
+                ReasonToArchive = businessUnit.ReasonToArchive,
+                ArchiveDate = businessUnit.ArchiveDate
+            };
 
         public static IReadOnlyCollection<BusinessUnitResponse> Map(IEnumerable<BusinessUnit> businessUnits)
-           => businessUnits.Select(Map).ToList().AsReadOnly();
+            => businessUnits.Select(Map).ToList().AsReadOnly();
     }
 
     public static class RTC

@@ -7,7 +7,7 @@ using MyFinance.Domain.Entities;
 
 namespace MyFinance.Application.UseCases.AccountTags.Commands.CreateAccountTag;
 
-internal sealed class CreateAccountTagHandler(IAccountTagRepository accountTagRepository) 
+internal sealed class CreateAccountTagHandler(IAccountTagRepository accountTagRepository)
     : ICommandHandler<CreateAccountTagCommand, AccountTagResponse>
 {
     private readonly IAccountTagRepository _accountTagRepository = accountTagRepository;

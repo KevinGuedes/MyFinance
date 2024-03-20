@@ -1,8 +1,6 @@
 ﻿using FluentResults;
-using Microsoft.Extensions.Logging;
 using MyFinance.Application.Abstractions.Persistence.Repositories;
 using MyFinance.Application.Abstractions.RequestHandling.Commands;
-using MyFinance.Application.Abstractions.Services;
 using MyFinance.Application.Common.Errors;
 using MyFinance.Application.Mappers;
 using MyFinance.Contracts.Transfer.Responses;
@@ -21,11 +19,13 @@ internal sealed class RegisterTransferHandler(
     private readonly IMonthlyBalanceRepository _monthlyBalanceRepository = monthlyBalanceRepository;
     private readonly ITransferRepository _transferRepository = transferRepository;
 
-    public async Task<Result<TransferResponse>> Handle(RegisterTransferCommand command, CancellationToken cancellationToken)
+    public async Task<Result<TransferResponse>> Handle(RegisterTransferCommand command,
+        CancellationToken cancellationToken)
     {
         var (businessUnitId, accountTagId, value, relatedTo, description, settlementDate, type) = command;
 
-        var businessUnit = await _businessUnitRepository.GetByIdAsync(businessUnitId, command.CurrentUserId, cancellationToken);
+        var businessUnit =
+            await _businessUnitRepository.GetByIdAsync(businessUnitId, command.CurrentUserId, cancellationToken);
         if (businessUnit is null)
         {
             var errorMessage = $"Business Unit with Id {businessUnitId} not found";
@@ -33,7 +33,8 @@ internal sealed class RegisterTransferHandler(
             return Result.Fail(entityNotFoundError);
         }
 
-        var accountTag = await _accountTagRepository.GetByIdAsync(accountTagId, command.CurrentUserId, cancellationToken);
+        var accountTag =
+            await _accountTagRepository.GetByIdAsync(accountTagId, command.CurrentUserId, cancellationToken);
         if (accountTag is null)
         {
             var errorMessage = $"Account Tag with Id {accountTagId} not found";

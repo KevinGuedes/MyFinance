@@ -9,7 +9,7 @@ public static class SummaryMapper
         public static SummaryResponse Map(Tuple<string, byte[]> summaryData)
         {
             var (fileName, fileContent) = summaryData;
-            return new()
+            return new SummaryResponse
             {
                 FileName = fileName,
                 FileContent = fileContent

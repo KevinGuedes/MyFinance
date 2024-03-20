@@ -5,14 +5,15 @@ using MyFinance.Application.Common.Errors;
 
 namespace MyFinance.Application.UseCases.BusinessUnits.Commands.ArchiveBusinessUnit;
 
-internal sealed class ArchiveBusinessUnitHandler(IBusinessUnitRepository businessUnitRepository) 
+internal sealed class ArchiveBusinessUnitHandler(IBusinessUnitRepository businessUnitRepository)
     : ICommandHandler<ArchiveBusinessUnitCommand>
 {
     private readonly IBusinessUnitRepository _businessUnitRepository = businessUnitRepository;
 
     public async Task<Result> Handle(ArchiveBusinessUnitCommand command, CancellationToken cancellationToken)
     {
-        var businessUnit = await _businessUnitRepository.GetByIdAsync(command.Id, command.CurrentUserId, cancellationToken);
+        var businessUnit =
+            await _businessUnitRepository.GetByIdAsync(command.Id, command.CurrentUserId, cancellationToken);
 
         if (businessUnit is null)
         {

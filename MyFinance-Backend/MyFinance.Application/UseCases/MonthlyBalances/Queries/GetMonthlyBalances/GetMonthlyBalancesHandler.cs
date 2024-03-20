@@ -1,7 +1,6 @@
 ﻿using FluentResults;
 using MyFinance.Application.Abstractions.Persistence.Repositories;
 using MyFinance.Application.Abstractions.RequestHandling.Queries;
-using MyFinance.Application.Abstractions.Services;
 using MyFinance.Application.Common.Errors;
 using MyFinance.Application.Mappers;
 using MyFinance.Contracts.Common;
@@ -10,8 +9,8 @@ using MyFinance.Contracts.MonthlyBalance.Responses;
 namespace MyFinance.Application.UseCases.MonthlyBalances.Queries.GetMonthlyBalances;
 
 internal sealed class GetMonthlyBalancesHandler(
-    IBusinessUnitRepository businessUnitRepository, 
-    IMonthlyBalanceRepository monthlyBalanceRepository) 
+    IBusinessUnitRepository businessUnitRepository,
+    IMonthlyBalanceRepository monthlyBalanceRepository)
     : IQueryHandler<GetMonthlyBalancesQuery, Paginated<MonthlyBalanceResponse>>
 {
     private readonly IBusinessUnitRepository _businessUnitRepository = businessUnitRepository;
@@ -27,7 +26,8 @@ internal sealed class GetMonthlyBalancesHandler(
 
         if (!isValidBusinessUnit)
         {
-            var entityNotFoundError = new EntityNotFoundError($"Business Unit with Id {query.BusinessUnitId} not found");
+            var entityNotFoundError =
+                new EntityNotFoundError($"Business Unit with Id {query.BusinessUnitId} not found");
             return Result.Fail(entityNotFoundError);
         }
 

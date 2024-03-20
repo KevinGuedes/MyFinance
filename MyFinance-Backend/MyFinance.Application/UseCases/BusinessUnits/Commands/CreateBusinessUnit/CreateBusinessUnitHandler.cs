@@ -7,12 +7,13 @@ using MyFinance.Domain.Entities;
 
 namespace MyFinance.Application.UseCases.BusinessUnits.Commands.CreateBusinessUnit;
 
-internal sealed class CreateBusinessUnitHandler(IBusinessUnitRepository businessUnitRepository) 
+internal sealed class CreateBusinessUnitHandler(IBusinessUnitRepository businessUnitRepository)
     : ICommandHandler<CreateBusinessUnitCommand, BusinessUnitResponse>
 {
     private readonly IBusinessUnitRepository _businessUnitRepository = businessUnitRepository;
 
-    public Task<Result<BusinessUnitResponse>> Handle(CreateBusinessUnitCommand command, CancellationToken cancellationToken)
+    public Task<Result<BusinessUnitResponse>> Handle(CreateBusinessUnitCommand command,
+        CancellationToken cancellationToken)
     {
         var businessUnit = new BusinessUnit(command.Name, command.Description, command.CurrentUserId);
         _businessUnitRepository.Insert(businessUnit);

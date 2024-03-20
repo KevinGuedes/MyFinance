@@ -4,7 +4,6 @@ using MediatR;
 using Microsoft.Extensions.Logging;
 using MyFinance.Application.Abstractions.RequestHandling;
 using MyFinance.Application.Common.Errors;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace MyFinance.Application.PipelineBehaviors;
 
@@ -31,7 +30,8 @@ public sealed class RequestValidationBehavior<TRequest, TResponse>(
 
         _logger.LogInformation("Validating {RequestName} payload", requestName);
         var validationContext = new ValidationContext<TRequest>(request);
-        var validationResults = await Task.WhenAll(_validators.Select(validators => validators.ValidateAsync(validationContext, cancellationToken)));
+        var validationResults = await Task.WhenAll(_validators.Select(validators =>
+            validators.ValidateAsync(validationContext, cancellationToken)));
         var validationErrors = validationResults
             .SelectMany(validationResult => validationResult.Errors)
             .Where(validationResult => validationResult is not null)

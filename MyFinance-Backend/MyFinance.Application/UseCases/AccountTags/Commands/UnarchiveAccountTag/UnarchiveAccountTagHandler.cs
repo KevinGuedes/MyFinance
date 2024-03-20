@@ -5,7 +5,7 @@ using MyFinance.Application.Common.Errors;
 
 namespace MyFinance.Application.UseCases.AccountTags.Commands.UnarchiveAccountTag;
 
-internal sealed class UnarchiveAccountTagHandler(IAccountTagRepository accountTagRepository) 
+internal sealed class UnarchiveAccountTagHandler(IAccountTagRepository accountTagRepository)
     : ICommandHandler<UnarchiveAccountTagCommand>
 {
     private readonly IAccountTagRepository _accountTagRepository = accountTagRepository;
@@ -13,7 +13,7 @@ internal sealed class UnarchiveAccountTagHandler(IAccountTagRepository accountTa
     public async Task<Result> Handle(UnarchiveAccountTagCommand command, CancellationToken cancellationToken)
     {
         var accountTag = await _accountTagRepository.GetByIdAsync(command.Id, command.CurrentUserId, cancellationToken);
-        
+
         if (accountTag is null)
         {
             var entityNotFoundError = new EntityNotFoundError($"Account Tag with Id {command.Id} not found");

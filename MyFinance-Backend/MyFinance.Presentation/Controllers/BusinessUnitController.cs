@@ -21,10 +21,8 @@ public class BusinessUnitController(IMediator mediator) : ApiController(mediator
     public async Task<IActionResult> CreateBusinessUnitAsync(
         [FromBody] [SwaggerRequestBody("Business unit payload", Required = true)]
         CreateBusinessUnitRequest request,
-        CancellationToken cancellationToken)
-    {
-        return ProcessResult(await _mediator.Send(BusinessUnitMapper.RTC.Map(request), cancellationToken), true);
-    }
+        CancellationToken cancellationToken) =>
+        ProcessResult(await _mediator.Send(BusinessUnitMapper.RTC.Map(request), cancellationToken), true);
 
     [HttpGet]
     [SwaggerOperation(Summary = "Lists all Business Units with pagination")]

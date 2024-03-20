@@ -37,7 +37,9 @@ public sealed class UnitOfWorkBehavior<TRequest, TResponse>(
                 _logger.LogInformation("Database changes for {RequestName} successfully executed", requestName);
             }
             else
+            {
                 _logger.LogWarning("Changes from {RequestName} not commited due to failure result", requestName);
+            }
 
             return response;
         }

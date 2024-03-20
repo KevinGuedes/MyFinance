@@ -1,7 +1,6 @@
 ﻿using FluentResults;
 using MyFinance.Application.Abstractions.Persistence.Repositories;
 using MyFinance.Application.Abstractions.RequestHandling.Commands;
-using MyFinance.Application.Abstractions.Services;
 using MyFinance.Application.Common.Errors;
 using MyFinance.Application.Mappers;
 using MyFinance.Contracts.Transfer.Responses;
@@ -20,7 +19,8 @@ internal sealed class UpdateTransferHandler(
     private readonly IMonthlyBalanceRepository _monthlyBalanceRepository = monthlyBalanceRepository;
     private readonly ITransferRepository _transferRepository = transferRepository;
 
-    public async Task<Result<TransferResponse>> Handle(UpdateTransferCommand command, CancellationToken cancellationToken)
+    public async Task<Result<TransferResponse>> Handle(UpdateTransferCommand command,
+        CancellationToken cancellationToken)
     {
         var (transferId, accountTagId, newTransferValue, relatedTo, description, settlementDate, type) = command;
 
@@ -33,7 +33,8 @@ internal sealed class UpdateTransferHandler(
             return Result.Fail(entityNotFoundError);
         }
 
-        var accountTag = await _accountTagRepository.GetByIdAsync(accountTagId, command.CurrentUserId, cancellationToken);
+        var accountTag =
+            await _accountTagRepository.GetByIdAsync(accountTagId, command.CurrentUserId, cancellationToken);
         if (accountTag is null)
         {
             var errorMessage = $"Account Tag with Id {accountTagId} not found";

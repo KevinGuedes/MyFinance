@@ -6,20 +6,21 @@ namespace MyFinance.Presentation.Middlewares;
 
 public class GlobalExceptionHandlerMiddleware(
     ILogger<GlobalExceptionHandlerMiddleware> logger,
-    ProblemDetailsFactory problemDetailsFactory) 
+    ProblemDetailsFactory problemDetailsFactory)
     : IExceptionHandler
 {
-    private readonly ProblemDetailsFactory _problemDetailsFactory = problemDetailsFactory;
     private readonly ILogger<GlobalExceptionHandlerMiddleware> _logger = logger;
+    private readonly ProblemDetailsFactory _problemDetailsFactory = problemDetailsFactory;
 
-    public async ValueTask<bool> TryHandleAsync(HttpContext httpContext, Exception exception, CancellationToken cancellationToken)
+    public async ValueTask<bool> TryHandleAsync(HttpContext httpContext, Exception exception,
+        CancellationToken cancellationToken)
     {
         _logger.LogError(exception, "Exception occurred: {Message}", exception.Message);
 
         var problemResponse = _problemDetailsFactory.CreateProblemDetails(
-            httpContext, 
+            httpContext,
             instance: httpContext.Request.Path,
-            statusCode: StatusCodes.Status500InternalServerError, 
+            statusCode: StatusCodes.Status500InternalServerError,
             detail: "MyFinance API went rogue! Sorry!") as ProblemResponse;
 
         httpContext.Response.StatusCode = problemResponse!.Status!.Value;

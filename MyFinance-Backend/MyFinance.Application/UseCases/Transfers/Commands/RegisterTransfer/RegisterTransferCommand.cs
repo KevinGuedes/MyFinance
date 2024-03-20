@@ -12,7 +12,7 @@ public sealed record RegisterTransferCommand(
     string RelatedTo,
     string Description,
     DateTime SettlementDate,
-    TransferType Type) 
+    TransferType Type)
     : UserBasedRequest, ICommand<TransferResponse>
 {
 }

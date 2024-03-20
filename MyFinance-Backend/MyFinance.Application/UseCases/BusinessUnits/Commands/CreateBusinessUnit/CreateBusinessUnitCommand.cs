@@ -4,7 +4,7 @@ using MyFinance.Contracts.BusinessUnit.Responses;
 
 namespace MyFinance.Application.UseCases.BusinessUnits.Commands.CreateBusinessUnit;
 
-public sealed record CreateBusinessUnitCommand(string Name, string? Description) 
+public sealed record CreateBusinessUnitCommand(string Name, string? Description)
     : UserBasedRequest, ICommand<BusinessUnitResponse>
 {
 }
