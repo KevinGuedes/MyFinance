@@ -3,6 +3,7 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using MyFinance.Application.UseCases.Summary.Queries.GetBusinessUnitSummary;
 using MyFinance.Application.UseCases.Summary.Queries.GetMonthlyBalanceSummary;
+using MyFinance.Contracts.Common;
 using MyFinance.Contracts.Summary.Responses;
 using Swashbuckle.AspNetCore.Annotations;
 
@@ -16,14 +17,14 @@ public class SummaryController(IMediator mediator) : ApiController(mediator)
 
     [HttpGet("BusinessUnit/{id:guid}")]
     [SwaggerOperation(Summary = "Get the Summary Spreadsheet for the given Business Unit")]
-    [SwaggerResponse(StatusCodes.Status200OK, "Summary Spreasheet for the given Business Unit",
+    [SwaggerResponse(StatusCodes.Status200OK, "Summary Spreadsheet for the given Business Unit",
         contentTypes: SPREADSHEET_CONTENT_TYPE)]
-    [SwaggerResponse(StatusCodes.Status206PartialContent, "Summary Spreasheet for the given Business Unit",
+    [SwaggerResponse(StatusCodes.Status206PartialContent, "Summary Spreadsheet for the given Business Unit",
         contentTypes: SPREADSHEET_CONTENT_TYPE)]
-    [SwaggerResponse(StatusCodes.Status404NotFound, "Business Unit not found", typeof(ProblemDetails))]
-    [SwaggerResponse(StatusCodes.Status400BadRequest, "Invalid Business Unit Id", typeof(ValidationProblemDetails))]
+    [SwaggerResponse(StatusCodes.Status404NotFound, "Business Unit not found", typeof(ProblemResponse))]
+    [SwaggerResponse(StatusCodes.Status400BadRequest, "Invalid Business Unit Id", typeof(ValidationProblemResponse))]
     [SwaggerResponse(StatusCodes.Status422UnprocessableEntity, "The Business Unit has no data to generate the summary",
-        typeof(ProblemDetails))]
+        typeof(ProblemResponse))]
     public async Task<IActionResult> GetBusinessUnitSummary(
         [FromRoute] [SwaggerParameter("Business Unit Id", Required = true)]
         Guid id,
@@ -36,14 +37,14 @@ public class SummaryController(IMediator mediator) : ApiController(mediator)
 
     [HttpGet("MonthlyBalance/{id:guid}")]
     [SwaggerOperation(Summary = "Get the Summary Spreadsheet for the given Monthly Balance")]
-    [SwaggerResponse(StatusCodes.Status200OK, "Summary Spreasheet for the given Monthly Balance",
+    [SwaggerResponse(StatusCodes.Status200OK, "Summary Spreadsheet for the given Monthly Balance",
         contentTypes: SPREADSHEET_CONTENT_TYPE)]
-    [SwaggerResponse(StatusCodes.Status206PartialContent, "Summary Spreasheet for the given Monthly Balance",
+    [SwaggerResponse(StatusCodes.Status206PartialContent, "Summary Spreadsheet for the given Monthly Balance",
         contentTypes: SPREADSHEET_CONTENT_TYPE)]
-    [SwaggerResponse(StatusCodes.Status404NotFound, "Monthly Balance not found", typeof(ProblemDetails))]
-    [SwaggerResponse(StatusCodes.Status400BadRequest, "Invalid Monthly Balance Id", typeof(ValidationProblemDetails))]
+    [SwaggerResponse(StatusCodes.Status404NotFound, "Monthly Balance not found", typeof(ProblemResponse))]
+    [SwaggerResponse(StatusCodes.Status400BadRequest, "Invalid Monthly Balance Id", typeof(ValidationProblemResponse))]
     [SwaggerResponse(StatusCodes.Status422UnprocessableEntity,
-        "The Monthly Balance has no data to generate the summary", typeof(ProblemDetails))]
+        "The Monthly Balance has no data to generate the summary", typeof(ProblemResponse))]
     public async Task<IActionResult> GetMonthlyBalanceSummaryAsync(
         [FromRoute] [SwaggerParameter("Monthly Balance Id", Required = true)]
         Guid id, CancellationToken cancellationToken)

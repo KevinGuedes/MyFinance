@@ -4,6 +4,7 @@ using MediatR;
 using Microsoft.Extensions.Logging;
 using MyFinance.Application.Abstractions.RequestHandling;
 using MyFinance.Application.Common.Errors;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace MyFinance.Application.PipelineBehaviors;
 
@@ -24,36 +25,37 @@ public sealed class RequestValidationBehavior<TRequest, TResponse>(
 
         if (_validators.Count() is 0)
         {
-            _logger.LogWarning("[{RequestName}] No validators found", requestName);
+            _logger.LogWarning("No validators found for {RequestName}", requestName);
             return await next();
         }
 
-        _logger.LogInformation("[{RequestName}] Validating request data", requestName);
-        var context = new ValidationContext<TRequest>(request);
-        var validationResults =
-            await Task.WhenAll(_validators.Select(validators => validators.ValidateAsync(context, cancellationToken)));
-        var errors = validationResults
+        _logger.LogInformation("Validating {RequestName} payload", requestName);
+        var validationContext = new ValidationContext<TRequest>(request);
+        var validationResults = await Task.WhenAll(_validators.Select(validators => validators.ValidateAsync(validationContext, cancellationToken)));
+        var validationErrors = validationResults
             .SelectMany(validationResult => validationResult.Errors)
             .Where(validationResult => validationResult is not null)
-            .GroupBy(
-                validationResult => validationResult.PropertyName,
-                validationResult => validationResult.ErrorMessage,
-                (propertyName, errorMessages) => new
-                {
-                    Key = string.Concat(char.ToLower(propertyName[0]), propertyName[1..]),
-                    Values = errorMessages.Distinct().ToArray()
-                })
-            .ToDictionary(dictionaryData => dictionaryData.Key, dictionaryData => dictionaryData.Values);
+            .ToList();
 
-        if (errors.Count is not 0)
-        {
-            _logger.LogWarning("[{RequestName}] Invalid request data", requestName);
-            var response = new TResponse();
-            var failedResult = Result.Fail(new InvalidRequestError(errors));
-            response.Reasons.AddRange(failedResult.Reasons);
-            return response;
-        }
+        //var errors = validationResults
+        //    .SelectMany(validationResult => validationResult.Errors)
+        //    .Where(validationResult => validationResult is not null)
+        //    .GroupBy(
+        //        validationResult => validationResult.PropertyName,
+        //        validationResult => validationResult.ErrorMessage,
+        //        (propertyName, errorMessages) => new
+        //        {
+        //            Key = string.Concat(char.ToLower(propertyName[0]), propertyName[1..]),
+        //            Values = errorMessages.Distinct().ToArray()
+        //        })
+        //    .ToDictionary(dictionaryData => dictionaryData.Key, dictionaryData => dictionaryData.Values);
 
-        return await next();
+        if (validationErrors.Count is 0) return await next();
+
+        _logger.LogWarning("Invalid payload for {RequestName}", requestName);
+        var response = new TResponse();
+        var failedResult = Result.Fail(new InvalidRequestError(validationErrors));
+        response.Reasons.AddRange(failedResult.Reasons);
+        return response;
     }
 }

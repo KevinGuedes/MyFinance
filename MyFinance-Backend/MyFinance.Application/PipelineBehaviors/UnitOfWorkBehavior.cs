@@ -23,32 +23,27 @@ public sealed class UnitOfWorkBehavior<TRequest, TResponse>(
 
         try
         {
-            _logger.LogInformation("[{RequestName}] Listening to database changes", requestName);
-
             var response = await next();
 
             if (!_unitOfWork.HasChanges())
             {
-                _logger.LogInformation("[{RequestName}] No database changes detected", requestName);
+                _logger.LogInformation("No database changes detected for {RequestName}", requestName);
                 return response;
             }
 
             if (response.IsSuccess)
             {
-                _logger.LogInformation("[{RequestName}] Saving database changes", requestName);
                 await _unitOfWork.SaveChangesAsync(cancellationToken);
-                _logger.LogInformation("[{RequestName}] Database changes successfully saved", requestName);
+                _logger.LogInformation("Database changes for {RequestName} successfully executed", requestName);
             }
             else
-            {
-                _logger.LogWarning("[{RequestName}] Changes not commited due to failure response", requestName);
-            }
+                _logger.LogWarning("Changes from {RequestName} not commited due to failure result", requestName);
 
             return response;
         }
         catch (Exception exception)
         {
-            _logger.LogCritical(exception, "[{RequestName}] Changes not commited due to exception", requestName);
+            _logger.LogCritical(exception, "Changes not commited due to exception in {RequestName}", requestName);
             throw;
         }
     }

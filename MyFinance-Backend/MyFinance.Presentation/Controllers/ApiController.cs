@@ -1,16 +1,19 @@
 ﻿using FluentResults;
 using MediatR;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using MyFinance.Application.Common.Errors;
+using MyFinance.Contracts.Common;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace MyFinance.Presentation.Controllers;
 
 [ApiController]
-[Route("api/[controller]")]
+[Route("[controller]")]
 [Produces("application/problem+json")]
 [Consumes("application/json")]
-[SwaggerResponse(StatusCodes.Status500InternalServerError, "Backend went rogue", typeof(ProblemDetails))]
+[SwaggerResponse(StatusCodes.Status500InternalServerError, "Backend went rogue", typeof(ProblemResponse))]
 public abstract class ApiController(IMediator mediator) : ControllerBase
 {
     protected readonly IMediator _mediator = mediator;
@@ -28,7 +31,7 @@ public abstract class ApiController(IMediator mediator) : ControllerBase
     protected IActionResult ProcessResult(Result result)
         => result.IsSuccess ? NoContent() : HandleFailureResult(result.Errors);
 
-    protected IActionResult HandleFailureResult(List<IError> errors)
+    protected IActionResult HandleFailureResult(IEnumerable<IError> errors)
     {
         return errors.FirstOrDefault() switch
         {
@@ -48,15 +51,20 @@ public abstract class ApiController(IMediator mediator) : ControllerBase
     }
 
     private ObjectResult BuildProblemResult(int statusCode, IError error)
-        => Problem(statusCode: statusCode, detail: error!.Message);
+        => Problem(statusCode: statusCode, detail: error.Message, instance: HttpContext.Request.Path);
 
     private ObjectResult BuildProblemResult(int statusCode)
-       => Problem(statusCode: statusCode, detail: "MyFinance API went rogue! Sorry!");
+        => Problem(statusCode: statusCode, detail: "MyFinance API went rogue! Sorry!", instance: HttpContext.Request.Path);
 
     private ActionResult BuildValidationProblemResult(InvalidRequestError invalidRequestError)
     {
-        var validationErrors = invalidRequestError.ValidationErrors;
-        var validationProblemDetails = new ValidationProblemDetails(validationErrors);
-        return ValidationProblem(validationProblemDetails);
+        var modelStateDictionary = new ModelStateDictionary();
+
+        invalidRequestError
+            .ValidationErrors
+            .ToList()
+            .ForEach(error => modelStateDictionary.AddModelError(error.PropertyName, error.ErrorMessage));
+        
+        return ValidationProblem(instance: HttpContext.Request.Path, modelStateDictionary: modelStateDictionary);
     }
 }

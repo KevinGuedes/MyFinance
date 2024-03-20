@@ -15,7 +15,9 @@ public sealed class UserProviderBehavior<TRequest>(
 
     public Task Process(TRequest request, CancellationToken cancellationToken)
     {
-        _logger.LogInformation("Retrieving User Id");
+        var requestName = request.GetType().Name;
+
+        _logger.LogInformation("Retrieving User Id for {RequestName}", requestName);
         request.CurrentUserId = _currentUserProvider.GetCurrentUserId();
         return Task.CompletedTask;
     }

@@ -14,8 +14,8 @@ public class MonthlyBalanceController(IMediator mediator) : ApiController(mediat
     [HttpGet]
     [SwaggerOperation(Summary = "Lists all existing Monthly Balances according to query parameters")]
     [SwaggerResponse(StatusCodes.Status200OK, "List of Monthly Balances", typeof(Paginated<MonthlyBalanceResponse>))]
-    [SwaggerResponse(StatusCodes.Status400BadRequest, "Invalid query parameters", typeof(ValidationProblemDetails))]
-    [SwaggerResponse(StatusCodes.Status404NotFound, "Business Unit not found", typeof(ProblemDetails))]
+    [SwaggerResponse(StatusCodes.Status400BadRequest, "Invalid query parameters", typeof(ValidationProblemResponse))]
+    [SwaggerResponse(StatusCodes.Status404NotFound, "Business Unit not found", typeof(ProblemResponse))]
     public async Task<IActionResult> GetBusinessUnitsAsync(
         [FromQuery] [SwaggerParameter("Business Unit Id", Required = true)]
         Guid businessUnitId,

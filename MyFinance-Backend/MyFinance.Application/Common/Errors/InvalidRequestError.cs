@@ -1,7 +1,9 @@
-﻿namespace MyFinance.Application.Common.Errors;
+﻿using FluentValidation.Results;
 
-public sealed class InvalidRequestError(Dictionary<string, string[]> validationErrors)
+namespace MyFinance.Application.Common.Errors;
+
+public sealed class InvalidRequestError(IEnumerable<ValidationFailure> validationErrors)
     : BaseError("Invalid payload data, check validation errors for more details")
 {
-    public Dictionary<string, string[]> ValidationErrors { get; set; } = validationErrors;
+    public IEnumerable<ValidationFailure> ValidationErrors { get; init; } = validationErrors;
 }

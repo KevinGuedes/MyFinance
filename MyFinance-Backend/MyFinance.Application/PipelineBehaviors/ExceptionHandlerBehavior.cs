@@ -22,19 +22,12 @@ public sealed class ExceptionHandlerBehavior<TRequest, TResponse>(
 
         try
         {
-            _logger.LogInformation("[{RequestName}] Starting to handle request", requestName);
             var response = await next();
-
-            if (response.IsSuccess)
-                _logger.LogInformation("[{RequestName}] Request handled with a success result", requestName);
-            else
-                _logger.LogWarning("[{RequestName}] Request handled with a failure result", requestName);
-
             return response;
         }
         catch (DbUpdateConcurrencyException exception)
         {
-            _logger.LogError(exception, "[{RequestName}] Entity has been updated previously", requestName);
+            _logger.LogError(exception, "Failed to handle {RequestName}. Entity has been updated previously", requestName);
 
             var conflictError =
                 new ConflictError("The regarding entity has already been update. Check the updated data and try again");
@@ -46,7 +39,7 @@ public sealed class ExceptionHandlerBehavior<TRequest, TResponse>(
         }
         catch (Exception exception)
         {
-            _logger.LogError(exception, "[{RequestName}] Failed to handle request", requestName);
+            _logger.LogError(exception, "Failed to handle {RequestName}", requestName);
 
             var failedResult = Result.Fail(new InternalServerError().CausedBy(exception));
             var response = new TResponse();

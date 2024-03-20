@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MyFinance.Application.Mappers;
 using MyFinance.Application.UseCases.Users.Commands.SignOut;
+using MyFinance.Contracts.Common;
 using MyFinance.Contracts.User.Requests;
 using Swashbuckle.AspNetCore.Annotations;
 
@@ -15,7 +16,7 @@ public class UserController(IMediator mediator) : ApiController(mediator)
     [HttpPost]
     [SwaggerOperation(Summary = "Registers a new User")]
     [SwaggerResponse(StatusCodes.Status204NoContent, "User successfully created")]
-    [SwaggerResponse(StatusCodes.Status400BadRequest, "Invalid payload", typeof(ValidationProblemDetails))]
+    [SwaggerResponse(StatusCodes.Status400BadRequest, "Invalid payload", typeof(ValidationProblemResponse))]
     public async Task<IActionResult> RegisterUserAsync(
         [FromBody] [SwaggerRequestBody("User's payload", Required = true)]
         RegisterUserRequest request,
@@ -26,7 +27,7 @@ public class UserController(IMediator mediator) : ApiController(mediator)
     [HttpPost("SignIn")]
     [SwaggerOperation(Summary = "Signs in an existing User")]
     [SwaggerResponse(StatusCodes.Status204NoContent, "User successfully signed in")]
-    [SwaggerResponse(StatusCodes.Status401Unauthorized, "Invalid credentials", typeof(ProblemDetails))]
+    [SwaggerResponse(StatusCodes.Status401Unauthorized, "Invalid credentials", typeof(ProblemResponse))]
     public async Task<IActionResult> SignInAsync(
         [FromBody] [SwaggerRequestBody("User's sign in credentials", Required = true)]
         SignInRequest request,
