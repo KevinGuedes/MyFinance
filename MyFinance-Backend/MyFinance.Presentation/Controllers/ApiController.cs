@@ -46,14 +46,6 @@ public abstract class ApiController(IMediator mediator) : ControllerBase
                 => BuildProblemResult(StatusCodes.Status500InternalServerError)
         };
     }
-
-    private ObjectResult BuildProblemResult(int statusCode, IError error)
-        => Problem(statusCode: statusCode, detail: error.Message, instance: HttpContext.Request.Path);
-
-    private ObjectResult BuildProblemResult(int statusCode)
-        => Problem(statusCode: statusCode, detail: "MyFinance API went rogue! Sorry!",
-            instance: HttpContext.Request.Path);
-
     private ActionResult BuildValidationProblemResult(InvalidRequestError invalidRequestError)
     {
         var modelStateDictionary = new ModelStateDictionary();
@@ -65,4 +57,10 @@ public abstract class ApiController(IMediator mediator) : ControllerBase
 
         return ValidationProblem(instance: HttpContext.Request.Path, modelStateDictionary: modelStateDictionary);
     }
+
+    private ObjectResult BuildProblemResult(int statusCode, IError error)
+        => Problem(statusCode: statusCode, detail: error.Message, instance: HttpContext.Request.Path);
+
+    private ObjectResult BuildProblemResult(int statusCode)
+        => Problem(statusCode: statusCode, detail: "MyFinance API went rogue! Sorry!", instance: HttpContext.Request.Path);
 }
