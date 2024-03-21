@@ -28,25 +28,25 @@ public abstract class ApiController(IMediator mediator) : ControllerBase
     protected IActionResult ProcessResult(Result result)
         => result.IsSuccess ? NoContent() : HandleFailureResult(result.Errors);
 
-    protected IActionResult HandleFailureResult(IEnumerable<IError> errors)
+    protected ObjectResult HandleFailureResult(IEnumerable<IError> errors)
     {
         return errors.FirstOrDefault() switch
         {
             InvalidRequestError invalidRequestError
-                => BuildValidationProblemResult(invalidRequestError),
+                => BuildValidationProblemResponse(invalidRequestError),
             EntityNotFoundError entityNotFoundError
-                => BuildProblemResult(StatusCodes.Status404NotFound, entityNotFoundError),
+                => BuildProblemResponse(StatusCodes.Status404NotFound, entityNotFoundError),
             UnprocessableEntityError unprocessableEntityError
-                => BuildProblemResult(StatusCodes.Status422UnprocessableEntity, unprocessableEntityError),
+                => BuildProblemResponse(StatusCodes.Status422UnprocessableEntity, unprocessableEntityError),
             UnauthorizedError unauthorizedError
-                => BuildProblemResult(StatusCodes.Status401Unauthorized, unauthorizedError),
+                => BuildProblemResponse(StatusCodes.Status401Unauthorized, unauthorizedError),
             ConflictError conflictError
-                => BuildProblemResult(StatusCodes.Status409Conflict, conflictError),
+                => BuildProblemResponse(StatusCodes.Status409Conflict, conflictError),
             _
-                => BuildProblemResult(StatusCodes.Status500InternalServerError)
+                => BuildProblemResponse(StatusCodes.Status500InternalServerError)
         };
     }
-    private ActionResult BuildValidationProblemResult(InvalidRequestError invalidRequestError)
+    private ObjectResult BuildValidationProblemResponse(InvalidRequestError invalidRequestError)
     {
         var modelStateDictionary = new ModelStateDictionary();
 
@@ -55,12 +55,33 @@ public abstract class ApiController(IMediator mediator) : ControllerBase
             .ToList()
             .ForEach(error => modelStateDictionary.AddModelError(error.PropertyName, error.ErrorMessage));
 
-        return ValidationProblem(instance: HttpContext.Request.Path, modelStateDictionary: modelStateDictionary);
+        var validationProblemResponse = ProblemDetailsFactory.CreateValidationProblemDetails(
+            HttpContext,
+            instance: HttpContext.Request.Path, 
+            modelStateDictionary: modelStateDictionary) as ValidationProblemResponse;
+
+        return new ObjectResult(validationProblemResponse) { StatusCode = validationProblemResponse!.Status };
     }
 
-    private ObjectResult BuildProblemResult(int statusCode, IError error)
-        => Problem(statusCode: statusCode, detail: error.Message, instance: HttpContext.Request.Path);
+    private ObjectResult BuildProblemResponse(int statusCode, IError error)
+    {
+        var problemResponse = ProblemDetailsFactory.CreateProblemDetails(
+            HttpContext,
+            statusCode: statusCode,
+            detail: error.Message,
+            instance: HttpContext.Request.Path) as ProblemResponse;
 
-    private ObjectResult BuildProblemResult(int statusCode)
-        => Problem(statusCode: statusCode, detail: "MyFinance API went rogue! Sorry!", instance: HttpContext.Request.Path);
+        return new ObjectResult(problemResponse) { StatusCode = problemResponse!.Status };
+    }
+
+    private ObjectResult BuildProblemResponse(int statusCode)
+    {
+        var problemResponse = ProblemDetailsFactory.CreateProblemDetails(
+        HttpContext,
+           statusCode: statusCode,
+           detail: "MyFinance API went rogue! Sorry!",
+           instance: HttpContext.Request.Path) as ProblemResponse;
+
+        return new ObjectResult(problemResponse) { StatusCode = problemResponse!.Status };
+    }
 }

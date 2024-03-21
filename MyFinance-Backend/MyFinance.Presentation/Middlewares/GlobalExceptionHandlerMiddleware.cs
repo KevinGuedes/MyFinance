@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Diagnostics;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using MyFinance.Contracts.Common;
 
@@ -17,14 +18,18 @@ public class GlobalExceptionHandlerMiddleware(
     {
         _logger.LogError(exception, "Exception occurred: {Message}", exception.Message);
 
-        var problemResponse = _problemDetailsFactory.CreateProblemDetails(
+        var problemDetails = _problemDetailsFactory.CreateProblemDetails(
             httpContext,
             instance: httpContext.Request.Path,
             statusCode: StatusCodes.Status500InternalServerError,
             detail: "MyFinance API went rogue! Sorry!") as ProblemResponse;
 
-        httpContext.Response.StatusCode = problemResponse!.Status!.Value;
-        await httpContext.Response.WriteAsJsonAsync(problemResponse, cancellationToken);
+        var response = new ObjectResult(problemDetails)
+        {
+            StatusCode = problemDetails!.Status
+        };
+
+        await httpContext.Response.WriteAsJsonAsync(response, cancellationToken);
 
         return true;
     }
