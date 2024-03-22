@@ -22,7 +22,6 @@ internal sealed class GetBusinessUnitSummaryHandler(
         var businessUnit = await _businessUnitRepository.GetWithSummaryData(
             query.Id,
             query.Year,
-            query.CurrentUserId,
             cancellationToken);
 
         if (businessUnit is null)

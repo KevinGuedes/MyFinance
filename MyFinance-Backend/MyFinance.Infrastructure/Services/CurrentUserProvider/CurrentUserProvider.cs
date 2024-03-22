@@ -7,8 +7,11 @@ public sealed class CurrentUserProvider(IHttpContextAccessor httpContextAccessor
 {
     private readonly IHttpContextAccessor _httpContextAccessor = httpContextAccessor;
 
-    public Guid GetCurrentUserId()
-        => Guid.Parse(GetValueByClaimType("id"));
+    public bool IsAuthenticated
+        => _httpContextAccessor.HttpContext!.User.Identity?.IsAuthenticated ?? false;
+
+    public Guid? GetCurrentUserId()
+        => IsAuthenticated ? Guid.Parse(GetValueByClaimType("id")) : default;
 
     private string GetValueByClaimType(string claimType)
         => _httpContextAccessor.HttpContext!.User.Claims

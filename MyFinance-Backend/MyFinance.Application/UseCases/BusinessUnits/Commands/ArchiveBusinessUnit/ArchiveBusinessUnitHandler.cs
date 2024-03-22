@@ -13,7 +13,7 @@ internal sealed class ArchiveBusinessUnitHandler(IBusinessUnitRepository busines
     public async Task<Result> Handle(ArchiveBusinessUnitCommand command, CancellationToken cancellationToken)
     {
         var businessUnit =
-            await _businessUnitRepository.GetByIdAsync(command.Id, command.CurrentUserId, cancellationToken);
+            await _businessUnitRepository.GetByIdAsync(command.Id, cancellationToken);
 
         if (businessUnit is null)
         {

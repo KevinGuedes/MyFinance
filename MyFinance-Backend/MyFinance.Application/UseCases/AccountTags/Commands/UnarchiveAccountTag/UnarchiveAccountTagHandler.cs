@@ -12,7 +12,7 @@ internal sealed class UnarchiveAccountTagHandler(IAccountTagRepository accountTa
 
     public async Task<Result> Handle(UnarchiveAccountTagCommand command, CancellationToken cancellationToken)
     {
-        var accountTag = await _accountTagRepository.GetByIdAsync(command.Id, command.CurrentUserId, cancellationToken);
+        var accountTag = await _accountTagRepository.GetByIdAsync(command.Id, cancellationToken);
 
         if (accountTag is null)
         {

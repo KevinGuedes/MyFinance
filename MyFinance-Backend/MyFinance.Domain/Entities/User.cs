@@ -1,4 +1,6 @@
-﻿namespace MyFinance.Domain.Entities;
+﻿using MyFinance.Domain.Common;
+
+namespace MyFinance.Domain.Entities;
 
 public class User : Entity
 {

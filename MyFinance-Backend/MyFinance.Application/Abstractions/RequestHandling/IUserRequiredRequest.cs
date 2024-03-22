@@ -1,6 +1,6 @@
 ﻿namespace MyFinance.Application.Abstractions.RequestHandling;
 
-public interface IUserBasedRequest
+internal interface IUserRequiredRequest
 {
     public Guid CurrentUserId { get; set; }
 }

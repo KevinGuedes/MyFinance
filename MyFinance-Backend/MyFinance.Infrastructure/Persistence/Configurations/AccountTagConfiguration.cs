@@ -14,7 +14,7 @@ public sealed class AccountTagConfiguration : EntityConfiguration<AccountTag>
 
         builder.Property(at => at.Description).IsRequired(false).HasMaxLength(300);
         builder.Property(bu => bu.ReasonToArchive).IsRequired(false).HasMaxLength(300);
-        builder.Property(bu => bu.ArchiveDate).IsRequired(false);
+        builder.Property(bu => bu.ArchivedOnUtc).IsRequired(false);
         builder.Property(bu => bu.IsArchived).IsRequired();
     }
 }

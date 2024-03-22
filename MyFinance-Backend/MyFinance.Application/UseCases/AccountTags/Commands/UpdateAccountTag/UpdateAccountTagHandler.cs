@@ -15,7 +15,7 @@ internal sealed class UpdateAccountTagHandler(IAccountTagRepository accountTagRe
     public async Task<Result<AccountTagResponse>> Handle(UpdateAccountTagCommand command,
         CancellationToken cancellationToken)
     {
-        var accountTag = await _accountTagRepository.GetByIdAsync(command.Id, command.CurrentUserId, cancellationToken);
+        var accountTag = await _accountTagRepository.GetByIdAsync(command.Id, cancellationToken);
 
         if (accountTag is null)
         {

@@ -20,7 +20,6 @@ public static class AccountTagMapper
                 Description = accountTag.Description,
                 IsArchived = accountTag.IsArchived,
                 ReasonToArchive = accountTag.ReasonToArchive,
-                ArchiveDate = accountTag.ArchiveDate
             };
 
         public static IReadOnlyCollection<AccountTagResponse> Map(IEnumerable<AccountTag> accountTags)

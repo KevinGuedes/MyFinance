@@ -7,14 +7,14 @@ namespace MyFinance.Application.UseCases.BusinessUnits.Commands.CreateBusinessUn
 public sealed class CreateBusinessUnitValidator : AbstractValidator<CreateBusinessUnitCommand>
 {
     private readonly IBusinessUnitRepository _businessUnitRepository;
-    private readonly ICurrentUserProvider _currentUserProvider;
 
-    public CreateBusinessUnitValidator(IBusinessUnitRepository businessUnitRepository,
-        ICurrentUserProvider currentUserProvider)
+    public CreateBusinessUnitValidator(IBusinessUnitRepository businessUnitRepository)
     {
         _businessUnitRepository = businessUnitRepository;
-        _currentUserProvider = currentUserProvider;
         ClassLevelCascadeMode = CascadeMode.Stop;
+
+        RuleFor(command => command.CurrentUserId)
+          .NotEqual(Guid.Empty).WithMessage("Invalid {PropertyName}");
 
         RuleFor(command => command.Description)
             .MaximumLength(300).WithMessage("{PropertyName} must have a maximum of 300 characters");
@@ -26,9 +26,7 @@ public sealed class CreateBusinessUnitValidator : AbstractValidator<CreateBusine
             .MaximumLength(100).WithMessage("{PropertyName} must have a maximum of 100 characters")
             .MustAsync(async (businessUnitName, cancellationToken) =>
             {
-                var currentUserId = _currentUserProvider.GetCurrentUserId();
-                var exists =
-                    await _businessUnitRepository.ExistsByNameAsync(businessUnitName, currentUserId, cancellationToken);
+                var exists = await _businessUnitRepository.ExistsByNameAsync(businessUnitName, cancellationToken);
                 return !exists;
             }).WithMessage("This {PropertyName} has already been taken");
     }

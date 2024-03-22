@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using MyFinance.Domain.Entities;
 
 namespace MyFinance.Infrastructure.Persistence.Configurations;
@@ -13,6 +14,6 @@ public sealed class TransferConfiguration : EntityConfiguration<Transfer>
         builder.Property(transfer => transfer.Description).IsRequired().HasMaxLength(300);
         builder.Property(transfer => transfer.RelatedTo).IsRequired().HasMaxLength(300);
         builder.Property(transfer => transfer.Type).HasConversion<string>().IsRequired();
-        builder.Property(transfer => transfer.Value).IsRequired().HasPrecision(17, 2);
+        builder.Property(transfer => transfer.Value).IsRequired().HasColumnType("MONEY");
     }
 }

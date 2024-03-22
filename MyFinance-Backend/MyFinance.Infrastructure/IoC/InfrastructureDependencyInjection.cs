@@ -13,20 +13,22 @@ using MyFinance.Infrastructure.Services.Auth;
 using MyFinance.Infrastructure.Services.CurrentUserProvider;
 using MyFinance.Infrastructure.Services.PasswordHasher;
 using MyFinance.Infrastructure.Services.Spreadsheet;
+using System.Reflection;
 
 namespace MyFinance.Infrastructure.IoC;
 
 public static class InfrastructureDependencyInjection
 {
     public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
-        => services.AddAuth()
+        => services
+            .AddHttpContextAccessor()
+            .AddAuth()
             .AddServices()
             .AddPersistence(configuration);
 
     private static IServiceCollection AddAuth(this IServiceCollection services)
     {
         services
-            .AddHttpContextAccessor()
             .AddAuthentication()
             .AddCookie(options =>
             {
@@ -46,7 +48,6 @@ public static class InfrastructureDependencyInjection
                         Detail = "User not authorizied"
                     };
                     httpContext.Response.StatusCode = problemDetails.Status.Value;
-                    httpContext.Response.StatusCode = problemDetails.Status.Value;
                     await httpContext.Response.WriteAsJsonAsync(problemDetails);
                 };
 
@@ -58,7 +59,7 @@ public static class InfrastructureDependencyInjection
                         Detail = "User not allowed"
                     };
 
-                    httpContext.Response.StatusCode = StatusCodes.Status403Forbidden;
+                    httpContext.Response.StatusCode = problemDetails.Status.Value;
                     await httpContext.Response.WriteAsJsonAsync(problemDetails);
                 };
             });
@@ -75,16 +76,16 @@ public static class InfrastructureDependencyInjection
 
     private static IServiceCollection AddPersistence(this IServiceCollection services, IConfiguration configuration)
     {
-        var migrationsAssemblyName = typeof(MyFinanceDbContext).Assembly.FullName;
         services.AddDbContext<MyFinanceDbContext>(
             options => options
                 .UseSqlite(configuration.GetConnectionString("Lite"),
                     sqlServerOptions => sqlServerOptions
                         .UseQuerySplittingBehavior(QuerySplittingBehavior.SingleQuery)
-                        .MigrationsAssembly(migrationsAssemblyName)));
+                        .MigrationsAssembly(Assembly.GetExecutingAssembly().FullName)));
+
+        services.AddScoped<IUnitOfWork, UnitOfWork>();
 
         return services
-            .AddScoped<IUnitOfWork, UnitOfWork>()
             .AddScoped<IBusinessUnitRepository, BusinessUnitRepository>()
             .AddScoped<IMonthlyBalanceRepository, MonthlyBalanceRepository>()
             .AddScoped<ITransferRepository, TransferRepository>()

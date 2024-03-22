@@ -15,8 +15,7 @@ internal sealed class UpdateBusinessUnitHandler(IBusinessUnitRepository business
     public async Task<Result<BusinessUnitResponse>> Handle(UpdateBusinessUnitCommand command,
         CancellationToken cancellationToken)
     {
-        var businessUnit =
-            await _businessUnitRepository.GetByIdAsync(command.Id, command.CurrentUserId, cancellationToken);
+        var businessUnit = await _businessUnitRepository.GetByIdAsync(command.Id, cancellationToken);
 
         if (businessUnit is null)
         {

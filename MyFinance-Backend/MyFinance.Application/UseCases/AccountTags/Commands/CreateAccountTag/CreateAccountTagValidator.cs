@@ -7,14 +7,14 @@ namespace MyFinance.Application.UseCases.AccountTags.Commands.CreateAccountTag;
 public sealed class CreateAccountTagValidator : AbstractValidator<CreateAccountTagCommand>
 {
     private readonly IAccountTagRepository _accountTagRepository;
-    private readonly ICurrentUserProvider _currentUserProvider;
 
-    public CreateAccountTagValidator(IAccountTagRepository accountTagRepository,
-        ICurrentUserProvider currentUserProvider)
+    public CreateAccountTagValidator(IAccountTagRepository accountTagRepository)
     {
         _accountTagRepository = accountTagRepository;
-        _currentUserProvider = currentUserProvider;
         ClassLevelCascadeMode = CascadeMode.Stop;
+
+        RuleFor(command => command.CurrentUserId)
+           .NotEqual(Guid.Empty).WithMessage("Invalid {PropertyName}");
 
         RuleFor(command => command.Description)
             .MaximumLength(300).WithMessage("{PropertyName} must have a maximum of 300 characters");
@@ -26,8 +26,7 @@ public sealed class CreateAccountTagValidator : AbstractValidator<CreateAccountT
             .Length(3, 10).WithMessage("{PropertyName} must have between 3 and 10 characters")
             .MustAsync(async (tag, cancellationToken) =>
             {
-                var currentUserId = _currentUserProvider.GetCurrentUserId();
-                var exists = await _accountTagRepository.ExistsByTagAsync(tag, currentUserId, cancellationToken);
+                var exists = await _accountTagRepository.ExistsByTagAsync(tag, cancellationToken);
                 return !exists;
             }).WithMessage("This {PropertyName} has already been taken");
     }

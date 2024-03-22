@@ -32,7 +32,7 @@ public sealed class SignInCommandHandler(
 
     private static Result HandleInvalidCredentials()
     {
-        var unauthorizedError = new UnauthorizedError("Invalid email or password");
+        var unauthorizedError = new UnauthorizedError("Invalid credentials");
         return Result.Fail(unauthorizedError);
     }
 }

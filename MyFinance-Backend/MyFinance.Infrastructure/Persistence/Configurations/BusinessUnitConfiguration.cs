@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using MyFinance.Domain.Entities;
 
 namespace MyFinance.Infrastructure.Persistence.Configurations;
@@ -12,11 +13,11 @@ public sealed class BusinessUnitConfiguration : EntityConfiguration<BusinessUnit
         builder.HasIndex(bu => bu.Name).IsUnique();
         builder.Property(bu => bu.Name).IsRequired().HasMaxLength(100);
 
-        builder.Property(bu => bu.Income).IsRequired().HasPrecision(17, 2);
-        builder.Property(bu => bu.Outcome).IsRequired().HasPrecision(17, 2);
+        builder.Property(bu => bu.Income).IsRequired().HasColumnType("MONEY");
+        builder.Property(bu => bu.Outcome).IsRequired().HasColumnType("MONEY");
         builder.Property(bu => bu.Description).IsRequired(false).HasMaxLength(300);
         builder.Property(bu => bu.ReasonToArchive).IsRequired(false).HasMaxLength(300);
-        builder.Property(bu => bu.ArchiveDate).IsRequired(false);
+        builder.Property(bu => bu.ArchivedOnUtc).IsRequired(false);
         builder.Property(bu => bu.IsArchived).IsRequired();
         builder.Ignore(bu => bu.Balance);
     }

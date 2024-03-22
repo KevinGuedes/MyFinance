@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using MyFinance.Domain.Entities;
+using MyFinance.Domain.Common;
 
 namespace MyFinance.Infrastructure.Persistence.Configurations;
 
@@ -11,8 +11,8 @@ public abstract class EntityConfiguration<TEntity> : IEntityTypeConfiguration<TE
         builder.HasKey(e => e.Id);
         builder.Property(e => e.Id).ValueGeneratedNever();
 
-        builder.Property(e => e.CreationDate).IsRequired();
-        builder.Property(e => e.UpdateDate).IsRequired(false);
+        builder.Property(e => e.CreatedOnUtc).IsRequired();
+        builder.Property(e => e.UpdatedOnUtc).IsRequired(false);
         //builder.Property(e => e.RowVersion).IsRowVersion();
     }
 }

@@ -1,14 +1,16 @@
-﻿using MyFinance.Domain.Enums;
+﻿using MyFinance.Domain.Abstractions;
+using MyFinance.Domain.Common;
+using MyFinance.Domain.Enums;
 
 namespace MyFinance.Domain.Entities;
 
-public class MonthlyBalance : UserOwnedEntity
+public class MonthlyBalance : Entity, IUserOwnedEntity
 {
     private MonthlyBalance()
     {
     }
 
-    public MonthlyBalance(DateTime referenceDate, BusinessUnit businessUnit, Guid userId) : base(userId)
+    public MonthlyBalance(DateTime referenceDate, BusinessUnit businessUnit, Guid userId)
     {
         Income = 0;
         Outcome = 0;
@@ -17,6 +19,7 @@ public class MonthlyBalance : UserOwnedEntity
         BusinessUnit = businessUnit;
         BusinessUnitId = businessUnit.Id;
         Transfers = [];
+        UserId = userId;
     }
 
     public int ReferenceYear { get; init; }
@@ -26,11 +29,13 @@ public class MonthlyBalance : UserOwnedEntity
     public double Balance => Income - Outcome;
     public Guid BusinessUnitId { get; private set; }
     public BusinessUnit BusinessUnit { get; private set; } = null!;
+    public Guid UserId { get; private set; }
     public List<Transfer> Transfers { get; private set; } = [];
 
     public void RegisterValue(double transferValue, TransferType transferType)
     {
-        SetUpdateDateToNow();
+        SetUpdateOnToUtcNow();
+
         if (transferType == TransferType.Profit)
             Income += transferValue;
         else
@@ -39,7 +44,8 @@ public class MonthlyBalance : UserOwnedEntity
 
     public void CancelValue(double transferValue, TransferType transferType)
     {
-        SetUpdateDateToNow();
+        SetUpdateOnToUtcNow();
+
         if (transferType == TransferType.Profit)
             Income -= transferValue;
         else

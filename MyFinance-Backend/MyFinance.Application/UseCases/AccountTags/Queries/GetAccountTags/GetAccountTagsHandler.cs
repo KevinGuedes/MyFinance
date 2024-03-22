@@ -18,7 +18,6 @@ internal sealed class GetAccountTagsHandler(IAccountTagRepository accountTagRepo
         var accountTags = await _accountTagRepository.GetPaginatedAsync(
             query.PageNumber,
             query.PageSize,
-            query.CurrentUserId,
             cancellationToken);
 
         var response = new Paginated<AccountTagResponse>(

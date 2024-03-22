@@ -18,7 +18,6 @@ internal sealed class GetBusinessUnitsHandler(IBusinessUnitRepository businessUn
         var businessUnits = await _businessUnitRepository.GetPaginatedAsync(
             query.PageNumber,
             query.PageSize,
-            query.CurrentUserId,
             cancellationToken);
 
         var response = new Paginated<BusinessUnitResponse>(

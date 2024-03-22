@@ -22,7 +22,7 @@ public class GlobalExceptionHandlerMiddleware(
             httpContext,
             instance: httpContext.Request.Path,
             statusCode: StatusCodes.Status500InternalServerError,
-            detail: "MyFinance API went rogue! Sorry!") as ProblemResponse;
+            detail: "MyFinance API went rogue! Sorry!");
 
         var response = new ObjectResult(problemDetails)
         {

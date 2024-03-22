@@ -13,7 +13,7 @@ public class UnarchiveBusinessUnitHandler(IBusinessUnitRepository businessUnitRe
     public async Task<Result> Handle(UnarchiveBusinessUnitCommand command, CancellationToken cancellationToken)
     {
         var businessUnit =
-            await _businessUnitRepository.GetByIdAsync(command.Id, command.CurrentUserId, cancellationToken);
+            await _businessUnitRepository.GetByIdAsync(command.Id, cancellationToken);
 
         if (businessUnit is null)
         {

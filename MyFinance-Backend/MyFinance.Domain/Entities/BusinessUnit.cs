@@ -1,14 +1,16 @@
-﻿using MyFinance.Domain.Enums;
+﻿using MyFinance.Domain.Abstractions;
+using MyFinance.Domain.Common;
+using MyFinance.Domain.Enums;
 
 namespace MyFinance.Domain.Entities;
 
-public class BusinessUnit : UserOwnedEntity
+public class BusinessUnit : Entity, IUserOwnedEntity, IArchivableEntity
 {
     private BusinessUnit()
     {
     }
 
-    public BusinessUnit(string name, string? description, Guid userId) : base(userId)
+    public BusinessUnit(string name, string? description, Guid userId)
     {
         Name = name;
         Income = 0;
@@ -16,7 +18,8 @@ public class BusinessUnit : UserOwnedEntity
         Description = description;
         IsArchived = false;
         ReasonToArchive = null;
-        ArchiveDate = null;
+        ArchivedOnUtc = null;
+        UserId = userId;
         MonthlyBalances = [];
     }
 
@@ -27,35 +30,41 @@ public class BusinessUnit : UserOwnedEntity
     public double Balance => Income - Outcome;
     public bool IsArchived { get; private set; }
     public string? ReasonToArchive { get; private set; }
-    public DateTime? ArchiveDate { get; private set; }
+    public DateTime? ArchivedOnUtc { get; private set; }
+    public Guid UserId { get; private set; }
     public List<MonthlyBalance> MonthlyBalances { get; private set; } = [];
 
     public void Update(string name, string? description)
     {
-        SetUpdateDateToNow();
+        SetUpdateOnToUtcNow();
+
         Name = name;
         Description = description;
     }
 
     public void Archive(string? reasonToArchive)
     {
-        SetUpdateDateToNow();
-        ArchiveDate = DateTime.UtcNow;
+        var utcNow = DateTime.UtcNow;
+        SetUpdateOnToUtcNow(utcNow);
+
+        ArchivedOnUtc = utcNow;
         IsArchived = true;
         ReasonToArchive = reasonToArchive;
     }
 
     public void Unarchive()
     {
-        SetUpdateDateToNow();
+        SetUpdateOnToUtcNow();
+
         IsArchived = false;
-        ArchiveDate = null;
+        ArchivedOnUtc = null;
         ReasonToArchive = null;
     }
 
     public void RegisterValue(double transferValue, TransferType transferType)
     {
-        SetUpdateDateToNow();
+        SetUpdateOnToUtcNow();
+
         if (transferType == TransferType.Profit)
             Income += transferValue;
         else
@@ -64,7 +73,8 @@ public class BusinessUnit : UserOwnedEntity
 
     public void CancelValue(double transferValue, TransferType transferType)
     {
-        SetUpdateDateToNow();
+        SetUpdateOnToUtcNow();
+
         if (transferType == TransferType.Profit)
             Income -= transferValue;
         else

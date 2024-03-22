@@ -16,7 +16,7 @@ internal sealed class DeleteTransferHandler(
 
     public async Task<Result> Handle(DeleteTransferCommand command, CancellationToken cancellationToken)
     {
-        var transfer = await _transferRepository.GetByIdAsync(command.Id, command.CurrentUserId, cancellationToken);
+        var transfer = await _transferRepository.GetByIdAsync(command.Id, cancellationToken);
 
         if (transfer is null)
         {

@@ -21,8 +21,7 @@ public class BusinessUnitMapper
                 Balance = businessUnit.Balance,
                 Description = businessUnit.Description,
                 IsArchived = businessUnit.IsArchived,
-                ReasonToArchive = businessUnit.ReasonToArchive,
-                ArchiveDate = businessUnit.ArchiveDate
+                ReasonToArchive = businessUnit.ReasonToArchive
             };
 
         public static IReadOnlyCollection<BusinessUnitResponse> Map(IEnumerable<BusinessUnit> businessUnits)

@@ -6,6 +6,9 @@ public sealed class RegisterTransferValidator : AbstractValidator<RegisterTransf
 {
     public RegisterTransferValidator()
     {
+        RuleFor(command => command.CurrentUserId)
+          .NotEqual(Guid.Empty).WithMessage("Invalid {PropertyName}");
+
         RuleFor(command => command.Value)
             .NotEqual(0).WithMessage("{PropertyName} must not be equal to 0")
             .GreaterThan(0).WithMessage("{PropertyName} must be greater than 0");

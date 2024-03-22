@@ -1,5 +1,5 @@
 ﻿namespace MyFinance.Application.Abstractions.RequestHandling.Queries;
 
-public interface IBaseQuery
+internal interface IBaseQuery
 {
 }

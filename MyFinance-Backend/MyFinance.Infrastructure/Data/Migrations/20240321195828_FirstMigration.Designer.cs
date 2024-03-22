@@ -11,7 +11,7 @@ using MyFinance.Infrastructure.Persistence.Context;
 namespace MyFinance.Infrastructure.Data.Migrations
 {
     [DbContext(typeof(MyFinanceDbContext))]
-    [Migration("20240315201231_FirstMigration")]
+    [Migration("20240321195828_FirstMigration")]
     partial class FirstMigration
     {
         /// <inheritdoc />
@@ -26,38 +26,32 @@ namespace MyFinance.Infrastructure.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT");
 
-                    b.Property<DateTime?>("ArchiveDate")
+                    b.Property<DateTime?>("ArchivedOnUtc")
                         .HasColumnType("TEXT");
 
-                    b.Property<DateTime>("CreationDate")
+                    b.Property<DateTime>("CreatedOnUtc")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Description")
-                        .HasMaxLength(300)
                         .HasColumnType("TEXT");
 
                     b.Property<bool>("IsArchived")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("ReasonToArchive")
-                        .HasMaxLength(300)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Tag")
                         .IsRequired()
-                        .HasMaxLength(10)
                         .HasColumnType("TEXT");
 
-                    b.Property<DateTime?>("UpdateDate")
+                    b.Property<DateTime?>("UpdatedOnUtc")
                         .HasColumnType("TEXT");
 
                     b.Property<Guid>("UserId")
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("Tag")
-                        .IsUnique();
 
                     b.ToTable("AccountTags");
                 });
@@ -68,18 +62,16 @@ namespace MyFinance.Infrastructure.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT");
 
-                    b.Property<DateTime?>("ArchiveDate")
+                    b.Property<DateTime?>("ArchivedOnUtc")
                         .HasColumnType("TEXT");
 
-                    b.Property<DateTime>("CreationDate")
+                    b.Property<DateTime>("CreatedOnUtc")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Description")
-                        .HasMaxLength(300)
                         .HasColumnType("TEXT");
 
                     b.Property<double>("Income")
-                        .HasPrecision(17, 2)
                         .HasColumnType("REAL");
 
                     b.Property<bool>("IsArchived")
@@ -87,27 +79,21 @@ namespace MyFinance.Infrastructure.Data.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasMaxLength(100)
                         .HasColumnType("TEXT");
 
                     b.Property<double>("Outcome")
-                        .HasPrecision(17, 2)
                         .HasColumnType("REAL");
 
                     b.Property<string>("ReasonToArchive")
-                        .HasMaxLength(300)
                         .HasColumnType("TEXT");
 
-                    b.Property<DateTime?>("UpdateDate")
+                    b.Property<DateTime?>("UpdatedOnUtc")
                         .HasColumnType("TEXT");
 
                     b.Property<Guid>("UserId")
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("Name")
-                        .IsUnique();
 
                     b.ToTable("BusinessUnits");
                 });
@@ -121,15 +107,13 @@ namespace MyFinance.Infrastructure.Data.Migrations
                     b.Property<Guid>("BusinessUnitId")
                         .HasColumnType("TEXT");
 
-                    b.Property<DateTime>("CreationDate")
+                    b.Property<DateTime>("CreatedOnUtc")
                         .HasColumnType("TEXT");
 
                     b.Property<double>("Income")
-                        .HasPrecision(17, 2)
                         .HasColumnType("REAL");
 
                     b.Property<double>("Outcome")
-                        .HasPrecision(17, 2)
                         .HasColumnType("REAL");
 
                     b.Property<int>("ReferenceMonth")
@@ -138,7 +122,7 @@ namespace MyFinance.Infrastructure.Data.Migrations
                     b.Property<int>("ReferenceYear")
                         .HasColumnType("INTEGER");
 
-                    b.Property<DateTime?>("UpdateDate")
+                    b.Property<DateTime?>("UpdatedOnUtc")
                         .HasColumnType("TEXT");
 
                     b.Property<Guid>("UserId")
@@ -160,12 +144,11 @@ namespace MyFinance.Infrastructure.Data.Migrations
                     b.Property<Guid>("AccountTagId")
                         .HasColumnType("TEXT");
 
-                    b.Property<DateTime>("CreationDate")
+                    b.Property<DateTime>("CreatedOnUtc")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasMaxLength(300)
                         .HasColumnType("TEXT");
 
                     b.Property<Guid>("MonthlyBalanceId")
@@ -173,24 +156,21 @@ namespace MyFinance.Infrastructure.Data.Migrations
 
                     b.Property<string>("RelatedTo")
                         .IsRequired()
-                        .HasMaxLength(300)
                         .HasColumnType("TEXT");
 
                     b.Property<DateTime>("SettlementDate")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("Type")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
+                    b.Property<int>("Type")
+                        .HasColumnType("INTEGER");
 
-                    b.Property<DateTime?>("UpdateDate")
+                    b.Property<DateTime?>("UpdatedOnUtc")
                         .HasColumnType("TEXT");
 
                     b.Property<Guid>("UserId")
                         .HasColumnType("TEXT");
 
                     b.Property<double>("Value")
-                        .HasPrecision(17, 2)
                         .HasColumnType("REAL");
 
                     b.HasKey("Id");
@@ -205,10 +185,9 @@ namespace MyFinance.Infrastructure.Data.Migrations
             modelBuilder.Entity("MyFinance.Domain.Entities.User", b =>
                 {
                     b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT");
 
-                    b.Property<DateTime>("CreationDate")
+                    b.Property<DateTime>("CreatedOnUtc")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Email")
@@ -225,7 +204,7 @@ namespace MyFinance.Infrastructure.Data.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<DateTime?>("UpdateDate")
+                    b.Property<DateTime?>("UpdatedOnUtc")
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");

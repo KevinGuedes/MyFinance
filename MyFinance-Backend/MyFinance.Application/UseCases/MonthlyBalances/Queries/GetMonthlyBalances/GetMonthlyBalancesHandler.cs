@@ -21,7 +21,6 @@ internal sealed class GetMonthlyBalancesHandler(
     {
         var isValidBusinessUnit = await _businessUnitRepository.ExistsByIdAsync(
             query.BusinessUnitId,
-            query.CurrentUserId,
             cancellationToken);
 
         if (!isValidBusinessUnit)
@@ -35,7 +34,6 @@ internal sealed class GetMonthlyBalancesHandler(
             query.BusinessUnitId,
             query.PageNumber,
             query.PageSize,
-            query.CurrentUserId,
             cancellationToken);
 
 

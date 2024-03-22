@@ -34,8 +34,7 @@ public sealed class UpdateAccountTagValidator : AbstractValidator<UpdateAccountT
             {
                 var currentUserId = _currentUserProvider.GetCurrentUserId();
 
-                var existingBusinessUnit =
-                    await _accountTagRepository.GetByTagAsync(tag, currentUserId, cancellationToken);
+                var existingBusinessUnit = await _accountTagRepository.GetByTagAsync(tag, cancellationToken);
                 if (existingBusinessUnit is null)
                     return true;
 

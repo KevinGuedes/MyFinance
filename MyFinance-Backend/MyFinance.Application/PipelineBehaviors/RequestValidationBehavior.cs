@@ -7,7 +7,7 @@ using MyFinance.Application.Common.Errors;
 
 namespace MyFinance.Application.PipelineBehaviors;
 
-public sealed class RequestValidationBehavior<TRequest, TResponse>(
+internal sealed class RequestValidationBehavior<TRequest, TResponse>(
     ILogger<RequestValidationBehavior<TRequest, TResponse>> logger,
     IEnumerable<IValidator<TRequest>> validators)
     : IPipelineBehavior<TRequest, TResponse>
@@ -28,7 +28,6 @@ public sealed class RequestValidationBehavior<TRequest, TResponse>(
             return await next();
         }
 
-        _logger.LogInformation("Validating {RequestName} payload", requestName);
         var validationContext = new ValidationContext<TRequest>(request);
         var validationResults = await Task.WhenAll(_validators.Select(validators =>
             validators.ValidateAsync(validationContext, cancellationToken)));
@@ -52,7 +51,6 @@ public sealed class RequestValidationBehavior<TRequest, TResponse>(
 
         if (validationErrors.Count is 0) return await next();
 
-        _logger.LogWarning("Invalid payload for {RequestName}", requestName);
         var response = new TResponse();
         var failedResult = Result.Fail(new InvalidRequestError(validationErrors));
         response.Reasons.AddRange(failedResult.Reasons);

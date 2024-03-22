@@ -7,7 +7,7 @@ using MyFinance.Application.Common.Errors;
 
 namespace MyFinance.Application.PipelineBehaviors;
 
-public sealed class ExceptionHandlerBehavior<TRequest, TResponse>(
+internal sealed class ExceptionHandlerBehavior<TRequest, TResponse>(
     ILogger<ExceptionHandlerBehavior<TRequest, TResponse>> logger)
     : IPipelineBehavior<TRequest, TResponse>
     where TRequest : IBaseAppRequest

@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc.ModelBinding;
 using MyFinance.Application.Common.Errors;
 using MyFinance.Contracts.Common;
 using Swashbuckle.AspNetCore.Annotations;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace MyFinance.Presentation.Controllers;
 
@@ -28,7 +29,7 @@ public abstract class ApiController(IMediator mediator) : ControllerBase
     protected IActionResult ProcessResult(Result result)
         => result.IsSuccess ? NoContent() : HandleFailureResult(result.Errors);
 
-    protected ObjectResult HandleFailureResult(IEnumerable<IError> errors)
+    protected IActionResult HandleFailureResult(IEnumerable<IError> errors)
     {
         return errors.FirstOrDefault() switch
         {
@@ -46,7 +47,7 @@ public abstract class ApiController(IMediator mediator) : ControllerBase
                 => BuildProblemResponse(StatusCodes.Status500InternalServerError)
         };
     }
-    private ObjectResult BuildValidationProblemResponse(InvalidRequestError invalidRequestError)
+    private ActionResult BuildValidationProblemResponse(InvalidRequestError invalidRequestError)
     {
         var modelStateDictionary = new ModelStateDictionary();
 
@@ -55,33 +56,12 @@ public abstract class ApiController(IMediator mediator) : ControllerBase
             .ToList()
             .ForEach(error => modelStateDictionary.AddModelError(error.PropertyName, error.ErrorMessage));
 
-        var validationProblemResponse = ProblemDetailsFactory.CreateValidationProblemDetails(
-            HttpContext,
-            instance: HttpContext.Request.Path, 
-            modelStateDictionary: modelStateDictionary) as ValidationProblemResponse;
-
-        return new ObjectResult(validationProblemResponse) { StatusCode = validationProblemResponse!.Status };
+        return ValidationProblem(instance: HttpContext.Request.Path,  modelStateDictionary: modelStateDictionary);
     }
 
     private ObjectResult BuildProblemResponse(int statusCode, IError error)
-    {
-        var problemResponse = ProblemDetailsFactory.CreateProblemDetails(
-            HttpContext,
-            statusCode: statusCode,
-            detail: error.Message,
-            instance: HttpContext.Request.Path) as ProblemResponse;
-
-        return new ObjectResult(problemResponse) { StatusCode = problemResponse!.Status };
-    }
+        => Problem(statusCode: statusCode, detail: error.Message, instance: HttpContext.Request.Path);
 
     private ObjectResult BuildProblemResponse(int statusCode)
-    {
-        var problemResponse = ProblemDetailsFactory.CreateProblemDetails(
-        HttpContext,
-           statusCode: statusCode,
-           detail: "MyFinance API went rogue! Sorry!",
-           instance: HttpContext.Request.Path) as ProblemResponse;
-
-        return new ObjectResult(problemResponse) { StatusCode = problemResponse!.Status };
-    }
+        => Problem(statusCode: statusCode, detail: "MyFinance API went rogue! Sorry!", instance: HttpContext.Request.Path);
 }

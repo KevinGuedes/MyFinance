@@ -5,12 +5,11 @@ using MyFinance.Infrastructure.Persistence.Context;
 
 namespace MyFinance.Infrastructure.Persistence.Repositories;
 
-public sealed class TransferRepository(MyFinanceDbContext myFinanceDbContext)
-    : UserOwnedEntityRepository<Transfer>(myFinanceDbContext), ITransferRepository
+internal sealed class TransferRepository(MyFinanceDbContext myFinanceDbContext)
+    : EntityRepository<Transfer>(myFinanceDbContext), ITransferRepository
 {
-    public override async Task<Transfer?> GetByIdAsync(Guid id, Guid userId, CancellationToken cancellationToken)
+    public override async Task<Transfer?> GetByIdAsync(Guid id, CancellationToken cancellationToken)
         => await _myFinanceDbContext.Transfers
-            .Where(t => t.UserId == userId)
             .Include(t => t.MonthlyBalance)
             .ThenInclude(mb => mb.BusinessUnit)
             .FirstOrDefaultAsync(t => t.Id == id, cancellationToken);

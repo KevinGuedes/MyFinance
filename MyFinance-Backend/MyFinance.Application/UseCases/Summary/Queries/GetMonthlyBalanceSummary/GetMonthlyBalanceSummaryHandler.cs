@@ -19,8 +19,7 @@ internal sealed class GetMonthlyBalanceSummaryHandler(
     public async Task<Result<SummaryResponse>> Handle(GetMonthlyBalanceSummaryQuery query,
         CancellationToken cancellationToken)
     {
-        var monthlyBalance =
-            await _monthlyBalanceRepository.GetWithSummaryData(query.Id, query.CurrentUserId, cancellationToken);
+        var monthlyBalance = await _monthlyBalanceRepository.GetWithSummaryData(query.Id, cancellationToken);
 
         if (monthlyBalance is null)
         {

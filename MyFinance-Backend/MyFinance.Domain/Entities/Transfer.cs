@@ -1,8 +1,10 @@
-﻿using MyFinance.Domain.Enums;
+﻿using MyFinance.Domain.Abstractions;
+using MyFinance.Domain.Common;
+using MyFinance.Domain.Enums;
 
 namespace MyFinance.Domain.Entities;
 
-public class Transfer : UserOwnedEntity
+public class Transfer : Entity, IUserOwnedEntity
 {
     private Transfer()
     {
@@ -16,7 +18,7 @@ public class Transfer : UserOwnedEntity
         TransferType type,
         MonthlyBalance monthlyBalance,
         AccountTag accountTag,
-        Guid userId) : base(userId)
+        Guid userId)
     {
         Value = value;
         RelatedTo = relatedTo;
@@ -27,6 +29,7 @@ public class Transfer : UserOwnedEntity
         MonthlyBalanceId = monthlyBalance.Id;
         AccountTag = accountTag;
         AccountTagId = accountTag.Id;
+        UserId = userId;
     }
 
     public double Value { get; private set; }
@@ -34,6 +37,7 @@ public class Transfer : UserOwnedEntity
     public string Description { get; private set; } = null!;
     public DateTime SettlementDate { get; private set; }
     public TransferType Type { get; private set; }
+    public Guid UserId { get; private set; }
     public Guid MonthlyBalanceId { get; private set; }
     public MonthlyBalance MonthlyBalance { get; private set; } = null!;
     public Guid AccountTagId { get; private set; }
@@ -48,7 +52,8 @@ public class Transfer : UserOwnedEntity
         MonthlyBalance monthlyBalance,
         AccountTag accountTag)
     {
-        SetUpdateDateToNow();
+        SetUpdateOnToUtcNow();
+
         Value = value;
         RelatedTo = relatedTo;
         Description = description;
