@@ -1,8 +1,9 @@
-﻿using System.Reflection;
-using FluentValidation;
+﻿using FluentValidation;
 using FluentValidation.AspNetCore;
 using Microsoft.Extensions.DependencyInjection;
-using MyFinance.Application.PipelineBehaviors;
+using MyFinance.Application.RequestPipeline.Behaviors;
+using MyFinance.Application.RequestPipeline.PostProcessors;
+using System.Reflection;
 
 namespace MyFinance.Application.IoC;
 
@@ -24,9 +25,9 @@ public static class ApplicationDependencyInjection
             {
                 cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly());
                 cfg
-                    .AddOpenBehavior(typeof(ExceptionHandlerBehavior<,>))
+                    .AddOpenBehavior(typeof(TimingBehavior<,>))
                     .AddOpenBehavior(typeof(UserProviderBehavior<,>))
-                    .AddOpenBehavior(typeof(RequestValidationBehavior<,>))
-                    .AddOpenBehavior(typeof(UnitOfWorkBehavior<,>));
+                    .AddOpenBehavior(typeof(ValidationBehavior<,>))
+                    .AddOpenRequestPostProcessor(typeof(UnitOfWorkPostProcessor<,>));
             });
 }

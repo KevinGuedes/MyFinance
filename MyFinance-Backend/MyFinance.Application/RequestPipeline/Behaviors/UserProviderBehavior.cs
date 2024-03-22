@@ -1,11 +1,10 @@
 ﻿using FluentResults;
 using MediatR;
-using Microsoft.Extensions.Logging;
 using MyFinance.Application.Abstractions.RequestHandling;
 using MyFinance.Application.Abstractions.Services;
 using MyFinance.Application.Common.Errors;
 
-namespace MyFinance.Application.PipelineBehaviors;
+namespace MyFinance.Application.RequestPipeline.Behaviors;
 
 internal sealed class UserProviderBehavior<TRequest, TResponse>(ICurrentUserProvider currentUserProvider)
     : IPipelineBehavior<TRequest, TResponse>
@@ -24,10 +23,10 @@ internal sealed class UserProviderBehavior<TRequest, TResponse>(ICurrentUserProv
             return await next();
         }
 
-        var response = new TResponse();
-        var failedResult = Result.Fail(new UnauthorizedError("Unable to identify user"));
-        response.Reasons.AddRange(failedResult.Reasons);
+        var internalServerError = new InternalServerError("Failed to identify current User");
+        var internalServerErrorResponse = new TResponse();
+        internalServerErrorResponse.Reasons.AddRange(internalServerError.Reasons);
 
-        return response;
+        return internalServerErrorResponse;
     }
 }

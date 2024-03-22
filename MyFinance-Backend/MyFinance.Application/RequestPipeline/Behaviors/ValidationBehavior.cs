@@ -5,16 +5,16 @@ using Microsoft.Extensions.Logging;
 using MyFinance.Application.Abstractions.RequestHandling;
 using MyFinance.Application.Common.Errors;
 
-namespace MyFinance.Application.PipelineBehaviors;
+namespace MyFinance.Application.RequestPipeline.Behaviors;
 
-internal sealed class RequestValidationBehavior<TRequest, TResponse>(
-    ILogger<RequestValidationBehavior<TRequest, TResponse>> logger,
+internal sealed class ValidationBehavior<TRequest, TResponse>(
+    ILogger<ValidationBehavior<TRequest, TResponse>> logger,
     IEnumerable<IValidator<TRequest>> validators)
     : IPipelineBehavior<TRequest, TResponse>
     where TRequest : IBaseAppRequest
     where TResponse : ResultBase, new()
 {
-    private readonly ILogger<RequestValidationBehavior<TRequest, TResponse>> _logger = logger;
+    private readonly ILogger<ValidationBehavior<TRequest, TResponse>> _logger = logger;
     private readonly IEnumerable<IValidator<TRequest>> _validators = validators;
 
     public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next,
@@ -51,9 +51,9 @@ internal sealed class RequestValidationBehavior<TRequest, TResponse>(
 
         if (validationErrors.Count is 0) return await next();
 
-        var response = new TResponse();
-        var failedResult = Result.Fail(new InvalidRequestError(validationErrors));
-        response.Reasons.AddRange(failedResult.Reasons);
-        return response;
+        var invalidRequestResponse = new TResponse();
+        var invalidRequestErrorResult = Result.Fail(new InvalidRequestError(validationErrors));
+        invalidRequestResponse.Reasons.AddRange(invalidRequestErrorResult.Reasons);
+        return invalidRequestResponse;
     }
 }
