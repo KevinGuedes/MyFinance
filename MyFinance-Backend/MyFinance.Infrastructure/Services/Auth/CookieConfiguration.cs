@@ -1,14 +1,9 @@
-﻿using Azure;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.Cookies;
+﻿using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.Extensions.Options;
 using MyFinance.Infrastructure.Extensions;
-using System.Net.Http;
-using System.Threading;
 
 namespace MyFinance.Infrastructure.Services.Auth;
 
@@ -26,8 +21,8 @@ internal class CookieConfiguration(ProblemDetailsFactory problemDetailsFactory)
         options.Cookie.HttpOnly = true;
         options.Cookie.SameSite = SameSiteMode.Strict;
         options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
-        options.SlidingExpiration = false;
         options.Cookie.IsEssential = true;
+        options.SlidingExpiration = false;
         options.ExpireTimeSpan = TimeSpan.FromMinutes(20);
 
         options.Events.OnRedirectToLogin = async context =>
