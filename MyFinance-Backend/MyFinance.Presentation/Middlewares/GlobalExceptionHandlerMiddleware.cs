@@ -35,7 +35,7 @@ public class GlobalExceptionHandlerMiddleware(
             statusCode: StatusCodes.Status500InternalServerError,
             detail: "MyFinance API went rogue. Sorry!");
 
-        return new ObjectResult(problemDetails)
+        return new(problemDetails)
         {
             StatusCode = problemDetails!.Status
         };

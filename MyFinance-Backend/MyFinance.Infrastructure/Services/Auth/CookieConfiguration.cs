@@ -57,7 +57,7 @@ internal class CookieConfiguration(ProblemDetailsFactory problemDetailsFactory)
             instance: httpContext.Request.Path,
             statusCode: StatusCodes.Status401Unauthorized);
 
-        return new ObjectResult(problemDetails)
+        return new(problemDetails)
         {
             StatusCode = problemDetails!.Status
         };
