@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.Extensions.Options;
+using MyFinance.Infrastructure.Extensions;
 using System.Net.Http;
 using System.Threading;
 
@@ -31,32 +32,29 @@ internal class CookieConfiguration(ProblemDetailsFactory problemDetailsFactory)
 
         options.Events.OnRedirectToLogin = async context =>
         {
-            var unauthorizedResponse = BuildUnauthorizedResponse(context);
+            var unauthorizedProblemResponse = BuildUnauthorizedProblemResponse(context.HttpContext);
+            context.HttpContext.Response.StatusCode = StatusCodes.Status401Unauthorized;
 
-            await context.HttpContext.Response.WriteAsJsonAsync(
-                value: unauthorizedResponse.Value,
-                type: unauthorizedResponse.Value!.GetType(),
-                options: null,
-                contentType: "application/problem+json");
+            await context.HttpContext.Response
+                .WriteProblemResponseAsJsonAsync(unauthorizedProblemResponse);
         };
 
         options.Events.OnRedirectToAccessDenied = async context =>
         {
-            var unauthorizedResponse = BuildUnauthorizedResponse(context);
+            var unauthorizedProblemResponse = BuildUnauthorizedProblemResponse(context.HttpContext);
+            context.HttpContext.Response.StatusCode = StatusCodes.Status401Unauthorized;
 
-            await context.HttpContext.Response.WriteAsJsonAsync(
-                value: unauthorizedResponse.Value,
-                type: unauthorizedResponse.Value!.GetType(),
-                options: null,
-                contentType: "application/problem+json");
+            await context.HttpContext.Response
+                .WriteProblemResponseAsJsonAsync(unauthorizedProblemResponse);
         };
     }
 
-    private ObjectResult BuildUnauthorizedResponse(RedirectContext<CookieAuthenticationOptions> context)
+    private ObjectResult BuildUnauthorizedProblemResponse(HttpContext httpContext)
     {
         var problemDetails = _problemDetailsFactory.CreateProblemDetails(
-            context.HttpContext,
-            instance: context.HttpContext.Request.Path,
+            httpContext,
+            detail: "User not logged in or doesn't have access to this resource",
+            instance: httpContext.Request.Path,
             statusCode: StatusCodes.Status401Unauthorized);
 
         return new ObjectResult(problemDetails)

@@ -1,8 +1,4 @@
-﻿using DocumentFormat.OpenXml.InkML;
-using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Infrastructure;
+﻿using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -16,7 +12,6 @@ using MyFinance.Infrastructure.Services.Auth;
 using MyFinance.Infrastructure.Services.CurrentUserProvider;
 using MyFinance.Infrastructure.Services.PasswordHasher;
 using MyFinance.Infrastructure.Services.Spreadsheet;
-using System.Net.Http;
 using System.Reflection;
 
 namespace MyFinance.Infrastructure.IoC;
