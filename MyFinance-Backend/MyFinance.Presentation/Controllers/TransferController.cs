@@ -10,7 +10,7 @@ using Swashbuckle.AspNetCore.Annotations;
 namespace MyFinance.Presentation.Controllers;
 
 [SwaggerTag("Create, update and delete Transfers")]
-[SwaggerResponse(StatusCodes.Status401Unauthorized, "Unauthorized")]
+[SwaggerResponse(StatusCodes.Status401Unauthorized, "Unauthorized", typeof(ProblemResponse))]
 public class TransferController(IMediator mediator) : ApiController(mediator)
 {
     [HttpPost]

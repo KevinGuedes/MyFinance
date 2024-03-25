@@ -1,7 +1,7 @@
-﻿using Microsoft.AspNetCore.Diagnostics;
+﻿using DocumentFormat.OpenXml.InkML;
+using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
-using MyFinance.Contracts.Common;
 
 namespace MyFinance.Presentation.Middlewares;
 
@@ -29,8 +29,13 @@ public class GlobalExceptionHandlerMiddleware(
             StatusCode = problemDetails!.Status
         };
 
-        await httpContext.Response.WriteAsJsonAsync(response, cancellationToken);
-
+        await httpContext.Response.WriteAsJsonAsync(
+            value: response.Value,
+            type: response.Value!.GetType(),
+            options: null, 
+            contentType: "application/problem+json",
+            cancellationToken: cancellationToken);
+       
         return true;
     }
 }

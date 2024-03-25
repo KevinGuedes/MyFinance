@@ -8,7 +8,7 @@ using Swashbuckle.AspNetCore.Annotations;
 namespace MyFinance.Presentation.Controllers;
 
 [SwaggerTag("Read Monthly Balances")]
-[SwaggerResponse(StatusCodes.Status401Unauthorized, "Unauthorized")]
+[SwaggerResponse(StatusCodes.Status401Unauthorized, "Unauthorized", typeof(ProblemResponse))]
 public class MonthlyBalanceController(IMediator mediator) : ApiController(mediator)
 {
     [HttpGet]

@@ -32,7 +32,10 @@ public class UserController(IMediator mediator) : ApiController(mediator)
         [FromBody] [SwaggerRequestBody("User's sign in credentials", Required = true)]
         SignInRequest request,
         CancellationToken cancellationToken)
-        => ProcessResult(await _mediator.Send(UserMapper.RTC.Map(request), cancellationToken));
+    {
+        throw new NotImplementedException();
+        return ProcessResult(await _mediator.Send(UserMapper.RTC.Map(request), cancellationToken));
+    }
 
     [HttpPost("SignOut")]
     [SwaggerOperation(Summary = "Signs out an existing User")]

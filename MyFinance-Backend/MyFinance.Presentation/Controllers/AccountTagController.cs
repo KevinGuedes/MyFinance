@@ -12,7 +12,7 @@ using Swashbuckle.AspNetCore.Annotations;
 namespace MyFinance.Presentation.Controllers;
 
 [SwaggerTag("Create and update Account Tags")]
-[SwaggerResponse(StatusCodes.Status401Unauthorized, "Unauthorized")]
+[SwaggerResponse(StatusCodes.Status401Unauthorized, "Unauthorized", typeof(ProblemResponse))]
 public class AccountTagController(IMediator mediator) : ApiController(mediator)
 {
     [HttpPost]

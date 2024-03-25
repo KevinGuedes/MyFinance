@@ -1,5 +1,8 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using DocumentFormat.OpenXml.InkML;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -13,6 +16,7 @@ using MyFinance.Infrastructure.Services.Auth;
 using MyFinance.Infrastructure.Services.CurrentUserProvider;
 using MyFinance.Infrastructure.Services.PasswordHasher;
 using MyFinance.Infrastructure.Services.Spreadsheet;
+using System.Net.Http;
 using System.Reflection;
 
 namespace MyFinance.Infrastructure.IoC;
@@ -29,40 +33,9 @@ public static class InfrastructureDependencyInjection
     private static IServiceCollection AddAuth(this IServiceCollection services)
     {
         services
-            .AddAuthentication()
-            .AddCookie(options =>
-            {
-                options.Cookie.Name = "MF-Access-Token";
-                options.Cookie.HttpOnly = true;
-                options.Cookie.SameSite = SameSiteMode.Strict;
-                options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
-                options.SlidingExpiration = true;
-                options.Cookie.IsEssential = true;
-                options.ExpireTimeSpan = TimeSpan.FromMinutes(20);
-
-                options.Events.OnRedirectToLogin = async httpContext =>
-                {
-                    var problemDetails = new ProblemDetails
-                    {
-                        Status = StatusCodes.Status401Unauthorized,
-                        Detail = "User not authorizied"
-                    };
-                    httpContext.Response.StatusCode = problemDetails.Status.Value;
-                    await httpContext.Response.WriteAsJsonAsync(problemDetails);
-                };
-
-                options.Events.OnRedirectToAccessDenied = async httpContext =>
-                {
-                    var problemDetails = new ProblemDetails
-                    {
-                        Status = StatusCodes.Status403Forbidden,
-                        Detail = "User not allowed"
-                    };
-
-                    httpContext.Response.StatusCode = problemDetails.Status.Value;
-                    await httpContext.Response.WriteAsJsonAsync(problemDetails);
-                };
-            });
+            .ConfigureOptions<CookieConfiguration>()
+            .AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+            .AddCookie();
 
         return services.AddAuthorization();
     }

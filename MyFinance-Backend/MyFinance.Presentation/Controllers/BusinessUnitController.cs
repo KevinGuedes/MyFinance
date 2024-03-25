@@ -11,7 +11,7 @@ using Swashbuckle.AspNetCore.Annotations;
 namespace MyFinance.Presentation.Controllers;
 
 [SwaggerTag("Create, read and update Business Units")]
-[SwaggerResponse(StatusCodes.Status401Unauthorized, "Unauthorized")]
+[SwaggerResponse(StatusCodes.Status401Unauthorized, "Unauthorized", typeof(ProblemResponse))]
 public class BusinessUnitController(IMediator mediator) : ApiController(mediator)
 {
     [HttpPost]

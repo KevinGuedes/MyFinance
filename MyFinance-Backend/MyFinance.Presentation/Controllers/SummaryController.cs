@@ -10,7 +10,7 @@ using Swashbuckle.AspNetCore.Annotations;
 namespace MyFinance.Presentation.Controllers;
 
 [SwaggerTag("Gets Summary Spreadsheets for Business Units and Monthly Balances")]
-[SwaggerResponse(StatusCodes.Status401Unauthorized, "Unauthorized")]
+[SwaggerResponse(StatusCodes.Status401Unauthorized, "Unauthorized", typeof(ProblemResponse))]
 public class SummaryController(IMediator mediator) : ApiController(mediator)
 {
     private const string SPREADSHEET_CONTENT_TYPE = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
