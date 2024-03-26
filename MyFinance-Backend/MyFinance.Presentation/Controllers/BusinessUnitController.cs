@@ -42,7 +42,7 @@ public class BusinessUnitController(IMediator mediator) : ApiController(mediator
         CancellationToken cancellationToken)
         => ProcessResult(await _mediator.Send(new GetBusinessUnitsQuery(pageNumber, pageSize), cancellationToken));
 
-    [HttpGet("MonthlySummary")]
+    [HttpGet("{id:guid}/MonthlySummary")]
     [SwaggerOperation(Summary = "Generates a monthly summary for a Business Unit")]
     [SwaggerResponse(StatusCodes.Status200OK, "Monthly Summary Spreadsheet for the given Business Unit",
         contentTypes: SPREADSHEET_CONTENT_TYPE)]
@@ -57,7 +57,7 @@ public class BusinessUnitController(IMediator mediator) : ApiController(mediator
         Guid id,
         [FromQuery] [SwaggerParameter("Year", Required = true)]
         int year,
-        [FromQuery] [SwaggerParameter("Year", Required = true)]
+        [FromQuery] [SwaggerParameter("Month", Required = true)]
         int month,
         CancellationToken cancellationToken)
     {

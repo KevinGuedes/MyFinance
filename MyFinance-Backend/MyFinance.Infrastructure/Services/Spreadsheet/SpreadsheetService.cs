@@ -1,6 +1,4 @@
-﻿using System.Globalization;
-using ClosedXML.Excel;
-using DocumentFormat.OpenXml.Bibliography;
+﻿using ClosedXML.Excel;
 using MyFinance.Application.Abstractions.Services;
 using MyFinance.Domain.Entities;
 using MyFinance.Domain.Enums;
@@ -18,28 +16,30 @@ public sealed class SpreadsheetService : ISpreadsheetService
 
     public Tuple<string, byte[]> GenerateMonthlySummary(BusinessUnit businessUnit, int year, int month)
     {
-        var workbookName = $"{businessUnit.Name} Summary - {month}/{year}.xlsx";
+        var refrenceDateHumanized = new DateOnly(year, month, 1).ToString("MMMM yyyy");
+        var workbookName = $"{businessUnit.Name} Summary - {refrenceDateHumanized}.xlsx";
         var wb = new XLWorkbook();
 
-        FillBusinessUnitData(businessUnit, wb);
-        FillTransfersData(businessUnit.Transfers, wb, year, month);
+        FillBusinessUnitData(businessUnit, wb, refrenceDateHumanized);
+        FillTransfersData(businessUnit.Transfers, wb, refrenceDateHumanized);
 
         return new Tuple<string, byte[]>(workbookName, ConvertWorkbookToByteArray(wb));
     }
 
-    private static void FillBusinessUnitData(BusinessUnit businessUnit, XLWorkbook wb)
+    private static void FillBusinessUnitData(BusinessUnit businessUnit, XLWorkbook wb, string refrenceDateHumanized)
     {
         var ws = wb.AddWorksheet(businessUnit.Name, 1);
-        ws.ColumnsUsed().Width = 12;
 
         FillCurrentBalanceData(businessUnit, ws);
-        FillMonthlyBalanceData(businessUnit, ws);
+        FillMonthlyBalanceData(businessUnit, ws, refrenceDateHumanized);
+
+        ws.Columns().AdjustToContents();
     }
 
     private static void FillCurrentBalanceData(BusinessUnit businessUnit, IXLWorksheet ws)
     {
         ws.Range(1, 1, 1, 3)
-            .SetValue($"Current Balance - {businessUnit.Name}")
+            .SetValue($"Current Balance")
             .Merge()
             .Style
             .Font.SetBold()
@@ -74,7 +74,7 @@ public sealed class SpreadsheetService : ISpreadsheetService
             .Border.SetOutsideBorder(XLBorderStyleValues.Thin);
     }
 
-    private static void FillMonthlyBalanceData(BusinessUnit businessUnit, IXLWorksheet ws)
+    private static void FillMonthlyBalanceData(BusinessUnit businessUnit, IXLWorksheet ws, string refrenceDateHumanized)
     {
         decimal monthlyIncome = 0;
         decimal monthlyOutcome = 0;
@@ -88,7 +88,7 @@ public sealed class SpreadsheetService : ISpreadsheetService
         }
 
         ws.Range(1, 5, 1, 7)
-          .SetValue($"Monthly Balance - {businessUnit.Name}")
+          .SetValue($"Monthly Balance - {refrenceDateHumanized}")
           .Merge()
           .Style
           .Font.SetBold()
@@ -123,14 +123,10 @@ public sealed class SpreadsheetService : ISpreadsheetService
             .Border.SetOutsideBorder(XLBorderStyleValues.Thin);
     }
 
-    private static void FillTransfersData(List<Transfer> transfers, XLWorkbook wb, int year, int month) {
-        var wsName = $"{year}/{month}";
-        var ws = wb.AddWorksheet(wsName);
-        var numberOfColumnsForMonthlyBalanceData = summaryColumnNames.Length;
-        var lastColumnNumberForTransferData = transferColumnNames.Length;
-        const int spaceBetweenData = 2;
+    private static void FillTransfersData(List<Transfer> transfers, XLWorkbook wb, string refrenceDateHumanized) {
+        var ws = wb.AddWorksheet(refrenceDateHumanized);
 
-        ws.Range(1, 1, 1, lastColumnNumberForTransferData)
+        ws.Range(1, 1, 1, transferColumnNames.Length)
             .SetValue("Transfers")
             .Merge()
             .Style
@@ -176,33 +172,7 @@ public sealed class SpreadsheetService : ISpreadsheetService
             .AddConditionalFormat()
             .WhenLessThan(0).Font.SetFontColor(XLColor.Red);
 
-        ws.Range(
-                1,
-                lastColumnNumberForTransferData + spaceBetweenData,
-                1,
-                lastColumnNumberForTransferData + 1 + numberOfColumnsForMonthlyBalanceData)
-            .SetValue(wsName)
-            .Merge()
-            .Style
-            .Font.SetBold()
-            .Fill.SetBackgroundColor(XLColor.CornflowerBlue)
-            .Alignment.SetHorizontal(XLAlignmentHorizontalValues.Center)
-            .Border.SetOutsideBorder(XLBorderStyleValues.Thin);
-
-        ws.Cell(2, lastColumnNumberForTransferData + 2)
-            .InsertData(summaryColumnNames, true)
-            .Style
-            .Font.SetBold()
-            .Alignment.SetHorizontal(XLAlignmentHorizontalValues.Center)
-            .Border.SetOutsideBorder(XLBorderStyleValues.Thin);
-
         ws.Columns().AdjustToContents();
-        ws.Column(1).Width = 12;
-
-        var lastColumnNumber =
-            lastColumnNumberForTransferData + spaceBetweenData + numberOfColumnsForMonthlyBalanceData;
-        for (var i = lastColumnNumberForTransferData + spaceBetweenData; i < lastColumnNumber; i++)
-            ws.Column(i).Width = 12;
     }
 
     private static byte[] ConvertWorkbookToByteArray(XLWorkbook workbook)
