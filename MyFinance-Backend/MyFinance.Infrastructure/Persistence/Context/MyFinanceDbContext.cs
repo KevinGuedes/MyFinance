@@ -10,7 +10,7 @@ public sealed class MyFinanceDbContext(
     DbContextOptions<MyFinanceDbContext> options,
     ICurrentUserProvider currentUserProvider) : DbContext(options)
 {
-    private readonly Guid? _currentUserId = currentUserProvider.GetCurrentUserId();
+    private readonly Guid? _currentUserId = currentUserProvider?.GetCurrentUserId();
 
     public DbSet<BusinessUnit> BusinessUnits { get; set; }
     public DbSet<Transfer> Transfers { get; set; }
