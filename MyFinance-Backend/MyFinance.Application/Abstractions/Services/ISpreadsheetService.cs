@@ -4,6 +4,5 @@ namespace MyFinance.Application.Abstractions.Services;
 
 public interface ISpreadsheetService
 {
-    Tuple<string, byte[]> GetBusinessUnitSummary(BusinessUnit businessUnit, int year);
-    Tuple<string, byte[]> GetMonthlyBalanceSummary(MonthlyBalance monthlyBalance);
+    Tuple<string, byte[]> GenerateMonthlySummary(BusinessUnit businessUnit, int year, int month);
 }

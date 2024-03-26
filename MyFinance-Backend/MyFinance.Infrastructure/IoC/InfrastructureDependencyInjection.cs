@@ -55,7 +55,6 @@ public static class InfrastructureDependencyInjection
 
         return services
             .AddScoped<IBusinessUnitRepository, BusinessUnitRepository>()
-            .AddScoped<IMonthlyBalanceRepository, MonthlyBalanceRepository>()
             .AddScoped<ITransferRepository, TransferRepository>()
             .AddScoped<IAccountTagRepository, AccountTagRepository>()
             .AddScoped<IUserRepository, UserRepository>();

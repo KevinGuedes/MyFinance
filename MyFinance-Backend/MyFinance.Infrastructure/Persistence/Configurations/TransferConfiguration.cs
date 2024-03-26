@@ -15,5 +15,23 @@ public sealed class TransferConfiguration : EntityConfiguration<Transfer>
         builder.Property(transfer => transfer.RelatedTo).IsRequired().HasMaxLength(300);
         builder.Property(transfer => transfer.Type).HasConversion<string>().IsRequired();
         builder.Property(transfer => transfer.Value).IsRequired().HasColumnType("MONEY");
+
+        builder
+            .HasOne<User>()
+            .WithMany()
+            .HasForeignKey(transfer => transfer.UserId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        builder
+            .HasOne(transfer => transfer.AccountTag)
+            .WithMany(at => at.Transfers)
+            .HasForeignKey(transfer => transfer.AccountTagId)
+            .OnDelete(DeleteBehavior.NoAction);
+
+        builder
+            .HasOne(transfer => transfer.BusinessUnit)
+            .WithMany(bu => bu.Transfers)
+            .HasForeignKey(transfer => transfer.BusinessUnitId)
+            .OnDelete(DeleteBehavior.NoAction);
     }
 }

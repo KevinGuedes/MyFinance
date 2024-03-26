@@ -20,5 +20,11 @@ public sealed class BusinessUnitConfiguration : EntityConfiguration<BusinessUnit
         builder.Property(bu => bu.ArchivedOnUtc).IsRequired(false);
         builder.Property(bu => bu.IsArchived).IsRequired();
         builder.Ignore(bu => bu.Balance);
+
+        builder
+            .HasOne<User>()
+            .WithMany()
+            .HasForeignKey(bu => bu.UserId)
+            .OnDelete(DeleteBehavior.Cascade);
     }
 }

@@ -6,17 +6,15 @@ using MyFinance.Application.Common.Errors;
 namespace MyFinance.Application.UseCases.Transfers.Commands.DeleteTransfer;
 
 internal sealed class DeleteTransferHandler(
-    IMonthlyBalanceRepository monthlyBalanceRepository,
     IBusinessUnitRepository businessUnitRepository,
     ITransferRepository transferRepository) : ICommandHandler<DeleteTransferCommand>
 {
     private readonly IBusinessUnitRepository _businessUnitRepository = businessUnitRepository;
-    private readonly IMonthlyBalanceRepository _monthlyBalanceRepository = monthlyBalanceRepository;
     private readonly ITransferRepository _transferRepository = transferRepository;
 
     public async Task<Result> Handle(DeleteTransferCommand command, CancellationToken cancellationToken)
     {
-        var transfer = await _transferRepository.GetByIdAsync(command.Id, cancellationToken);
+        var transfer = await _transferRepository.GetWithBusinessUnitByIdAsync(command.Id, cancellationToken);
 
         if (transfer is null)
         {
@@ -24,15 +22,9 @@ internal sealed class DeleteTransferHandler(
             return Result.Fail(entityNotFoundError);
         }
 
-        var monthlyBalance = transfer.MonthlyBalance;
-        var businessUnit = monthlyBalance.BusinessUnit;
-
-        monthlyBalance.CancelValue(transfer.Value, transfer.Type);
-        _monthlyBalanceRepository.Update(monthlyBalance);
-
+        var businessUnit = transfer.BusinessUnit;
         businessUnit.CancelValue(transfer.Value, transfer.Type);
         _businessUnitRepository.Update(businessUnit);
-
         _transferRepository.Delete(transfer);
 
         return Result.Ok();

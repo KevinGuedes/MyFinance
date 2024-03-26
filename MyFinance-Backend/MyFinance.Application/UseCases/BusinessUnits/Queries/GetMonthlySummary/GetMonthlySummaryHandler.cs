@@ -6,28 +6,29 @@ using MyFinance.Application.Common.Errors;
 using MyFinance.Application.Mappers;
 using MyFinance.Contracts.Summary.Responses;
 
-namespace MyFinance.Application.UseCases.Summary.Queries.GetMonthlyBalanceSummary;
+namespace MyFinance.Application.UseCases.BusinessUnits.Queries.GetMonthlySummary;
 
-internal sealed class GetMonthlyBalanceSummaryHandler(
-    IMonthlyBalanceRepository monthlyBalanceRepository,
+internal sealed class GetMonthlySummaryHandler(
+    IBusinessUnitRepository businessUnitRepository,
     ISpreadsheetService spreadsheetService)
-    : IQueryHandler<GetMonthlyBalanceSummaryQuery, SummaryResponse>
+    : IQueryHandler<GetMonthlySummaryQuery, SummaryResponse>
 {
-    private readonly IMonthlyBalanceRepository _monthlyBalanceRepository = monthlyBalanceRepository;
+    private readonly IBusinessUnitRepository _businessUnitRepository = businessUnitRepository;
     private readonly ISpreadsheetService _spreadsheetService = spreadsheetService;
 
-    public async Task<Result<SummaryResponse>> Handle(GetMonthlyBalanceSummaryQuery query,
+    public async Task<Result<SummaryResponse>> Handle(GetMonthlySummaryQuery query,
         CancellationToken cancellationToken)
     {
-        var monthlyBalance = await _monthlyBalanceRepository.GetWithSummaryData(query.Id, cancellationToken);
+        var businessUnit = await _businessUnitRepository
+            .GetWithSummaryData(query.Id, query.Year, query.Month, cancellationToken);
 
-        if (monthlyBalance is null)
+        if (businessUnit is null)
         {
-            var entityNotFoundError = new EntityNotFoundError($"Monthly Balance with Id {query.Id} not found");
+            var entityNotFoundError = new EntityNotFoundError($"Business Unit with Id {query.Id} not found");
             return Result.Fail(entityNotFoundError);
         }
 
-        var hasTransfersForProcessing = monthlyBalance.Transfers.Count is not 0;
+        var hasTransfersForProcessing = businessUnit.Transfers.Count is not 0;
         if (!hasTransfersForProcessing)
         {
             var errorMessage = $"Monthly Balance with Id {query.Id} has no Transfers to summarize";
@@ -35,7 +36,7 @@ internal sealed class GetMonthlyBalanceSummaryHandler(
             return Result.Fail(unprocessableEntityError);
         }
 
-        var summaryData = _spreadsheetService.GetMonthlyBalanceSummary(monthlyBalance);
+        var summaryData = _spreadsheetService.GenerateMonthlySummary(businessUnit, query.Year, query.Month);
 
         return Result.Ok(SummaryMapper.DTR.Map(summaryData));
     }

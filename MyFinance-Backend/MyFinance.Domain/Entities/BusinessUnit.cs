@@ -20,19 +20,19 @@ public class BusinessUnit : Entity, IUserOwnedEntity, IArchivableEntity
         ReasonToArchive = null;
         ArchivedOnUtc = null;
         UserId = userId;
-        MonthlyBalances = [];
+        Transfers = [];
     }
 
     public string Name { get; private set; } = null!;
     public string? Description { get; private set; }
-    public double Income { get; private set; }
-    public double Outcome { get; private set; }
-    public double Balance => Income - Outcome;
+    public decimal Income { get; private set; }
+    public decimal Outcome { get; private set; }
+    public decimal Balance => Income - Outcome;
     public bool IsArchived { get; private set; }
     public string? ReasonToArchive { get; private set; }
     public DateTime? ArchivedOnUtc { get; private set; }
     public Guid UserId { get; private set; }
-    public List<MonthlyBalance> MonthlyBalances { get; private set; } = [];
+    public List<Transfer> Transfers { get; private set; } = [];
 
     public void Update(string name, string? description)
     {
@@ -61,7 +61,7 @@ public class BusinessUnit : Entity, IUserOwnedEntity, IArchivableEntity
         ReasonToArchive = null;
     }
 
-    public void RegisterValue(double transferValue, TransferType transferType)
+    public void RegisterValue(decimal transferValue, TransferType transferType)
     {
         SetUpdateOnToUtcNow();
 
@@ -71,7 +71,7 @@ public class BusinessUnit : Entity, IUserOwnedEntity, IArchivableEntity
             Outcome += transferValue;
     }
 
-    public void CancelValue(double transferValue, TransferType transferType)
+    public void CancelValue(decimal transferValue, TransferType transferType)
     {
         SetUpdateOnToUtcNow();
 

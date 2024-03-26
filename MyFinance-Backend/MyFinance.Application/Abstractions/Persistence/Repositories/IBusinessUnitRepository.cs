@@ -11,7 +11,7 @@ public interface IBusinessUnitRepository
     Task<bool> ExistsByIdAsync(Guid id, CancellationToken cancellationToken);
     Task<bool> ExistsByNameAsync(string name, CancellationToken cancellationToken);
     Task<BusinessUnit?> GetByNameAsync(string name, CancellationToken cancellationToken);
-    Task<BusinessUnit?> GetWithSummaryData(Guid id, int year, CancellationToken cancellationToken);
+    Task<BusinessUnit?> GetWithSummaryData(Guid id, int year, int month, CancellationToken cancellationToken);
     Task<BusinessUnit?> GetByIdAsync(Guid id, CancellationToken cancellationToken);
     void Update(BusinessUnit businessUnit);
     void Insert(BusinessUnit businessUnit);
