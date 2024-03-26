@@ -123,7 +123,8 @@ public sealed class SummaryService : ISummaryService
             .Border.SetOutsideBorder(XLBorderStyleValues.Thin);
     }
 
-    private static void FillTransfersData(List<Transfer> transfers, XLWorkbook wb, string refrenceDateHumanized) {
+    private static void FillTransfersData(List<Transfer> transfers, XLWorkbook wb, string refrenceDateHumanized)
+    {
         var ws = wb.AddWorksheet(refrenceDateHumanized);
 
         ws.Range(1, 1, 1, transferColumnNames.Length)

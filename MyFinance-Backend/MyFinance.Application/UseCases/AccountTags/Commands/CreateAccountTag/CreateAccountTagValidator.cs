@@ -1,6 +1,5 @@
 ﻿using FluentValidation;
 using MyFinance.Application.Abstractions.Persistence.Repositories;
-using MyFinance.Application.Abstractions.Services;
 
 namespace MyFinance.Application.UseCases.AccountTags.Commands.CreateAccountTag;
 

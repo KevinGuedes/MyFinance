@@ -36,7 +36,7 @@ internal sealed class BusinessUnitRepository(MyFinanceDbContext myFinanceDbConte
             .AsNoTracking()
             .Include(bu => bu.Transfers
                 .Where(
-                    transfer => transfer.SettlementDate.Year == year && 
+                    transfer => transfer.SettlementDate.Year == year &&
                     transfer.SettlementDate.Month == month))
             .ThenInclude(transfer => transfer.AccountTag)
             .FirstOrDefaultAsync(bu => bu.Id == id, cancellationToken);

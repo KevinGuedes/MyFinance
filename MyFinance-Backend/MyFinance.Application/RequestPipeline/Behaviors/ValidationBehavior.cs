@@ -49,7 +49,8 @@ internal sealed class ValidationBehavior<TRequest, TResponse>(
         //        })
         //    .ToDictionary(dictionaryData => dictionaryData.Key, dictionaryData => dictionaryData.Values);
 
-        if (validationErrors.Count is 0) return await next();
+        if (validationErrors.Count is 0)
+            return await next();
 
         var invalidRequestResponse = new TResponse();
         var invalidRequestErrorResult = Result.Fail(new InvalidRequestError(validationErrors));

@@ -11,7 +11,7 @@ public class DesignTimeMyFinanceDbContextFactory : IDesignTimeDbContextFactory<M
         var path = Directory.GetCurrentDirectory();
         var configurationBuilder = new ConfigurationBuilder();
         configurationBuilder.SetBasePath(path).AddJsonFile("appsettings.json");
-        
+
         var configuration = configurationBuilder.Build();
         var connectionString = configuration.GetConnectionString("MyFinanceDb");
 

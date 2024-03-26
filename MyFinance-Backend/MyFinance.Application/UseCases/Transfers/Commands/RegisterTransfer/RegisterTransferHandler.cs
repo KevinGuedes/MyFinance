@@ -37,12 +37,12 @@ internal sealed class RegisterTransferHandler(
         }
 
         var transfer = new Transfer(
-            command.Value, 
-            command.RelatedTo, 
-            command.Description, 
-            command.SettlementDate, 
-            command.Type, 
-            businessUnit, 
+            command.Value,
+            command.RelatedTo,
+            command.Description,
+            command.SettlementDate,
+            command.Type,
+            businessUnit,
             accountTag,
             command.CurrentUserId);
 

@@ -5,7 +5,7 @@ using MyFinance.Infrastructure.Persistence.Context;
 
 namespace MyFinance.Infrastructure.Persistence.Repositories;
 
-internal sealed class AccountTagRepository(MyFinanceDbContext myFinanceDbContext) 
+internal sealed class AccountTagRepository(MyFinanceDbContext myFinanceDbContext)
     : EntityRepository<AccountTag>(myFinanceDbContext), IAccountTagRepository
 {
     public async Task<IEnumerable<AccountTag>> GetPaginatedAsync(
