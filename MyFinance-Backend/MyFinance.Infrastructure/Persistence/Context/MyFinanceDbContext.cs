@@ -21,22 +21,22 @@ public sealed class MyFinanceDbContext(
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
-        ApplyUserOwnedEntitiesGlobalFilters(modelBuilder);
+        ApplyGlobalFiltersForUserOwnedEntities(modelBuilder);
         base.OnModelCreating(modelBuilder);
     }
 
-    private void ApplyUserOwnedEntitiesGlobalFilters(ModelBuilder modelBuilder)
+    private void ApplyGlobalFiltersForUserOwnedEntities(ModelBuilder modelBuilder)
     {
         if (_currentUserId.HasValue)
         {
-            ApplyUserOwnedGlobalFilterFor<BusinessUnit>(modelBuilder);
-            ApplyUserOwnedGlobalFilterFor<Transfer>(modelBuilder);
-            ApplyUserOwnedGlobalFilterFor<MonthlyBalance>(modelBuilder);
-            ApplyUserOwnedGlobalFilterFor<AccountTag>(modelBuilder);
+            ApplyGlobalFilterForUserOwnedEntity<BusinessUnit>(modelBuilder);
+            ApplyGlobalFilterForUserOwnedEntity<Transfer>(modelBuilder);
+            ApplyGlobalFilterForUserOwnedEntity<MonthlyBalance>(modelBuilder);
+            ApplyGlobalFilterForUserOwnedEntity<AccountTag>(modelBuilder);
         }
     }
 
-    private void ApplyUserOwnedGlobalFilterFor<TEntity>(ModelBuilder modelBuilder)
+    private void ApplyGlobalFilterForUserOwnedEntity<TEntity>(ModelBuilder modelBuilder)
         where TEntity : class, IUserOwnedEntity
         => modelBuilder.Entity<TEntity>().HasQueryFilter(entity => entity.UserId == _currentUserId!.Value);
 }
