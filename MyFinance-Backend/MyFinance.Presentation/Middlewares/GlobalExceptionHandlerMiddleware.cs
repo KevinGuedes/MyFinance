@@ -23,7 +23,7 @@ public class GlobalExceptionHandlerMiddleware(
 
         await httpContext.Response
             .WriteProblemResponseAsJsonAsync(internalServerErrorProblemResponse);
-       
+
         return true;
     }
 

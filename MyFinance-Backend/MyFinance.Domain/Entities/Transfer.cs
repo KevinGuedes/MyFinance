@@ -11,12 +11,12 @@ public class Transfer : Entity, IUserOwnedEntity
     }
 
     public Transfer(
-        double value,
+        decimal value,
         string relatedTo,
         string description,
         DateTime settlementDate,
         TransferType type,
-        MonthlyBalance monthlyBalance,
+        BusinessUnit businessUnit,
         AccountTag accountTag,
         Guid userId)
     {
@@ -25,31 +25,30 @@ public class Transfer : Entity, IUserOwnedEntity
         Description = description;
         SettlementDate = settlementDate;
         Type = type;
-        MonthlyBalance = monthlyBalance;
-        MonthlyBalanceId = monthlyBalance.Id;
+        BusinessUnit = businessUnit;
+        BusinessUnitId = businessUnit.Id;
         AccountTag = accountTag;
         AccountTagId = accountTag.Id;
         UserId = userId;
     }
 
-    public double Value { get; private set; }
+    public decimal Value { get; private set; }
     public string RelatedTo { get; private set; } = null!;
     public string Description { get; private set; } = null!;
     public DateTime SettlementDate { get; private set; }
     public TransferType Type { get; private set; }
     public Guid UserId { get; private set; }
-    public Guid MonthlyBalanceId { get; private set; }
-    public MonthlyBalance MonthlyBalance { get; private set; } = null!;
+    public Guid BusinessUnitId { get; private set; }
+    public BusinessUnit BusinessUnit { get; private set; } = null!;
     public Guid AccountTagId { get; private set; }
     public AccountTag AccountTag { get; private set; } = null!;
 
     public void Update(
-        double value,
+        decimal value,
         string relatedTo,
         string description,
         DateTime settlementDate,
         TransferType type,
-        MonthlyBalance monthlyBalance,
         AccountTag accountTag)
     {
         SetUpdateOnToUtcNow();
@@ -59,9 +58,23 @@ public class Transfer : Entity, IUserOwnedEntity
         Description = description;
         SettlementDate = settlementDate;
         Type = type;
-        MonthlyBalance = monthlyBalance;
-        MonthlyBalanceId = monthlyBalance.Id;
         AccountTag = accountTag;
         AccountTagId = accountTag.Id;
+    }
+
+    public void Update(
+        decimal value,
+        string relatedTo,
+        string description,
+        DateTime settlementDate,
+        TransferType type)
+    {
+        SetUpdateOnToUtcNow();
+
+        Value = value;
+        RelatedTo = relatedTo;
+        Description = description;
+        SettlementDate = settlementDate;
+        Type = type;
     }
 }

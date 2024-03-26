@@ -9,5 +9,5 @@ public sealed class TransferResponse
     public required string Description { get; init; }
     public required DateTime SettlementDate { get; init; }
     public required TransferType Type { get; init; }
-    public required double Value { get; init; }
+    public required decimal Value { get; init; }
 }

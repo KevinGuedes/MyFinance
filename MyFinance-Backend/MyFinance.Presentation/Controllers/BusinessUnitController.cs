@@ -1,11 +1,14 @@
-﻿using MediatR;
+﻿using FluentResults;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using MyFinance.Application.Mappers;
 using MyFinance.Application.UseCases.BusinessUnits.Commands.UnarchiveBusinessUnit;
 using MyFinance.Application.UseCases.BusinessUnits.Queries.GetBusinessUnits;
+using MyFinance.Application.UseCases.BusinessUnits.Queries.GetMonthlySummary;
 using MyFinance.Contracts.BusinessUnit.Requests;
 using MyFinance.Contracts.BusinessUnit.Responses;
 using MyFinance.Contracts.Common;
+using MyFinance.Contracts.Summary.Responses;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace MyFinance.Presentation.Controllers;
@@ -14,6 +17,8 @@ namespace MyFinance.Presentation.Controllers;
 [SwaggerResponse(StatusCodes.Status401Unauthorized, "Unauthorized", typeof(ProblemResponse))]
 public class BusinessUnitController(IMediator mediator) : ApiController(mediator)
 {
+    private const string SPREADSHEET_CONTENT_TYPE = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+
     [HttpPost]
     [SwaggerOperation(Summary = "Creates a new Business Unit")]
     [SwaggerResponse(StatusCodes.Status201Created, "Created Business Unit", typeof(BusinessUnitResponse))]
@@ -36,6 +41,30 @@ public class BusinessUnitController(IMediator mediator) : ApiController(mediator
         int pageSize,
         CancellationToken cancellationToken)
         => ProcessResult(await _mediator.Send(new GetBusinessUnitsQuery(pageNumber, pageSize), cancellationToken));
+
+    [HttpGet("{id:guid}/MonthlySummary")]
+    [SwaggerOperation(Summary = "Generates a monthly summary for a Business Unit")]
+    [SwaggerResponse(StatusCodes.Status200OK, "Monthly Summary Spreadsheet for the given Business Unit",
+        contentTypes: SPREADSHEET_CONTENT_TYPE)]
+    [SwaggerResponse(StatusCodes.Status206PartialContent, "Monthly Summary Spreadsheet for the given Business Unit",
+        contentTypes: SPREADSHEET_CONTENT_TYPE)]
+    [SwaggerResponse(StatusCodes.Status404NotFound, "Business Unit not found", typeof(ProblemResponse))]
+    [SwaggerResponse(StatusCodes.Status400BadRequest, "Invalid query parameters", typeof(ValidationProblemResponse))]
+    [SwaggerResponse(StatusCodes.Status422UnprocessableEntity, "The Business Unit has no data to generate the summary",
+        typeof(ProblemResponse))]
+    public async Task<IActionResult> GetBusinessUnitSummary(
+        [FromRoute] [SwaggerParameter("Business Unit Id", Required = true)]
+        Guid id,
+        [FromQuery] [SwaggerParameter("Year", Required = true)]
+        int year,
+        [FromQuery] [SwaggerParameter("Month", Required = true)]
+        int month,
+        CancellationToken cancellationToken)
+    {
+        var query = new GetMonthlySummaryQuery(id, year, month);
+        var result = await _mediator.Send(query, cancellationToken);
+        return ProcessSummaryResult(result, SPREADSHEET_CONTENT_TYPE);
+    }
 
     [HttpPut]
     [SwaggerOperation(Summary = "Updates an existing Business Unit")]
@@ -75,4 +104,13 @@ public class BusinessUnitController(IMediator mediator) : ApiController(mediator
         ArchiveBusinessUnitRequest request,
         CancellationToken cancellationToken)
         => ProcessResult(await _mediator.Send(BusinessUnitMapper.RTC.Map(request), cancellationToken));
+
+    private IActionResult ProcessSummaryResult(Result<SummaryResponse> result, string contentType)
+    {
+        if (result.IsFailed)
+            return HandleFailureResult(result.Errors);
+
+        var (fileName, fileContent) = result.Value;
+        return File(fileContent, contentType, fileName, true);
+    }
 }

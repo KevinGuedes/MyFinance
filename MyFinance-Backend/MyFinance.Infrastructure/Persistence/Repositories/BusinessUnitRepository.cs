@@ -22,24 +22,22 @@ internal sealed class BusinessUnitRepository(MyFinanceDbContext myFinanceDbConte
 
     public Task<bool> ExistsByNameAsync(string name, CancellationToken cancellationToken)
         => _myFinanceDbContext.BusinessUnits
+            .AsNoTracking()
             .AnyAsync(bu => bu.Name == name, cancellationToken);
 
     public Task<BusinessUnit?> GetByNameAsync(string name, CancellationToken cancellationToken)
         => _myFinanceDbContext.BusinessUnits
-            .Where(bu => bu.Name == name)
             .AsNoTracking()
+            .Where(bu => bu.Name == name)
             .FirstOrDefaultAsync(cancellationToken);
 
-    public Task<BusinessUnit?> GetWithSummaryData(Guid id, int year, CancellationToken cancellationToken)
+    public Task<BusinessUnit?> GetWithSummaryData(Guid id, int year, int month, CancellationToken cancellationToken)
         => _myFinanceDbContext.BusinessUnits
-            .Include(bu => bu.MonthlyBalances
-                .Where(mb => mb.Transfers.Count != 0 && mb.ReferenceYear == year)
-                .OrderBy(mb => mb.ReferenceYear)
-                .ThenBy(mb => mb.ReferenceMonth))
-            .ThenInclude(mb => mb.Transfers
-                .OrderByDescending(t => t.CreatedOnUtc)
-                .ThenByDescending(t => t.RelatedTo))
-            .ThenInclude(t => t.AccountTag)
             .AsNoTracking()
+            .Include(bu => bu.Transfers
+                .Where(
+                    transfer => transfer.SettlementDate.Year == year &&
+                    transfer.SettlementDate.Month == month))
+            .ThenInclude(transfer => transfer.AccountTag)
             .FirstOrDefaultAsync(bu => bu.Id == id, cancellationToken);
 }

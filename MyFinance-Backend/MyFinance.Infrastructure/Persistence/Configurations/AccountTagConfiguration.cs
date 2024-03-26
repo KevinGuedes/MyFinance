@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using MyFinance.Domain.Entities;
 
 namespace MyFinance.Infrastructure.Persistence.Configurations;
@@ -16,5 +17,11 @@ public sealed class AccountTagConfiguration : EntityConfiguration<AccountTag>
         builder.Property(bu => bu.ReasonToArchive).IsRequired(false).HasMaxLength(300);
         builder.Property(bu => bu.ArchivedOnUtc).IsRequired(false);
         builder.Property(bu => bu.IsArchived).IsRequired();
+
+        builder
+            .HasOne<User>()
+            .WithMany()
+            .HasForeignKey(at => at.UserId)
+            .OnDelete(DeleteBehavior.Cascade);
     }
 }

@@ -8,7 +8,7 @@ namespace MyFinance.Application.UseCases.Transfers.Commands.UpdateTransfer;
 public sealed record UpdateTransferCommand(
     Guid Id,
     Guid AccountTagId,
-    double Value,
+    decimal Value,
     string RelatedTo,
     string Description,
     DateTime SettlementDate,

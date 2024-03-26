@@ -23,8 +23,8 @@ internal sealed class TimingBehavior<TRequest, TResponse>(ILogger<TimingBehavior
 
         var elapsedTime = Stopwatch.GetElapsedTime(startTime);
         _logger.LogInformation(
-            "{RequestName} {Status} - Main flow execution time: {ElapsedTime}ms", 
-            requestName, 
+            "{RequestName} {Status} - Main flow execution time: {ElapsedTime}ms",
+            requestName,
             response.IsSuccess ? "succeeded" : "failed",
             elapsedTime);
 

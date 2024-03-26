@@ -10,11 +10,10 @@ public sealed class MyFinanceDbContext(
     DbContextOptions<MyFinanceDbContext> options,
     ICurrentUserProvider currentUserProvider) : DbContext(options)
 {
-    private readonly Guid? _currentUserId = currentUserProvider.GetCurrentUserId();
+    private readonly Guid? _currentUserId = currentUserProvider?.GetCurrentUserId();
 
     public DbSet<BusinessUnit> BusinessUnits { get; set; }
     public DbSet<Transfer> Transfers { get; set; }
-    public DbSet<MonthlyBalance> MonthlyBalances { get; set; }
     public DbSet<AccountTag> AccountTags { get; set; }
     public DbSet<User> Users { get; set; }
 
@@ -31,7 +30,6 @@ public sealed class MyFinanceDbContext(
         {
             ApplyGlobalFilterForUserOwnedEntity<BusinessUnit>(modelBuilder);
             ApplyGlobalFilterForUserOwnedEntity<Transfer>(modelBuilder);
-            ApplyGlobalFilterForUserOwnedEntity<MonthlyBalance>(modelBuilder);
             ApplyGlobalFilterForUserOwnedEntity<AccountTag>(modelBuilder);
         }
     }

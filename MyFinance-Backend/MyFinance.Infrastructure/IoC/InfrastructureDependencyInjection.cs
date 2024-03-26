@@ -11,7 +11,7 @@ using MyFinance.Infrastructure.Persistence.UnitOfWork;
 using MyFinance.Infrastructure.Services.Auth;
 using MyFinance.Infrastructure.Services.CurrentUserProvider;
 using MyFinance.Infrastructure.Services.PasswordHasher;
-using MyFinance.Infrastructure.Services.Spreadsheet;
+using MyFinance.Infrastructure.Services.Summary;
 using System.Reflection;
 
 namespace MyFinance.Infrastructure.IoC;
@@ -37,7 +37,7 @@ public static class InfrastructureDependencyInjection
 
     private static IServiceCollection AddServices(this IServiceCollection services)
         => services
-            .AddScoped<ISpreadsheetService, SpreadsheetService>()
+            .AddScoped<ISummaryService, SummaryService>()
             .AddScoped<IPasswordHasher, PasswordHasher>()
             .AddScoped<IAuthService, AuthService>()
             .AddScoped<ICurrentUserProvider, CurrentUserProvider>();
@@ -55,7 +55,6 @@ public static class InfrastructureDependencyInjection
 
         return services
             .AddScoped<IBusinessUnitRepository, BusinessUnitRepository>()
-            .AddScoped<IMonthlyBalanceRepository, MonthlyBalanceRepository>()
             .AddScoped<ITransferRepository, TransferRepository>()
             .AddScoped<IAccountTagRepository, AccountTagRepository>()
             .AddScoped<IUserRepository, UserRepository>();

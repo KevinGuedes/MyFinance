@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Mvc.ModelBinding;
 using MyFinance.Application.Common.Errors;
 using MyFinance.Contracts.Common;
 using Swashbuckle.AspNetCore.Annotations;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace MyFinance.Presentation.Controllers;
 
@@ -56,7 +55,7 @@ public abstract class ApiController(IMediator mediator) : ControllerBase
             .ToList()
             .ForEach(error => modelStateDictionary.AddModelError(error.PropertyName, error.ErrorMessage));
 
-        return ValidationProblem(instance: HttpContext.Request.Path,  modelStateDictionary: modelStateDictionary);
+        return ValidationProblem(instance: HttpContext.Request.Path, modelStateDictionary: modelStateDictionary);
     }
 
     private ObjectResult BuildProblemResponse(int statusCode, IError error)
