@@ -10,11 +10,11 @@ namespace MyFinance.Application.UseCases.BusinessUnits.Queries.GetMonthlySummary
 
 internal sealed class GetMonthlySummaryHandler(
     IBusinessUnitRepository businessUnitRepository,
-    ISpreadsheetService spreadsheetService)
+    ISummaryService summaryService)
     : IQueryHandler<GetMonthlySummaryQuery, SummaryResponse>
 {
     private readonly IBusinessUnitRepository _businessUnitRepository = businessUnitRepository;
-    private readonly ISpreadsheetService _spreadsheetService = spreadsheetService;
+    private readonly ISummaryService _summaryService = summaryService;
 
     public async Task<Result<SummaryResponse>> Handle(GetMonthlySummaryQuery query,
         CancellationToken cancellationToken)
@@ -36,7 +36,7 @@ internal sealed class GetMonthlySummaryHandler(
             return Result.Fail(unprocessableEntityError);
         }
 
-        var summaryData = _spreadsheetService.GenerateMonthlySummary(businessUnit, query.Year, query.Month);
+        var summaryData = _summaryService.GenerateMonthlySummary(businessUnit, query.Year, query.Month);
 
         return Result.Ok(SummaryMapper.DTR.Map(summaryData));
     }

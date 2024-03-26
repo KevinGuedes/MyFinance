@@ -2,7 +2,7 @@
 
 namespace MyFinance.Application.Abstractions.Services;
 
-public interface ISpreadsheetService
+public interface ISummaryService
 {
     Tuple<string, byte[]> GenerateMonthlySummary(BusinessUnit businessUnit, int year, int month);
 }

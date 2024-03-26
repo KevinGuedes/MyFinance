@@ -5,9 +5,9 @@ using MyFinance.Domain.Enums;
 
 //Data de geração do summary
 
-namespace MyFinance.Infrastructure.Services.Spreadsheet;
+namespace MyFinance.Infrastructure.Services.Summary;
 
-public sealed class SpreadsheetService : ISpreadsheetService
+public sealed class SummaryService : ISummaryService
 {
     private static readonly string[] summaryColumnNames = ["Income", "Outcome", "Balance"];
 
