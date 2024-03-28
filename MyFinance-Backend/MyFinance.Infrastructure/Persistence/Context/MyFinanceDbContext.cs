@@ -6,7 +6,7 @@ using System.Reflection;
 
 namespace MyFinance.Infrastructure.Persistence.Context;
 
-public sealed class MyFinanceDbContext(
+internal sealed class MyFinanceDbContext(
     DbContextOptions<MyFinanceDbContext> options,
     ICurrentUserProvider currentUserProvider) : DbContext(options)
 {
@@ -15,6 +15,7 @@ public sealed class MyFinanceDbContext(
     public DbSet<BusinessUnit> BusinessUnits { get; set; }
     public DbSet<Transfer> Transfers { get; set; }
     public DbSet<AccountTag> AccountTags { get; set; }
+    public DbSet<Category> Categories { get; set; }
     public DbSet<User> Users { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -31,6 +32,7 @@ public sealed class MyFinanceDbContext(
             ApplyGlobalFilterForUserOwnedEntity<BusinessUnit>(modelBuilder);
             ApplyGlobalFilterForUserOwnedEntity<Transfer>(modelBuilder);
             ApplyGlobalFilterForUserOwnedEntity<AccountTag>(modelBuilder);
+            ApplyGlobalFilterForUserOwnedEntity<Category>(modelBuilder);
         }
     }
 

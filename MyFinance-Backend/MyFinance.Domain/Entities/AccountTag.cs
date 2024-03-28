@@ -3,7 +3,7 @@ using MyFinance.Domain.Common;
 
 namespace MyFinance.Domain.Entities;
 
-public class AccountTag : Entity, IUserOwnedEntity, IArchivableEntity
+public sealed class AccountTag : Entity, IUserOwnedEntity, IArchivableEntity
 {
     private AccountTag()
     {

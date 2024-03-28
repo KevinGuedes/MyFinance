@@ -4,7 +4,7 @@ using MyFinance.Domain.Enums;
 
 namespace MyFinance.Domain.Entities;
 
-public class BusinessUnit : Entity, IUserOwnedEntity, IArchivableEntity
+public sealed class BusinessUnit : Entity, IUserOwnedEntity, IArchivableEntity
 {
     private BusinessUnit()
     {
@@ -23,6 +23,7 @@ public class BusinessUnit : Entity, IUserOwnedEntity, IArchivableEntity
         Transfers = [];
     }
 
+    public Guid UserId { get; init; }
     public string Name { get; private set; } = null!;
     public string? Description { get; private set; }
     public decimal Income { get; private set; }
@@ -31,7 +32,6 @@ public class BusinessUnit : Entity, IUserOwnedEntity, IArchivableEntity
     public bool IsArchived { get; private set; }
     public string? ReasonToArchive { get; private set; }
     public DateTime? ArchivedOnUtc { get; private set; }
-    public Guid UserId { get; private set; }
     public List<Transfer> Transfers { get; private set; } = [];
 
     public void Update(string name, string? description)

@@ -57,6 +57,7 @@ namespace MyFinance.Infrastructure.Persistence.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "TEXT", nullable: false),
+                    UserId = table.Column<Guid>(type: "TEXT", nullable: false),
                     Name = table.Column<string>(type: "TEXT", maxLength: 100, nullable: false),
                     Description = table.Column<string>(type: "TEXT", maxLength: 300, nullable: true),
                     Income = table.Column<decimal>(type: "MONEY", nullable: false),
@@ -64,7 +65,6 @@ namespace MyFinance.Infrastructure.Persistence.Migrations
                     IsArchived = table.Column<bool>(type: "INTEGER", nullable: false),
                     ReasonToArchive = table.Column<string>(type: "TEXT", maxLength: 300, nullable: true),
                     ArchivedOnUtc = table.Column<DateTime>(type: "TEXT", nullable: true),
-                    UserId = table.Column<Guid>(type: "TEXT", nullable: false),
                     CreatedOnUtc = table.Column<DateTime>(type: "TEXT", nullable: false),
                     UpdatedOnUtc = table.Column<DateTime>(type: "TEXT", nullable: true)
                 },
@@ -80,18 +80,43 @@ namespace MyFinance.Infrastructure.Persistence.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Categories",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
+                    UserId = table.Column<Guid>(type: "TEXT", nullable: false),
+                    Name = table.Column<string>(type: "TEXT", maxLength: 50, nullable: false),
+                    IsArchived = table.Column<bool>(type: "INTEGER", nullable: false),
+                    ReasonToArchive = table.Column<string>(type: "TEXT", maxLength: 300, nullable: true),
+                    ArchivedOnUtc = table.Column<DateTime>(type: "TEXT", nullable: true),
+                    CreatedOnUtc = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    UpdatedOnUtc = table.Column<DateTime>(type: "TEXT", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Categories", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Categories_Users_UserId",
+                        column: x => x.UserId,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Transfers",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "TEXT", nullable: false),
+                    UserId = table.Column<Guid>(type: "TEXT", nullable: false),
                     Value = table.Column<decimal>(type: "MONEY", nullable: false),
                     RelatedTo = table.Column<string>(type: "TEXT", maxLength: 300, nullable: false),
                     Description = table.Column<string>(type: "TEXT", maxLength: 300, nullable: false),
                     SettlementDate = table.Column<DateTime>(type: "TEXT", nullable: false),
                     Type = table.Column<string>(type: "TEXT", nullable: false),
-                    UserId = table.Column<Guid>(type: "TEXT", nullable: false),
                     BusinessUnitId = table.Column<Guid>(type: "TEXT", nullable: false),
                     AccountTagId = table.Column<Guid>(type: "TEXT", nullable: false),
+                    CategoryId = table.Column<Guid>(type: "TEXT", nullable: false),
                     CreatedOnUtc = table.Column<DateTime>(type: "TEXT", nullable: false),
                     UpdatedOnUtc = table.Column<DateTime>(type: "TEXT", nullable: true)
                 },
@@ -107,6 +132,11 @@ namespace MyFinance.Infrastructure.Persistence.Migrations
                         name: "FK_Transfers_BusinessUnits_BusinessUnitId",
                         column: x => x.BusinessUnitId,
                         principalTable: "BusinessUnits",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Transfers_Categories_CategoryId",
+                        column: x => x.CategoryId,
+                        principalTable: "Categories",
                         principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_Transfers_Users_UserId",
@@ -139,6 +169,17 @@ namespace MyFinance.Infrastructure.Persistence.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Categories_Name",
+                table: "Categories",
+                column: "Name",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Categories_UserId",
+                table: "Categories",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Transfers_AccountTagId",
                 table: "Transfers",
                 column: "AccountTagId");
@@ -147,6 +188,11 @@ namespace MyFinance.Infrastructure.Persistence.Migrations
                 name: "IX_Transfers_BusinessUnitId",
                 table: "Transfers",
                 column: "BusinessUnitId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Transfers_CategoryId",
+                table: "Transfers",
+                column: "CategoryId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Transfers_UserId",
@@ -171,6 +217,9 @@ namespace MyFinance.Infrastructure.Persistence.Migrations
 
             migrationBuilder.DropTable(
                 name: "BusinessUnits");
+
+            migrationBuilder.DropTable(
+                name: "Categories");
 
             migrationBuilder.DropTable(
                 name: "Users");

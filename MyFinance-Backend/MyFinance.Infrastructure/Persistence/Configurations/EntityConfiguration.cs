@@ -4,7 +4,7 @@ using MyFinance.Domain.Common;
 
 namespace MyFinance.Infrastructure.Persistence.Configurations;
 
-public abstract class EntityConfiguration<TEntity> : IEntityTypeConfiguration<TEntity> where TEntity : Entity
+internal abstract class EntityConfiguration<TEntity> : IEntityTypeConfiguration<TEntity> where TEntity : Entity
 {
     public virtual void Configure(EntityTypeBuilder<TEntity> builder)
     {

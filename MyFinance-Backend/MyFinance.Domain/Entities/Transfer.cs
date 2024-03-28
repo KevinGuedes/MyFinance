@@ -4,7 +4,7 @@ using MyFinance.Domain.Enums;
 
 namespace MyFinance.Domain.Entities;
 
-public class Transfer : Entity, IUserOwnedEntity
+public sealed class Transfer : Entity, IUserOwnedEntity
 {
     private Transfer()
     {
@@ -16,48 +16,50 @@ public class Transfer : Entity, IUserOwnedEntity
         string description,
         DateTime settlementDate,
         TransferType type,
+        Guid userId,
         BusinessUnit businessUnit,
         AccountTag accountTag,
-        Guid userId)
+        Category category)
     {
         Value = value;
         RelatedTo = relatedTo;
         Description = description;
         SettlementDate = settlementDate;
         Type = type;
+        UserId = userId;
         BusinessUnit = businessUnit;
         BusinessUnitId = businessUnit.Id;
         AccountTag = accountTag;
         AccountTagId = accountTag.Id;
-        UserId = userId;
+        Category = category;
+        CategoryId = category.Id;
     }
 
+    public Guid UserId { get; init; }
     public decimal Value { get; private set; }
     public string RelatedTo { get; private set; } = null!;
     public string Description { get; private set; } = null!;
     public DateTime SettlementDate { get; private set; }
     public TransferType Type { get; private set; }
-    public Guid UserId { get; private set; }
     public Guid BusinessUnitId { get; private set; }
     public BusinessUnit BusinessUnit { get; private set; } = null!;
     public Guid AccountTagId { get; private set; }
     public AccountTag AccountTag { get; private set; } = null!;
+    public Guid CategoryId { get; private set; }
+    public Category Category { get; private set; } = null!;
 
-    public void Update(
-        decimal value,
-        string relatedTo,
-        string description,
-        DateTime settlementDate,
-        TransferType type,
-        AccountTag accountTag)
+    public void UpdateCategory(Category category)
+    {
+        SetUpdateOnToUtcNow();
+       
+        Category = category;
+        CategoryId = category.Id;
+    }
+
+    public void UpdateAccountTag(AccountTag accountTag)
     {
         SetUpdateOnToUtcNow();
 
-        Value = value;
-        RelatedTo = relatedTo;
-        Description = description;
-        SettlementDate = settlementDate;
-        Type = type;
         AccountTag = accountTag;
         AccountTagId = accountTag.Id;
     }

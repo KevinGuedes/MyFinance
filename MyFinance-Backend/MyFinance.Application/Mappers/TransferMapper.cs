@@ -28,6 +28,7 @@ public static class TransferMapper
             => new(
                 request.BusinessUnitId,
                 request.AccountTagId,
+                request.CategoryId,
                 request.Value,
                 request.RelatedTo,
                 request.Description,
@@ -38,6 +39,7 @@ public static class TransferMapper
             => new(
                 request.Id,
                 request.AccountTagId,
+                request.CategoryId,
                 request.Value,
                 request.RelatedTo,
                 request.Description,

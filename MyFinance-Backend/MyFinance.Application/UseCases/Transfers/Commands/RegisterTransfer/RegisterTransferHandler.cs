@@ -11,11 +11,13 @@ namespace MyFinance.Application.UseCases.Transfers.Commands.RegisterTransfer;
 internal sealed class RegisterTransferHandler(
     IBusinessUnitRepository businessUnitRepository,
     ITransferRepository transferRepository,
-    IAccountTagRepository accountTagRepository) : ICommandHandler<RegisterTransferCommand, TransferResponse>
+    IAccountTagRepository accountTagRepository,
+    ICategoryRepository categoryRepository) : ICommandHandler<RegisterTransferCommand, TransferResponse>
 {
-    private readonly IAccountTagRepository _accountTagRepository = accountTagRepository;
     private readonly IBusinessUnitRepository _businessUnitRepository = businessUnitRepository;
     private readonly ITransferRepository _transferRepository = transferRepository;
+    private readonly IAccountTagRepository _accountTagRepository = accountTagRepository;
+    private readonly ICategoryRepository _categoryRepository = categoryRepository;
 
     public async Task<Result<TransferResponse>> Handle(RegisterTransferCommand command,
         CancellationToken cancellationToken)
@@ -36,15 +38,24 @@ internal sealed class RegisterTransferHandler(
             return Result.Fail(entityNotFoundError);
         }
 
+        var category = await _categoryRepository.GetByIdAsync(command.CategoryId, cancellationToken);
+        if (category is null)
+        {
+            var errorMessage = $"Category with Id {command.AccountTagId} not found";
+            var entityNotFoundError = new EntityNotFoundError(errorMessage);
+            return Result.Fail(entityNotFoundError);
+        }
+
         var transfer = new Transfer(
             command.Value,
             command.RelatedTo,
             command.Description,
             command.SettlementDate,
             command.Type,
+            command.CurrentUserId,
             businessUnit,
             accountTag,
-            command.CurrentUserId);
+            category);
 
         businessUnit.RegisterValue(transfer.Value, transfer.Type);
 

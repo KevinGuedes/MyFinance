@@ -11,7 +11,7 @@ using MyFinance.Infrastructure.Persistence.Context;
 namespace MyFinance.Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(MyFinanceDbContext))]
-    [Migration("20240326161432_FirstMigration")]
+    [Migration("20240328145400_FirstMigration")]
     partial class FirstMigration
     {
         /// <inheritdoc />
@@ -112,6 +112,45 @@ namespace MyFinance.Infrastructure.Persistence.Migrations
                     b.ToTable("BusinessUnits");
                 });
 
+            modelBuilder.Entity("MyFinance.Domain.Entities.Category", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime?>("ArchivedOnUtc")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("CreatedOnUtc")
+                        .HasColumnType("TEXT");
+
+                    b.Property<bool>("IsArchived")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("ReasonToArchive")
+                        .HasMaxLength(300)
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime?>("UpdatedOnUtc")
+                        .HasColumnType("TEXT");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Name")
+                        .IsUnique();
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Categories");
+                });
+
             modelBuilder.Entity("MyFinance.Domain.Entities.Transfer", b =>
                 {
                     b.Property<Guid>("Id")
@@ -121,6 +160,9 @@ namespace MyFinance.Infrastructure.Persistence.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<Guid>("BusinessUnitId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<Guid>("CategoryId")
                         .HasColumnType("TEXT");
 
                     b.Property<DateTime>("CreatedOnUtc")
@@ -157,6 +199,8 @@ namespace MyFinance.Infrastructure.Persistence.Migrations
                     b.HasIndex("AccountTagId");
 
                     b.HasIndex("BusinessUnitId");
+
+                    b.HasIndex("CategoryId");
 
                     b.HasIndex("UserId");
 
@@ -214,6 +258,15 @@ namespace MyFinance.Infrastructure.Persistence.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("MyFinance.Domain.Entities.Category", b =>
+                {
+                    b.HasOne("MyFinance.Domain.Entities.User", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("MyFinance.Domain.Entities.Transfer", b =>
                 {
                     b.HasOne("MyFinance.Domain.Entities.AccountTag", "AccountTag")
@@ -228,6 +281,12 @@ namespace MyFinance.Infrastructure.Persistence.Migrations
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
+                    b.HasOne("MyFinance.Domain.Entities.Category", "Category")
+                        .WithMany("Transfers")
+                        .HasForeignKey("CategoryId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
                     b.HasOne("MyFinance.Domain.Entities.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
@@ -237,6 +296,8 @@ namespace MyFinance.Infrastructure.Persistence.Migrations
                     b.Navigation("AccountTag");
 
                     b.Navigation("BusinessUnit");
+
+                    b.Navigation("Category");
                 });
 
             modelBuilder.Entity("MyFinance.Domain.Entities.AccountTag", b =>
@@ -245,6 +306,11 @@ namespace MyFinance.Infrastructure.Persistence.Migrations
                 });
 
             modelBuilder.Entity("MyFinance.Domain.Entities.BusinessUnit", b =>
+                {
+                    b.Navigation("Transfers");
+                });
+
+            modelBuilder.Entity("MyFinance.Domain.Entities.Category", b =>
                 {
                     b.Navigation("Transfers");
                 });

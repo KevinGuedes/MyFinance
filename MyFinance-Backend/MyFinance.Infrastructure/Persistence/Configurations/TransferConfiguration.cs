@@ -4,7 +4,7 @@ using MyFinance.Domain.Entities;
 
 namespace MyFinance.Infrastructure.Persistence.Configurations;
 
-public sealed class TransferConfiguration : EntityConfiguration<Transfer>
+internal sealed class TransferConfiguration : EntityConfiguration<Transfer>
 {
     public override void Configure(EntityTypeBuilder<Transfer> builder)
     {
@@ -26,6 +26,12 @@ public sealed class TransferConfiguration : EntityConfiguration<Transfer>
             .HasOne(transfer => transfer.AccountTag)
             .WithMany(at => at.Transfers)
             .HasForeignKey(transfer => transfer.AccountTagId)
+            .OnDelete(DeleteBehavior.NoAction);
+
+        builder
+            .HasOne(transfer => transfer.Category)
+            .WithMany(at => at.Transfers)
+            .HasForeignKey(transfer => transfer.CategoryId)
             .OnDelete(DeleteBehavior.NoAction);
 
         builder

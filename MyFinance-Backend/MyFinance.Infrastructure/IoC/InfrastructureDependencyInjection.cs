@@ -54,9 +54,10 @@ public static class InfrastructureDependencyInjection
         services.AddScoped<IUnitOfWork, UnitOfWork>();
 
         return services
+            .AddScoped<IUserRepository, UserRepository>()
             .AddScoped<IBusinessUnitRepository, BusinessUnitRepository>()
             .AddScoped<ITransferRepository, TransferRepository>()
             .AddScoped<IAccountTagRepository, AccountTagRepository>()
-            .AddScoped<IUserRepository, UserRepository>();
+            .AddScoped<ICategoryRepository, CategoryRepository>();
     }
 }

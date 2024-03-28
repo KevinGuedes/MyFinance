@@ -4,7 +4,7 @@ using MyFinance.Domain.Entities;
 
 namespace MyFinance.Infrastructure.Persistence.Configurations;
 
-public sealed class AccountTagConfiguration : EntityConfiguration<AccountTag>
+internal sealed class AccountTagConfiguration : EntityConfiguration<AccountTag>
 {
     public override void Configure(EntityTypeBuilder<AccountTag> builder)
     {
