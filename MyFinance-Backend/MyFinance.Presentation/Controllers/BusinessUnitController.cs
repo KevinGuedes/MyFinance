@@ -13,7 +13,7 @@ using Swashbuckle.AspNetCore.Annotations;
 
 namespace MyFinance.Presentation.Controllers;
 
-[SwaggerTag("Create, read and update Business Units")]
+[SwaggerTag("Business Units management")]
 [SwaggerResponse(StatusCodes.Status401Unauthorized, "Unauthorized", typeof(ProblemResponse))]
 public class BusinessUnitController(IMediator mediator) : ApiController(mediator)
 {

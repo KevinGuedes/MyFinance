@@ -4,7 +4,7 @@ using MyFinance.Domain.Entities;
 
 namespace MyFinance.Infrastructure.Persistence.Configurations;
 
-public sealed class BusinessUnitConfiguration : EntityConfiguration<BusinessUnit>
+internal sealed class BusinessUnitConfiguration : EntityConfiguration<BusinessUnit>
 {
     public override void Configure(EntityTypeBuilder<BusinessUnit> builder)
     {

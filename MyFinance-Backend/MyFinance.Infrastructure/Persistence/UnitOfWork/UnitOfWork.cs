@@ -3,7 +3,7 @@ using MyFinance.Infrastructure.Persistence.Context;
 
 namespace MyFinance.Infrastructure.Persistence.UnitOfWork;
 
-public sealed class UnitOfWork(MyFinanceDbContext myFinanceDbContext) : IUnitOfWork
+internal sealed class UnitOfWork(MyFinanceDbContext myFinanceDbContext) : IUnitOfWork
 {
     private readonly MyFinanceDbContext _myFinanceDbContext = myFinanceDbContext;
 

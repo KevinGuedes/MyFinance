@@ -9,7 +9,7 @@ using Swashbuckle.AspNetCore.Annotations;
 
 namespace MyFinance.Presentation.Controllers;
 
-[SwaggerTag("Manages user related operations")]
+[SwaggerTag("User management")]
 public class UserController(IMediator mediator) : ApiController(mediator)
 {
     [AllowAnonymous]

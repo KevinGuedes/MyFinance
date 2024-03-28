@@ -4,7 +4,7 @@ using Microsoft.Extensions.Configuration;
 
 namespace MyFinance.Infrastructure.Persistence.Context;
 
-public class DesignTimeMyFinanceDbContextFactory : IDesignTimeDbContextFactory<MyFinanceDbContext>
+internal class DesignTimeMyFinanceDbContextFactory : IDesignTimeDbContextFactory<MyFinanceDbContext>
 {
     public MyFinanceDbContext CreateDbContext(string[] args)
     {

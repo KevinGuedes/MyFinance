@@ -2,7 +2,7 @@
 
 namespace MyFinance.Domain.Entities;
 
-public class User : Entity
+public sealed class User : Entity
 {
     private User()
     {

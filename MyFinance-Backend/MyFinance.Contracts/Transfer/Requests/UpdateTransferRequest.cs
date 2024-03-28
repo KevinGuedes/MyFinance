@@ -6,6 +6,7 @@ public sealed class UpdateTransferRequest
 {
     public required Guid Id { get; init; }
     public required Guid AccountTagId { get; init; }
+    public required Guid CategoryId { get; init; }
     public required decimal Value { get; init; }
     public required string RelatedTo { get; init; }
     public required string Description { get; init; }

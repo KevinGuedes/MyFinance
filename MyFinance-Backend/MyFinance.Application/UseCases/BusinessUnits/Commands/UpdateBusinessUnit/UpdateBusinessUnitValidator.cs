@@ -32,8 +32,8 @@ public sealed class UpdateBusinessUnitValidator : AbstractValidator<UpdateBusine
                 if (existingBusinessUnit is null)
                     return true;
 
-                var isValidName = existingBusinessUnit.Id == command.Id;
-                return isValidName;
+                var isValid = existingBusinessUnit.Id == command.Id;
+                return isValid;
             }).WithMessage("The {PropertyName} {PropertyValue} has already been taken");
     }
 }
