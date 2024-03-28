@@ -26,11 +26,13 @@ public sealed class Transfer : Entity, IUserOwnedEntity
         Description = description;
         SettlementDate = settlementDate;
         Type = type;
+        UserId = userId;
         BusinessUnit = businessUnit;
         BusinessUnitId = businessUnit.Id;
         AccountTag = accountTag;
         AccountTagId = accountTag.Id;
-        UserId = userId;
+        Category = category;
+        CategoryId = category.Id;
     }
 
     public Guid UserId { get; init; }
