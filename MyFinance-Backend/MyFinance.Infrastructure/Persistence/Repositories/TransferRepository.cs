@@ -15,8 +15,8 @@ internal sealed class TransferRepository(MyFinanceDbContext myFinanceDbContext)
 
     public async Task<IEnumerable<Transfer>> GetByParamsAsync(
         Guid businessUnitId,
-        DateOnly? from,
-        DateOnly? to,
+        DateOnly? startDate,
+        DateOnly? endDate,
         Guid? categoryId,
         Guid? accountTagId,
         int pageNumber,
@@ -27,15 +27,15 @@ internal sealed class TransferRepository(MyFinanceDbContext myFinanceDbContext)
             .AsNoTracking()
             .Where(transfer => transfer.BusinessUnitId == businessUnitId);
 
-        if (from.HasValue && from.Value != default)
+        if (startDate.HasValue && startDate.Value != default)
         {
-            var fromDateTimeInStartOfDay = new DateTime(from.Value, new TimeOnly()); 
+            var fromDateTimeInStartOfDay = new DateTime(startDate.Value, new TimeOnly()); 
             transfers = transfers.Where(transfer => transfer.SettlementDate >= fromDateTimeInStartOfDay);
         }
 
-        if (to.HasValue && to.Value != default)
+        if (endDate.HasValue && endDate.Value != default)
         {
-            var toDateTimeInEndOfDay = new DateTime(to.Value, new TimeOnly()).AddDays(1).AddTicks(-1);
+            var toDateTimeInEndOfDay = new DateTime(endDate.Value, new TimeOnly()).AddDays(1).AddTicks(-1);
             transfers = transfers.Where(transfer => transfer.SettlementDate <= toDateTimeInEndOfDay);
         }
 

@@ -6,8 +6,8 @@ public interface ITransferRepository
 {
     Task<IEnumerable<Transfer>> GetByParamsAsync(
         Guid businessUnitId,
-        DateOnly? from,
-        DateOnly? to,
+        DateOnly? startDate,
+        DateOnly? endDate,
         Guid? categoryId,
         Guid? accountTagId,
         int pageNumber,

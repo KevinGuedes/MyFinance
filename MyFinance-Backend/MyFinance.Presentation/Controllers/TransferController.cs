@@ -22,9 +22,9 @@ public class TransferController(IMediator mediator) : ApiController(mediator)
         [FromQuery][SwaggerParameter("Business Unit Id", Required = true)]
         Guid businessUnitId,
         [FromQuery][SwaggerParameter("Start date")]
-        DateOnly from,
+        DateOnly startDate,
         [FromQuery][SwaggerParameter("End date")]
-        DateOnly to,
+        DateOnly endDate,
         [FromQuery][SwaggerParameter("Category Id")]
         Guid categoryId,
         [FromQuery][SwaggerParameter("Account Tag Id")]
@@ -37,8 +37,8 @@ public class TransferController(IMediator mediator) : ApiController(mediator)
     {
         var query = new GetTransfersQuery(
             businessUnitId, 
-            from, 
-            to, 
+            startDate, 
+            endDate, 
             categoryId, 
             accountTagId, 
             pageNumber, 

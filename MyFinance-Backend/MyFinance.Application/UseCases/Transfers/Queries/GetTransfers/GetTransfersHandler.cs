@@ -15,8 +15,8 @@ internal sealed class GetTransfersHandler(ITransferRepository transferRepository
     {
         var transfers = await _transferRepository.GetByParamsAsync(
             query.BusinessUnitId,
-            query.From,
-            query.To,
+            query.StartDate,
+            query.EndDate,
             query.CategoryId,
             query.AccountTagId,
             query.PageNumber,
