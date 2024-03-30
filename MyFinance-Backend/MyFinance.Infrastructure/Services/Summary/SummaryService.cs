@@ -3,8 +3,6 @@ using MyFinance.Application.Abstractions.Services;
 using MyFinance.Domain.Entities;
 using MyFinance.Domain.Enums;
 
-//Data de geração do summary
-
 namespace MyFinance.Infrastructure.Services.Summary;
 
 public sealed class SummaryService : ISummaryService

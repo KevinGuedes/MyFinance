@@ -3,6 +3,7 @@ using MyFinance.Application.UseCases.Categories.Commands.CreateCategory;
 using MyFinance.Application.UseCases.Categories.Commands.UpdateCategory;
 using MyFinance.Contracts.Category.Requests;
 using MyFinance.Contracts.Category.Responses;
+using MyFinance.Contracts.Common;
 using MyFinance.Domain.Entities;
 
 namespace MyFinance.Application.Mappers;
@@ -11,6 +12,16 @@ public static class CategoryMapper
 {
     public static class DTR
     {
+        public static Paginated<CategoryResponse> Map(
+            IEnumerable<Category> categories,
+            int pageNumber,
+            int pageSize)
+            => new(
+                Map(categories),
+                pageNumber,
+                pageSize,
+                0);
+
         public static CategoryResponse Map(Category category)
                => new()
                {

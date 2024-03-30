@@ -3,6 +3,7 @@ using MyFinance.Application.UseCases.BusinessUnits.Commands.CreateBusinessUnit;
 using MyFinance.Application.UseCases.BusinessUnits.Commands.UpdateBusinessUnit;
 using MyFinance.Contracts.BusinessUnit.Requests;
 using MyFinance.Contracts.BusinessUnit.Responses;
+using MyFinance.Contracts.Common;
 using MyFinance.Domain.Entities;
 
 namespace MyFinance.Application.Mappers;
@@ -11,6 +12,16 @@ public class BusinessUnitMapper
 {
     public static class DTR
     {
+        public static Paginated<BusinessUnitResponse> Map(
+            IEnumerable<BusinessUnit> businessUnits,
+            int pageNumber,
+            int pageSize)
+            => new(
+                Map(businessUnits),
+                pageNumber,
+                pageSize,
+                0);
+
         public static BusinessUnitResponse Map(BusinessUnit businessUnit)
             => new()
             {

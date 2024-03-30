@@ -4,6 +4,15 @@ namespace MyFinance.Application.Abstractions.Persistence.Repositories;
 
 public interface ITransferRepository
 {
+    Task<IEnumerable<Transfer>> GetByParamsAsync(
+        Guid businessUnitId,
+        DateOnly? from,
+        DateOnly? to,
+        Guid? categoryId,
+        Guid? accountTagId,
+        int pageNumber,
+        int pageSize,
+        CancellationToken cancellationToken);
     Task<Transfer?> GetWithBusinessUnitByIdAsync(Guid id, CancellationToken cancellationToken);
     void Update(Transfer transfer);
     void Insert(Transfer transfer);

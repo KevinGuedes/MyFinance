@@ -20,11 +20,7 @@ internal sealed class GetAccountTagsHandler(IAccountTagRepository accountTagRepo
             query.PageSize,
             cancellationToken);
 
-        var response = new Paginated<AccountTagResponse>(
-            AccountTagMapper.DTR.Map(accountTags),
-            query.PageNumber,
-            query.PageSize,
-            0);
+        var response = AccountTagMapper.DTR.Map(accountTags, query.PageNumber, query.PageSize);
 
         return Result.Ok(response);
     }
