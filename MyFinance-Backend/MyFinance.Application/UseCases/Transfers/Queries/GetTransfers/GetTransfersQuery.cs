@@ -10,7 +10,7 @@ public sealed record GetTransfersQuery(
     DateOnly? EndDate,
     Guid? CategoryId,
     Guid? AccountTagId,
-    int PageNumber, 
+    int PageNumber,
     int PageSize) : IQuery<Paginated<TransferGroupResponse>>
 {
 }

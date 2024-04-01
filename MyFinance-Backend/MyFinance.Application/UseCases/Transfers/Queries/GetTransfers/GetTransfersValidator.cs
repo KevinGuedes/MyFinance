@@ -6,8 +6,8 @@ public sealed class GetTransfersValidator : AbstractValidator<GetTransfersQuery>
 {
     public GetTransfersValidator()
     {
-        When(query => 
-            query.StartDate.HasValue && query.StartDate.Value != default && 
+        When(query =>
+            query.StartDate.HasValue && query.StartDate.Value != default &&
             query.EndDate.HasValue && query.EndDate.Value != default,
             () =>
         {

@@ -37,12 +37,12 @@ public class TransferController(IMediator mediator) : ApiController(mediator)
         CancellationToken cancellationToken)
     {
         var query = new GetTransfersQuery(
-            businessUnitId, 
-            startDate, 
-            endDate, 
-            categoryId, 
-            accountTagId, 
-            pageNumber, 
+            businessUnitId,
+            startDate,
+            endDate,
+            categoryId,
+            accountTagId,
+            pageNumber,
             pageSize);
 
         return ProcessResult(await _mediator.Send(query, cancellationToken));
