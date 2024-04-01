@@ -51,7 +51,7 @@ public sealed class Transfer : Entity, IUserOwnedEntity
     public void UpdateCategory(Category category)
     {
         SetUpdateOnToUtcNow();
-       
+
         Category = category;
         CategoryId = category.Id;
     }

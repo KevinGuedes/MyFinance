@@ -16,7 +16,7 @@ internal class DesignTimeMyFinanceDbContextFactory : IDesignTimeDbContextFactory
         var connectionString = configuration.GetConnectionString("MyFinanceDb");
 
         var optionsBuilder = new DbContextOptionsBuilder<MyFinanceDbContext>();
-        optionsBuilder.UseSqlite(connectionString);
+        optionsBuilder.UseSqlServer(connectionString);
 
         //var serviceProvider = new ServiceCollection()
         //    .AddScoped<ICurrentUserProvider, CurrentUserProvider>()

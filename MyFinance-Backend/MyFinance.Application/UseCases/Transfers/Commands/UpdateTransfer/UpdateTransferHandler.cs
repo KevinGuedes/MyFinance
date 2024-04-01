@@ -4,7 +4,6 @@ using MyFinance.Application.Abstractions.RequestHandling.Commands;
 using MyFinance.Application.Common.Errors;
 using MyFinance.Application.Mappers;
 using MyFinance.Contracts.Transfer.Responses;
-using MyFinance.Domain.Entities;
 
 namespace MyFinance.Application.UseCases.Transfers.Commands.UpdateTransfer;
 

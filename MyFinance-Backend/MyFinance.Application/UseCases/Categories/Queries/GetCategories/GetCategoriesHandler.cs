@@ -20,11 +20,7 @@ internal sealed class GetCategoriesHandler(ICategoryRepository categoryRepositor
             query.PageSize,
             cancellationToken);
 
-        var response = new Paginated<CategoryResponse>(
-            CategoryMapper.DTR.Map(categories),
-            query.PageNumber,
-            query.PageSize,
-            0);
+        var response = CategoryMapper.DTR.Map(categories, query.PageNumber, query.PageSize);
 
         return Result.Ok(response);
     }

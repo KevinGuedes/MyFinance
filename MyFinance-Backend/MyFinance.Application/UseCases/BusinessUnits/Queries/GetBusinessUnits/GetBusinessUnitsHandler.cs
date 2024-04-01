@@ -20,11 +20,7 @@ internal sealed class GetBusinessUnitsHandler(IBusinessUnitRepository businessUn
             query.PageSize,
             cancellationToken);
 
-        var response = new Paginated<BusinessUnitResponse>(
-            BusinessUnitMapper.DTR.Map(businessUnits),
-            query.PageNumber,
-            query.PageSize,
-            0);
+        var response = BusinessUnitMapper.DTR.Map(businessUnits, query.PageNumber, query.PageSize);
 
         return Result.Ok(response);
     }

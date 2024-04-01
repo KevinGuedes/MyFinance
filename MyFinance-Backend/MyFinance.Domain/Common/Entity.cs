@@ -11,7 +11,7 @@ public abstract class Entity : IAuditableEntity
     public Guid Id { get; private set; } = Guid.NewGuid();
     public DateTime CreatedOnUtc { get; private set; } = DateTime.UtcNow;
     public DateTime? UpdatedOnUtc { get; private set; }
-    //public byte[] RowVersion { get; private set; } = null!;
+    public byte[] RowVersion { get; private set; } = null!;
 
     public void SetUpdateOnToUtcNow()
         => UpdatedOnUtc = DateTime.UtcNow;
