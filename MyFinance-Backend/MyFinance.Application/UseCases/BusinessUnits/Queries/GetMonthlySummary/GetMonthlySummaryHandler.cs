@@ -31,7 +31,7 @@ internal sealed class GetMonthlySummaryHandler(
         var hasTransfersForProcessing = businessUnit.Transfers.Count is not 0;
         if (!hasTransfersForProcessing)
         {
-            var errorMessage = $"Monthly Balance with Id {query.Id} has no Transfers to summarize";
+            var errorMessage = $"Business Unit with Id {query.Id} has no Transfers to summarize in the given period";
             var unprocessableEntityError = new UnprocessableEntityError(errorMessage);
             return Result.Fail(unprocessableEntityError);
         }
