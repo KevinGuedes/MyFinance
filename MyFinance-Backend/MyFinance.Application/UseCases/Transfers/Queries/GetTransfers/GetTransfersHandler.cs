@@ -24,14 +24,6 @@ internal sealed class GetTransfersHandler(ITransferRepository transferRepository
             query.PageSize,
             cancellationToken);
 
-        var (income, outcome) = await _transferRepository.GetIncomeAndOutcomeFromPeriodByParams(
-            query.BusinessUnitId,
-            query.StartDate,
-            query.EndDate,
-            query.CategoryId,
-            query.AccountTagId,
-            cancellationToken);
-
         return TransferMapper.DTR.Map(transfers, query.PageNumber, query.PageSize);
     }
 }
