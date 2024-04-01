@@ -15,12 +15,13 @@ namespace MyFinance.Infrastructure.Persistence.Migrations
                 name: "Users",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
-                    Name = table.Column<string>(type: "TEXT", maxLength: 100, nullable: false),
-                    Email = table.Column<string>(type: "TEXT", maxLength: 256, nullable: false),
-                    PasswordHash = table.Column<string>(type: "TEXT", nullable: false),
-                    CreatedOnUtc = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    UpdatedOnUtc = table.Column<DateTime>(type: "TEXT", nullable: true)
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false),
+                    PasswordHash = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    CreatedOnUtc = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UpdatedOnUtc = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    RowVersion = table.Column<byte[]>(type: "rowversion", rowVersion: true, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -31,15 +32,16 @@ namespace MyFinance.Infrastructure.Persistence.Migrations
                 name: "AccountTags",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
-                    UserId = table.Column<Guid>(type: "TEXT", nullable: false),
-                    Tag = table.Column<string>(type: "TEXT", maxLength: 10, nullable: false),
-                    Description = table.Column<string>(type: "TEXT", maxLength: 300, nullable: true),
-                    IsArchived = table.Column<bool>(type: "INTEGER", nullable: false),
-                    ReasonToArchive = table.Column<string>(type: "TEXT", maxLength: 300, nullable: true),
-                    ArchivedOnUtc = table.Column<DateTime>(type: "TEXT", nullable: true),
-                    CreatedOnUtc = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    UpdatedOnUtc = table.Column<DateTime>(type: "TEXT", nullable: true)
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Tag = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(300)", maxLength: 300, nullable: true),
+                    IsArchived = table.Column<bool>(type: "bit", nullable: false),
+                    ReasonToArchive = table.Column<string>(type: "nvarchar(300)", maxLength: 300, nullable: true),
+                    ArchivedOnUtc = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    CreatedOnUtc = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UpdatedOnUtc = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    RowVersion = table.Column<byte[]>(type: "rowversion", rowVersion: true, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -56,17 +58,18 @@ namespace MyFinance.Infrastructure.Persistence.Migrations
                 name: "BusinessUnits",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
-                    UserId = table.Column<Guid>(type: "TEXT", nullable: false),
-                    Name = table.Column<string>(type: "TEXT", maxLength: 100, nullable: false),
-                    Description = table.Column<string>(type: "TEXT", maxLength: 300, nullable: true),
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(300)", maxLength: 300, nullable: true),
                     Income = table.Column<decimal>(type: "MONEY", nullable: false),
                     Outcome = table.Column<decimal>(type: "MONEY", nullable: false),
-                    IsArchived = table.Column<bool>(type: "INTEGER", nullable: false),
-                    ReasonToArchive = table.Column<string>(type: "TEXT", maxLength: 300, nullable: true),
-                    ArchivedOnUtc = table.Column<DateTime>(type: "TEXT", nullable: true),
-                    CreatedOnUtc = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    UpdatedOnUtc = table.Column<DateTime>(type: "TEXT", nullable: true)
+                    IsArchived = table.Column<bool>(type: "bit", nullable: false),
+                    ReasonToArchive = table.Column<string>(type: "nvarchar(300)", maxLength: 300, nullable: true),
+                    ArchivedOnUtc = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    CreatedOnUtc = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UpdatedOnUtc = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    RowVersion = table.Column<byte[]>(type: "rowversion", rowVersion: true, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -83,14 +86,15 @@ namespace MyFinance.Infrastructure.Persistence.Migrations
                 name: "Categories",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
-                    UserId = table.Column<Guid>(type: "TEXT", nullable: false),
-                    Name = table.Column<string>(type: "TEXT", maxLength: 50, nullable: false),
-                    IsArchived = table.Column<bool>(type: "INTEGER", nullable: false),
-                    ReasonToArchive = table.Column<string>(type: "TEXT", maxLength: 300, nullable: true),
-                    ArchivedOnUtc = table.Column<DateTime>(type: "TEXT", nullable: true),
-                    CreatedOnUtc = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    UpdatedOnUtc = table.Column<DateTime>(type: "TEXT", nullable: true)
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    IsArchived = table.Column<bool>(type: "bit", nullable: false),
+                    ReasonToArchive = table.Column<string>(type: "nvarchar(300)", maxLength: 300, nullable: true),
+                    ArchivedOnUtc = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    CreatedOnUtc = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UpdatedOnUtc = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    RowVersion = table.Column<byte[]>(type: "rowversion", rowVersion: true, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -107,18 +111,19 @@ namespace MyFinance.Infrastructure.Persistence.Migrations
                 name: "Transfers",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
-                    UserId = table.Column<Guid>(type: "TEXT", nullable: false),
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Value = table.Column<decimal>(type: "MONEY", nullable: false),
-                    RelatedTo = table.Column<string>(type: "TEXT", maxLength: 300, nullable: false),
-                    Description = table.Column<string>(type: "TEXT", maxLength: 300, nullable: false),
-                    SettlementDate = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    Type = table.Column<string>(type: "TEXT", nullable: false),
-                    BusinessUnitId = table.Column<Guid>(type: "TEXT", nullable: false),
-                    AccountTagId = table.Column<Guid>(type: "TEXT", nullable: false),
-                    CategoryId = table.Column<Guid>(type: "TEXT", nullable: false),
-                    CreatedOnUtc = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    UpdatedOnUtc = table.Column<DateTime>(type: "TEXT", nullable: true)
+                    RelatedTo = table.Column<string>(type: "nvarchar(300)", maxLength: 300, nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(300)", maxLength: 300, nullable: false),
+                    SettlementDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Type = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    BusinessUnitId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    AccountTagId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    CategoryId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    CreatedOnUtc = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UpdatedOnUtc = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    RowVersion = table.Column<byte[]>(type: "rowversion", rowVersion: true, nullable: false)
                 },
                 constraints: table =>
                 {

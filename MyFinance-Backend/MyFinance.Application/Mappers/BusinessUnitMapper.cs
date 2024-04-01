@@ -16,11 +16,7 @@ public class BusinessUnitMapper
             IEnumerable<BusinessUnit> businessUnits,
             int pageNumber,
             int pageSize)
-            => new(
-                Map(businessUnits),
-                pageNumber,
-                pageSize,
-                0);
+            => new(Map(businessUnits), pageNumber, pageSize, 0);
 
         public static BusinessUnitResponse Map(BusinessUnit businessUnit)
             => new()

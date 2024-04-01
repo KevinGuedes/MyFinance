@@ -2,27 +2,21 @@
 
 namespace MyFinance.Application.UseCases.Transfers.Queries.GetTransfers;
 
-internal class GetTransfersValidator : AbstractValidator<GetTransfersQuery>
+public sealed class GetTransfersValidator : AbstractValidator<GetTransfersQuery>
 {
     public GetTransfersValidator()
     {
         When(query => 
-            query.From.HasValue && query.From.Value != default && 
-            query.To.HasValue && query.To.Value != default,
+            query.StartDate.HasValue && query.StartDate.Value != default && 
+            query.EndDate.HasValue && query.EndDate.Value != default,
             () =>
         {
-            RuleFor(query => query.From)
-                .LessThan(query => query.To)
+            RuleFor(query => query.EndDate)
+                .GreaterThan(query => query.StartDate)
                 .WithMessage("End date must not be after start date");
         });
 
         RuleFor(query => query.BusinessUnitId)
-           .NotEqual(Guid.Empty).WithMessage("Invalid {PropertyName}");
-
-        RuleFor(query => query.BusinessUnitId)
-            .NotEqual(Guid.Empty).WithMessage("Invalid {PropertyName}");
-
-        RuleFor(query => query.AccountTagId)
             .NotEqual(Guid.Empty).WithMessage("Invalid {PropertyName}");
 
         RuleFor(query => query.PageNumber)

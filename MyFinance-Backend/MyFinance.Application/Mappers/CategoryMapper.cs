@@ -16,11 +16,7 @@ public static class CategoryMapper
             IEnumerable<Category> categories,
             int pageNumber,
             int pageSize)
-            => new(
-                Map(categories),
-                pageNumber,
-                pageSize,
-                0);
+            => new(Map(categories), pageNumber, pageSize, 0);
 
         public static CategoryResponse Map(Category category)
                => new()

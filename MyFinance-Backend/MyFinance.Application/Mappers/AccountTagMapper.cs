@@ -17,11 +17,7 @@ public static class AccountTagMapper
            IEnumerable<AccountTag> accountTags,
            int pageNumber,
            int pageSize)
-           => new(
-               Map(accountTags),
-               pageNumber,
-               pageSize,
-               0);
+           => new(Map(accountTags), pageNumber, pageSize, 0);
 
         public static AccountTagResponse Map(AccountTag accountTag)
             => new()
