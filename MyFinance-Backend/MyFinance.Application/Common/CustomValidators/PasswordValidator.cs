@@ -10,8 +10,7 @@ public static class PasswordValidator
     private static readonly Func<char, bool> IsNonAlphaNumeric = c => !(IsLowerCase(c) || IsUpperCase(c) || IsNumber(c));
 
     public static IRuleBuilderOptions<T, string> MustBeAStrongPassword<T>(this IRuleBuilder<T, string> ruleBuilder)
-    {
-        return ruleBuilder
+        => ruleBuilder
             .NotEmpty().WithMessage("{PropertyName} must not be empty")
             .NotNull().WithMessage("{PropertyName} must not be null")
             .MinimumLength(16).WithMessage("{PropertyName} must have at least 16 characters")
@@ -35,5 +34,4 @@ public static class PasswordValidator
                 var hasTwoLowerCaseLetters = plainTextPassword.Count(IsLowerCase) >= 2;
                 return hasTwoLowerCaseLetters;
             }).WithMessage("{PropertyName} must have at least 2 lower case letters");
-    }
 }
