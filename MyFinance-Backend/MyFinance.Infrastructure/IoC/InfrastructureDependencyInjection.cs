@@ -46,7 +46,7 @@ public static class InfrastructureDependencyInjection
     {
         services.AddDbContext<MyFinanceDbContext>(
             options => options
-                .UseSqlite(configuration.GetConnectionString("Lite"),
+                .UseSqlServer(configuration.GetConnectionString("MyFinanceDb"),
                     sqlServerOptions => sqlServerOptions
                         .UseQuerySplittingBehavior(QuerySplittingBehavior.SingleQuery)
                         .MigrationsAssembly(Assembly.GetExecutingAssembly().FullName)));

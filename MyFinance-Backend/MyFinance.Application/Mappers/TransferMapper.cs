@@ -12,6 +12,13 @@ public static class TransferMapper
 {
     public static class DTR
     {
+        public static PeriodBalanceResponse Map(decimal income, decimal outcome)
+            => new()
+            {
+                Income = income,
+                Outcome = outcome,
+            };
+
         public static Paginated<TransferGroupResponse> Map(
             IEnumerable<Transfer> transfers,
             int pageNumber,
