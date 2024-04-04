@@ -13,29 +13,29 @@ public sealed class SummaryService : ISummaryService
 
     private static readonly string[] summaryColumnNames = ["Income", "Outcome", "Balance"];
     private static readonly string[] transferColumnNames =
-        ["Value", "Related To", "Description", "Account Tag", "Settlement Date"];
+        ["Value", "Related To", "Description", "Category", "Account Tag", "Settlement Date"];
 
-    public Tuple<string, byte[]> GenerateMonthlySummary(BusinessUnit businessUnit, int year, int month)
+    public Tuple<string, byte[]> GenerateMonthlySummary(
+        BusinessUnit businessUnit, 
+        IEnumerable<Transfer> transfers,
+        int year, 
+        int month)
     {
         var refrenceDateHumanized = new DateOnly(year, month, 1).ToString("MMMM yyyy");
         var workbookName = $"{businessUnit.Name} Summary - {refrenceDateHumanized}.xlsx";
         var wb = new XLWorkbook();
 
-        FillBalanceData(businessUnit, wb, refrenceDateHumanized);
-        FillTransfersData(businessUnit.Transfers, wb, refrenceDateHumanized);
+        var balanceWorksheet = wb.AddWorksheet(businessUnit.Name, 1);
+        FillGenerationData(balanceWorksheet);
+        FillCurrentBalanceData(businessUnit, balanceWorksheet);
+        FillMonthlyBalanceData(transfers, balanceWorksheet, refrenceDateHumanized);
+        balanceWorksheet.Columns().AdjustToContents();
+
+        var transfersWorksheet = wb.AddWorksheet(refrenceDateHumanized, 2);
+        FillTransfersData(businessUnit.Transfers, transfersWorksheet, refrenceDateHumanized);
+        transfersWorksheet.Columns().AdjustToContents();
 
         return new Tuple<string, byte[]>(workbookName, ConvertWorkbookToByteArray(wb));
-    }
-
-    private static void FillBalanceData(BusinessUnit businessUnit, XLWorkbook wb, string refrenceDateHumanized)
-    {
-        var ws = wb.AddWorksheet(businessUnit.Name, 1);
-
-        FillGenerationData(ws);
-        FillCurrentBalanceData(businessUnit, ws);
-        FillMonthlyBalanceData(businessUnit, ws, refrenceDateHumanized);
-
-        ws.Columns().AdjustToContents();
     }
 
     private static void FillGenerationData(IXLWorksheet ws)
@@ -89,12 +89,12 @@ public sealed class SummaryService : ISummaryService
             .Border.SetOutsideBorder(XLBorderStyleValues.Thin);
     }
 
-    private static void FillMonthlyBalanceData(BusinessUnit businessUnit, IXLWorksheet ws, string refrenceDateHumanized)
+    private static void FillMonthlyBalanceData(IEnumerable<Transfer> transfers, IXLWorksheet ws, string refrenceDateHumanized)
     {
         decimal monthlyIncome = 0;
         decimal monthlyOutcome = 0;
 
-        foreach (var transfer in businessUnit.Transfers)
+        foreach (var transfer in transfers)
         {
             if (transfer.Type == TransferType.Profit)
                 monthlyIncome += transfer.Value;
@@ -137,10 +137,8 @@ public sealed class SummaryService : ISummaryService
             .Border.SetOutsideBorder(XLBorderStyleValues.Thin);
     }
 
-    private static void FillTransfersData(List<Transfer> transfers, XLWorkbook wb, string refrenceDateHumanized)
+    private static void FillTransfersData(IEnumerable<Transfer> transfers, IXLWorksheet ws, string refrenceDateHumanized)
     {
-        var ws = wb.AddWorksheet(refrenceDateHumanized);
-
         ws.Range(inititalRowForTransfersData, 1, inititalRowForTransfersData, transferColumnNames.Length)
             .SetValue("Transfers")
             .Merge()
@@ -168,6 +166,7 @@ public sealed class SummaryService : ISummaryService
                 Value = value,
                 transfer.RelatedTo,
                 transfer.Description,
+                Category = transfer.Category.Name,
                 AccountTag = transfer.AccountTag.Tag,
                 SettlementDate = transfer.SettlementDate.ToString("dddd, dd MMMM yyyy HH:mm:ss")
             };
