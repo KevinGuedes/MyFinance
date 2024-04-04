@@ -25,6 +25,7 @@ namespace MyFinance.Infrastructure.Persistence.Migrations
             modelBuilder.Entity("MyFinance.Domain.Entities.AccountTag", b =>
                 {
                     b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime?>("ArchivedOnUtc")
@@ -43,12 +44,6 @@ namespace MyFinance.Infrastructure.Persistence.Migrations
                     b.Property<string>("ReasonToArchive")
                         .HasMaxLength(300)
                         .HasColumnType("nvarchar(300)");
-
-                    b.Property<byte[]>("RowVersion")
-                        .IsConcurrencyToken()
-                        .IsRequired()
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("rowversion");
 
                     b.Property<string>("Tag")
                         .IsRequired()
@@ -74,6 +69,7 @@ namespace MyFinance.Infrastructure.Persistence.Migrations
             modelBuilder.Entity("MyFinance.Domain.Entities.BusinessUnit", b =>
                 {
                     b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime?>("ArchivedOnUtc")
@@ -104,12 +100,6 @@ namespace MyFinance.Infrastructure.Persistence.Migrations
                         .HasMaxLength(300)
                         .HasColumnType("nvarchar(300)");
 
-                    b.Property<byte[]>("RowVersion")
-                        .IsConcurrencyToken()
-                        .IsRequired()
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("rowversion");
-
                     b.Property<DateTime?>("UpdatedOnUtc")
                         .HasColumnType("datetime2");
 
@@ -129,6 +119,7 @@ namespace MyFinance.Infrastructure.Persistence.Migrations
             modelBuilder.Entity("MyFinance.Domain.Entities.Category", b =>
                 {
                     b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime?>("ArchivedOnUtc")
@@ -149,12 +140,6 @@ namespace MyFinance.Infrastructure.Persistence.Migrations
                         .HasMaxLength(300)
                         .HasColumnType("nvarchar(300)");
 
-                    b.Property<byte[]>("RowVersion")
-                        .IsConcurrencyToken()
-                        .IsRequired()
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("rowversion");
-
                     b.Property<DateTime?>("UpdatedOnUtc")
                         .HasColumnType("datetime2");
 
@@ -174,6 +159,7 @@ namespace MyFinance.Infrastructure.Persistence.Migrations
             modelBuilder.Entity("MyFinance.Domain.Entities.Transfer", b =>
                 {
                     b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid>("AccountTagId")
@@ -197,12 +183,6 @@ namespace MyFinance.Infrastructure.Persistence.Migrations
                         .IsRequired()
                         .HasMaxLength(300)
                         .HasColumnType("nvarchar(300)");
-
-                    b.Property<byte[]>("RowVersion")
-                        .IsConcurrencyToken()
-                        .IsRequired()
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("rowversion");
 
                     b.Property<DateTime>("SettlementDate")
                         .HasColumnType("datetime2");
@@ -236,6 +216,7 @@ namespace MyFinance.Infrastructure.Persistence.Migrations
             modelBuilder.Entity("MyFinance.Domain.Entities.User", b =>
                 {
                     b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("CreatedOnUtc")
@@ -254,12 +235,6 @@ namespace MyFinance.Infrastructure.Persistence.Migrations
                     b.Property<string>("PasswordHash")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<byte[]>("RowVersion")
-                        .IsConcurrencyToken()
-                        .IsRequired()
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("rowversion");
 
                     b.Property<DateTime?>("UpdatedOnUtc")
                         .HasColumnType("datetime2");
