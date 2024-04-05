@@ -9,6 +9,17 @@ namespace MyFinance.Infrastructure.Persistence.Repositories;
 internal sealed class TransferRepository(MyFinanceDbContext myFinanceDbContext)
     : EntityRepository<Transfer>(myFinanceDbContext), ITransferRepository
 {
+    public async Task<IEnumerable<Transfer>> GetWithSummaryDataAsync(Guid businessUnitId, int year, int month, CancellationToken cancellationToken)
+        => await _myFinanceDbContext.Transfers
+            .AsNoTracking()
+            .Where(
+                transfer => transfer.SettlementDate.Year == year && 
+                transfer.SettlementDate.Month == month && 
+                transfer.BusinessUnitId == businessUnitId)
+            .Include(transfer => transfer.Category)
+            .Include(transfer => transfer.AccountTag)
+            .ToListAsync(cancellationToken);
+
     public async Task<Transfer?> GetWithBusinessUnitByIdAsync(Guid id, CancellationToken cancellationToken)
         => await _myFinanceDbContext.Transfers
             .Include(transfer => transfer.BusinessUnit)
@@ -53,7 +64,7 @@ internal sealed class TransferRepository(MyFinanceDbContext myFinanceDbContext)
         return new Tuple<decimal, decimal>(income, outcome);
     }
 
-    public async Task<IEnumerable<Transfer>> GetTransfersByParams(
+    public async Task<Tuple<int, IEnumerable<Transfer>>> GetTransfersByParams(
         Guid businessUnitId,
         DateOnly? startDate,
         DateOnly? endDate,
@@ -70,11 +81,14 @@ internal sealed class TransferRepository(MyFinanceDbContext myFinanceDbContext)
             categoryId,
             accountTagId);
 
-        return await transfers
+        var totalCount = transfers.Count();
+        var transfersPage = await transfers
             .OrderByDescending(transfer => transfer.SettlementDate)
             .Skip((pageNumber - 1) * pageSize)
             .Take(pageSize)
             .ToListAsync(cancellationToken);
+
+        return new Tuple<int, IEnumerable<Transfer>>(totalCount, transfers);
     }
 
     private IQueryable<Transfer> GetByParams(

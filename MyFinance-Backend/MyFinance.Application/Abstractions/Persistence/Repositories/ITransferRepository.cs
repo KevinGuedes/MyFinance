@@ -11,7 +11,7 @@ public interface ITransferRepository
         Guid? categoryId,
         Guid? accountTagId,
         CancellationToken cancellationToken);
-    Task<IEnumerable<Transfer>> GetTransfersByParams(
+    Task<Tuple<int, IEnumerable<Transfer>>> GetTransfersByParams(
         Guid businessUnitId,
         DateOnly? startDate,
         DateOnly? endDate,
@@ -19,6 +19,11 @@ public interface ITransferRepository
         Guid? accountTagId,
         int pageNumber,
         int pageSize,
+        CancellationToken cancellationToken);
+    Task<IEnumerable<Transfer>> GetWithSummaryDataAsync(
+        Guid businessUnitId, 
+        int year, 
+        int month, 
         CancellationToken cancellationToken);
     Task<Transfer?> GetWithBusinessUnitByIdAsync(Guid id, CancellationToken cancellationToken);
     void Update(Transfer transfer);

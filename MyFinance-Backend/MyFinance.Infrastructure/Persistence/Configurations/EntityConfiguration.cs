@@ -9,10 +9,10 @@ internal abstract class EntityConfiguration<TEntity> : IEntityTypeConfiguration<
     public virtual void Configure(EntityTypeBuilder<TEntity> builder)
     {
         builder.HasKey(e => e.Id);
-        builder.Property(e => e.Id).ValueGeneratedNever();
+        builder.Property(e => e.Id).ValueGeneratedOnAdd();
 
         builder.Property(e => e.CreatedOnUtc).IsRequired();
         builder.Property(e => e.UpdatedOnUtc).IsRequired(false);
-        builder.Property(e => e.RowVersion).IsRowVersion();
+        //builder.Property(e => e.RowVersion).IsRowVersion();
     }
 }

@@ -30,14 +30,4 @@ internal sealed class BusinessUnitRepository(MyFinanceDbContext myFinanceDbConte
             .AsNoTracking()
             .Where(bu => bu.Name == name)
             .FirstOrDefaultAsync(cancellationToken);
-
-    public Task<BusinessUnit?> GetWithSummaryData(Guid id, int year, int month, CancellationToken cancellationToken)
-        => _myFinanceDbContext.BusinessUnits
-            .AsNoTracking()
-            .Include(bu => bu.Transfers
-                .Where(
-                    transfer => transfer.SettlementDate.Year == year &&
-                    transfer.SettlementDate.Month == month))
-            .ThenInclude(transfer => transfer.AccountTag)
-            .FirstOrDefaultAsync(bu => bu.Id == id, cancellationToken);
 }

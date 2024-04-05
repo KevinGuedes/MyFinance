@@ -1,12 +1,13 @@
 ﻿using FluentValidation;
 using MyFinance.Application.Abstractions.Persistence.Repositories;
+using MyFinance.Application.Common.CustomValidationRules;
 
 namespace MyFinance.Application.UseCases.Users.Commands.RegisterUser;
 
 public sealed class RegisterUserCommandValidator : AbstractValidator<RegisterUserCommand>
 {
     private readonly IUserRepository _userRepository;
-
+ 
     public RegisterUserCommandValidator(IUserRepository userRepository)
     {
         _userRepository = userRepository;
@@ -18,9 +19,7 @@ public sealed class RegisterUserCommandValidator : AbstractValidator<RegisterUse
             .MaximumLength(256).WithMessage("{PropertyName} must not exceed 256 characters");
 
         RuleFor(command => command.PlainTextPassword)
-            .NotEmpty().WithMessage("{PropertyName} must not be empty")
-            .NotNull().WithMessage("{PropertyName} must not be null")
-            .MinimumLength(16).WithMessage("{PropertyName} must have at least 16 characters");
+            .MustBeAStrongPassword();
 
         RuleFor(command => command.PlainTextConfirmationPassword)
             .Equal(command => command.PlainTextPassword)

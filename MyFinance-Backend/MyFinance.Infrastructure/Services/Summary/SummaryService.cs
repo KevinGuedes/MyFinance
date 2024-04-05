@@ -7,36 +7,53 @@ namespace MyFinance.Infrastructure.Services.Summary;
 
 public sealed class SummaryService : ISummaryService
 {
+    private const int initalRowForBalanceData = 3;
+    private const int inititalRowForGenerationData = 1;
+    private const int inititalRowForTransfersData = 1;
+
     private static readonly string[] summaryColumnNames = ["Income", "Outcome", "Balance"];
-
     private static readonly string[] transferColumnNames =
-        ["Value", "Related To", "Description", "Account Tag", "Settlement Date"];
+        ["Value", "Related To", "Description", "Category", "Account Tag", "Settlement Date"];
 
-    public Tuple<string, byte[]> GenerateMonthlySummary(BusinessUnit businessUnit, int year, int month)
+    public Tuple<string, byte[]> GenerateMonthlySummary(
+        BusinessUnit businessUnit, 
+        IEnumerable<Transfer> transfers,
+        int year, 
+        int month)
     {
         var refrenceDateHumanized = new DateOnly(year, month, 1).ToString("MMMM yyyy");
         var workbookName = $"{businessUnit.Name} Summary - {refrenceDateHumanized}.xlsx";
         var wb = new XLWorkbook();
 
-        FillBusinessUnitData(businessUnit, wb, refrenceDateHumanized);
-        FillTransfersData(businessUnit.Transfers, wb, refrenceDateHumanized);
+        var balanceWorksheet = wb.AddWorksheet(businessUnit.Name, 1);
+        FillGenerationData(balanceWorksheet);
+        FillCurrentBalanceData(businessUnit, balanceWorksheet);
+        FillMonthlyBalanceData(transfers, balanceWorksheet, refrenceDateHumanized);
+        balanceWorksheet.Columns().AdjustToContents();
+
+        var transfersWorksheet = wb.AddWorksheet(refrenceDateHumanized, 2);
+        FillTransfersData(businessUnit.Transfers, transfersWorksheet, refrenceDateHumanized);
+        transfersWorksheet.Columns().AdjustToContents();
 
         return new Tuple<string, byte[]>(workbookName, ConvertWorkbookToByteArray(wb));
     }
 
-    private static void FillBusinessUnitData(BusinessUnit businessUnit, XLWorkbook wb, string refrenceDateHumanized)
+    private static void FillGenerationData(IXLWorksheet ws)
     {
-        var ws = wb.AddWorksheet(businessUnit.Name, 1);
-
-        FillCurrentBalanceData(businessUnit, ws);
-        FillMonthlyBalanceData(businessUnit, ws, refrenceDateHumanized);
-
-        ws.Columns().AdjustToContents();
+        var summaryGenerationDateHumanized = DateTime.UtcNow.ToString("dddd, dd MMMM yyyy HH:mm:ss");
+        ws.Range(inititalRowForGenerationData, 1, inititalRowForGenerationData, 7)
+            .SetValue($"Summary enerated {summaryGenerationDateHumanized}")
+            .Merge()
+            .Style
+            .Font.SetBold()
+            .Fill.SetBackgroundColor(XLColor.CornflowerBlue)
+            .Alignment.SetHorizontal(XLAlignmentHorizontalValues.Center)
+            .Border.SetOutsideBorder(XLBorderStyleValues.Thin);
     }
 
     private static void FillCurrentBalanceData(BusinessUnit businessUnit, IXLWorksheet ws)
     {
-        ws.Range(1, 1, 1, 3)
+          ws.Range(initalRowForBalanceData, 1, initalRowForBalanceData, 3)
             .SetValue($"Current Balance")
             .Merge()
             .Style
@@ -45,7 +62,7 @@ public sealed class SummaryService : ISummaryService
             .Alignment.SetHorizontal(XLAlignmentHorizontalValues.Center)
             .Border.SetOutsideBorder(XLBorderStyleValues.Thin);
 
-        ws.Cell(2, 1)
+        ws.Cell(initalRowForBalanceData + 1, 1)
             .InsertData(summaryColumnNames, true)
             .Style
             .Font.SetBold()
@@ -57,7 +74,7 @@ public sealed class SummaryService : ISummaryService
            businessUnit.Income, -1 * businessUnit.Outcome, businessUnit.Balance
         };
 
-        var currentBalanceRange = ws.Cell(3, 1).InsertData(currentBalanceData, true);
+        var currentBalanceRange = ws.Cell(initalRowForBalanceData + 2, 1).InsertData(currentBalanceData, true);
         currentBalanceRange.Column(1).LastCell().Style.Font.SetFontColor(XLColor.Green);
         currentBalanceRange.Column(2).LastCell().Style.Font.SetFontColor(XLColor.Red);
         var currentBalanceColor = GetBalanceColor(businessUnit.Balance);
@@ -72,12 +89,12 @@ public sealed class SummaryService : ISummaryService
             .Border.SetOutsideBorder(XLBorderStyleValues.Thin);
     }
 
-    private static void FillMonthlyBalanceData(BusinessUnit businessUnit, IXLWorksheet ws, string refrenceDateHumanized)
+    private static void FillMonthlyBalanceData(IEnumerable<Transfer> transfers, IXLWorksheet ws, string refrenceDateHumanized)
     {
         decimal monthlyIncome = 0;
         decimal monthlyOutcome = 0;
 
-        foreach (var transfer in businessUnit.Transfers)
+        foreach (var transfer in transfers)
         {
             if (transfer.Type == TransferType.Profit)
                 monthlyIncome += transfer.Value;
@@ -85,7 +102,7 @@ public sealed class SummaryService : ISummaryService
                 monthlyOutcome += transfer.Value;
         }
 
-        ws.Range(1, 5, 1, 7)
+        ws.Range(initalRowForBalanceData, 5, initalRowForBalanceData, 7)
           .SetValue($"Monthly Balance - {refrenceDateHumanized}")
           .Merge()
           .Style
@@ -94,7 +111,7 @@ public sealed class SummaryService : ISummaryService
           .Alignment.SetHorizontal(XLAlignmentHorizontalValues.Center)
           .Border.SetOutsideBorder(XLBorderStyleValues.Thin);
 
-        ws.Cell(2, 5)
+        ws.Cell(initalRowForBalanceData + 1, 5)
             .InsertData(summaryColumnNames, true)
             .Style
             .Font.SetBold()
@@ -106,8 +123,7 @@ public sealed class SummaryService : ISummaryService
         {
             monthlyIncome, -1 * monthlyOutcome, monthlyBalance
         };
-
-        var monthlyBalanceRange = ws.Cell(3, 5).InsertData(monthlyBalanceData, true);
+                var monthlyBalanceRange = ws.Cell(initalRowForBalanceData + 2, 5).InsertData(monthlyBalanceData, true);
         monthlyBalanceRange.Column(1).LastCell().Style.Font.SetFontColor(XLColor.Green);
         monthlyBalanceRange.Column(2).LastCell().Style.Font.SetFontColor(XLColor.Red);
         var yearlyBalanceColor = GetBalanceColor(monthlyBalance);
@@ -121,11 +137,9 @@ public sealed class SummaryService : ISummaryService
             .Border.SetOutsideBorder(XLBorderStyleValues.Thin);
     }
 
-    private static void FillTransfersData(List<Transfer> transfers, XLWorkbook wb, string refrenceDateHumanized)
+    private static void FillTransfersData(IEnumerable<Transfer> transfers, IXLWorksheet ws, string refrenceDateHumanized)
     {
-        var ws = wb.AddWorksheet(refrenceDateHumanized);
-
-        ws.Range(1, 1, 1, transferColumnNames.Length)
+        ws.Range(inititalRowForTransfersData, 1, inititalRowForTransfersData, transferColumnNames.Length)
             .SetValue("Transfers")
             .Merge()
             .Style
@@ -134,7 +148,7 @@ public sealed class SummaryService : ISummaryService
             .Alignment.SetHorizontal(XLAlignmentHorizontalValues.Center)
             .Border.SetOutsideBorder(XLBorderStyleValues.Thin);
 
-        ws.Cell(2, 1)
+        ws.Cell(inititalRowForTransfersData + 1, 1)
             .InsertData(transferColumnNames, true)
             .Style
             .Font.SetBold()
@@ -152,12 +166,13 @@ public sealed class SummaryService : ISummaryService
                 Value = value,
                 transfer.RelatedTo,
                 transfer.Description,
+                Category = transfer.Category.Name,
                 AccountTag = transfer.AccountTag.Tag,
                 SettlementDate = transfer.SettlementDate.ToString("dddd, dd MMMM yyyy HH:mm:ss")
             };
         });
 
-        var transfersDataRange = ws.Cell(3, 1).InsertData(transfersData);
+        var transfersDataRange = ws.Cell(inititalRowForTransfersData + 2, 1).InsertData(transfersData);
         transfersDataRange.Style
             .Alignment.SetHorizontal(XLAlignmentHorizontalValues.Center)
             .Border.SetOutsideBorder(XLBorderStyleValues.Thin);

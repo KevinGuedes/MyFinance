@@ -4,6 +4,7 @@ namespace MyFinance.Application.Abstractions.Persistence.Repositories;
 
 public interface IAccountTagRepository
 {
+    Task<long> GetTotalCountAsync(CancellationToken cancellationToken);
     Task<IEnumerable<AccountTag>> GetPaginatedAsync(
         int pageNumber,
         int pageSize,

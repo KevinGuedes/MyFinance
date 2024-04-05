@@ -9,8 +9,8 @@ internal abstract class EntityRepository<TEntity>(MyFinanceDbContext myFinanceDb
 {
     protected readonly MyFinanceDbContext _myFinanceDbContext = myFinanceDbContext;
 
-    public Task<int> GetTotalCountAsync(CancellationToken cancellationToken)
-        => _myFinanceDbContext.Set<TEntity>().CountAsync(cancellationToken);
+    public Task<long> GetTotalCountAsync(CancellationToken cancellationToken)
+        => _myFinanceDbContext.Set<TEntity>().LongCountAsync(cancellationToken);
 
     public virtual async Task<TEntity?> GetByIdAsync(Guid id, CancellationToken cancellationToken)
         => await _myFinanceDbContext.Set<TEntity>().FindAsync([id], cancellationToken);

@@ -15,8 +15,9 @@ public class BusinessUnitMapper
         public static Paginated<BusinessUnitResponse> Map(
             IEnumerable<BusinessUnit> businessUnits,
             int pageNumber,
-            int pageSize)
-            => new(Map(businessUnits), pageNumber, pageSize, 0);
+            int pageSize,
+            long totalCount)
+            => new(Map(businessUnits), pageNumber, pageSize, totalCount);
 
         public static BusinessUnitResponse Map(BusinessUnit businessUnit)
             => new()

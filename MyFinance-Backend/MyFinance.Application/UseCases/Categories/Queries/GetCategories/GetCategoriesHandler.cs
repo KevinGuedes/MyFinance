@@ -15,12 +15,18 @@ internal sealed class GetCategoriesHandler(ICategoryRepository categoryRepositor
     public async Task<Result<Paginated<CategoryResponse>>> Handle(GetCategoriesQuery query,
         CancellationToken cancellationToken)
     {
+        var totalCount = await _categoryRepository.GetTotalCountAsync(cancellationToken);
+
         var categories = await _categoryRepository.GetPaginatedAsync(
             query.PageNumber,
             query.PageSize,
             cancellationToken);
 
-        var response = CategoryMapper.DTR.Map(categories, query.PageNumber, query.PageSize);
+        var response = CategoryMapper.DTR.Map(
+            categories,
+            query.PageNumber,
+            query.PageSize,
+            totalCount);
 
         return Result.Ok(response);
     }
