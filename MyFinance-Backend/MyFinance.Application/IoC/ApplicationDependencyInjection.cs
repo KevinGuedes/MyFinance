@@ -20,7 +20,7 @@ public static class ApplicationDependencyInjection
 
     private static IServiceCollection AddMediatR(this IServiceCollection services)
         => services
-            .AddMediatR(cfg => 
+            .AddMediatR(cfg =>
                 cfg
                     .RegisterServicesFromAssembly(Assembly.GetExecutingAssembly())
                     .AddOpenBehavior(typeof(TimingBehavior<,>))

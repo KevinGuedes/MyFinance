@@ -23,8 +23,8 @@ internal sealed class GetBusinessUnitsHandler(IBusinessUnitRepository businessUn
             cancellationToken);
 
         var response = BusinessUnitMapper.DTR.Map(
-            businessUnits, 
-            query.PageNumber, 
+            businessUnits,
+            query.PageNumber,
             query.PageSize,
             totalCount);
 

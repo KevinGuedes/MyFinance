@@ -21,9 +21,9 @@ public interface ITransferRepository
         int pageSize,
         CancellationToken cancellationToken);
     Task<IEnumerable<Transfer>> GetWithSummaryDataAsync(
-        Guid businessUnitId, 
-        int year, 
-        int month, 
+        Guid businessUnitId,
+        int year,
+        int month,
         CancellationToken cancellationToken);
     Task<Transfer?> GetWithBusinessUnitByIdAsync(Guid id, CancellationToken cancellationToken);
     void Update(Transfer transfer);
