@@ -23,9 +23,9 @@ internal sealed class GetAccountTagsHandler(IAccountTagRepository accountTagRepo
             cancellationToken);
 
         var response = AccountTagMapper.DTR.Map(
-            accountTags, 
-            query.PageNumber, 
-            query.PageSize, 
+            accountTags,
+            query.PageNumber,
+            query.PageSize,
             totalCount);
 
         return Result.Ok(response);

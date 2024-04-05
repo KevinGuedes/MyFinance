@@ -13,8 +13,8 @@ internal sealed class TransferRepository(MyFinanceDbContext myFinanceDbContext)
         => await _myFinanceDbContext.Transfers
             .AsNoTracking()
             .Where(
-                transfer => transfer.SettlementDate.Year == year && 
-                transfer.SettlementDate.Month == month && 
+                transfer => transfer.SettlementDate.Year == year &&
+                transfer.SettlementDate.Month == month &&
                 transfer.BusinessUnitId == businessUnitId)
             .Include(transfer => transfer.Category)
             .Include(transfer => transfer.AccountTag)
