@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using MyFinance.Application.Abstractions.RequestHandling;
 using MyFinance.Application.Common.Errors;
+using Microsoft.Data.SqlClient;
 
 namespace MyFinance.Application.RequestPipeline.Behaviors;
 
@@ -14,15 +15,18 @@ internal sealed class ExceptionHandlerBehavior<TRequest, TResponse, TException>(
     where TResponse : ResultBase, new()
     where TException : Exception
 {
+    private const int DEADLOCK_ERROR_CODE = 1205;
     private readonly ILogger<ExceptionHandlerBehavior<TRequest, TResponse, TException>> _logger = logger;
 
     public Task Handle(TRequest request, TException exception, RequestExceptionHandlerState<TResponse> state, CancellationToken cancellationToken)
     {
-        var errorResult = exception switch
-        {
-            DbUpdateConcurrencyException => BuildConflictErrorResult(exception),
-            _ => BuildInternalServerErrorResult(exception, request.GetType().Name)
-        };
+        var isConcurrencyException =
+            exception.InnerException?.InnerException is SqlException sqlException &&
+            sqlException.Number == DEADLOCK_ERROR_CODE;
+
+        var errorResult = isConcurrencyException ? 
+            BuildConflictErrorResult(exception) : 
+            BuildInternalServerErrorResult(exception, request.GetType().Name);
 
         var response = new TResponse();
         response.Reasons.AddRange(errorResult.Reasons);
@@ -33,7 +37,7 @@ internal sealed class ExceptionHandlerBehavior<TRequest, TResponse, TException>(
 
     private static Result BuildConflictErrorResult(TException exception)
     {
-        var conflictMessage = "The regarding entity has already been update. Check the updated data and try again";
+        var conflictMessage = "The regarding entity is likely to have been updated. Check the updated data and try again";
         var conflictError = new ConflictError(conflictMessage).CausedBy(exception);
         return Result.Fail(conflictError);
     }
