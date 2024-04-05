@@ -64,7 +64,7 @@ internal sealed class TransferRepository(MyFinanceDbContext myFinanceDbContext)
         return new Tuple<decimal, decimal>(income, outcome);
     }
 
-    public async Task<IEnumerable<Transfer>> GetTransfersByParams(
+    public async Task<Tuple<int, IEnumerable<Transfer>>> GetTransfersByParams(
         Guid businessUnitId,
         DateOnly? startDate,
         DateOnly? endDate,
@@ -81,11 +81,14 @@ internal sealed class TransferRepository(MyFinanceDbContext myFinanceDbContext)
             categoryId,
             accountTagId);
 
-        return await transfers
+        var totalCount = transfers.Count();
+        var transfersPage = await transfers
             .OrderByDescending(transfer => transfer.SettlementDate)
             .Skip((pageNumber - 1) * pageSize)
             .Take(pageSize)
             .ToListAsync(cancellationToken);
+
+        return new Tuple<int, IEnumerable<Transfer>>(totalCount, transfers);
     }
 
     private IQueryable<Transfer> GetByParams(

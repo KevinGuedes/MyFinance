@@ -11,7 +11,7 @@ public interface ITransferRepository
         Guid? categoryId,
         Guid? accountTagId,
         CancellationToken cancellationToken);
-    Task<IEnumerable<Transfer>> GetTransfersByParams(
+    Task<Tuple<int, IEnumerable<Transfer>>> GetTransfersByParams(
         Guid businessUnitId,
         DateOnly? startDate,
         DateOnly? endDate,

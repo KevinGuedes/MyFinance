@@ -15,12 +15,18 @@ internal sealed class GetBusinessUnitsHandler(IBusinessUnitRepository businessUn
     public async Task<Result<Paginated<BusinessUnitResponse>>> Handle(GetBusinessUnitsQuery query,
         CancellationToken cancellationToken)
     {
+        var totalCount = await _businessUnitRepository.GetTotalCountAsync(cancellationToken);
+
         var businessUnits = await _businessUnitRepository.GetPaginatedAsync(
             query.PageNumber,
             query.PageSize,
             cancellationToken);
 
-        var response = BusinessUnitMapper.DTR.Map(businessUnits, query.PageNumber, query.PageSize);
+        var response = BusinessUnitMapper.DTR.Map(
+            businessUnits, 
+            query.PageNumber, 
+            query.PageSize,
+            totalCount);
 
         return Result.Ok(response);
     }

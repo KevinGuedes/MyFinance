@@ -16,8 +16,9 @@ public static class AccountTagMapper
         public static Paginated<AccountTagResponse> Map(
            IEnumerable<AccountTag> accountTags,
            int pageNumber,
-           int pageSize)
-           => new(Map(accountTags), pageNumber, pageSize, 0);
+           int pageSize,
+           long totalCount)
+           => new(Map(accountTags), pageNumber, pageSize, totalCount);
 
         public static AccountTagResponse Map(AccountTag accountTag)
             => new()

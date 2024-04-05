@@ -22,7 +22,8 @@ public static class TransferMapper
         public static Paginated<TransferGroupResponse> Map(
             IEnumerable<Transfer> transfers,
             int pageNumber,
-            int pageSize)
+            int pageSize,
+            int totalCount)
         {
             var tranferGroups = transfers.GroupBy(
                 transfer => transfer.SettlementDate.Date,
@@ -49,7 +50,7 @@ public static class TransferMapper
                     };
                 });
 
-            return new(tranferGroups.ToList().AsReadOnly(), pageNumber, pageSize, 0);
+            return new(tranferGroups.ToList().AsReadOnly(), pageNumber, pageSize, totalCount);
         }
 
         public static TransferResponse Map(Transfer transfer)

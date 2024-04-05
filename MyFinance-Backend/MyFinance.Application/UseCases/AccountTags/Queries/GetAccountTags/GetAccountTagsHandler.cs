@@ -15,12 +15,18 @@ internal sealed class GetAccountTagsHandler(IAccountTagRepository accountTagRepo
     public async Task<Result<Paginated<AccountTagResponse>>> Handle(GetAccountTagsQuery query,
         CancellationToken cancellationToken)
     {
+        var totalCount = await _accountTagRepository.GetTotalCountAsync(cancellationToken);
+
         var accountTags = await _accountTagRepository.GetPaginatedAsync(
             query.PageNumber,
             query.PageSize,
             cancellationToken);
 
-        var response = AccountTagMapper.DTR.Map(accountTags, query.PageNumber, query.PageSize);
+        var response = AccountTagMapper.DTR.Map(
+            accountTags, 
+            query.PageNumber, 
+            query.PageSize, 
+            totalCount);
 
         return Result.Ok(response);
     }

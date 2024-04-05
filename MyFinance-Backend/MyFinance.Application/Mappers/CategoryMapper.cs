@@ -15,8 +15,9 @@ public static class CategoryMapper
         public static Paginated<CategoryResponse> Map(
             IEnumerable<Category> categories,
             int pageNumber,
-            int pageSize)
-            => new(Map(categories), pageNumber, pageSize, 0);
+            int pageSize,
+            long totalCount)
+            => new(Map(categories), pageNumber, pageSize, totalCount);
 
         public static CategoryResponse Map(Category category)
                => new()
