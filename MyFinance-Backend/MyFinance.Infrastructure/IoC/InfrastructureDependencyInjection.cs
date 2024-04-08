@@ -22,8 +22,9 @@ public static class InfrastructureDependencyInjection
         => services
             .AddHttpContextAccessor()
             .AddAuth()
-            .AddServices()
-            .AddPersistence(configuration);
+            .AddInfrastructureServices()
+            .AddPersistence(configuration)
+            .AddHelthCheckForExternalServices();
 
     private static IServiceCollection AddAuth(this IServiceCollection services)
     {
@@ -35,7 +36,7 @@ public static class InfrastructureDependencyInjection
         return services.AddAuthorization();
     }
 
-    private static IServiceCollection AddServices(this IServiceCollection services)
+    private static IServiceCollection AddInfrastructureServices(this IServiceCollection services)
         => services
             .AddScoped<ISummaryService, SummaryService>()
             .AddScoped<IPasswordHasher, PasswordHasher>()
@@ -59,5 +60,14 @@ public static class InfrastructureDependencyInjection
             .AddScoped<ITransferRepository, TransferRepository>()
             .AddScoped<IAccountTagRepository, AccountTagRepository>()
             .AddScoped<ICategoryRepository, CategoryRepository>();
+    }
+
+    private static IServiceCollection AddHelthCheckForExternalServices(this IServiceCollection services)
+    {
+        services
+            .AddHealthChecks()
+            .AddDbContextCheck<MyFinanceDbContext>("database");
+
+        return services;
     }
 }
