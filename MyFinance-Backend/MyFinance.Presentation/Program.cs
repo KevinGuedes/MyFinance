@@ -22,6 +22,8 @@ var app = builder.Build();
             {
                 options.SwaggerEndpoint("/swagger/v1/swagger.json", "MyFinance API");
                 options.DocumentTitle = "MyFinance API";
+                options.ConfigObject.TryItOutEnabled = true;
+                options.ConfigObject.DisplayRequestDuration = true;
             });
     }
 
