@@ -1,6 +1,6 @@
 ﻿namespace MyFinance.Contracts.Transfer.Requests;
 
-public sealed class GetAnnualBalanceDataRequest
+public sealed class GetDiscriminatedAnnualBalanceDataRequest
 {
     public required Guid BusinessUnitId { get; init; }
     public required int Year { get; init; }

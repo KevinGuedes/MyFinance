@@ -14,11 +14,11 @@ public static class TransferMapper
     {
         private const int AMOUNT_OF_MONTHS_IN_ONE_YEAR = 12;
 
-        public static AnnualBalanceDataResponse Map(
+        public static DiscriminatedAnnualBalanceDataResponse Map(
             int year,
-            IEnumerable<(int Month, decimal Income, decimal Outcome)> annualBalanceData)
+            IEnumerable<(int Month, decimal Income, decimal Outcome)> discriminatedAnnualBalanceData)
         {
-            var existingMonthlyBalances = annualBalanceData.Select(monthlyBalanceData => new MonthlyBalanceDataResponse
+            var existingMonthlyBalances = discriminatedAnnualBalanceData.Select(monthlyBalanceData => new MonthlyBalanceDataResponse
             {
                 Month = monthlyBalanceData.Month,
                 Income = monthlyBalanceData.Income,

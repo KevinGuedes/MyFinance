@@ -76,18 +76,18 @@ public class TransferController(IMediator mediator) : ApiController(mediator)
         return ProcessResult(await _mediator.Send(query, cancellationToken));
     }
 
-    [HttpGet("AnnualBalance")]
+    [HttpGet("DiscriminatedAnnualBalance")]
     [SwaggerOperation(Summary = "Gets the income, outcome and balance for each month within a given year")]
-    [SwaggerResponse(StatusCodes.Status200OK, "Annual balance data", typeof(AnnualBalanceDataResponse))]
+    [SwaggerResponse(StatusCodes.Status200OK, "Annual balance data", typeof(DiscriminatedAnnualBalanceDataResponse))]
     [SwaggerResponse(StatusCodes.Status400BadRequest, "Invalid query parameters", typeof(ValidationProblemResponse))]
-    public async Task<IActionResult> GetAnnualBalanceDataAsync(
+    public async Task<IActionResult> GetDiscriminatedAnnualBalanceAsync(
         [FromQuery][SwaggerParameter("Business Unit Id", Required = true)]
         Guid businessUnitId,
         [FromQuery][SwaggerParameter("Year", Required = true)]
         int year,
         CancellationToken cancellationToken)
     {    
-        var query = new GetAnnualBalanceDataQuery(businessUnitId, year);
+        var query = new GetDiscriminatedAnnualBalanceDataQuery(businessUnitId, year);
         return ProcessResult(await _mediator.Send(query, cancellationToken));
     }
 

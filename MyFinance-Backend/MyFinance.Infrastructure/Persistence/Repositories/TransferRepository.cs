@@ -123,7 +123,7 @@ internal sealed class TransferRepository(MyFinanceDbContext myFinanceDbContext)
         return transfers;
     }
 
-    public async Task<IEnumerable<(int Month, decimal Income, decimal Outcome)>> GetAnnualBalanceDataAsync(
+    public async Task<IEnumerable<(int Month, decimal Income, decimal Outcome)>> GetDiscriminatedAnnualBalanceDataAsync(
         Guid businessUnitId,
         int year,
         CancellationToken cancellationToken)

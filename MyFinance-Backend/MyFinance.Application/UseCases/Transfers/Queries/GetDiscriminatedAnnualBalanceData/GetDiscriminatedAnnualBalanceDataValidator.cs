@@ -3,7 +3,7 @@ using MyFinance.Application.Common.CustomValidators;
 
 namespace MyFinance.Application.UseCases.Transfers.Queries.GetAnnualBalanceData;
 
-public sealed class GetAnnualBalanceDataValidator : AbstractValidator<GetAnnualBalanceDataQuery>
+public sealed class GetAnnualBalanceDataValidator : AbstractValidator<GetDiscriminatedAnnualBalanceDataQuery>
 {
     public GetAnnualBalanceDataValidator()
     {
