@@ -1,5 +1,4 @@
-﻿using DocumentFormat.OpenXml.Drawing;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using MyFinance.Application.Abstractions.Persistence.Repositories;
 using MyFinance.Domain.Entities;
 using MyFinance.Domain.Enums;

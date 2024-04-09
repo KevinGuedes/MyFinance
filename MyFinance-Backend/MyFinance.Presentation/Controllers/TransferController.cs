@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using MyFinance.Application.Mappers;
 using MyFinance.Application.UseCases.Transfers.Commands.DeleteTransfer;
 using MyFinance.Application.UseCases.Transfers.Queries.GetAnnualBalanceData;
-using MyFinance.Application.UseCases.Transfers.Queries.GetPeriodBalance;
+using MyFinance.Application.UseCases.Transfers.Queries.GetBalanceDataFromPeriod;
 using MyFinance.Application.UseCases.Transfers.Queries.GetTransfers;
 using MyFinance.Contracts.Common;
 using MyFinance.Contracts.Transfer.Requests;
@@ -66,7 +66,7 @@ public class TransferController(IMediator mediator) : ApiController(mediator)
         Guid accountTagId,
         CancellationToken cancellationToken)
     {
-        var query = new GetBalanceDateFromPeriodQuery(
+        var query = new GetBalanceDataFromPeriodQuery(
             businessUnitId,
             startDate,
             endDate,
@@ -77,7 +77,7 @@ public class TransferController(IMediator mediator) : ApiController(mediator)
     }
 
     [HttpGet("AnnualBalance")]
-    [SwaggerOperation(Summary = "Lists the Transfers retrived according to query parameters. Transfers are grouped by date")]
+    [SwaggerOperation(Summary = "Gets the income, outcome and balance for each month within a given year")]
     [SwaggerResponse(StatusCodes.Status200OK, "Annual balance data", typeof(AnnualBalanceDataResponse))]
     [SwaggerResponse(StatusCodes.Status400BadRequest, "Invalid query parameters", typeof(ValidationProblemResponse))]
     public async Task<IActionResult> GetAnnualBalanceDataAsync(

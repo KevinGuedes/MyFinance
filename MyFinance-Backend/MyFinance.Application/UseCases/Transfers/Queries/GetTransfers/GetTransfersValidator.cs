@@ -17,8 +17,7 @@ public sealed class GetTransfersValidator : AbstractValidator<GetTransfersQuery>
                 .WithMessage("End date must not be after start date");
         });
 
-        RuleFor(query => query.BusinessUnitId)
-            .NotEqual(Guid.Empty).WithMessage("Invalid {PropertyName}");
+        RuleFor(query => query.BusinessUnitId).MustBeAValidGuid();
 
         RuleFor(query => query.PageNumber).MustBeAValidPageNumber();
         RuleFor(query => query.PageSize).MustBeLessThan100();
