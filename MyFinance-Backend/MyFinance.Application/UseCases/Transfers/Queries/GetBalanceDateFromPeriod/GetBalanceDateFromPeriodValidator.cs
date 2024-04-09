@@ -2,9 +2,9 @@
 
 namespace MyFinance.Application.UseCases.Transfers.Queries.GetPeriodBalance;
 
-public sealed class GetPeriodBalanceValidator : AbstractValidator<GetPeriodBalanceQuery>
+public sealed class GetBalanceDateFromPeriodValidator : AbstractValidator<GetBalanceDateFromPeriodQuery>
 {
-    public GetPeriodBalanceValidator()
+    public GetBalanceDateFromPeriodValidator()
     {
         When(query =>
             query.StartDate.HasValue && query.StartDate.Value != default &&

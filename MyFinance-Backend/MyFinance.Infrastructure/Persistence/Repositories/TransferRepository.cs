@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using DocumentFormat.OpenXml.Drawing;
+using Microsoft.EntityFrameworkCore;
 using MyFinance.Application.Abstractions.Persistence.Repositories;
 using MyFinance.Domain.Entities;
 using MyFinance.Domain.Enums;
@@ -122,4 +123,20 @@ internal sealed class TransferRepository(MyFinanceDbContext myFinanceDbContext)
 
         return transfers;
     }
+
+    public async Task<IEnumerable<Tuple<int, decimal, decimal>>> GetAnnualBalanceDataAsync(
+        Guid businessUnitId,
+        int year,
+        CancellationToken cancellationToken)
+        => await _myFinanceDbContext.Transfers
+            .AsNoTracking()
+            .Where(transfer => transfer.SettlementDate.Year == year && transfer.BusinessUnitId == businessUnitId)
+            .GroupBy(transfer => transfer.SettlementDate.Month)
+            .Select(transferGroup => new Tuple<int, decimal, decimal>
+            (
+                transferGroup.Key,
+                transferGroup.Sum(transfer => transfer.Type == TransferType.Profit ? transfer.Value : 0),
+                transferGroup.Sum(transfer => transfer.Type == TransferType.Expense ? transfer.Value : 0)
+            ))
+            .ToListAsync(cancellationToken);
 }
