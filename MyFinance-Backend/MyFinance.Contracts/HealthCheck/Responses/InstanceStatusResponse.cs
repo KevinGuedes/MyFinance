@@ -2,7 +2,7 @@
 
 namespace MyFinance.Contracts.HealthCheck.Responses;
 
-public class InstanceStatusResponse
+public sealed class InstanceStatusResponse
 {
     public required string Name { get; init; }
     public required string Status { get; init; }
