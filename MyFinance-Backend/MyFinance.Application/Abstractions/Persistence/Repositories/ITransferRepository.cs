@@ -4,18 +4,18 @@ namespace MyFinance.Application.Abstractions.Persistence.Repositories;
 
 public interface ITransferRepository
 {
-    Task<IEnumerable<Tuple<int, decimal, decimal>>> GetAnnualBalanceDataAsync(
+    Task<IEnumerable<(int Month, decimal Income, decimal Outcome)>> GetAnnualBalanceDataAsync(
         Guid businessUnitId,
         int year, 
         CancellationToken cancellationToken);
-    Task<Tuple<decimal, decimal>> GetIncomeAndOutcomeFromPeriodByParams(
+    Task<(decimal Income, decimal Outcome)> GetBalanceDataFromPeriodAsync(
         Guid businessUnitId,
         DateOnly? startDate,
         DateOnly? endDate,
         Guid? categoryId,
         Guid? accountTagId,
         CancellationToken cancellationToken);
-    Task<Tuple<int, IEnumerable<Transfer>>> GetTransfersByParams(
+    Task<(long TotalCount, IEnumerable<Transfer> Transfers)> GetTransfersByParamsAsync(
         Guid businessUnitId,
         DateOnly? startDate,
         DateOnly? endDate,

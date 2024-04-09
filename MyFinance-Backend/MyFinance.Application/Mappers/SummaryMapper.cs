@@ -6,13 +6,12 @@ public static class SummaryMapper
 {
     public static class DTR
     {
-        public static SummaryResponse Map(Tuple<string, byte[]> summaryData)
+        public static SummaryResponse Map((string FileName, byte[] FileContent) summaryData)
         {
-            var (fileName, fileContent) = summaryData;
             return new SummaryResponse
             {
-                FileName = fileName,
-                FileContent = fileContent
+                FileName = summaryData.FileName,
+                FileContent = summaryData.FileContent
             };
         }
     }

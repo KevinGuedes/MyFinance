@@ -13,7 +13,7 @@ internal sealed class GetPeriodBalanceHandler(ITransferRepository transferReposi
 
     public async Task<Result<PeriodBalanceDataResponse>> Handle(GetBalanceDateFromPeriodQuery query, CancellationToken cancellationToken)
     {
-        var (income, outcome) = await _transferRepository.GetIncomeAndOutcomeFromPeriodByParams(
+        var periodBalanceData = await _transferRepository.GetBalanceDataFromPeriodAsync(
             query.BusinessUnitId,
             query.StartDate,
             query.EndDate,
@@ -21,6 +21,6 @@ internal sealed class GetPeriodBalanceHandler(ITransferRepository transferReposi
             query.AccountTagId,
             cancellationToken);
 
-        return Result.Ok(TransferMapper.DTR.Map(income, outcome));
+        return Result.Ok(TransferMapper.DTR.Map(periodBalanceData));
     }
 }

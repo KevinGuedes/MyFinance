@@ -16,13 +16,13 @@ public static class TransferMapper
 
         public static AnnualBalanceDataResponse Map(
             int year,
-            IEnumerable<Tuple<int, decimal, decimal>> annualBalanceData)
+            IEnumerable<(int Month, decimal Income, decimal Outcome)> annualBalanceData)
         {
             var existingMonthlyBalances = annualBalanceData.Select(monthlyBalanceData => new MonthlyBalanceDataResponse
             {
-                Month = monthlyBalanceData.Item1,
-                Income = monthlyBalanceData.Item2,
-                Outcome = monthlyBalanceData.Item3,
+                Month = monthlyBalanceData.Month,
+                Income = monthlyBalanceData.Income,
+                Outcome = monthlyBalanceData.Outcome,
             });
 
             var filledMonthlyBalances = new Dictionary<int, MonthlyBalanceDataResponse>();
@@ -55,20 +55,19 @@ public static class TransferMapper
             };
         }
 
-        public static PeriodBalanceDataResponse Map(decimal income, decimal outcome)
+        public static PeriodBalanceDataResponse Map((decimal Income, decimal Outcome) periodBalanceData)
             => new()
             {
-                Income = income,
-                Outcome = outcome,
+                Income = periodBalanceData.Income,
+                Outcome = periodBalanceData.Outcome,
             };
 
         public static Paginated<TransferGroupResponse> Map(
-            IEnumerable<Transfer> transfers,
+            (long TotalCount, IEnumerable<Transfer> Transfers) transfersData,
             int pageNumber,
-            int pageSize,
-            int totalCount)
+            int pageSize)
         {
-            var tranferGroups = transfers.GroupBy(
+            var tranferGroups = transfersData.Transfers.GroupBy(
                 transfer => transfer.SettlementDate.Date,
                 transfer => transfer,
                 (settlementDate, transfers) =>
@@ -93,7 +92,11 @@ public static class TransferMapper
                     };
                 });
 
-            return new(tranferGroups.ToList().AsReadOnly(), pageNumber, pageSize, totalCount);
+            return new(
+                tranferGroups.ToList().AsReadOnly(), 
+                pageNumber, 
+                pageSize, 
+                transfersData.TotalCount);
         }
 
         public static TransferResponse Map(Transfer transfer)
