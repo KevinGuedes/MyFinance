@@ -1,11 +1,11 @@
 ﻿using FluentValidation;
 using MyFinance.Application.Common.CustomValidators;
 
-namespace MyFinance.Application.UseCases.Transfers.Queries.GetAnnualBalanceData;
+namespace MyFinance.Application.UseCases.Transfers.Queries.GetDiscriminatedAnnualBalanceData;
 
-public sealed class GetAnnualBalanceDataValidator : AbstractValidator<GetDiscriminatedAnnualBalanceDataQuery>
+public sealed class GetDiscriminatedAnnualBalanceDataValidator : AbstractValidator<GetDiscriminatedAnnualBalanceDataQuery>
 {
-    public GetAnnualBalanceDataValidator()
+    public GetDiscriminatedAnnualBalanceDataValidator()
     {
         RuleFor(query => query.BusinessUnitId).MustBeAValidGuid();
 

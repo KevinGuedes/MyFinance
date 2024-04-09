@@ -2,8 +2,8 @@
 using Microsoft.AspNetCore.Mvc;
 using MyFinance.Application.Mappers;
 using MyFinance.Application.UseCases.Transfers.Commands.DeleteTransfer;
-using MyFinance.Application.UseCases.Transfers.Queries.GetAnnualBalanceData;
 using MyFinance.Application.UseCases.Transfers.Queries.GetBalanceDataFromPeriod;
+using MyFinance.Application.UseCases.Transfers.Queries.GetDiscriminatedAnnualBalanceData;
 using MyFinance.Application.UseCases.Transfers.Queries.GetTransfers;
 using MyFinance.Contracts.Common;
 using MyFinance.Contracts.Transfer.Requests;

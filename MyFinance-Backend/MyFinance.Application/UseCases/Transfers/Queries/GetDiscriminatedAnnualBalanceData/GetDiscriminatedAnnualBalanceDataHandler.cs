@@ -4,7 +4,7 @@ using MyFinance.Application.Abstractions.RequestHandling.Queries;
 using MyFinance.Application.Mappers;
 using MyFinance.Contracts.Transfer.Responses;
 
-namespace MyFinance.Application.UseCases.Transfers.Queries.GetAnnualBalanceData;
+namespace MyFinance.Application.UseCases.Transfers.Queries.GetDiscriminatedAnnualBalanceData;
 
 internal sealed class GetDiscriminatedAnnualBalanceDataHandler(ITransferRepository transferRepository) 
     : IQueryHandler<GetDiscriminatedAnnualBalanceDataQuery, DiscriminatedAnnualBalanceDataResponse>
