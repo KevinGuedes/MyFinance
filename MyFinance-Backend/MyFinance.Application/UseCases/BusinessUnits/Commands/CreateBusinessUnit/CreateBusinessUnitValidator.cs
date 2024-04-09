@@ -1,5 +1,6 @@
 ﻿using FluentValidation;
 using MyFinance.Application.Abstractions.Persistence.Repositories;
+using MyFinance.Application.Common.CustomValidators;
 
 namespace MyFinance.Application.UseCases.BusinessUnits.Commands.CreateBusinessUnit;
 
@@ -12,8 +13,7 @@ public sealed class CreateBusinessUnitValidator : AbstractValidator<CreateBusine
         _businessUnitRepository = businessUnitRepository;
         ClassLevelCascadeMode = CascadeMode.Stop;
 
-        RuleFor(command => command.CurrentUserId)
-          .NotEqual(Guid.Empty).WithMessage("Invalid {PropertyName}");
+        RuleFor(command => command.CurrentUserId).MustBeAValidGuid();
 
         RuleFor(command => command.Description)
             .MaximumLength(300).WithMessage("{PropertyName} must have a maximum of 300 characters");

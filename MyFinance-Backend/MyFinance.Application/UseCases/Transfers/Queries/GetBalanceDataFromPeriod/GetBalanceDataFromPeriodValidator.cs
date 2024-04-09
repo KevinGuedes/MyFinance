@@ -7,6 +7,8 @@ public sealed class GetBalanceDataFromPeriodValidator : AbstractValidator<GetBal
 {
     public GetBalanceDataFromPeriodValidator()
     {
+        RuleFor(query => query.BusinessUnitId).MustBeAValidGuid();
+
         When(query =>
             query.StartDate.HasValue && query.StartDate.Value != default &&
             query.EndDate.HasValue && query.EndDate.Value != default,
@@ -16,7 +18,5 @@ public sealed class GetBalanceDataFromPeriodValidator : AbstractValidator<GetBal
                     .GreaterThan(query => query.StartDate)
                     .WithMessage("End date must not be after start date");
             });
-
-        RuleFor(query => query.BusinessUnitId).MustBeAValidGuid();
     }
 }
