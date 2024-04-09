@@ -9,7 +9,6 @@ public interface ICategoryRepository
         int pageNumber,
         int pageSize,
         CancellationToken cancellationToken);
-
     Task<bool> ExistsByNameAsync(string name, CancellationToken cancellationToken);
     Task<Category?> GetByIdAsync(Guid id, CancellationToken cancellationToken);
     Task<Category?> GetByNameAsync(string name, CancellationToken cancellationToken);

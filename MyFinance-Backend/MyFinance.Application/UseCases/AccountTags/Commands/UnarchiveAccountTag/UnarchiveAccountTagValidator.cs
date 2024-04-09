@@ -1,4 +1,5 @@
 ﻿using FluentValidation;
+using MyFinance.Application.Common.CustomValidators;
 
 namespace MyFinance.Application.UseCases.AccountTags.Commands.UnarchiveAccountTag;
 
@@ -6,7 +7,6 @@ public sealed class UnarchiveAccountTagValidator : AbstractValidator<UnarchiveAc
 {
     public UnarchiveAccountTagValidator()
     {
-        RuleFor(command => command.Id)
-            .NotEqual(Guid.Empty).WithMessage("{PropertyName} invalid");
+        RuleFor(command => command.Id).MustBeAValidGuid();
     }
 }

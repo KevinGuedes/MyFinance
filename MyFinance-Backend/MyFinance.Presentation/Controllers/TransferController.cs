@@ -2,7 +2,8 @@
 using Microsoft.AspNetCore.Mvc;
 using MyFinance.Application.Mappers;
 using MyFinance.Application.UseCases.Transfers.Commands.DeleteTransfer;
-using MyFinance.Application.UseCases.Transfers.Queries.GetPeriodBalance;
+using MyFinance.Application.UseCases.Transfers.Queries.GetBalanceDataFromPeriod;
+using MyFinance.Application.UseCases.Transfers.Queries.GetDiscriminatedAnnualBalanceData;
 using MyFinance.Application.UseCases.Transfers.Queries.GetTransfers;
 using MyFinance.Contracts.Common;
 using MyFinance.Contracts.Transfer.Requests;
@@ -50,7 +51,7 @@ public class TransferController(IMediator mediator) : ApiController(mediator)
 
     [HttpGet("PeriodBalance")]
     [SwaggerOperation(Summary = "Gets the income, outcome and balance of the given period according to query parameters")]
-    [SwaggerResponse(StatusCodes.Status200OK, "Balance data", typeof(PeriodBalanceResponse))]
+    [SwaggerResponse(StatusCodes.Status200OK, "Balance data", typeof(PeriodBalanceDataResponse))]
     [SwaggerResponse(StatusCodes.Status400BadRequest, "Invalid query parameters", typeof(ValidationProblemResponse))]
     public async Task<IActionResult> GetPeriodBalanceAsync(
         [FromQuery][SwaggerParameter("Business Unit Id", Required = true)]
@@ -65,13 +66,28 @@ public class TransferController(IMediator mediator) : ApiController(mediator)
         Guid accountTagId,
         CancellationToken cancellationToken)
     {
-        var query = new GetPeriodBalanceQuery(
+        var query = new GetBalanceDataFromPeriodQuery(
             businessUnitId,
             startDate,
             endDate,
             categoryId,
             accountTagId);
 
+        return ProcessResult(await _mediator.Send(query, cancellationToken));
+    }
+
+    [HttpGet("DiscriminatedAnnualBalance")]
+    [SwaggerOperation(Summary = "Gets the income, outcome and balance for each month within a given year")]
+    [SwaggerResponse(StatusCodes.Status200OK, "Annual balance data", typeof(DiscriminatedAnnualBalanceDataResponse))]
+    [SwaggerResponse(StatusCodes.Status400BadRequest, "Invalid query parameters", typeof(ValidationProblemResponse))]
+    public async Task<IActionResult> GetDiscriminatedAnnualBalanceAsync(
+        [FromQuery][SwaggerParameter("Business Unit Id", Required = true)]
+        Guid businessUnitId,
+        [FromQuery][SwaggerParameter("Year", Required = true)]
+        int year,
+        CancellationToken cancellationToken)
+    {    
+        var query = new GetDiscriminatedAnnualBalanceDataQuery(businessUnitId, year);
         return ProcessResult(await _mediator.Send(query, cancellationToken));
     }
 

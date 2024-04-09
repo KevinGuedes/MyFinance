@@ -4,16 +4,16 @@ using MyFinance.Application.Abstractions.RequestHandling.Queries;
 using MyFinance.Application.Mappers;
 using MyFinance.Contracts.Transfer.Responses;
 
-namespace MyFinance.Application.UseCases.Transfers.Queries.GetPeriodBalance;
+namespace MyFinance.Application.UseCases.Transfers.Queries.GetBalanceDataFromPeriod;
 
 internal sealed class GetPeriodBalanceHandler(ITransferRepository transferRepository)
-    : IQueryHandler<GetPeriodBalanceQuery, PeriodBalanceResponse>
+    : IQueryHandler<GetBalanceDataFromPeriodQuery, PeriodBalanceDataResponse>
 {
     private readonly ITransferRepository _transferRepository = transferRepository;
 
-    public async Task<Result<PeriodBalanceResponse>> Handle(GetPeriodBalanceQuery query, CancellationToken cancellationToken)
+    public async Task<Result<PeriodBalanceDataResponse>> Handle(GetBalanceDataFromPeriodQuery query, CancellationToken cancellationToken)
     {
-        var (income, outcome) = await _transferRepository.GetIncomeAndOutcomeFromPeriodByParams(
+        var periodBalanceData = await _transferRepository.GetBalanceDataFromPeriodAsync(
             query.BusinessUnitId,
             query.StartDate,
             query.EndDate,
@@ -21,6 +21,6 @@ internal sealed class GetPeriodBalanceHandler(ITransferRepository transferReposi
             query.AccountTagId,
             cancellationToken);
 
-        return Result.Ok(TransferMapper.DTR.Map(income, outcome));
+        return Result.Ok(TransferMapper.DTR.Map(periodBalanceData));
     }
 }
