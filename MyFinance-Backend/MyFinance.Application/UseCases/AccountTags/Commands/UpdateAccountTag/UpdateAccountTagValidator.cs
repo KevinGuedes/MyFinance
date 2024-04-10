@@ -1,5 +1,6 @@
 ﻿using FluentValidation;
 using MyFinance.Application.Abstractions.Persistence.Repositories;
+using MyFinance.Application.Common.CustomValidators;
 
 namespace MyFinance.Application.UseCases.AccountTags.Commands.UpdateAccountTag;
 
@@ -18,8 +19,7 @@ public sealed class UpdateAccountTagValidator : AbstractValidator<UpdateAccountT
             .MaximumLength(300)
             .WithMessage("{PropertyName} must have a maximum of 300 charactersmust have a maximum of 300 characters");
 
-        RuleFor(command => command.Id)
-            .NotEqual(Guid.Empty).WithMessage("{PropertyName} invalid");
+        RuleFor(command => command.Id).MustBeAValidGuid();
 
         RuleFor(command => command.Tag)
             .Cascade(CascadeMode.Stop)

@@ -12,20 +12,62 @@ public static class TransferMapper
 {
     public static class DTR
     {
-        public static PeriodBalanceResponse Map(decimal income, decimal outcome)
+        private const int AMOUNT_OF_MONTHS_IN_ONE_YEAR = 12;
+
+        public static DiscriminatedAnnualBalanceDataResponse Map(
+            int year,
+            IEnumerable<(int Month, decimal Income, decimal Outcome)> discriminatedAnnualBalanceData)
+        {
+            var existingMonthlyBalances = discriminatedAnnualBalanceData.Select(monthlyBalanceData => new MonthlyBalanceDataResponse
+            {
+                Month = monthlyBalanceData.Month,
+                Income = monthlyBalanceData.Income,
+                Outcome = monthlyBalanceData.Outcome,
+            });
+
+            var filledMonthlyBalances = new Dictionary<int, MonthlyBalanceDataResponse>();
+
+            foreach (var monthlyBalance in existingMonthlyBalances)
+                filledMonthlyBalances[monthlyBalance.Month] = monthlyBalance;
+
+            for (int month = 1; month <= AMOUNT_OF_MONTHS_IN_ONE_YEAR; month++)
+            {
+                var hasMonthlyBalanceForMonth = filledMonthlyBalances.ContainsKey(month);
+
+                if (hasMonthlyBalanceForMonth)
+                    continue;
+
+                filledMonthlyBalances[month] = new MonthlyBalanceDataResponse
+                {
+                    Month = month,
+                    Income = 0.0000m,
+                    Outcome = 0.00000m,
+                };
+            }
+
+            return new()
+            {
+                Year = year,
+                MonthlyBalanceData = filledMonthlyBalances.Values
+                    .OrderBy(monthlyBalance => monthlyBalance.Month)
+                    .ToList()
+                    .AsReadOnly()
+            };
+        }
+
+        public static PeriodBalanceDataResponse Map((decimal Income, decimal Outcome) periodBalanceData)
             => new()
             {
-                Income = income,
-                Outcome = outcome,
+                Income = periodBalanceData.Income,
+                Outcome = periodBalanceData.Outcome,
             };
 
         public static Paginated<TransferGroupResponse> Map(
-            IEnumerable<Transfer> transfers,
+            (long TotalCount, IEnumerable<Transfer> Transfers) transfersData,
             int pageNumber,
-            int pageSize,
-            int totalCount)
+            int pageSize)
         {
-            var tranferGroups = transfers.GroupBy(
+            var tranferGroups = transfersData.Transfers.GroupBy(
                 transfer => transfer.SettlementDate.Date,
                 transfer => transfer,
                 (settlementDate, transfers) =>
@@ -50,7 +92,11 @@ public static class TransferMapper
                     };
                 });
 
-            return new(tranferGroups.ToList().AsReadOnly(), pageNumber, pageSize, totalCount);
+            return new(
+                tranferGroups.ToList().AsReadOnly(), 
+                pageNumber, 
+                pageSize, 
+                transfersData.TotalCount);
         }
 
         public static TransferResponse Map(Transfer transfer)

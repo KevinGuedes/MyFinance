@@ -1,5 +1,6 @@
 ﻿using FluentValidation;
 using MyFinance.Application.Abstractions.Persistence.Repositories;
+using MyFinance.Application.Common.CustomValidators;
 
 namespace MyFinance.Application.UseCases.Categories.Commands.UpdateCategory;
 
@@ -12,8 +13,7 @@ public sealed class UpdateCategoryValidator : AbstractValidator<UpdateCategoryCo
         _categoryRepository = categoryRepository;
         ClassLevelCascadeMode = CascadeMode.Stop;
 
-        RuleFor(command => command.Id)
-            .NotEqual(Guid.Empty).WithMessage("{PropertyName} invalid");
+        RuleFor(command => command.Id).MustBeAValidGuid();
 
         RuleFor(command => command.Name)
             .Cascade(CascadeMode.Stop)

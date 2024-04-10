@@ -14,7 +14,7 @@ internal sealed class GetTransfersHandler(ITransferRepository transferRepository
 
     public async Task<Result<Paginated<TransferGroupResponse>>> Handle(GetTransfersQuery query, CancellationToken cancellationToken)
     {
-        var (totalCount, transfers) = await _transferRepository.GetTransfersByParams(
+        var transfersData = await _transferRepository.GetTransfersByParamsAsync(
             query.BusinessUnitId,
             query.StartDate,
             query.EndDate,
@@ -24,6 +24,6 @@ internal sealed class GetTransfersHandler(ITransferRepository transferRepository
             query.PageSize,
             cancellationToken);
 
-        return TransferMapper.DTR.Map(transfers, query.PageNumber, query.PageSize, totalCount);
+        return TransferMapper.DTR.Map(transfersData, query.PageNumber, query.PageSize);
     }
 }

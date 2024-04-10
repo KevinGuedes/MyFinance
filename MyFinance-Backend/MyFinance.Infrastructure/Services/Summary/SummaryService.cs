@@ -15,7 +15,7 @@ public sealed class SummaryService : ISummaryService
     private static readonly string[] transferColumnNames =
         ["Value", "Related To", "Description", "Category", "Account Tag", "Settlement Date"];
 
-    public Tuple<string, byte[]> GenerateMonthlySummary(
+    public (string FileName, byte[] FileContent) GenerateMonthlySummary(
         BusinessUnit businessUnit, 
         IEnumerable<Transfer> transfers,
         int year, 
@@ -35,7 +35,7 @@ public sealed class SummaryService : ISummaryService
         FillTransfersData(businessUnit.Transfers, transfersWorksheet, refrenceDateHumanized);
         transfersWorksheet.Columns().AdjustToContents();
 
-        return new Tuple<string, byte[]>(workbookName, ConvertWorkbookToByteArray(wb));
+        return (FileName: workbookName, FileContent: ConvertWorkbookToByteArray(wb));
     }
 
     private static void FillGenerationData(IXLWorksheet ws)

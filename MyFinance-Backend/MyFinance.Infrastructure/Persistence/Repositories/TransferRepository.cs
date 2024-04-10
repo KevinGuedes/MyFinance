@@ -25,7 +25,7 @@ internal sealed class TransferRepository(MyFinanceDbContext myFinanceDbContext)
             .Include(transfer => transfer.BusinessUnit)
             .FirstOrDefaultAsync(transfer => transfer.Id == id, cancellationToken);
 
-    public async Task<Tuple<decimal, decimal>> GetIncomeAndOutcomeFromPeriodByParams(
+    public async Task<(decimal Income, decimal Outcome)> GetBalanceDataFromPeriodAsync(
         Guid businessUnitId,
         DateOnly? startDate,
         DateOnly? endDate,
@@ -61,10 +61,10 @@ internal sealed class TransferRepository(MyFinanceDbContext myFinanceDbContext)
                 outcome = transferGroup.Value;
         }
 
-        return new Tuple<decimal, decimal>(income, outcome);
+        return (Income: income, Outcome: outcome);
     }
 
-    public async Task<Tuple<int, IEnumerable<Transfer>>> GetTransfersByParams(
+    public async Task<(long TotalCount, IEnumerable<Transfer> Transfers)> GetTransfersByParamsAsync(
         Guid businessUnitId,
         DateOnly? startDate,
         DateOnly? endDate,
@@ -81,14 +81,14 @@ internal sealed class TransferRepository(MyFinanceDbContext myFinanceDbContext)
             categoryId,
             accountTagId);
 
-        var totalCount = transfers.Count();
+        var totalCount = await transfers.LongCountAsync(cancellationToken);
         var transfersPage = await transfers
             .OrderByDescending(transfer => transfer.SettlementDate)
             .Skip((pageNumber - 1) * pageSize)
             .Take(pageSize)
             .ToListAsync(cancellationToken);
 
-        return new Tuple<int, IEnumerable<Transfer>>(totalCount, transfers);
+        return (TotalCount: totalCount, Transfers: transfers);
     }
 
     private IQueryable<Transfer> GetByParams(
@@ -121,5 +121,28 @@ internal sealed class TransferRepository(MyFinanceDbContext myFinanceDbContext)
             transfers = transfers.Where(transfer => transfer.AccountTagId == accountTagId.Value);
 
         return transfers;
+    }
+
+    public async Task<IEnumerable<(int Month, decimal Income, decimal Outcome)>> GetDiscriminatedAnnualBalanceDataAsync(
+        Guid businessUnitId,
+        int year,
+        CancellationToken cancellationToken)
+    {
+        var result = await _myFinanceDbContext.Transfers
+            .AsNoTracking()
+            .Where(transfer => transfer.SettlementDate.Year == year && transfer.BusinessUnitId == businessUnitId)
+            .GroupBy(transfer => transfer.SettlementDate.Month)
+            .Select(transferGroup => new Tuple<int, decimal, decimal>
+            (
+                transferGroup.Key,
+                transferGroup.Sum(transfer => transfer.Type == TransferType.Profit ? transfer.Value : 0),
+                transferGroup.Sum(transfer => transfer.Type == TransferType.Expense ? transfer.Value : 0)
+            ))
+            .ToListAsync(cancellationToken);
+
+        return result.Select(unnamedMonthlyBalanceData => (
+            Month: unnamedMonthlyBalanceData.Item1,
+            Income: unnamedMonthlyBalanceData.Item2,
+            Outcome: unnamedMonthlyBalanceData.Item3));
     }
 }

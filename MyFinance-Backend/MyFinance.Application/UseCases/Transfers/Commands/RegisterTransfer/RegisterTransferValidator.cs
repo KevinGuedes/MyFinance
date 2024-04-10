@@ -1,4 +1,5 @@
 ﻿using FluentValidation;
+using MyFinance.Application.Common.CustomValidators;
 
 namespace MyFinance.Application.UseCases.Transfers.Commands.RegisterTransfer;
 
@@ -6,8 +7,10 @@ public sealed class RegisterTransferValidator : AbstractValidator<RegisterTransf
 {
     public RegisterTransferValidator()
     {
-        RuleFor(command => command.CurrentUserId)
-          .NotEqual(Guid.Empty).WithMessage("Invalid {PropertyName}");
+        RuleFor(command => command.CurrentUserId).MustBeAValidGuid();
+        RuleFor(command => command.BusinessUnitId).MustBeAValidGuid();
+        RuleFor(command => command.AccountTagId).MustBeAValidGuid();
+        RuleFor(command => command.CategoryId).MustBeAValidGuid();
 
         RuleFor(command => command.Value)
             .NotEqual(0).WithMessage("{PropertyName} must not be equal to 0")
@@ -25,11 +28,5 @@ public sealed class RegisterTransferValidator : AbstractValidator<RegisterTransf
 
         RuleFor(command => command.Type)
             .IsInEnum().WithMessage("Invalid {PropertyName}");
-
-        RuleFor(command => command.BusinessUnitId)
-            .NotEqual(Guid.Empty).WithMessage("{PropertyName} invalid");
-
-        RuleFor(command => command.AccountTagId)
-            .NotEqual(Guid.Empty).WithMessage("{PropertyName} invalid");
     }
 }

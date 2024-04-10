@@ -1,4 +1,5 @@
 ﻿using FluentValidation;
+using MyFinance.Application.Common.CustomValidators;
 
 namespace MyFinance.Application.UseCases.BusinessUnits.Queries.GetMonthlySummary;
 
@@ -6,11 +7,10 @@ public sealed class GetMonthlySummaryValidator : AbstractValidator<GetMonthlySum
 {
     public GetMonthlySummaryValidator()
     {
-        RuleFor(query => query.Id)
-            .NotEqual(Guid.Empty).WithMessage("{PropertyName} invalid");
+        RuleFor(query => query.Id).MustBeAValidGuid();
 
         RuleFor(query => query.Year)
-            .GreaterThan(2000).WithMessage("{PropertyName} must be greater than 2000");
+            .GreaterThan(1900).WithMessage("{PropertyName} must be greater than 1900");
 
         RuleFor(query => query.Month)
             .InclusiveBetween(1, 12).WithMessage("{PropertyName} must be between 1 and 12");

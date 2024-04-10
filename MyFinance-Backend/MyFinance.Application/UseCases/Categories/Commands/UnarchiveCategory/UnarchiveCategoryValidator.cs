@@ -1,4 +1,5 @@
 ﻿using FluentValidation;
+using MyFinance.Application.Common.CustomValidators;
 
 namespace MyFinance.Application.UseCases.Categories.Commands.UnarchiveCategory;
 
@@ -6,7 +7,6 @@ public sealed class UnarchiveCategoryValidator : AbstractValidator<UnarchiveCate
 {
     public UnarchiveCategoryValidator()
     {
-        RuleFor(command => command.Id)
-            .NotEqual(Guid.Empty).WithMessage("{PropertyName} invalid");
+        RuleFor(command => command.Id).MustBeAValidGuid();
     }
 }

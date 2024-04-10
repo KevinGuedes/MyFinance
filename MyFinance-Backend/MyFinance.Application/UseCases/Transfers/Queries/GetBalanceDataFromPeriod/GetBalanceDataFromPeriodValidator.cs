@@ -1,11 +1,14 @@
 ﻿using FluentValidation;
+using MyFinance.Application.Common.CustomValidators;
 
-namespace MyFinance.Application.UseCases.Transfers.Queries.GetPeriodBalance;
+namespace MyFinance.Application.UseCases.Transfers.Queries.GetBalanceDataFromPeriod;
 
-public sealed class GetPeriodBalanceValidator : AbstractValidator<GetPeriodBalanceQuery>
+public sealed class GetBalanceDataFromPeriodValidator : AbstractValidator<GetBalanceDataFromPeriodQuery>
 {
-    public GetPeriodBalanceValidator()
+    public GetBalanceDataFromPeriodValidator()
     {
+        RuleFor(query => query.BusinessUnitId).MustBeAValidGuid();
+
         When(query =>
             query.StartDate.HasValue && query.StartDate.Value != default &&
             query.EndDate.HasValue && query.EndDate.Value != default,
@@ -15,8 +18,5 @@ public sealed class GetPeriodBalanceValidator : AbstractValidator<GetPeriodBalan
                     .GreaterThan(query => query.StartDate)
                     .WithMessage("End date must not be after start date");
             });
-
-        RuleFor(query => query.BusinessUnitId)
-            .NotEqual(Guid.Empty).WithMessage("Invalid {PropertyName}");
     }
 }

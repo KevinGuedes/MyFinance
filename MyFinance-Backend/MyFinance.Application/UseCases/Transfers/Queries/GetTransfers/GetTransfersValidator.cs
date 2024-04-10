@@ -7,6 +7,10 @@ public sealed class GetTransfersValidator : AbstractValidator<GetTransfersQuery>
 {
     public GetTransfersValidator()
     {
+        RuleFor(query => query.BusinessUnitId).MustBeAValidGuid();
+        RuleFor(query => query.PageNumber).MustBeAValidPageNumber();
+        RuleFor(query => query.PageSize).MustBeLessThan100();
+
         When(query =>
             query.StartDate.HasValue && query.StartDate.Value != default &&
             query.EndDate.HasValue && query.EndDate.Value != default,
@@ -16,11 +20,5 @@ public sealed class GetTransfersValidator : AbstractValidator<GetTransfersQuery>
                 .GreaterThan(query => query.StartDate)
                 .WithMessage("End date must not be after start date");
         });
-
-        RuleFor(query => query.BusinessUnitId)
-            .NotEqual(Guid.Empty).WithMessage("Invalid {PropertyName}");
-
-        RuleFor(query => query.PageNumber).MustBeAValidPageNumber();
-        RuleFor(query => query.PageSize).MustBeLessThan100();
     }
 }
