@@ -30,8 +30,10 @@ internal class CookieConfiguration(ProblemDetailsFactory problemDetailsFactory)
             var unauthorizedProblemResponse = BuildUnauthorizedProblemResponse(context.HttpContext);
             context.HttpContext.Response.StatusCode = StatusCodes.Status401Unauthorized;
 
-            await context.HttpContext.Response
-                .WriteProblemResponseAsJsonAsync(unauthorizedProblemResponse);
+            await context
+                .HttpContext
+                .Response
+                .WriteAsProblemPlusJsonAsync(unauthorizedProblemResponse);
         };
 
         options.Events.OnRedirectToAccessDenied = async context =>
@@ -39,8 +41,10 @@ internal class CookieConfiguration(ProblemDetailsFactory problemDetailsFactory)
             var unauthorizedProblemResponse = BuildUnauthorizedProblemResponse(context.HttpContext);
             context.HttpContext.Response.StatusCode = StatusCodes.Status401Unauthorized;
 
-            await context.HttpContext.Response
-                .WriteProblemResponseAsJsonAsync(unauthorizedProblemResponse);
+            await context
+                .HttpContext
+                .Response
+                .WriteAsProblemPlusJsonAsync(unauthorizedProblemResponse);
         };
     }
 

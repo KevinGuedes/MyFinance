@@ -22,7 +22,7 @@ public class GlobalExceptionHandlerMiddleware(
         httpContext.Response.StatusCode = StatusCodes.Status500InternalServerError;
 
         await httpContext.Response
-            .WriteProblemResponseAsJsonAsync(internalServerErrorProblemResponse);
+            .WriteAsProblemPlusJsonAsync(internalServerErrorProblemResponse, cancellationToken);
 
         return true;
     }

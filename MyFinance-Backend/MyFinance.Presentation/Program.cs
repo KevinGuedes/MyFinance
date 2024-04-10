@@ -12,21 +12,25 @@ var builder = WebApplication.CreateBuilder(args);
 
 var app = builder.Build();
 {
-    if (app.Environment.IsDevelopment())
-        app.UseDeveloperExceptionPage();
-
     app.UseExceptionHandler();
-    app
-        .UseSwagger()
-        .UseSwaggerUI(options =>
-        {
-            options.SwaggerEndpoint("/swagger/v1/swagger.json", "MyFinance API");
-            options.DocumentTitle = "MyFinance API";
-        });
+
+    if (app.Environment.IsDevelopment())
+    {
+        app
+            .UseSwagger()
+            .UseSwaggerUI(options =>
+            {
+                options.SwaggerEndpoint("/swagger/v1/swagger.json", "MyFinance API");
+                options.DocumentTitle = "MyFinance API";
+                options.ConfigObject.TryItOutEnabled = true;
+                options.ConfigObject.DisplayRequestDuration = true;
+            });
+    }
 
     app.UseHttpsRedirection();
     app.UseAuthentication();
     app.UseAuthorization();
     app.MapControllers().RequireAuthorization();
+
     app.Run();
 }
