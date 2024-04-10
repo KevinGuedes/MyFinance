@@ -18,10 +18,11 @@ public static class HealthChecksMapper
                     Name = entry.Key,
                     Status = entry.Value.Status.ToString(),
                     Duration = entry.Value.Duration.ToString(),
-                    Description = entry.Value.Description,
+                    Description = entry.Value.Description ?? entry.Value.Exception?.Message,
+                    ExceptionMessage = entry.Value.Exception?.Message,
                     Data = entry.Value.Data,
                     Tags = entry.Value.Tags.ToList().AsReadOnly()
-                }).ToList()
+                }).ToList().AsReadOnly()
             };
     }
 }
