@@ -1,8 +1,6 @@
-﻿using Microsoft.Extensions.Diagnostics.HealthChecks;
+﻿namespace MyFinance.Contracts.HealthCheck.Responses;
 
-namespace MyFinance.Contracts.HealthCheck.Responses;
-
-public sealed class InstanceStatusResponse
+public sealed class ServiceHealthResponse
 {
     public required string Name { get; init; }
     public required string Status { get; init; }

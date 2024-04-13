@@ -2,9 +2,10 @@
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using MyFinance.Application.Common.Errors;
+using MyFinance.Application.Mappers;
 using MyFinance.Application.UseCases.HealthChecks.Queries.GetHealthChecksReport;
 using MyFinance.Contracts.HealthCheck.Responses;
-using MyFinance.Contracts.Summary.Responses;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace MyFinance.Presentation.Controllers;
@@ -15,21 +16,35 @@ public class HealthChecksController(IMediator mediator) : ApiController(mediator
     [HttpGet]
     [AllowAnonymous]
     [SwaggerOperation(Summary = "Checks the health of the application")]
-    [SwaggerResponse(StatusCodes.Status200OK, "Application is Healthy or Degraded", typeof(HealthChecksReportResponse))]
-    [SwaggerResponse(StatusCodes.Status503ServiceUnavailable, "Application is unhealthy", typeof(HealthChecksReportResponse))]
+    [SwaggerResponse(StatusCodes.Status200OK, "Application is Healthy or Degraded", typeof(HealthyServicesResponse))]
+    [SwaggerResponse(StatusCodes.Status503ServiceUnavailable, "Application is unhealthy", typeof(UnhealthyServicesResponse))]
     public async Task<IActionResult> GetHealthChecksReportAsync(CancellationToken cancellationToken)
     {
         var result = await _mediator.Send(new GetHealthChecksReportQuery(), cancellationToken);
-        return ProcessHealthChecksReportResult(result);
+        
+        if (result.IsSuccess)
+            return Ok(result.Value);
+
+        var error = result.Errors.FirstOrDefault();
+
+        if (error is UnhealthyServicesError unhealthyServicesError)
+            return BuildUnhealthyApplicationResponse(unhealthyServicesError);
+
+        return HandleFailureResult(error);
     }
 
-    private IActionResult ProcessHealthChecksReportResult(Result<HealthChecksReportResponse> result)
+    private ObjectResult BuildUnhealthyApplicationResponse(UnhealthyServicesError unhealthyServicesError)
     {
-        if(result.IsFailed)
-            return HandleFailureResult(result.Errors);
+        var statusCode = StatusCodes.Status503ServiceUnavailable;
+        var problemDetails = BuildProblemDetails(
+            statusCode,
+            "Service(s) currently unhealthy");
 
-        return result.Value.IsHealthy ? 
-            Ok(result.Value) : 
-            StatusCode(StatusCodes.Status503ServiceUnavailable, result.Value);
+        var unhealthyServicesResponse = HealthChecksMapper.ETR.Map(problemDetails, unhealthyServicesError.HealthReport);
+       
+        return new(unhealthyServicesResponse)
+        {
+            StatusCode = statusCode
+        };
     }
 }
