@@ -3,8 +3,11 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using MyFinance.Application.Common.Errors;
+using MyFinance.Application.Mappers;
 using MyFinance.Contracts.Common;
+using MyFinance.Contracts.User.Responses;
 using Swashbuckle.AspNetCore.Annotations;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace MyFinance.Presentation.Controllers;
 
@@ -28,9 +31,42 @@ public abstract class ApiController(IMediator mediator) : ControllerBase
     protected IActionResult ProcessResult(Result result)
         => result.IsSuccess ? NoContent() : HandleFailureResult(result.Errors);
 
-    protected IActionResult HandleFailureResult(IEnumerable<IError> errors)
+    protected ProblemDetails BuildProblemDetails(
+        int statusCode, 
+        string detail,
+        IDictionary<string, object?>? extensions = null)
     {
-        return errors.FirstOrDefault() switch
+        //.net 9 will have a Problem with extensions as parameter, and then this code will be simplified 
+        // Maybe not if they dont add it to the problem fetails factory
+        //https://github.com/dotnet/aspnetcore/pull/50204
+        //https://github.com/dotnet/aspnetcore/blob/main/src/Mvc/Mvc.Core/src/ControllerBase.cs#L1839
+
+        var problemDetails = ProblemDetailsFactory.CreateProblemDetails(
+            HttpContext,
+            statusCode: statusCode,
+            detail: detail,
+            instance: HttpContext.Request.Path);
+
+        if (extensions is not null)
+        {
+            foreach (var extension in extensions)
+            {
+                problemDetails.Extensions.Add(extension);
+            }
+        }
+
+        return problemDetails;
+    }
+
+    protected IActionResult HandleFailureResult(IEnumerable<IError> errors)
+        => HandleFailureResult(errors.FirstOrDefault());
+
+    protected IActionResult HandleFailureResult(IError? error)
+    {
+        if (error is null)
+            return BuildProblemResponse(StatusCodes.Status500InternalServerError);
+
+        return error switch
         {
             InvalidRequestError invalidRequestError
                 => BuildValidationProblemResponse(invalidRequestError),
@@ -46,6 +82,7 @@ public abstract class ApiController(IMediator mediator) : ControllerBase
                 => BuildProblemResponse(StatusCodes.Status500InternalServerError)
         };
     }
+
     private ActionResult BuildValidationProblemResponse(InvalidRequestError invalidRequestError)
     {
         var modelStateDictionary = new ModelStateDictionary();

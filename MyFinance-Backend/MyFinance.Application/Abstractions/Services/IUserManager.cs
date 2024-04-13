@@ -2,8 +2,7 @@
 
 namespace MyFinance.Application.Abstractions.Services;
 
-public interface IAuthService
+public interface IUserManager
 {
-    Task SignInAsync(User user);
-    Task SignOutAsync();
+    bool IsLockedOut(User user);
 }

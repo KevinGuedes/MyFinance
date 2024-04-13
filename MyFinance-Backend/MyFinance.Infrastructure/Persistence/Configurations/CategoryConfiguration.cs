@@ -11,8 +11,8 @@ internal class CategoryConfiguration : EntityConfiguration<Category>
         base.Configure(builder);
 
         builder.HasIndex(at => at.Name).IsUnique();
-        builder.Property(at => at.Name).IsRequired().HasMaxLength(50);
 
+        builder.Property(at => at.Name).IsRequired().HasMaxLength(50);
         builder.Property(bu => bu.ReasonToArchive).IsRequired(false).HasMaxLength(300);
         builder.Property(bu => bu.ArchivedOnUtc).IsRequired(false);
         builder.Property(bu => bu.IsArchived).IsRequired();

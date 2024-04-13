@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.Extensions.Options;
 using MyFinance.Infrastructure.Extensions;
 
-namespace MyFinance.Infrastructure.Services.Auth;
+namespace MyFinance.Infrastructure.Services.SignInManager;
 
 internal class CookieConfiguration(ProblemDetailsFactory problemDetailsFactory)
     : IConfigureNamedOptions<CookieAuthenticationOptions>
@@ -27,7 +27,11 @@ internal class CookieConfiguration(ProblemDetailsFactory problemDetailsFactory)
 
         options.Events.OnRedirectToLogin = async context =>
         {
-            var unauthorizedProblemResponse = BuildUnauthorizedProblemResponse(context.HttpContext);
+            var unauthorizedProblemResponse = BuildProblemResponse(
+                    context.HttpContext,
+                    StatusCodes.Status401Unauthorized,
+                    "Unauthorized");
+
             context.HttpContext.Response.StatusCode = StatusCodes.Status401Unauthorized;
 
             await context
@@ -38,8 +42,12 @@ internal class CookieConfiguration(ProblemDetailsFactory problemDetailsFactory)
 
         options.Events.OnRedirectToAccessDenied = async context =>
         {
-            var unauthorizedProblemResponse = BuildUnauthorizedProblemResponse(context.HttpContext);
-            context.HttpContext.Response.StatusCode = StatusCodes.Status401Unauthorized;
+            var unauthorizedProblemResponse = BuildProblemResponse(
+                context.HttpContext, 
+                StatusCodes.Status403Forbidden, 
+                "Resource access denied");
+
+            context.HttpContext.Response.StatusCode = StatusCodes.Status403Forbidden;
 
             await context
                 .HttpContext
@@ -48,13 +56,13 @@ internal class CookieConfiguration(ProblemDetailsFactory problemDetailsFactory)
         };
     }
 
-    private ObjectResult BuildUnauthorizedProblemResponse(HttpContext httpContext)
+    private ObjectResult BuildProblemResponse(HttpContext httpContext, int statusCode, string detail)
     {
         var problemDetails = _problemDetailsFactory.CreateProblemDetails(
             httpContext,
-            detail: "User not logged in or doesn't have access to this resource",
+            detail: detail,
             instance: httpContext.Request.Path,
-            statusCode: StatusCodes.Status401Unauthorized);
+            statusCode: statusCode);
 
         return new(problemDetails)
         {

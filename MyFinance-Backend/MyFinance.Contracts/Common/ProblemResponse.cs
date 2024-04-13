@@ -2,6 +2,15 @@
 
 namespace MyFinance.Contracts.Common;
 
-public sealed class ProblemResponse : ProblemDetails
+public class ProblemResponse : ProblemDetails
 {
+    public ProblemResponse(ProblemDetails problemDetails)
+    {
+        Status = problemDetails.Status;
+        Title = problemDetails.Title;
+        Detail = problemDetails.Detail;
+        Instance = problemDetails.Instance;
+        Type = problemDetails.Type;
+        Extensions = problemDetails.Extensions;
+    }
 }

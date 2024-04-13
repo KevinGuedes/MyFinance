@@ -2,8 +2,7 @@
 
 namespace MyFinance.Application.Common.Errors;
 
-public abstract class BaseError : Error
+public abstract class BaseError(string message) : Error(message)
 {
-    public BaseError(string message) : base(message)
-        => Metadata.Add("DateUTC", DateTime.UtcNow);
+    public DateTime OccurredOnUtc { get; init; } = DateTime.UtcNow;
 }

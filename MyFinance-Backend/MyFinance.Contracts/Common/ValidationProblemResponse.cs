@@ -2,6 +2,6 @@
 
 namespace MyFinance.Contracts.Common;
 
-public sealed class ValidationProblemResponse : ValidationProblemDetails
+public class ValidationProblemResponse : ValidationProblemDetails
 {
 }
