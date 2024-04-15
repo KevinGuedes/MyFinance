@@ -1,10 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore.Storage;
-
-namespace MyFinance.Application.Abstractions.Persistence.UnitOfWork;
+﻿namespace MyFinance.Application.Abstractions.Persistence.UnitOfWork;
 
 public interface IUnitOfWork
 {
-    Task<IDbContextTransaction> BeginTransactionAsync(CancellationToken cancellationToken);
+    Task BeginTransactionAsync(CancellationToken cancellationToken);
+    Task CommitTransactionAsync(CancellationToken cancellationToken);
+    Task RollbackTransactionAsync(CancellationToken cancellationToken);
     Task SaveChangesAsync(CancellationToken cancellationToken);
     bool HasChanges();
 }
