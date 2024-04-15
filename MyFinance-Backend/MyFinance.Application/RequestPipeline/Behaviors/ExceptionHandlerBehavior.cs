@@ -1,10 +1,9 @@
 ﻿using FluentResults;
 using MediatR.Pipeline;
-using Microsoft.EntityFrameworkCore;
+using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Logging;
 using MyFinance.Application.Abstractions.RequestHandling;
 using MyFinance.Application.Common.Errors;
-using Microsoft.Data.SqlClient;
 
 namespace MyFinance.Application.RequestPipeline.Behaviors;
 

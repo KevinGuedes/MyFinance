@@ -28,9 +28,9 @@ internal class CookieConfiguration(ProblemDetailsFactory problemDetailsFactory)
         options.Events.OnRedirectToLogin = async context =>
         {
             var unauthorizedProblemResponse = BuildProblemResponse(
-                    context.HttpContext,
-                    StatusCodes.Status401Unauthorized,
-                    "Unauthorized");
+                context.HttpContext,
+                StatusCodes.Status401Unauthorized,
+                "Unauthorized");
 
             context.HttpContext.Response.StatusCode = StatusCodes.Status401Unauthorized;
 
@@ -43,8 +43,8 @@ internal class CookieConfiguration(ProblemDetailsFactory problemDetailsFactory)
         options.Events.OnRedirectToAccessDenied = async context =>
         {
             var unauthorizedProblemResponse = BuildProblemResponse(
-                context.HttpContext, 
-                StatusCodes.Status403Forbidden, 
+                context.HttpContext,
+                StatusCodes.Status403Forbidden,
                 "Resource access denied");
 
             context.HttpContext.Response.StatusCode = StatusCodes.Status403Forbidden;
