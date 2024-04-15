@@ -58,13 +58,17 @@ public class UserController(IMediator mediator) : ApiController(mediator)
     private ObjectResult BuildTooManyFailedSignInAttemptsResponse(TooManyFailedSignInAttemptsError tooManyFailedSignInAttemptsError)
     {
         HttpContext.Response.Headers.RetryAfter = tooManyFailedSignInAttemptsError.LockoutEndOnUtc.ToString("R");
-        var statusCode = StatusCodes.Status429TooManyRequests;
-        var problemDetails = BuildProblemDetails(statusCode, tooManyFailedSignInAttemptsError.Message);
+       
+        var problemDetails = BuildProblemDetails(StatusCodes.Status429TooManyRequests, tooManyFailedSignInAttemptsError.Message);
+        //in case .net adds builtin solutions for this, remove this code
+        //https://github.com/dotnet/aspnetcore/blob/main/src/Shared/ProblemDetails/ProblemDetailsDefaults.cs
+        problemDetails.Type = "https://datatracker.ietf.org/doc/html/rfc6585#section-4";
+        
         var tooManyFailedSignInAttemptsResponse = UserMapper.ETR.Map(problemDetails, tooManyFailedSignInAttemptsError);
 
-        return new ObjectResult(tooManyFailedSignInAttemptsResponse)
+        return new(tooManyFailedSignInAttemptsResponse)
         {
-            StatusCode = statusCode
+            StatusCode = problemDetails.Status
         };
     }
 }

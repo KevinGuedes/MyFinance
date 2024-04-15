@@ -35,13 +35,12 @@ public class HealthChecksController(IMediator mediator) : ApiController(mediator
 
     private ObjectResult BuildUnhealthyApplicationResponse(UnhealthyServicesError unhealthyServicesError)
     {
-        var statusCode = StatusCodes.Status503ServiceUnavailable;
-        var problemDetails = BuildProblemDetails(statusCode, "Service(s) currently unhealthy");
+        var problemDetails = BuildProblemDetails(StatusCodes.Status503ServiceUnavailable, "Service(s) currently unhealthy");
         var unhealthyServicesResponse = HealthChecksMapper.ETR.Map(problemDetails, unhealthyServicesError.HealthReport);
-       
+
         return new(unhealthyServicesResponse)
         {
-            StatusCode = statusCode
+            StatusCode = problemDetails.Status
         };
     }
 }

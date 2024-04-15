@@ -2,12 +2,10 @@
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Microsoft.AspNetCore.WebUtilities;
 using MyFinance.Application.Common.Errors;
-using MyFinance.Application.Mappers;
 using MyFinance.Contracts.Common;
-using MyFinance.Contracts.User.Responses;
 using Swashbuckle.AspNetCore.Annotations;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace MyFinance.Presentation.Controllers;
 
@@ -40,12 +38,13 @@ public abstract class ApiController(IMediator mediator) : ControllerBase
         // Maybe not if they dont add it to the problem fetails factory
         //https://github.com/dotnet/aspnetcore/pull/50204
         //https://github.com/dotnet/aspnetcore/blob/main/src/Mvc/Mvc.Core/src/ControllerBase.cs#L1839
-
         var problemDetails = ProblemDetailsFactory.CreateProblemDetails(
             HttpContext,
             statusCode: statusCode,
             detail: detail,
             instance: HttpContext.Request.Path);
+
+        problemDetails.Title ??= ReasonPhrases.GetReasonPhrase(statusCode);
 
         if (extensions is not null)
         {
