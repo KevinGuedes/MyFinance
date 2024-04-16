@@ -43,8 +43,6 @@ public class HealthChecksController(IMediator mediator) : ApiController(mediator
             detail: "Service(s) currently unhealthy",
             instance: HttpContext.Request.Path);
 
-        problemDetails.Title ??= ReasonPhrases.GetReasonPhrase(statusCode);
-
         var unhealthyServicesResponse = HealthChecksMapper.ETR.Map(problemDetails, unhealthyServicesError.HealthReport);
 
         return new(unhealthyServicesResponse)
