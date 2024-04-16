@@ -21,7 +21,7 @@ public sealed class SignInManager : ISignInManager
         _lockoutOptions = signInOptions.Value.LockoutOptions;
 
         ArgumentNullException.ThrowIfNull(
-            _lockoutOptions.LockoutThresholds, 
+            _lockoutOptions.LockoutThresholds,
             nameof(_lockoutOptions.LockoutThresholds));
         ArgumentNullException.ThrowIfNull(
             _signInOptions.TimeInMonthsToRequestPasswordUpdate,
@@ -54,8 +54,8 @@ public sealed class SignInManager : ISignInManager
     public bool WillLockoutOnNextAttempt(int failedSignInAttempts)
     {
         var nextFailedSignInAttempts = failedSignInAttempts + 1;
-       
-        if(nextFailedSignInAttempts >= _lockoutOptions.UpperAttemptsThreshold)
+
+        if (nextFailedSignInAttempts >= _lockoutOptions.UpperAttemptsThreshold)
             return true;
 
         if (_lockoutOptions.HasLockoutFor(nextFailedSignInAttempts))
@@ -68,7 +68,7 @@ public sealed class SignInManager : ISignInManager
     {
         var nextFailedSignInAttempts = failedSignInAttempts + 1;
 
-        if(nextFailedSignInAttempts >= _lockoutOptions.UpperAttemptsThreshold)
+        if (nextFailedSignInAttempts >= _lockoutOptions.UpperAttemptsThreshold)
             return _lockoutOptions.UpperLockoutDurationThreshold;
 
         if (_lockoutOptions.HasLockoutFor(nextFailedSignInAttempts))
@@ -78,7 +78,7 @@ public sealed class SignInManager : ISignInManager
     }
 
     public bool ShouldLockout(int failedSignInAttempts)
-        => failedSignInAttempts >= _lockoutOptions.UpperAttemptsThreshold || 
+        => failedSignInAttempts >= _lockoutOptions.UpperAttemptsThreshold ||
             _lockoutOptions.HasLockoutFor(failedSignInAttempts);
 
     public DateTime GetLockoutEndOnUtc(int failedSignInAttempts)
@@ -87,9 +87,9 @@ public sealed class SignInManager : ISignInManager
         if (hasReachUpperAttemtpsThreshold)
             return DateTime.UtcNow.Add(_lockoutOptions.UpperLockoutDurationThreshold);
 
-        if(_lockoutOptions.HasLockoutFor(failedSignInAttempts))
+        if (_lockoutOptions.HasLockoutFor(failedSignInAttempts))
             return DateTime.UtcNow.Add(_lockoutOptions.LockoutThresholds[failedSignInAttempts]);
-        
+
         throw new InvalidOperationException("Lockout configuration not provided");
     }
 

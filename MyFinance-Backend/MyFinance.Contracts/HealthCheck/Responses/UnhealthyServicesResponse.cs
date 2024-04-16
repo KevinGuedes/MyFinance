@@ -4,7 +4,7 @@ using MyFinance.Contracts.Common;
 
 namespace MyFinance.Contracts.HealthCheck.Responses;
 
-public sealed class UnhealthyServicesResponse(ProblemDetails problemDetails, HealthReport healthReport) 
+public sealed class UnhealthyServicesResponse(ProblemDetails problemDetails, HealthReport healthReport)
     : ProblemResponse(problemDetails)
 {
     public bool IsHealthy { get; init; } = healthReport.Status == HealthStatus.Healthy;

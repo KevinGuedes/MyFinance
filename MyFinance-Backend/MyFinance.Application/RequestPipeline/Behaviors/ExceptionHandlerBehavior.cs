@@ -23,8 +23,8 @@ internal sealed class ExceptionHandlerBehavior<TRequest, TResponse, TException>(
             exception.InnerException?.InnerException is SqlException sqlException &&
             sqlException.Number == DEADLOCK_ERROR_CODE;
 
-        var errorResult = isConcurrencyException ? 
-            BuildConflictErrorResult(exception) : 
+        var errorResult = isConcurrencyException ?
+            BuildConflictErrorResult(exception) :
             BuildInternalServerErrorResult(exception, request.GetType().Name);
 
         var response = new TResponse();

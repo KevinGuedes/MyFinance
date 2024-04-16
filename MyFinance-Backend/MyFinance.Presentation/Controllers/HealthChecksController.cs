@@ -1,8 +1,5 @@
-﻿using DocumentFormat.OpenXml.Office2016.Drawing.ChartDrawing;
-using FluentResults;
-using MediatR;
+﻿using MediatR;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.WebUtilities;
 using MyFinance.Application.Common.Errors;
@@ -24,7 +21,7 @@ public class HealthChecksController(IMediator mediator) : ApiController(mediator
     public async Task<IActionResult> GetHealthChecksReportAsync(CancellationToken cancellationToken)
     {
         var result = await _mediator.Send(new GetHealthChecksReportQuery(), cancellationToken);
-        
+
         if (result.IsSuccess)
             return Ok(result.Value);
 

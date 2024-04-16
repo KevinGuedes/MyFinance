@@ -15,7 +15,7 @@ public static class HttpResponseExtension
     }
 
     public static async Task WriteAsProblemPlusJsonAsync(
-        this HttpResponse httpResponse, 
+        this HttpResponse httpResponse,
         ObjectResult objectResult,
         CancellationToken cancellationToken)
     {

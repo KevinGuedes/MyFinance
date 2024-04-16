@@ -12,7 +12,7 @@ internal sealed class UnitOfWork(MyFinanceDbContext myFinanceDbContext) : IUnitO
     public Task BeginTransactionAsync(CancellationToken cancellationToken)
         => _myFinanceDbContext.Database
             .BeginTransactionAsync(IsolationLevel.Serializable, cancellationToken);
-   
+
     public Task CommitTransactionAsync(CancellationToken cancellationToken)
         => _myFinanceDbContext.Database.CommitTransactionAsync(cancellationToken);
 

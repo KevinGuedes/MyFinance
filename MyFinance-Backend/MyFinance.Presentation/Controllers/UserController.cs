@@ -1,8 +1,6 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.WebUtilities;
 using MyFinance.Application.Common.Errors;
 using MyFinance.Application.Mappers;
 using MyFinance.Application.UseCases.Users.Commands.SignOut;
@@ -59,11 +57,11 @@ public class UserController(IMediator mediator) : ApiController(mediator)
 
     private ObjectResult BuildTooManyFailedSignInAttemptsResponse(TooManyFailedSignInAttemptsError tooManyFailedSignInAttemptsError)
     {
-        HttpContext.Response.Headers.RetryAfter 
+        HttpContext.Response.Headers.RetryAfter
             = tooManyFailedSignInAttemptsError.LockoutEndOnUtc.ToString("R");
 
         var statusCode = StatusCodes.Status429TooManyRequests;
-       
+
         var problemDetails = ProblemDetailsFactory.CreateProblemDetails(
             HttpContext,
             statusCode: statusCode,
@@ -71,8 +69,8 @@ public class UserController(IMediator mediator) : ApiController(mediator)
             instance: HttpContext.Request.Path);
 
         problemDetails.Type = "https://datatracker.ietf.org/doc/html/rfc6585#section-4";
-        
-        var tooManyFailedSignInAttemptsResponse 
+
+        var tooManyFailedSignInAttemptsResponse
             = UserMapper.ETR.Map(problemDetails, tooManyFailedSignInAttemptsError);
 
         return new(tooManyFailedSignInAttemptsResponse)
