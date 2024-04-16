@@ -4,13 +4,13 @@ using MyFinance.Application.Abstractions.Services;
 
 namespace MyFinance.Application.UseCases.Users.Commands.SignOut;
 
-public sealed class SignOutCommandHandler(IAuthService authService) : ICommandHandler<SignOutCommand>
+public sealed class SignOutCommandHandler(ISignInManager signInManager) : ICommandHandler<SignOutCommand>
 {
-    private readonly IAuthService _authService = authService;
+    private readonly ISignInManager _signInManager = signInManager;
 
     public async Task<Result> Handle(SignOutCommand request, CancellationToken cancellationToken)
     {
-        await _authService.SignOutAsync();
+        await _signInManager.SignOutAsync();
         return Result.Ok();
     }
 }

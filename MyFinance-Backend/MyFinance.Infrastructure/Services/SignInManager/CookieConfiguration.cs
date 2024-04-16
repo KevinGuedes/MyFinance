@@ -3,9 +3,10 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.Extensions.Options;
+using MyFinance.Contracts.Common;
 using MyFinance.Infrastructure.Extensions;
 
-namespace MyFinance.Infrastructure.Services.Auth;
+namespace MyFinance.Infrastructure.Services.SignInManager;
 
 internal class CookieConfiguration(ProblemDetailsFactory problemDetailsFactory)
     : IConfigureNamedOptions<CookieAuthenticationOptions>
@@ -27,7 +28,11 @@ internal class CookieConfiguration(ProblemDetailsFactory problemDetailsFactory)
 
         options.Events.OnRedirectToLogin = async context =>
         {
-            var unauthorizedProblemResponse = BuildUnauthorizedProblemResponse(context.HttpContext);
+            var unauthorizedProblemResponse = BuildProblemResponse(
+                context.HttpContext,
+                StatusCodes.Status401Unauthorized,
+                "User not signed in");
+
             context.HttpContext.Response.StatusCode = StatusCodes.Status401Unauthorized;
 
             await context
@@ -38,8 +43,12 @@ internal class CookieConfiguration(ProblemDetailsFactory problemDetailsFactory)
 
         options.Events.OnRedirectToAccessDenied = async context =>
         {
-            var unauthorizedProblemResponse = BuildUnauthorizedProblemResponse(context.HttpContext);
-            context.HttpContext.Response.StatusCode = StatusCodes.Status401Unauthorized;
+            var unauthorizedProblemResponse = BuildProblemResponse(
+                context.HttpContext,
+                StatusCodes.Status403Forbidden,
+                "Access to resource has been denied");
+
+            context.HttpContext.Response.StatusCode = StatusCodes.Status403Forbidden;
 
             await context
                 .HttpContext
@@ -48,15 +57,15 @@ internal class CookieConfiguration(ProblemDetailsFactory problemDetailsFactory)
         };
     }
 
-    private ObjectResult BuildUnauthorizedProblemResponse(HttpContext httpContext)
+    private ObjectResult BuildProblemResponse(HttpContext httpContext, int statusCode, string detail)
     {
         var problemDetails = _problemDetailsFactory.CreateProblemDetails(
             httpContext,
-            detail: "User not logged in or doesn't have access to this resource",
+            detail: detail,
             instance: httpContext.Request.Path,
-            statusCode: StatusCodes.Status401Unauthorized);
+            statusCode: statusCode);
 
-        return new(problemDetails)
+        return new(new ProblemResponse(problemDetails))
         {
             StatusCode = problemDetails!.Status
         };

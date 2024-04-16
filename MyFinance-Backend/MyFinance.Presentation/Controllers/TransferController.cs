@@ -86,7 +86,7 @@ public class TransferController(IMediator mediator) : ApiController(mediator)
         [FromQuery][SwaggerParameter("Year", Required = true)]
         int year,
         CancellationToken cancellationToken)
-    {    
+    {
         var query = new GetDiscriminatedAnnualBalanceDataQuery(businessUnitId, year);
         return ProcessResult(await _mediator.Send(query, cancellationToken));
     }

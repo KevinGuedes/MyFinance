@@ -14,24 +14,23 @@ internal sealed class UnitOfWorkBehavior<TRequest, TResponse>(IUnitOfWork unitOf
 
     public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
     {
-        var transaction = await _unitOfWork.BeginTransactionAsync(cancellationToken);
+        await _unitOfWork.BeginTransactionAsync(cancellationToken);
 
-        var response = await next();
-
-        if (response.IsSuccess)
+        try
         {
+            var response = await next();
+
             if (_unitOfWork.HasChanges())
-            {
                 await _unitOfWork.SaveChangesAsync(cancellationToken);
-            }
 
-            await transaction.CommitAsync(cancellationToken);
+            await _unitOfWork.CommitTransactionAsync(cancellationToken);
+
+            return response;
         }
-        else
+        catch
         {
-            await transaction.RollbackAsync(cancellationToken);
+            await _unitOfWork.RollbackTransactionAsync(cancellationToken);
+            throw;
         }
-
-        return response;
     }
 }

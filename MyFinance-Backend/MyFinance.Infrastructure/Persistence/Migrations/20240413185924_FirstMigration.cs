@@ -19,6 +19,9 @@ namespace MyFinance.Infrastructure.Persistence.Migrations
                     Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false),
                     PasswordHash = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    FailedSignInAttempts = table.Column<int>(type: "int", nullable: false),
+                    LastPasswordUpdateOnUtc = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    LockoutEndOnUtc = table.Column<DateTime>(type: "datetime2", nullable: true),
                     CreatedOnUtc = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UpdatedOnUtc = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },

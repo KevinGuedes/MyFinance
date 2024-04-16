@@ -8,11 +8,11 @@ internal abstract class EntityConfiguration<TEntity> : IEntityTypeConfiguration<
 {
     public virtual void Configure(EntityTypeBuilder<TEntity> builder)
     {
-        builder.HasKey(e => e.Id);
-        builder.Property(e => e.Id).ValueGeneratedOnAdd();
+        builder.HasKey(entity => entity.Id);
+        builder.Property(entity => entity.Id).ValueGeneratedOnAdd();
 
-        builder.Property(e => e.CreatedOnUtc).IsRequired();
-        builder.Property(e => e.UpdatedOnUtc).IsRequired(false);
+        builder.Property(entity => entity.CreatedOnUtc).IsRequired();
+        builder.Property(entity => entity.UpdatedOnUtc).IsRequired(false);
         //builder.Property(e => e.RowVersion).IsRowVersion();
     }
 }

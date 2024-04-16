@@ -7,7 +7,7 @@ namespace MyFinance.Application.UseCases.Users.Commands.RegisterUser;
 public sealed class RegisterUserCommandValidator : AbstractValidator<RegisterUserCommand>
 {
     private readonly IUserRepository _userRepository;
- 
+
     public RegisterUserCommandValidator(IUserRepository userRepository)
     {
         _userRepository = userRepository;

@@ -16,9 +16,9 @@ public sealed class SummaryService : ISummaryService
         ["Value", "Related To", "Description", "Category", "Account Tag", "Settlement Date"];
 
     public (string FileName, byte[] FileContent) GenerateMonthlySummary(
-        BusinessUnit businessUnit, 
+        BusinessUnit businessUnit,
         IEnumerable<Transfer> transfers,
-        int year, 
+        int year,
         int month)
     {
         var refrenceDateHumanized = new DateOnly(year, month, 1).ToString("MMMM yyyy");
@@ -53,14 +53,14 @@ public sealed class SummaryService : ISummaryService
 
     private static void FillCurrentBalanceData(BusinessUnit businessUnit, IXLWorksheet ws)
     {
-          ws.Range(initalRowForBalanceData, 1, initalRowForBalanceData, 3)
-            .SetValue($"Current Balance")
-            .Merge()
-            .Style
-            .Font.SetBold()
-            .Fill.SetBackgroundColor(XLColor.CornflowerBlue)
-            .Alignment.SetHorizontal(XLAlignmentHorizontalValues.Center)
-            .Border.SetOutsideBorder(XLBorderStyleValues.Thin);
+        ws.Range(initalRowForBalanceData, 1, initalRowForBalanceData, 3)
+          .SetValue($"Current Balance")
+          .Merge()
+          .Style
+          .Font.SetBold()
+          .Fill.SetBackgroundColor(XLColor.CornflowerBlue)
+          .Alignment.SetHorizontal(XLAlignmentHorizontalValues.Center)
+          .Border.SetOutsideBorder(XLBorderStyleValues.Thin);
 
         ws.Cell(initalRowForBalanceData + 1, 1)
             .InsertData(summaryColumnNames, true)
@@ -123,7 +123,7 @@ public sealed class SummaryService : ISummaryService
         {
             monthlyIncome, -1 * monthlyOutcome, monthlyBalance
         };
-                var monthlyBalanceRange = ws.Cell(initalRowForBalanceData + 2, 5).InsertData(monthlyBalanceData, true);
+        var monthlyBalanceRange = ws.Cell(initalRowForBalanceData + 2, 5).InsertData(monthlyBalanceData, true);
         monthlyBalanceRange.Column(1).LastCell().Style.Font.SetFontColor(XLColor.Green);
         monthlyBalanceRange.Column(2).LastCell().Style.Font.SetFontColor(XLColor.Red);
         var yearlyBalanceColor = GetBalanceColor(monthlyBalance);

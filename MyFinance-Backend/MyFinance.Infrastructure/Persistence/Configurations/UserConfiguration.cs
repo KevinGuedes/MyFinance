@@ -10,13 +10,12 @@ internal sealed class UserConfiguration : EntityConfiguration<User>
         base.Configure(builder);
 
         builder.HasIndex(user => user.Email).IsUnique();
-        builder.Property(user => user.Email)
-            .HasMaxLength(256)
-            .IsRequired();
 
+        builder.Property(user => user.Email).HasMaxLength(256).IsRequired();
         builder.Property(user => user.PasswordHash).IsRequired();
-        builder.Property(transfer => transfer.Name)
-            .HasMaxLength(100)
-            .IsRequired();
+        builder.Property(user => user.Name).HasMaxLength(100).IsRequired();
+        builder.Property(user => user.LastPasswordUpdateOnUtc).IsRequired();
+        builder.Property(user => user.FailedSignInAttempts).IsRequired();
+        builder.Property(user => user.LockoutEndOnUtc).IsRequired(false);
     }
 }

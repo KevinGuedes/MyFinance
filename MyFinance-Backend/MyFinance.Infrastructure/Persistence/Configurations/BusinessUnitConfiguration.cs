@@ -11,8 +11,8 @@ internal sealed class BusinessUnitConfiguration : EntityConfiguration<BusinessUn
         base.Configure(builder);
 
         builder.HasIndex(bu => bu.Name).IsUnique();
-        builder.Property(bu => bu.Name).IsRequired().HasMaxLength(100);
 
+        builder.Property(bu => bu.Name).IsRequired().HasMaxLength(100);
         builder.Property(bu => bu.Income).IsRequired().HasColumnType("MONEY");
         builder.Property(bu => bu.Outcome).IsRequired().HasColumnType("MONEY");
         builder.Property(bu => bu.Description).IsRequired(false).HasMaxLength(300);

@@ -93,9 +93,9 @@ public static class TransferMapper
                 });
 
             return new(
-                tranferGroups.ToList().AsReadOnly(), 
-                pageNumber, 
-                pageSize, 
+                tranferGroups.ToList().AsReadOnly(),
+                pageNumber,
+                pageSize,
                 transfersData.TotalCount);
         }
 

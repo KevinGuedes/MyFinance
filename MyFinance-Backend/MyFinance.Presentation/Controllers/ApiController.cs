@@ -17,20 +17,24 @@ public abstract class ApiController(IMediator mediator) : ControllerBase
 {
     protected readonly IMediator _mediator = mediator;
 
-    protected IActionResult ProcessResult<TResponse>(Result<TResponse> result, bool hasEntityBeenCreated = false)
+    protected ObjectResult ProcessResult<TResponse>(Result<TResponse> result, bool hasEntityBeenCreated = false)
     {
         if (result.IsFailed)
             return HandleFailureResult(result.Errors);
 
-        return hasEntityBeenCreated ? StatusCode(StatusCodes.Status201Created, result.Value) : Ok(result.Value);
+        return hasEntityBeenCreated ? 
+            StatusCode(StatusCodes.Status201Created, result.Value) : 
+            Ok(result.Value);
     }
 
     protected IActionResult ProcessResult(Result result)
         => result.IsSuccess ? NoContent() : HandleFailureResult(result.Errors);
 
-    protected IActionResult HandleFailureResult(IEnumerable<IError> errors)
-    {
-        return errors.FirstOrDefault() switch
+    protected ObjectResult HandleFailureResult(IEnumerable<IError> errors)
+        => HandleFailureResult(errors.FirstOrDefault());
+
+    protected ObjectResult HandleFailureResult(IError? error)
+        => error switch
         {
             InvalidRequestError invalidRequestError
                 => BuildValidationProblemResponse(invalidRequestError),
@@ -42,11 +46,13 @@ public abstract class ApiController(IMediator mediator) : ControllerBase
                 => BuildProblemResponse(StatusCodes.Status401Unauthorized, unauthorizedError),
             ConflictError conflictError
                 => BuildProblemResponse(StatusCodes.Status409Conflict, conflictError),
+            null
+                => BuildProblemResponse(StatusCodes.Status500InternalServerError),
             _
                 => BuildProblemResponse(StatusCodes.Status500InternalServerError)
         };
-    }
-    private ActionResult BuildValidationProblemResponse(InvalidRequestError invalidRequestError)
+
+    private ObjectResult BuildValidationProblemResponse(InvalidRequestError invalidRequestError)
     {
         var modelStateDictionary = new ModelStateDictionary();
 
@@ -55,12 +61,43 @@ public abstract class ApiController(IMediator mediator) : ControllerBase
             .ToList()
             .ForEach(error => modelStateDictionary.AddModelError(error.PropertyName, error.ErrorMessage));
 
-        return ValidationProblem(instance: HttpContext.Request.Path, modelStateDictionary: modelStateDictionary);
+        var validationProblemDetails = ProblemDetailsFactory.CreateValidationProblemDetails(
+            HttpContext,
+            modelStateDictionary,
+            StatusCodes.Status400BadRequest,
+            detail: "Invalid payload data, check the errors for more information");
+
+        return new(new ValidationProblemResponse(validationProblemDetails))
+        {
+            StatusCode = validationProblemDetails.Status
+        };
     }
 
     private ObjectResult BuildProblemResponse(int statusCode, IError error)
-        => Problem(statusCode: statusCode, detail: error.Message, instance: HttpContext.Request.Path);
+    {
+        var problemDetails = ProblemDetailsFactory.CreateProblemDetails(
+            HttpContext,
+            statusCode: statusCode,
+            detail: error.Message,
+            instance: HttpContext.Request.Path);
+
+        return new(new ProblemResponse(problemDetails))
+        {
+            StatusCode = problemDetails!.Status
+        };
+    }
 
     private ObjectResult BuildProblemResponse(int statusCode)
-        => Problem(statusCode: statusCode, detail: "MyFinance API went rogue! Sorry!", instance: HttpContext.Request.Path);
+    {
+        var problemDetails = ProblemDetailsFactory.CreateProblemDetails(
+            HttpContext,
+            statusCode: statusCode,
+            detail: "MyFinance API went rogue! Sorry!",
+            instance: HttpContext.Request.Path);
+
+        return new(new ProblemResponse(problemDetails))
+        {
+            StatusCode = problemDetails!.Status
+        };
+    }
 }

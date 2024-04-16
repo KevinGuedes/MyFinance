@@ -8,9 +8,9 @@ using MyFinance.Application.Abstractions.Services;
 using MyFinance.Infrastructure.Persistence.Context;
 using MyFinance.Infrastructure.Persistence.Repositories;
 using MyFinance.Infrastructure.Persistence.UnitOfWork;
-using MyFinance.Infrastructure.Services.Auth;
 using MyFinance.Infrastructure.Services.CurrentUserProvider;
 using MyFinance.Infrastructure.Services.PasswordHasher;
+using MyFinance.Infrastructure.Services.SignInManager;
 using MyFinance.Infrastructure.Services.Summary;
 using System.Reflection;
 
@@ -37,11 +37,30 @@ public static class InfrastructureDependencyInjection
     }
 
     private static IServiceCollection AddInfrastructureServices(this IServiceCollection services)
-        => services
+    {
+        services
+            .Configure<PasswordHasherOptions>(passwordHasherOptions =>
+            {
+                passwordHasherOptions.WorkFactor = 16;
+            })
+            .Configure<SignInOptions>(signInOptions =>
+            {
+                signInOptions.TimeInMonthsToRequestPasswordUpdate = 6;
+                signInOptions.LockoutOptions.LockoutThresholds = new Dictionary<int, TimeSpan>
+                {
+                    { 3, TimeSpan.FromMinutes(5) },
+                    { 6, TimeSpan.FromMinutes(10) },
+                    { 9, TimeSpan.FromHours(1) },
+                    { 12, TimeSpan.FromDays(1) },
+                }.AsReadOnly();
+            });
+
+        return services
             .AddScoped<ISummaryService, SummaryService>()
             .AddScoped<IPasswordHasher, PasswordHasher>()
-            .AddScoped<IAuthService, AuthService>()
+            .AddScoped<ISignInManager, SignInManager>()
             .AddScoped<ICurrentUserProvider, CurrentUserProvider>();
+    }
 
     private static IServiceCollection AddPersistence(this IServiceCollection services, IConfiguration configuration)
     {

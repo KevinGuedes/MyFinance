@@ -6,7 +6,7 @@ public interface ITransferRepository
 {
     Task<IEnumerable<(int Month, decimal Income, decimal Outcome)>> GetDiscriminatedAnnualBalanceDataAsync(
         Guid businessUnitId,
-        int year, 
+        int year,
         CancellationToken cancellationToken);
     Task<(decimal Income, decimal Outcome)> GetBalanceDataFromPeriodAsync(
         Guid businessUnitId,

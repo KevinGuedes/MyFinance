@@ -8,7 +8,7 @@ public abstract class Entity : IAuditableEntity
     {
     }
 
-    public Guid Id { get; private set; } 
+    public Guid Id { get; private set; }
     public DateTime CreatedOnUtc { get; private set; } = DateTime.UtcNow;
     public DateTime? UpdatedOnUtc { get; private set; }
     //public byte[] RowVersion { get; private set; } = null!;

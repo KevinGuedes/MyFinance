@@ -6,7 +6,7 @@ using MyFinance.Contracts.Transfer.Responses;
 
 namespace MyFinance.Application.UseCases.Transfers.Queries.GetDiscriminatedAnnualBalanceData;
 
-internal sealed class GetDiscriminatedAnnualBalanceDataHandler(ITransferRepository transferRepository) 
+internal sealed class GetDiscriminatedAnnualBalanceDataHandler(ITransferRepository transferRepository)
     : IQueryHandler<GetDiscriminatedAnnualBalanceDataQuery, DiscriminatedAnnualBalanceDataResponse>
 {
     private readonly ITransferRepository _transferRepository = transferRepository;

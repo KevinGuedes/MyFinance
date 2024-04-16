@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
+using MyFinance.Contracts.Common;
 using MyFinance.Infrastructure.Extensions;
 
 namespace MyFinance.Presentation.Middlewares;
@@ -35,7 +36,7 @@ public class GlobalExceptionHandlerMiddleware(
             statusCode: StatusCodes.Status500InternalServerError,
             detail: "MyFinance API went rogue. Sorry!");
 
-        return new(problemDetails)
+        return new(new ProblemResponse(problemDetails))
         {
             StatusCode = problemDetails!.Status
         };
