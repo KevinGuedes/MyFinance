@@ -21,8 +21,6 @@ public static class HealthChecksMapper
                     Duration = entry.Value.Duration.ToString(),
                     Description = entry.Value.Description ?? entry.Value.Exception?.Message,
                     ExceptionMessage = entry.Value.Exception?.Message,
-                    Data = entry.Value.Data,
-                    Tags = entry.Value.Tags.ToList().AsReadOnly()
                 }).ToList().AsReadOnly()
             };
     }
@@ -40,8 +38,6 @@ public static class HealthChecksMapper
                     Duration = entry.Value.Duration.ToString(),
                     Description = entry.Value.Description ?? entry.Value.Exception?.Message,
                     ExceptionMessage = entry.Value.Exception?.Message,
-                    Data = entry.Value.Data,
-                    Tags = entry.Value.Tags.ToList().AsReadOnly()
                 }).ToList().AsReadOnly()
             };
         }

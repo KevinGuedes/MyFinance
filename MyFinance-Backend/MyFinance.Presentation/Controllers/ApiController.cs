@@ -1,4 +1,5 @@
-﻿using FluentResults;
+﻿using DocumentFormat.OpenXml.Office2016.Drawing.ChartDrawing;
+using FluentResults;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
@@ -6,6 +7,7 @@ using Microsoft.AspNetCore.WebUtilities;
 using MyFinance.Application.Common.Errors;
 using MyFinance.Contracts.Common;
 using Swashbuckle.AspNetCore.Annotations;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace MyFinance.Presentation.Controllers;
 
@@ -29,43 +31,11 @@ public abstract class ApiController(IMediator mediator) : ControllerBase
     protected IActionResult ProcessResult(Result result)
         => result.IsSuccess ? NoContent() : HandleFailureResult(result.Errors);
 
-    protected ProblemDetails BuildProblemDetails(
-        int statusCode, 
-        string detail,
-        IDictionary<string, object?>? extensions = null)
-    {
-        //.net 9 will have a Problem with extensions as parameter, and then this code will be simplified 
-        // Maybe not if they dont add it to the problem fetails factory
-        //https://github.com/dotnet/aspnetcore/pull/50204
-        //https://github.com/dotnet/aspnetcore/blob/main/src/Mvc/Mvc.Core/src/ControllerBase.cs#L1839
-        var problemDetails = ProblemDetailsFactory.CreateProblemDetails(
-            HttpContext,
-            statusCode: statusCode,
-            detail: detail,
-            instance: HttpContext.Request.Path);
-
-        problemDetails.Title ??= ReasonPhrases.GetReasonPhrase(statusCode);
-
-        if (extensions is not null)
-        {
-            foreach (var extension in extensions)
-            {
-                problemDetails.Extensions.Add(extension);
-            }
-        }
-
-        return problemDetails;
-    }
-
     protected IActionResult HandleFailureResult(IEnumerable<IError> errors)
         => HandleFailureResult(errors.FirstOrDefault());
 
     protected IActionResult HandleFailureResult(IError? error)
-    {
-        if (error is null)
-            return BuildProblemResponse(StatusCodes.Status500InternalServerError);
-
-        return error switch
+        => error switch
         {
             InvalidRequestError invalidRequestError
                 => BuildValidationProblemResponse(invalidRequestError),
@@ -77,12 +47,13 @@ public abstract class ApiController(IMediator mediator) : ControllerBase
                 => BuildProblemResponse(StatusCodes.Status401Unauthorized, unauthorizedError),
             ConflictError conflictError
                 => BuildProblemResponse(StatusCodes.Status409Conflict, conflictError),
+            null
+                => BuildProblemResponse(StatusCodes.Status500InternalServerError),
             _
                 => BuildProblemResponse(StatusCodes.Status500InternalServerError)
         };
-    }
 
-    private ActionResult BuildValidationProblemResponse(InvalidRequestError invalidRequestError)
+    private ObjectResult BuildValidationProblemResponse(InvalidRequestError invalidRequestError)
     {
         var modelStateDictionary = new ModelStateDictionary();
 
@@ -91,12 +62,43 @@ public abstract class ApiController(IMediator mediator) : ControllerBase
             .ToList()
             .ForEach(error => modelStateDictionary.AddModelError(error.PropertyName, error.ErrorMessage));
 
-        return ValidationProblem(instance: HttpContext.Request.Path, modelStateDictionary: modelStateDictionary);
+        var validationProblemDetails = ProblemDetailsFactory.CreateValidationProblemDetails(
+            HttpContext,
+            modelStateDictionary,
+            StatusCodes.Status400BadRequest,
+            detail: "Invalid payload data, check the errors for more information");
+
+        return new(new ValidationProblemResponse(validationProblemDetails))
+        {
+            StatusCode = validationProblemDetails.Status
+        };
     }
 
     private ObjectResult BuildProblemResponse(int statusCode, IError error)
-        => Problem(statusCode: statusCode, detail: error.Message, instance: HttpContext.Request.Path);
+    {
+        var problemDetails = ProblemDetailsFactory.CreateProblemDetails(
+            HttpContext,
+            statusCode: statusCode,
+            detail: error.Message,
+            instance: HttpContext.Request.Path);
+
+        return new(new ProblemResponse(problemDetails))
+        {
+            StatusCode = problemDetails!.Status
+        };
+    }
 
     private ObjectResult BuildProblemResponse(int statusCode)
-        => Problem(statusCode: statusCode, detail: "MyFinance API went rogue! Sorry!", instance: HttpContext.Request.Path);
+    {
+        var problemDetails = ProblemDetailsFactory.CreateProblemDetails(
+            HttpContext,
+            statusCode: statusCode,
+            detail: "MyFinance API went rogue! Sorry!",
+            instance: HttpContext.Request.Path);
+
+        return new(new ProblemResponse(problemDetails))
+        {
+            StatusCode = problemDetails!.Status
+        };
+    }
 }

@@ -1,7 +1,10 @@
-﻿using FluentResults;
+﻿using DocumentFormat.OpenXml.Office2016.Drawing.ChartDrawing;
+using FluentResults;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.WebUtilities;
 using MyFinance.Application.Common.Errors;
 using MyFinance.Application.Mappers;
 using MyFinance.Application.UseCases.HealthChecks.Queries.GetHealthChecksReport;
@@ -35,7 +38,16 @@ public class HealthChecksController(IMediator mediator) : ApiController(mediator
 
     private ObjectResult BuildUnhealthyApplicationResponse(UnhealthyServicesError unhealthyServicesError)
     {
-        var problemDetails = BuildProblemDetails(StatusCodes.Status503ServiceUnavailable, "Service(s) currently unhealthy");
+        var statusCode = StatusCodes.Status503ServiceUnavailable;
+
+        var problemDetails = ProblemDetailsFactory.CreateProblemDetails(
+            HttpContext,
+            statusCode: statusCode,
+            detail: "Service(s) currently unhealthy",
+            instance: HttpContext.Request.Path);
+
+        problemDetails.Title ??= ReasonPhrases.GetReasonPhrase(statusCode);
+
         var unhealthyServicesResponse = HealthChecksMapper.ETR.Map(problemDetails, unhealthyServicesError.HealthReport);
 
         return new(unhealthyServicesResponse)

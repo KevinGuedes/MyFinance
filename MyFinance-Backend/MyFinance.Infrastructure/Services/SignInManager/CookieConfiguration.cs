@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.Extensions.Options;
+using MyFinance.Contracts.Common;
 using MyFinance.Infrastructure.Extensions;
 
 namespace MyFinance.Infrastructure.Services.SignInManager;
@@ -30,7 +31,7 @@ internal class CookieConfiguration(ProblemDetailsFactory problemDetailsFactory)
             var unauthorizedProblemResponse = BuildProblemResponse(
                 context.HttpContext,
                 StatusCodes.Status401Unauthorized,
-                "Unauthorized");
+                "User not signed in");
 
             context.HttpContext.Response.StatusCode = StatusCodes.Status401Unauthorized;
 
@@ -45,7 +46,7 @@ internal class CookieConfiguration(ProblemDetailsFactory problemDetailsFactory)
             var unauthorizedProblemResponse = BuildProblemResponse(
                 context.HttpContext,
                 StatusCodes.Status403Forbidden,
-                "Resource access denied");
+                "Access to resource has been denied");
 
             context.HttpContext.Response.StatusCode = StatusCodes.Status403Forbidden;
 
@@ -64,7 +65,7 @@ internal class CookieConfiguration(ProblemDetailsFactory problemDetailsFactory)
             instance: httpContext.Request.Path,
             statusCode: statusCode);
 
-        return new(problemDetails)
+        return new(new ProblemResponse(problemDetails))
         {
             StatusCode = problemDetails!.Status
         };

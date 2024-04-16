@@ -1,6 +1,8 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.WebUtilities;
 using MyFinance.Application.Common.Errors;
 using MyFinance.Application.Mappers;
 using MyFinance.Application.UseCases.Users.Commands.SignOut;
@@ -28,7 +30,7 @@ public class UserController(IMediator mediator) : ApiController(mediator)
     [AllowAnonymous]
     [HttpPost("SignIn")]
     [SwaggerOperation(Summary = "Signs in an existing User")]
-    [SwaggerResponse(StatusCodes.Status204NoContent, "User successfully signed in", typeof(SignInResponse))]
+    [SwaggerResponse(StatusCodes.Status200OK, "User successfully signed in", typeof(SignInResponse))]
     [SwaggerResponse(StatusCodes.Status401Unauthorized, "Invalid credentials", typeof(ProblemResponse))]
     [SwaggerResponse(StatusCodes.Status429TooManyRequests, "Too many failed sign in attempts", typeof(TooManyFailedSignInAttemptsResponse))]
     public async Task<IActionResult> SignInAsync(
@@ -57,14 +59,21 @@ public class UserController(IMediator mediator) : ApiController(mediator)
 
     private ObjectResult BuildTooManyFailedSignInAttemptsResponse(TooManyFailedSignInAttemptsError tooManyFailedSignInAttemptsError)
     {
-        HttpContext.Response.Headers.RetryAfter = tooManyFailedSignInAttemptsError.LockoutEndOnUtc.ToString("R");
+        HttpContext.Response.Headers.RetryAfter 
+            = tooManyFailedSignInAttemptsError.LockoutEndOnUtc.ToString("R");
+
+        var statusCode = StatusCodes.Status429TooManyRequests;
        
-        var problemDetails = BuildProblemDetails(StatusCodes.Status429TooManyRequests, tooManyFailedSignInAttemptsError.Message);
-        //in case .net adds builtin solutions for this, remove this code
-        //https://github.com/dotnet/aspnetcore/blob/main/src/Shared/ProblemDetails/ProblemDetailsDefaults.cs
+        var problemDetails = ProblemDetailsFactory.CreateProblemDetails(
+            HttpContext,
+            statusCode: statusCode,
+            detail: "Service(s) currently unhealthy",
+            instance: HttpContext.Request.Path);
+
         problemDetails.Type = "https://datatracker.ietf.org/doc/html/rfc6585#section-4";
         
-        var tooManyFailedSignInAttemptsResponse = UserMapper.ETR.Map(problemDetails, tooManyFailedSignInAttemptsError);
+        var tooManyFailedSignInAttemptsResponse 
+            = UserMapper.ETR.Map(problemDetails, tooManyFailedSignInAttemptsError);
 
         return new(tooManyFailedSignInAttemptsResponse)
         {

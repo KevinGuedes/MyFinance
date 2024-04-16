@@ -1,16 +1,14 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.WebUtilities;
 
 namespace MyFinance.Contracts.Common;
 
-public class ProblemResponse : ProblemDetails
+public class ProblemResponse(ProblemDetails problemDetails)
 {
-    public ProblemResponse(ProblemDetails problemDetails)
-    {
-        Status = problemDetails.Status;
-        Title = problemDetails.Title;
-        Detail = problemDetails.Detail;
-        Instance = problemDetails.Instance;
-        Type = problemDetails.Type;
-        Extensions = problemDetails.Extensions;
-    }
+    public string Title { get; init; } 
+        = problemDetails.Title ?? ReasonPhrases.GetReasonPhrase(problemDetails.Status!.Value);
+    public string Type { get; init; } = problemDetails.Type!;
+    public int Status { get; init; } = problemDetails.Status!.Value;
+    public string Detail { get; init; } = problemDetails.Detail!;
+    public string Instance { get; init; } = problemDetails.Instance!;
 }
