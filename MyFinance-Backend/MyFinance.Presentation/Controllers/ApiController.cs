@@ -17,21 +17,23 @@ public abstract class ApiController(IMediator mediator) : ControllerBase
 {
     protected readonly IMediator _mediator = mediator;
 
-    protected IActionResult ProcessResult<TResponse>(Result<TResponse> result, bool hasEntityBeenCreated = false)
+    protected ObjectResult ProcessResult<TResponse>(Result<TResponse> result, bool hasEntityBeenCreated = false)
     {
         if (result.IsFailed)
             return HandleFailureResult(result.Errors);
 
-        return hasEntityBeenCreated ? StatusCode(StatusCodes.Status201Created, result.Value) : Ok(result.Value);
+        return hasEntityBeenCreated ? 
+            StatusCode(StatusCodes.Status201Created, result.Value) : 
+            Ok(result.Value);
     }
 
     protected IActionResult ProcessResult(Result result)
         => result.IsSuccess ? NoContent() : HandleFailureResult(result.Errors);
 
-    protected IActionResult HandleFailureResult(IEnumerable<IError> errors)
+    protected ObjectResult HandleFailureResult(IEnumerable<IError> errors)
         => HandleFailureResult(errors.FirstOrDefault());
 
-    protected IActionResult HandleFailureResult(IError? error)
+    protected ObjectResult HandleFailureResult(IError? error)
         => error switch
         {
             InvalidRequestError invalidRequestError

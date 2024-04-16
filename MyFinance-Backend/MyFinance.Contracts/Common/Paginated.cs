@@ -6,4 +6,6 @@ public sealed class Paginated<T>(IReadOnlyCollection<T> items, int pageNumber, i
     public int PageNumber { get; init; } = pageNumber;
     public int PageSize { get; init; } = pageSize;
     public long TotalCount { get; init; } = totalCount;
+    public bool HasNextPage => TotalCount > PageSize * PageNumber;
+    public bool HasPreviousPage => PageNumber > 1;
 }
