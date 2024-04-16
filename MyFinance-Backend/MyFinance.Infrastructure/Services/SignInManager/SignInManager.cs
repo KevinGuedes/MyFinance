@@ -1,12 +1,10 @@
-﻿using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Authentication;
+﻿using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Options;
 using MyFinance.Application.Abstractions.Services;
 using MyFinance.Domain.Entities;
 using System.Security.Claims;
-using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Options;
-using DocumentFormat.OpenXml.Wordprocessing;
-using Microsoft.AspNetCore.Identity;
 
 namespace MyFinance.Infrastructure.Services.SignInManager;
 
@@ -16,15 +14,18 @@ public sealed class SignInManager : ISignInManager
     private readonly LockoutOptions _lockoutOptions;
     private readonly SignInOptions _signInOptions;
 
-
     public SignInManager(IHttpContextAccessor httpContextAccessor, IOptions<SignInOptions> signInOptions)
     {
         _httpContextAccessor = httpContextAccessor;
         _signInOptions = signInOptions.Value;
         _lockoutOptions = signInOptions.Value.LockoutOptions;
 
-        ArgumentNullException.ThrowIfNull(_lockoutOptions.LockoutThresholds);
-        ArgumentNullException.ThrowIfNull(_signInOptions.TimeInMonthsToRequestPasswordUpdate);
+        ArgumentNullException.ThrowIfNull(
+            _lockoutOptions.LockoutThresholds, 
+            nameof(_lockoutOptions.LockoutThresholds));
+        ArgumentNullException.ThrowIfNull(
+            _signInOptions.TimeInMonthsToRequestPasswordUpdate,
+            nameof(_signInOptions.TimeInMonthsToRequestPasswordUpdate));
     }
 
     public async Task SignInAsync(User user)

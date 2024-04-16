@@ -12,8 +12,7 @@ public sealed class PasswordHasher : IPasswordHasher
     {
         _passwordHasherOptions = passwordHasherOptions.Value;
 
-        ArgumentNullException.ThrowIfNull(_passwordHasherOptions.WorkFactor);
-        ArgumentNullException.ThrowIfNull(_passwordHasherOptions.MinimumAllowedWorkFactor);
+        ArgumentNullException.ThrowIfNull(_passwordHasherOptions.WorkFactor, nameof(_passwordHasherOptions.WorkFactor));
         if (_passwordHasherOptions.WorkFactor < _passwordHasherOptions.MinimumAllowedWorkFactor)
             throw new ArgumentException("Work factor must be equal or greater than 14");
     }
