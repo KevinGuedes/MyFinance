@@ -13,8 +13,6 @@ public sealed class CreateCategoryValidator : AbstractValidator<CreateCategoryCo
         _categoryRepository = categoryRepository;
         ClassLevelCascadeMode = CascadeMode.Stop;
 
-        RuleFor(command => command.CurrentUserId).MustBeAValidGuid();
-
         RuleFor(command => command.Name)
             .Cascade(CascadeMode.Stop)
             .NotNull().WithMessage("{PropertyName} must not be null")

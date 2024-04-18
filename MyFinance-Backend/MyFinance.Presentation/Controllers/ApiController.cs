@@ -36,8 +36,8 @@ public abstract class ApiController(IMediator mediator) : ControllerBase
     protected ObjectResult HandleFailureResult(IError? error)
         => error switch
         {
-            InvalidRequestError invalidRequestError
-                => BuildValidationProblemResponse(invalidRequestError),
+            BadRequestError badRequest
+                => BuildValidationProblemResponse(badRequest),
             EntityNotFoundError entityNotFoundError
                 => BuildProblemResponse(StatusCodes.Status404NotFound, entityNotFoundError),
             UnprocessableEntityError unprocessableEntityError
@@ -52,11 +52,11 @@ public abstract class ApiController(IMediator mediator) : ControllerBase
                 => BuildProblemResponse(StatusCodes.Status500InternalServerError)
         };
 
-    private ObjectResult BuildValidationProblemResponse(InvalidRequestError invalidRequestError)
+    private ObjectResult BuildValidationProblemResponse(BadRequestError badRequestError)
     {
         var modelStateDictionary = new ModelStateDictionary();
 
-        invalidRequestError
+        badRequestError
             .ValidationErrors
             .ToList()
             .ForEach(error => modelStateDictionary.AddModelError(error.PropertyName, error.ErrorMessage));

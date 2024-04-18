@@ -1,9 +1,9 @@
 ﻿namespace MyFinance.Contracts.User.Requests;
 
-public sealed class RegisterUserRequest
+public sealed record RegisterUserRequest(
+    string Name,
+    string Email,
+    string PlainTextPassword,
+    string PlainTextPasswordConfirmation)
 {
-    public required string Name { get; init; }
-    public required string Email { get; init; }
-    public required string PlainTextPassword { get; init; }
-    public required string PlainTextConfirmationPassword { get; init; }
 }

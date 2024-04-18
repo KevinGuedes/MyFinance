@@ -17,7 +17,7 @@ internal sealed class UserProviderBehavior<TRequest, TResponse>(ICurrentUserProv
     {
         var currentUserId = _currentUserProvider.GetCurrentUserId();
 
-        if (currentUserId.HasValue)
+        if (currentUserId.HasValue && currentUserId.Value != default)
         {
             request.CurrentUserId = currentUserId.Value;
             return await next();

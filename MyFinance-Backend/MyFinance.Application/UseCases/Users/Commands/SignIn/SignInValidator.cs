@@ -2,9 +2,9 @@
 
 namespace MyFinance.Application.UseCases.Users.Commands.SignIn;
 
-public sealed class SignInCommandValidator : AbstractValidator<SignInCommand>
+public sealed class SignInValidator : AbstractValidator<SignInCommand>
 {
-    public SignInCommandValidator()
+    public SignInValidator()
     {
         RuleFor(command => command.Email)
             .NotEmpty().WithMessage("{PropertyName} must not be empty")

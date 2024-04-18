@@ -14,7 +14,6 @@ public sealed record UpdateTransferCommand(
     string Description,
     DateTime SettlementDate,
     TransferType Type)
-    : IUserRequiredRequest, ICommand<TransferResponse>
+    : ICommand<TransferResponse>
 {
-    public Guid CurrentUserId { get; set; }
 }

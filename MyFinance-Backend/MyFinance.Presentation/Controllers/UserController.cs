@@ -49,9 +49,22 @@ public class UserController(IMediator mediator) : ApiController(mediator)
         return HandleFailureResult(error);
     }
 
+    [HttpPost("UpdatePassword")]
+    [SwaggerOperation(Summary = "Updates the User's password")]
+    [SwaggerResponse(StatusCodes.Status200OK, "Password successfully updated")]
+    [SwaggerResponse(StatusCodes.Status400BadRequest, "Invalid payload", typeof(ValidationProblemResponse))]
+    [SwaggerResponse(StatusCodes.Status401Unauthorized, "Unauthorized", typeof(ProblemResponse))]
+    [SwaggerResponse(StatusCodes.Status422UnprocessableEntity, "The new password is similar to the current password", typeof(ProblemResponse))]
+    public async Task<IActionResult> UpdatePasswordAsync(
+        [FromBody] [SwaggerRequestBody("Update password payload", Required = true)]
+        UpdatePasswordRequest request,
+        CancellationToken cancellationToken)
+        => ProcessResult(await _mediator.Send(UserMapper.RTC.Map(request), cancellationToken));
+
     [HttpPost("SignOut")]
     [SwaggerOperation(Summary = "Signs out an existing User")]
     [SwaggerResponse(StatusCodes.Status204NoContent, "User successfully signed out")]
+    [SwaggerResponse(StatusCodes.Status401Unauthorized, "Unauthorized", typeof(ProblemResponse))]
     public async Task<IActionResult> SignOutAsync(CancellationToken cancellationToken)
         => ProcessResult(await _mediator.Send(new SignOutCommand(), cancellationToken));
 

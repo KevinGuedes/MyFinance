@@ -29,31 +29,20 @@ internal sealed class ValidationBehavior<TRequest, TResponse>(
         }
 
         var validationContext = new ValidationContext<TRequest>(request);
+
         var validationResults = await Task.WhenAll(_validators.Select(validators =>
             validators.ValidateAsync(validationContext, cancellationToken)));
+
         var validationErrors = validationResults
             .SelectMany(validationResult => validationResult.Errors)
             .Where(validationResult => validationResult is not null)
             .ToList();
 
-        //var errors = validationResults
-        //    .SelectMany(validationResult => validationResult.Errors)
-        //    .Where(validationResult => validationResult is not null)
-        //    .GroupBy(
-        //        validationResult => validationResult.PropertyName,
-        //        validationResult => validationResult.ErrorMessage,
-        //        (propertyName, errorMessages) => new
-        //        {
-        //            Key = string.Concat(char.ToLower(propertyName[0]), propertyName[1..]),
-        //            Values = errorMessages.Distinct().ToArray()
-        //        })
-        //    .ToDictionary(dictionaryData => dictionaryData.Key, dictionaryData => dictionaryData.Values);
-
         if (validationErrors.Count is 0)
             return await next();
 
         var invalidRequestResponse = new TResponse();
-        var invalidRequestErrorResult = Result.Fail(new InvalidRequestError(validationErrors));
+        var invalidRequestErrorResult = Result.Fail(new BadRequestError(validationErrors));
         invalidRequestResponse.Reasons.AddRange(invalidRequestErrorResult.Reasons);
         return invalidRequestResponse;
     }

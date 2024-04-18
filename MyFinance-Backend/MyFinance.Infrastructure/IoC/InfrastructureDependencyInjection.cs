@@ -9,7 +9,7 @@ using MyFinance.Infrastructure.Persistence.Context;
 using MyFinance.Infrastructure.Persistence.Repositories;
 using MyFinance.Infrastructure.Persistence.UnitOfWork;
 using MyFinance.Infrastructure.Services.CurrentUserProvider;
-using MyFinance.Infrastructure.Services.PasswordHasher;
+using MyFinance.Infrastructure.Services.PasswordManager;
 using MyFinance.Infrastructure.Services.SignInManager;
 using MyFinance.Infrastructure.Services.Summary;
 using System.Reflection;
@@ -39,7 +39,7 @@ public static class InfrastructureDependencyInjection
     private static IServiceCollection AddInfrastructureServices(this IServiceCollection services)
     {
         services
-            .Configure<PasswordHasherOptions>(passwordHasherOptions =>
+            .Configure<PasswordManagerOptions>(passwordHasherOptions =>
             {
                 passwordHasherOptions.WorkFactor = 16;
             })
@@ -57,7 +57,7 @@ public static class InfrastructureDependencyInjection
 
         return services
             .AddScoped<ISummaryService, SummaryService>()
-            .AddScoped<IPasswordHasher, PasswordHasher>()
+            .AddScoped<IPasswordManager, PasswordManager>()
             .AddScoped<ISignInManager, SignInManager>()
             .AddScoped<ICurrentUserProvider, CurrentUserProvider>();
     }

@@ -8,7 +8,6 @@ public sealed class UpdateTransferValidator : AbstractValidator<UpdateTransferCo
     public UpdateTransferValidator()
     {
         RuleFor(command => command.Id).MustBeAValidGuid();
-        RuleFor(command => command.CurrentUserId).MustBeAValidGuid();
         RuleFor(command => command.AccountTagId).MustBeAValidGuid();
         RuleFor(command => command.CategoryId).MustBeAValidGuid();
 

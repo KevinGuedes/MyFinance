@@ -1,7 +1,5 @@
 ﻿namespace MyFinance.Contracts.BusinessUnit.Requests;
 
-public sealed class ArchiveBusinessUnitRequest
+public sealed record ArchiveBusinessUnitRequest(Guid Id, string? ReasonToArchive)
 {
-    public required Guid Id { get; init; }
-    public required string? ReasonToArchive { get; init; }
 }

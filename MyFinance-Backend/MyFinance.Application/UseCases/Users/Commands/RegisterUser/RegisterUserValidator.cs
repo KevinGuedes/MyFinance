@@ -4,11 +4,11 @@ using MyFinance.Application.Common.CustomValidationRules;
 
 namespace MyFinance.Application.UseCases.Users.Commands.RegisterUser;
 
-public sealed class RegisterUserCommandValidator : AbstractValidator<RegisterUserCommand>
+public sealed class RegisterUserValidator : AbstractValidator<RegisterUserCommand>
 {
     private readonly IUserRepository _userRepository;
 
-    public RegisterUserCommandValidator(IUserRepository userRepository)
+    public RegisterUserValidator(IUserRepository userRepository)
     {
         _userRepository = userRepository;
         ClassLevelCascadeMode = CascadeMode.Stop;
@@ -21,7 +21,7 @@ public sealed class RegisterUserCommandValidator : AbstractValidator<RegisterUse
         RuleFor(command => command.PlainTextPassword)
             .MustBeAStrongPassword();
 
-        RuleFor(command => command.PlainTextConfirmationPassword)
+        RuleFor(command => command.PlainTextPasswordConfirmation)
             .Equal(command => command.PlainTextPassword)
             .WithMessage("The {PropertyName} and {ComparisonProperty} do not match");
 

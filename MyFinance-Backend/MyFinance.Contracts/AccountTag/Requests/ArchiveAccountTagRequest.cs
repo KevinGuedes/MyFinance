@@ -1,7 +1,5 @@
 ﻿namespace MyFinance.Contracts.AccountTag.Requests;
 
-public sealed class ArchiveAccountTagRequest
+public sealed record ArchiveAccountTagRequest(Guid Id, string? ReasonToArchive)
 {
-    public required Guid Id { get; init; }
-    public required string? ReasonToArchive { get; init; }
 }

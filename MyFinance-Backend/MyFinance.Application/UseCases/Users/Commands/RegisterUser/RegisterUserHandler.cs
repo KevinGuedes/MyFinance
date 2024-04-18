@@ -6,16 +6,18 @@ using MyFinance.Domain.Entities;
 
 namespace MyFinance.Application.UseCases.Users.Commands.RegisterUser;
 
-internal sealed class RegisterUserCommandHandler(IUserRepository userRepository, IPasswordHasher passwordHasher)
+internal sealed class RegisterUserHandler(
+    IUserRepository userRepository, 
+    IPasswordManager passwordManager)
     : ICommandHandler<RegisterUserCommand>
 {
-    private readonly IPasswordHasher _passwordHasher = passwordHasher;
+    private readonly IPasswordManager _passwordManager = passwordManager;
     private readonly IUserRepository _userRepository = userRepository;
 
-    public Task<Result> Handle(RegisterUserCommand request, CancellationToken cancellationToken)
+    public Task<Result> Handle(RegisterUserCommand command, CancellationToken cancellationToken)
     {
-        var passwordHash = _passwordHasher.HashPassword(request.PlainTextPassword);
-        var user = new User(request.Name, request.Email, passwordHash);
+        var passwordHash = _passwordManager.HashPassword(command.PlainTextPassword);
+        var user = new User(command.Name, command.Email, passwordHash);
         _userRepository.Insert(user);
 
         return Task.FromResult(Result.Ok());
