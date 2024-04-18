@@ -39,9 +39,9 @@ public static class InfrastructureDependencyInjection
     private static IServiceCollection AddInfrastructureServices(this IServiceCollection services)
     {
         services
-            .Configure<PasswordManagerOptions>(passwordHasherOptions =>
+            .Configure<PasswordManagerOptions>(passwordManagerOptions =>
             {
-                passwordHasherOptions.WorkFactor = 16;
+                passwordManagerOptions.WorkFactor = 16;
             })
             .Configure<SignInOptions>(signInOptions =>
             {
