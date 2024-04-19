@@ -17,5 +17,6 @@ internal sealed class UserConfiguration : EntityConfiguration<User>
         builder.Property(user => user.LastPasswordUpdateOnUtc).IsRequired();
         builder.Property(user => user.FailedSignInAttempts).IsRequired();
         builder.Property(user => user.LockoutEndOnUtc).IsRequired(false);
+        builder.Property(user => user.MagicSignInId).IsRequired(false);
     }
 }

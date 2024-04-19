@@ -17,6 +17,7 @@ public sealed class User : Entity
         FailedSignInAttempts = 0;
         LockoutEndOnUtc = null;
         LastPasswordUpdateOnUtc = utcNow;
+        MagicSignInId = null;
     }
 
     public string Name { get; private set; } = null!;
@@ -25,6 +26,7 @@ public sealed class User : Entity
     public int FailedSignInAttempts { get; private set; }
     public DateTime LastPasswordUpdateOnUtc { get; private set; }
     public DateTime? LockoutEndOnUtc { get; private set; }
+    public Guid? MagicSignInId { get; private set; }
 
     public void IncrementFailedSignInAttempts()
     {
@@ -52,5 +54,17 @@ public sealed class User : Entity
 
         PasswordHash = passwordHash;
         LastPasswordUpdateOnUtc = utcNow;
+    }
+
+    public void SetMagicSignInId(Guid magicSignInId)
+    {
+        SetUpdateOnToUtcNow();
+        MagicSignInId = magicSignInId;
+    }
+
+    public void ResetMagicSignInId()
+    {
+        SetUpdateOnToUtcNow();
+        MagicSignInId = null;
     }
 }

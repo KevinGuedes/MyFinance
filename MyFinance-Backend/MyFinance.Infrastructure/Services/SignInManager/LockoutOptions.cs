@@ -17,6 +17,9 @@ public sealed class LockoutOptions
         }.AsReadOnly();
     }
 
-    public bool HasLockoutFor(int failedSignInAttempts)
+    public bool HasLockoutFor(int failedSignInAttempts) 
         => LockoutThresholds.ContainsKey(failedSignInAttempts);
+
+    public TimeSpan GetLockoutDurationFor(int failedSignInAttempts)
+        => LockoutThresholds[failedSignInAttempts];
 }

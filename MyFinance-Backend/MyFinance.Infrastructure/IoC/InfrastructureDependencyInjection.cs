@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.DataProtection;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -19,12 +20,19 @@ namespace MyFinance.Infrastructure.IoC;
 public static class InfrastructureDependencyInjection
 {
     public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
-        => services
+    {
+        services
+            .AddDataProtection()
+            .SetApplicationName("MyFinance")
+            .SetDefaultKeyLifetime(TimeSpan.FromHours(12));
+
+        return services
             .AddHttpContextAccessor()
             .AddAuth()
             .AddInfrastructureServices()
             .AddPersistence(configuration)
             .AddHelthCheckForExternalServices();
+    }
 
     private static IServiceCollection AddAuth(this IServiceCollection services)
     {
