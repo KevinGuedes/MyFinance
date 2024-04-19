@@ -24,7 +24,7 @@ public static class InfrastructureDependencyInjection
         services
             .AddDataProtection()
             .SetApplicationName("MyFinance")
-            .SetDefaultKeyLifetime(TimeSpan.FromHours(12));
+            .SetDefaultKeyLifetime(TimeSpan.FromDays(14));
 
         return services
             .AddHttpContextAccessor()
