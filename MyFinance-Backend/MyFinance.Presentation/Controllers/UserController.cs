@@ -49,7 +49,7 @@ public class UserController(IMediator mediator) : ApiController(mediator)
         return HandleFailureResult(error);
     }
 
-    [HttpPost("UpdatePassword")]
+    [HttpPatch("UpdatePassword")]
     [SwaggerOperation(Summary = "Updates the User's password")]
     [SwaggerResponse(StatusCodes.Status200OK, "Password successfully updated")]
     [SwaggerResponse(StatusCodes.Status400BadRequest, "Invalid payload", typeof(ValidationProblemResponse))]

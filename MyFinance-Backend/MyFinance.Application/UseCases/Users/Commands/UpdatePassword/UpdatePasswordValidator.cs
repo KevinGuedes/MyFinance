@@ -11,7 +11,8 @@ public sealed class UpdatePasswordValidator : AbstractValidator<UpdatePasswordCo
             .MustBeAStrongPassword();
 
         RuleFor(command => command.PlainTextNewPassword)
-            .NotEqual(command => command.PlainTextCurrentPassword);
+            .NotEqual(command => command.PlainTextCurrentPassword)
+            .WithMessage("{PropertyName} and {ComparisonProperty} must not be equal");
 
         RuleFor(command => command.PlainTextNewPasswordConfirmation)
             .Equal(command => command.PlainTextNewPassword)

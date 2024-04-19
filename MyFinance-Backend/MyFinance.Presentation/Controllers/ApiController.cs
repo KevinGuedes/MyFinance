@@ -65,7 +65,8 @@ public abstract class ApiController(IMediator mediator) : ControllerBase
             HttpContext,
             modelStateDictionary,
             StatusCodes.Status400BadRequest,
-            detail: "Invalid payload data, check the errors for more information");
+            detail: "Invalid payload data, check the errors for more information",
+            instance: HttpContext.Request.Path);
 
         return new(new ValidationProblemResponse(validationProblemDetails))
         {
