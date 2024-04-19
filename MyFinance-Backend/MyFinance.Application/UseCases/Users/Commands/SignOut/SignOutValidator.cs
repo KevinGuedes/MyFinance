@@ -2,6 +2,6 @@
 
 namespace MyFinance.Application.UseCases.Users.Commands.SignOut;
 
-public sealed class SignOutCommandValidator : AbstractValidator<SignOutCommand>
+public sealed class SignOutValidator : AbstractValidator<SignOutCommand>
 {
 }

@@ -72,6 +72,7 @@ internal sealed class UpdateTransferHandler(
             command.Type);
 
         businessUnit.RegisterValue(transfer.Value, transfer.Type);
+
         _transferRepository.Update(transfer);
         _businessUnitRepository.Update(businessUnit);
 

@@ -13,8 +13,6 @@ public sealed class CreateAccountTagValidator : AbstractValidator<CreateAccountT
         _accountTagRepository = accountTagRepository;
         ClassLevelCascadeMode = CascadeMode.Stop;
 
-        RuleFor(command => command.CurrentUserId).MustBeAValidGuid();
-
         RuleFor(command => command.Description)
             .MaximumLength(300).WithMessage("{PropertyName} must have a maximum of 300 characters");
 

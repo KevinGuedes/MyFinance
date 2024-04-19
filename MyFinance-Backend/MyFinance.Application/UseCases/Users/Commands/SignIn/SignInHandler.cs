@@ -7,25 +7,25 @@ using MyFinance.Contracts.User.Responses;
 
 namespace MyFinance.Application.UseCases.Users.Commands.SignIn;
 
-public sealed class SignInCommandHandler(
+internal sealed class SignInHandler(
     ISignInManager signInManager,
-    IPasswordHasher passwordHasher,
+    IPasswordManager passwordManager,
     IUserRepository userRepository) : ICommandHandler<SignInCommand, SignInResponse>
 {
     private readonly ISignInManager _signInManager = signInManager;
-    private readonly IPasswordHasher _passwordHasher = passwordHasher;
+    private readonly IPasswordManager _passwordManager = passwordManager;
     private readonly IUserRepository _userRepository = userRepository;
 
-    public async Task<Result<SignInResponse>> Handle(SignInCommand request, CancellationToken cancellationToken)
+    public async Task<Result<SignInResponse>> Handle(SignInCommand command, CancellationToken cancellationToken)
     {
-        var user = await _userRepository.GetByEmailAsync(request.Email, cancellationToken);
+        var user = await _userRepository.GetByEmailAsync(command.Email, cancellationToken);
         if (user is null)
             return HandleInvalidCredentials();
 
         if (!_signInManager.CanSignIn(user.LockoutEndOnUtc))
             return HandleLockout(user.LockoutEndOnUtc!.Value);
 
-        var isPasswordValid = _passwordHasher.VerifyPassword(request.PlainTextPassword, user.PasswordHash);
+        var isPasswordValid = _passwordManager.VerifyPassword(command.PlainTextPassword, user.PasswordHash);
         if (isPasswordValid)
         {
             if (user.FailedSignInAttempts != 0)

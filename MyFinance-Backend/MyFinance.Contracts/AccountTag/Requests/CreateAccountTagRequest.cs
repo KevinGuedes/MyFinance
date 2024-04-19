@@ -1,7 +1,5 @@
 ﻿namespace MyFinance.Contracts.AccountTag.Requests;
 
-public sealed class CreateAccountTagRequest
+public sealed record CreateAccountTagRequest(string Tag, string? Description)
 {
-    public required string Tag { get; init; } = null!;
-    public required string? Description { get; init; }
 }

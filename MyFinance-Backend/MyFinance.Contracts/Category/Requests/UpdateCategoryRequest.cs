@@ -1,7 +1,5 @@
 ﻿namespace MyFinance.Contracts.Category.Requests;
 
-public sealed class UpdateCategoryRequest
+public sealed record UpdateCategoryRequest(Guid Id, string Name)
 {
-    public required Guid Id { get; init; }
-    public required string Name { get; init; } = null!;
 }

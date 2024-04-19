@@ -6,6 +6,6 @@ public sealed record RegisterUserCommand(
     string Name,
     string Email,
     string PlainTextPassword,
-    string PlainTextConfirmationPassword) : ICommand
+    string PlainTextPasswordConfirmation) : ICommand
 {
 }

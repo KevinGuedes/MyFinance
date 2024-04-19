@@ -1,6 +1,5 @@
 ﻿namespace MyFinance.Contracts.Category.Requests;
 
-public sealed class CreateCategoryRequest
+public sealed record CreateCategoryRequest(string Name)
 {
-    public required string Name { get; init; } = null!;
 }
