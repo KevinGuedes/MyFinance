@@ -3,7 +3,7 @@ using MyFinance.Application.Abstractions.Services;
 
 namespace MyFinance.Infrastructure.Services.CurrentUserProvider;
 
-public sealed class CurrentUserProvider(IHttpContextAccessor httpContextAccessor) : ICurrentUserProvider
+internal sealed class CurrentUserProvider(IHttpContextAccessor httpContextAccessor) : ICurrentUserProvider
 {
     private readonly IHttpContextAccessor _httpContextAccessor = httpContextAccessor;
 

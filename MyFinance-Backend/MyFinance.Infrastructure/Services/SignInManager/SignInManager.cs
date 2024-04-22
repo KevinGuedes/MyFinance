@@ -9,11 +9,10 @@ using System.Security.Claims;
 
 namespace MyFinance.Infrastructure.Services.SignInManager;
 
-public sealed class SignInManager : ISignInManager
+internal sealed class SignInManager : ISignInManager
 {
     private readonly IHttpContextAccessor _httpContextAccessor;
     private readonly ITimeLimitedDataProtector _tldp;
-    private readonly LockoutOptions _lockoutOptions;
     private readonly SignInOptions _signInOptions;
 
     public SignInManager(
@@ -23,7 +22,6 @@ public sealed class SignInManager : ISignInManager
     {
         _httpContextAccessor = httpContextAccessor;
         _signInOptions = signInOptions.Value;
-        _lockoutOptions = signInOptions.Value.LockoutOptions;
 
         if (_signInOptions.MagicSignInTokenDurationInMinutes > 20)
             throw new ArgumentException("Magic sign in token duration cannot be greater than 20 minutes");
@@ -31,10 +29,6 @@ public sealed class SignInManager : ISignInManager
         _tldp = idp
             .CreateProtector(_signInOptions.MagicSignInTokenPurpose)
             .ToTimeLimitedDataProtector();
-
-        ArgumentNullException.ThrowIfNull(
-            _lockoutOptions.LockoutThresholds,
-            nameof(_lockoutOptions.LockoutThresholds));
 
         ArgumentNullException.ThrowIfNull(
             _signInOptions.TimeInMonthsToRequestPasswordUpdate,
@@ -59,52 +53,8 @@ public sealed class SignInManager : ISignInManager
     }
 
     public Task SignOutAsync()
-        => _httpContextAccessor.HttpContext!.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-
-    public bool CanSignIn(DateTime? lockoutEndOnUtc)
-        => !lockoutEndOnUtc.HasValue || lockoutEndOnUtc < DateTime.UtcNow;
-
-    public bool WillLockoutOnNextAttempt(int failedSignInAttempts)
-    {
-        var nextFailedSignInAttempts = failedSignInAttempts + 1;
-
-        if (nextFailedSignInAttempts >= _lockoutOptions.UpperAttemptsThreshold)
-            return true;
-
-        if (_lockoutOptions.HasLockoutFor(nextFailedSignInAttempts))
-            return true;
-
-        return false;
-    }
-
-    public TimeSpan GetNextLockoutDuration(int failedSignInAttempts)
-    {
-        var nextFailedSignInAttempts = failedSignInAttempts + 1;
-
-        if (nextFailedSignInAttempts >= _lockoutOptions.UpperAttemptsThreshold)
-            return _lockoutOptions.UpperLockoutDurationThreshold;
-
-        if (_lockoutOptions.HasLockoutFor(nextFailedSignInAttempts))
-            return _lockoutOptions.GetLockoutDurationFor(nextFailedSignInAttempts);
-
-        throw new InvalidOperationException("Lockout configuration not provided");
-    }
-
-    public bool ShouldLockout(int failedSignInAttempts)
-        => failedSignInAttempts >= _lockoutOptions.UpperAttemptsThreshold ||
-            _lockoutOptions.HasLockoutFor(failedSignInAttempts);
-
-    public DateTime GetLockoutEndOnUtc(int failedSignInAttempts)
-    {
-        var hasReachUpperAttemtpsThreshold = failedSignInAttempts >= _lockoutOptions.UpperAttemptsThreshold;
-        if (hasReachUpperAttemtpsThreshold)
-            return DateTime.UtcNow.Add(_lockoutOptions.UpperLockoutDurationThreshold);
-
-        if (_lockoutOptions.HasLockoutFor(failedSignInAttempts))
-            return DateTime.UtcNow.Add(_lockoutOptions.GetLockoutDurationFor(failedSignInAttempts));
-
-        throw new InvalidOperationException("Lockout configuration not provided");
-    }
+        => _httpContextAccessor.HttpContext!
+            .SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
 
     public bool ShouldUpdatePassword(DateTime lastPasswordUpdateOnUtc)
         => DateTime.UtcNow > lastPasswordUpdateOnUtc.AddMonths(_signInOptions.TimeInMonthsToRequestPasswordUpdate);

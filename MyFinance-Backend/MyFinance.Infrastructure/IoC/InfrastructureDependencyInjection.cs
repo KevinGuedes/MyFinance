@@ -10,6 +10,7 @@ using MyFinance.Infrastructure.Persistence.Context;
 using MyFinance.Infrastructure.Persistence.Repositories;
 using MyFinance.Infrastructure.Persistence.UnitOfWork;
 using MyFinance.Infrastructure.Services.CurrentUserProvider;
+using MyFinance.Infrastructure.Services.LockoutManager;
 using MyFinance.Infrastructure.Services.PasswordManager;
 using MyFinance.Infrastructure.Services.SignInManager;
 using MyFinance.Infrastructure.Services.Summary;
@@ -22,9 +23,7 @@ public static class InfrastructureDependencyInjection
     public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
         services
-            .AddDataProtection()
-            .SetApplicationName("MyFinance")
-            .SetDefaultKeyLifetime(TimeSpan.FromDays(14));
+            .AddDataProtection();
 
         return services
             .AddHttpContextAccessor()
@@ -47,25 +46,30 @@ public static class InfrastructureDependencyInjection
     private static IServiceCollection AddInfrastructureServices(this IServiceCollection services)
     {
         services
-            .Configure<PasswordManagerOptions>(passwordManagerOptions =>
+            .Configure<LockoutOptions>(lockoutOptions =>
             {
-                passwordManagerOptions.WorkFactor = 16;
-            })
-            .Configure<SignInOptions>(signInOptions =>
-            {
-                signInOptions.TimeInMonthsToRequestPasswordUpdate = 6;
-                signInOptions.LockoutOptions.LockoutThresholds = new Dictionary<int, TimeSpan>
+                lockoutOptions.LockoutThresholds = new Dictionary<int, TimeSpan>
                 {
                     { 3, TimeSpan.FromMinutes(5) },
                     { 6, TimeSpan.FromMinutes(10) },
                     { 9, TimeSpan.FromHours(1) },
                     { 12, TimeSpan.FromDays(1) },
                 }.AsReadOnly();
+            })
+            .Configure<PasswordOptions>(passwordManagerOptions =>
+            {
+                passwordManagerOptions.WorkFactor = 16;
+            })
+            .Configure<SignInOptions>(signInOptions =>
+            {
+                signInOptions.MagicSignInTokenDurationInMinutes = 10;
+                signInOptions.TimeInMonthsToRequestPasswordUpdate = 6;
             });
 
         return services
             .AddScoped<ISummaryService, SummaryService>()
             .AddScoped<IPasswordManager, PasswordManager>()
+            .AddScoped<ILockoutManager, LockoutManager>()
             .AddScoped<ISignInManager, SignInManager>()
             .AddScoped<ICurrentUserProvider, CurrentUserProvider>();
     }

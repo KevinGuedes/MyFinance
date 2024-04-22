@@ -1,8 +1,9 @@
 ﻿namespace MyFinance.Infrastructure.Services.PasswordManager;
 
-public sealed class PasswordManagerOptions
+internal sealed class PasswordOptions
 {
-    public const string ResetPasswordTokenPurpose = "ResetPassword";
+    public readonly string ResetPasswordTokenPurpose 
+        = "MyFinance.Infrastructure.Services.PasswordManager-ResetPassword";
     public readonly int MinimumAllowedWorkFactor = 14;
     public readonly double SimilarityThreshold = 0.25;
 

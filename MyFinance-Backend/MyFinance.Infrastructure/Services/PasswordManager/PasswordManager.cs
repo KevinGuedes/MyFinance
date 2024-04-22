@@ -5,11 +5,11 @@ using BC = BCrypt.Net.BCrypt;
 
 namespace MyFinance.Infrastructure.Services.PasswordManager;
 
-public sealed class PasswordManager : IPasswordManager
+internal sealed class PasswordManager : IPasswordManager
 {
-    private readonly PasswordManagerOptions _passwordManagerOptions;
+    private readonly PasswordOptions _passwordManagerOptions;
 
-    public PasswordManager(IOptions<PasswordManagerOptions> passwordManagerOptions)
+    public PasswordManager(IOptions<PasswordOptions> passwordManagerOptions)
     {
         _passwordManagerOptions = passwordManagerOptions.Value;
 

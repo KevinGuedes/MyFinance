@@ -5,7 +5,7 @@ using MyFinance.Domain.Enums;
 
 namespace MyFinance.Infrastructure.Services.Summary;
 
-public sealed class SummaryService : ISummaryService
+internal sealed class SummaryService : ISummaryService
 {
     private const int initalRowForBalanceData = 3;
     private const int inititalRowForGenerationData = 1;

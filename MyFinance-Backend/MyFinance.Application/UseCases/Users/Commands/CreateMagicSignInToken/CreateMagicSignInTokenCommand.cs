@@ -2,7 +2,6 @@
 
 namespace MyFinance.Application.UseCases.Users.Commands.CreateMagicSignInToken;
 
-public sealed record CreateMagicSignInTokenCommand(string Email) 
-    : ICommand
+public sealed record CreateMagicSignInTokenCommand(string Email) : ICommand
 {
 }
