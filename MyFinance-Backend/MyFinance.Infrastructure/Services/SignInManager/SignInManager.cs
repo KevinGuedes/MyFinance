@@ -23,16 +23,17 @@ internal sealed class SignInManager : ISignInManager
         _httpContextAccessor = httpContextAccessor;
         _signInOptions = signInOptions.Value;
 
-        if (_signInOptions.MagicSignInTokenDurationInMinutes > 20)
-            throw new ArgumentException("Magic sign in token duration cannot be greater than 20 minutes");
+        if (_signInOptions.MagicSignInTokenDurationInMinutes > _signInOptions.MaximumMagicSignInTokenDurationInMinutes)
+        {
+            var message = "Magic sign in token duration cannot be greater than " +
+                $"{_signInOptions.MaximumMagicSignInTokenDurationInMinutes} minutes";
+
+            throw new ArgumentException(message);
+        }
        
         _tldp = idp
             .CreateProtector(_signInOptions.MagicSignInTokenPurpose)
             .ToTimeLimitedDataProtector();
-
-        ArgumentNullException.ThrowIfNull(
-            _signInOptions.TimeInMonthsToRequestPasswordUpdate,
-            nameof(_signInOptions.TimeInMonthsToRequestPasswordUpdate));
     }
 
     public async Task SignInAsync(User user)
@@ -55,9 +56,6 @@ internal sealed class SignInManager : ISignInManager
     public Task SignOutAsync()
         => _httpContextAccessor.HttpContext!
             .SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-
-    public bool ShouldUpdatePassword(DateTime lastPasswordUpdateOnUtc)
-        => DateTime.UtcNow > lastPasswordUpdateOnUtc.AddMonths(_signInOptions.TimeInMonthsToRequestPasswordUpdate);
 
     public string CreateMagicSignInToken(Guid magicSignInId)
         => _tldp

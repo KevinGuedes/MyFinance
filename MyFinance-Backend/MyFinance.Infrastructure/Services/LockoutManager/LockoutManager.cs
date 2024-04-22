@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Identity;
-using Microsoft.Extensions.Options;
+﻿using Microsoft.Extensions.Options;
 using MyFinance.Application.Abstractions.Services;
 
 namespace MyFinance.Infrastructure.Services.LockoutManager;
@@ -12,13 +11,16 @@ internal sealed class LockoutManager : ILockoutManager
     {
         _lockoutOptions = lockoutOptions.Value;
 
-        ArgumentNullException.ThrowIfNull(
-            _lockoutOptions.LockoutThresholds,
-            nameof(_lockoutOptions.LockoutThresholds));
+        if (_lockoutOptions.LockoutThresholds.Count is 0)
+            throw new ArgumentException("Lockout thresholds must be provided");
     }
 
     public bool CanSignIn(DateTime? lockoutEndOnUtc)
         => !lockoutEndOnUtc.HasValue || lockoutEndOnUtc < DateTime.UtcNow;
+
+    public bool ShouldLockout(int failedSignInAttempts)
+        => failedSignInAttempts >= _lockoutOptions.UpperAttemptsThreshold ||
+            _lockoutOptions.HasLockoutFor(failedSignInAttempts);
 
     public bool WillLockoutOnNextAttempt(int failedSignInAttempts)
     {
@@ -27,10 +29,7 @@ internal sealed class LockoutManager : ILockoutManager
         if (nextFailedSignInAttempts >= _lockoutOptions.UpperAttemptsThreshold)
             return true;
 
-        if (_lockoutOptions.HasLockoutFor(nextFailedSignInAttempts))
-            return true;
-
-        return false;
+        return _lockoutOptions.HasLockoutFor(nextFailedSignInAttempts);
     }
 
     public TimeSpan GetNextLockoutDuration(int failedSignInAttempts)
@@ -45,11 +44,6 @@ internal sealed class LockoutManager : ILockoutManager
 
         throw new InvalidOperationException("Lockout configuration not provided");
     }
-
-    public bool ShouldLockout(int failedSignInAttempts)
-        => failedSignInAttempts >= _lockoutOptions.UpperAttemptsThreshold ||
-            _lockoutOptions.HasLockoutFor(failedSignInAttempts);
-
 
     public DateTime GetLockoutEndOnUtc(int failedSignInAttempts)
     {

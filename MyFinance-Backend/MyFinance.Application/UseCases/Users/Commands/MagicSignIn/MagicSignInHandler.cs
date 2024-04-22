@@ -9,10 +9,12 @@ namespace MyFinance.Application.UseCases.Users.Commands.MagicSignIn;
 
 internal sealed class MagicSignInHandler(
     ISignInManager signInManager,
+    IPasswordManager passwordManager,
     IUserRepository userRepository) 
     : ICommandHandler<MagicSignInCommand, SignInResponse>
 {
     private readonly ISignInManager _signInManager = signInManager;
+    private readonly IPasswordManager _passwordManager = passwordManager;
     private readonly IUserRepository _userRepository = userRepository;
 
     public async Task<Result<SignInResponse>> Handle(MagicSignInCommand command, CancellationToken cancellationToken)
@@ -30,7 +32,7 @@ internal sealed class MagicSignInHandler(
         _userRepository.Update(user);
 
         await _signInManager.SignInAsync(user);
-        var shouldUpdatePassword = _signInManager.ShouldUpdatePassword(user.LastPasswordUpdateOnUtc);
+        var shouldUpdatePassword = _passwordManager.ShouldUpdatePassword(user.LastPasswordUpdateOnUtc);
         
         return Result.Ok(new SignInResponse(shouldUpdatePassword));
     }

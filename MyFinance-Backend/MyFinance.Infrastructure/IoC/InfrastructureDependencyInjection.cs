@@ -56,14 +56,14 @@ public static class InfrastructureDependencyInjection
                     { 12, TimeSpan.FromDays(1) },
                 }.AsReadOnly();
             })
-            .Configure<PasswordOptions>(passwordManagerOptions =>
+            .Configure<PasswordOptions>(passwordOptions =>
             {
-                passwordManagerOptions.WorkFactor = 16;
+                passwordOptions.WorkFactor = 16;
+                passwordOptions.TimeInMonthsToRequestPasswordUpdate = 6;
             })
             .Configure<SignInOptions>(signInOptions =>
             {
                 signInOptions.MagicSignInTokenDurationInMinutes = 10;
-                signInOptions.TimeInMonthsToRequestPasswordUpdate = 6;
             });
 
         return services
