@@ -1,6 +1,5 @@
 ﻿using FluentValidation;
 using MyFinance.Application.Abstractions.Persistence.Repositories;
-using MyFinance.Application.Common.CustomValidators;
 
 namespace MyFinance.Application.UseCases.Categories.Commands.CreateCategory;
 

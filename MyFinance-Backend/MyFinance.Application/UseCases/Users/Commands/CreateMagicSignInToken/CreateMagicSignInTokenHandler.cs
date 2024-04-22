@@ -7,7 +7,7 @@ namespace MyFinance.Application.UseCases.Users.Commands.CreateMagicSignInToken;
 
 internal sealed class CreateMagicSignInTokenHandler(
     ISignInManager signInManager,
-    IUserRepository userRepository) 
+    IUserRepository userRepository)
     : ICommandHandler<CreateMagicSignInTokenCommand>
 {
     private readonly ISignInManager _signInManager = signInManager;

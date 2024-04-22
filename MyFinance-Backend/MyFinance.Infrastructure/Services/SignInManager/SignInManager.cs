@@ -23,7 +23,7 @@ internal sealed class SignInManager : ISignInManager
         _httpContextAccessor = httpContextAccessor;
         _signInOptions = signInOptions.Value;
         _signInOptions.ValidateOptions();
-       
+
         _tldp = idp
             .CreateProtector(_signInOptions.MagicSignInTokenPurpose)
             .ToTimeLimitedDataProtector();

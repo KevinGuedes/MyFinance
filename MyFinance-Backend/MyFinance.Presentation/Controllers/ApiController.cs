@@ -22,8 +22,8 @@ public abstract class ApiController(IMediator mediator) : ControllerBase
         if (result.IsFailed)
             return HandleFailureResult(result.Errors);
 
-        return hasEntityBeenCreated ? 
-            StatusCode(StatusCodes.Status201Created, result.Value) : 
+        return hasEntityBeenCreated ?
+            StatusCode(StatusCodes.Status201Created, result.Value) :
             Ok(result.Value);
     }
 

@@ -16,7 +16,7 @@ internal sealed class PasswordManager : IPasswordManager
     }
 
     public bool ShouldUpdatePassword(DateTime lastPasswordUpdateOnUtc)
-        => DateTime.UtcNow > 
+        => DateTime.UtcNow >
             lastPasswordUpdateOnUtc.AddMonths(_passwordOptions.TimeInMonthsToRequestPasswordUpdate);
 
     public bool ArePasswordsSimilar(string plainTextPassword, string plainTextNewPassword)

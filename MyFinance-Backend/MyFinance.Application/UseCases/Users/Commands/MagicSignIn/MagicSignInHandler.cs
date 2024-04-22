@@ -10,7 +10,7 @@ namespace MyFinance.Application.UseCases.Users.Commands.MagicSignIn;
 internal sealed class MagicSignInHandler(
     ISignInManager signInManager,
     IPasswordManager passwordManager,
-    IUserRepository userRepository) 
+    IUserRepository userRepository)
     : ICommandHandler<MagicSignInCommand, SignInResponse>
 {
     private readonly ISignInManager _signInManager = signInManager;
@@ -24,7 +24,7 @@ internal sealed class MagicSignInHandler(
 
         var user = await _userRepository.GetByMagicSignInIdAsync(magicSignInId, cancellationToken);
 
-        if(user is null)
+        if (user is null)
             return HandleInvalidToken();
 
         user.ResetLockout();
@@ -33,7 +33,7 @@ internal sealed class MagicSignInHandler(
 
         await _signInManager.SignInAsync(user);
         var shouldUpdatePassword = _passwordManager.ShouldUpdatePassword(user.LastPasswordUpdateOnUtc);
-        
+
         return Result.Ok(new SignInResponse(shouldUpdatePassword));
     }
 

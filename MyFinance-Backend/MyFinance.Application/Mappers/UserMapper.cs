@@ -16,9 +16,9 @@ public static class UserMapper
     {
         public static RegisterUserCommand Map(RegisterUserRequest request)
             => new(
-                request.Name, 
-                request.Email, 
-                request.PlainTextPassword, 
+                request.Name,
+                request.Email,
+                request.PlainTextPassword,
                 request.PlainTextPasswordConfirmation);
 
         public static SignInCommand Map(SignInRequest request)
@@ -26,7 +26,7 @@ public static class UserMapper
 
         public static UpdatePasswordCommand Map(UpdatePasswordRequest request)
             => new(
-                request.PlainTextCurrentPassword, 
+                request.PlainTextCurrentPassword,
                 request.PlainTextNewPassword,
                 request.PlainTextNewPasswordConfirmation);
 

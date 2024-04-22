@@ -7,7 +7,7 @@ using MyFinance.Domain.Entities;
 namespace MyFinance.Application.UseCases.Users.Commands.RegisterUser;
 
 internal sealed class RegisterUserHandler(
-    IUserRepository userRepository, 
+    IUserRepository userRepository,
     IPasswordManager passwordManager)
     : ICommandHandler<RegisterUserCommand>
 {
