@@ -12,23 +12,12 @@ internal sealed class PasswordManager : IPasswordManager
     public PasswordManager(IOptions<PasswordOptions> passwordOptions)
     {
         _passwordOptions = passwordOptions.Value;
-
-
-        if (_passwordOptions.TimeInMonthsToRequestPasswordUpdate > _passwordOptions.MaximumAllowedTimeInMonthsToRequestPasswordUpdate)
-        {
-            var message = "Time in months to request password update must be equal " + 
-                $"or less than {_passwordOptions.MaximumAllowedTimeInMonthsToRequestPasswordUpdate}";
-
-            throw new ArgumentException(message);
-        }
-
-        if (_passwordOptions.WorkFactor < _passwordOptions.MinimumAllowedWorkFactor)
-            throw new ArgumentException($"Work factor must be equal or greater than {_passwordOptions.MinimumAllowedWorkFactor}");
+        _passwordOptions.ValidateOptions();
     }
+
     public bool ShouldUpdatePassword(DateTime lastPasswordUpdateOnUtc)
         => DateTime.UtcNow > 
             lastPasswordUpdateOnUtc.AddMonths(_passwordOptions.TimeInMonthsToRequestPasswordUpdate);
-
 
     public bool ArePasswordsSimilar(string plainTextPassword, string plainTextNewPassword)
     {

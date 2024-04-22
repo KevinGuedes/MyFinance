@@ -1,6 +1,8 @@
-﻿namespace MyFinance.Infrastructure.Services.PasswordManager;
+﻿using MyFinance.Infrastructure.Abstractions;
 
-internal sealed class PasswordOptions
+namespace MyFinance.Infrastructure.Services.PasswordManager;
+
+internal sealed class PasswordOptions : IValidatableOptions
 {
     public readonly string ResetPasswordTokenPurpose 
         = "MyFinance.Infrastructure.Services.PasswordManager-ResetPassword";
@@ -10,4 +12,13 @@ internal sealed class PasswordOptions
 
     public int WorkFactor { get; set; } = 16;
     public int TimeInMonthsToRequestPasswordUpdate { get; set; } = 6;
+
+    public void ValidateOptions()
+    {
+        if (WorkFactor < MinimumAllowedWorkFactor)
+            throw new ArgumentException($"Work factor must be equal or greater than {MinimumAllowedWorkFactor}");
+
+        if (TimeInMonthsToRequestPasswordUpdate > MaximumAllowedTimeInMonthsToRequestPasswordUpdate)
+            throw new ArgumentException($"Time in months to request password update must be equal or less than {MaximumAllowedTimeInMonthsToRequestPasswordUpdate}");
+    }
 }

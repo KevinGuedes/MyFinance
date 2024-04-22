@@ -10,9 +10,7 @@ internal sealed class LockoutManager : ILockoutManager
     public LockoutManager(IOptions<LockoutOptions> lockoutOptions)
     {
         _lockoutOptions = lockoutOptions.Value;
-
-        if (_lockoutOptions.LockoutThresholds.Count is 0)
-            throw new ArgumentException("Lockout thresholds must be provided");
+        _lockoutOptions.ValidateOptions();
     }
 
     public bool CanSignIn(DateTime? lockoutEndOnUtc)

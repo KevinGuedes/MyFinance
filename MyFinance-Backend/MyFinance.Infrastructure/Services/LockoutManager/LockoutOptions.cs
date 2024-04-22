@@ -1,6 +1,8 @@
-﻿namespace MyFinance.Infrastructure.Services.LockoutManager;
+﻿using MyFinance.Infrastructure.Abstractions;
 
-internal sealed class LockoutOptions
+namespace MyFinance.Infrastructure.Services.LockoutManager;
+
+internal sealed class LockoutOptions : IValidatableOptions
 {
     public IReadOnlyDictionary<int, TimeSpan> LockoutThresholds { get; set; }
     public int UpperAttemptsThreshold => LockoutThresholds.Keys.Max();
@@ -22,4 +24,10 @@ internal sealed class LockoutOptions
 
     public TimeSpan GetLockoutDurationFor(int failedSignInAttempts)
         => LockoutThresholds[failedSignInAttempts];
+
+    public void ValidateOptions()
+    {
+        if (LockoutThresholds.Count is 0)
+            throw new ArgumentException("Lockout thresholds must be provided");
+    }
 }

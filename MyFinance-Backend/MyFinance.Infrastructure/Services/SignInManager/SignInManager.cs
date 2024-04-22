@@ -22,14 +22,7 @@ internal sealed class SignInManager : ISignInManager
     {
         _httpContextAccessor = httpContextAccessor;
         _signInOptions = signInOptions.Value;
-
-        if (_signInOptions.MagicSignInTokenDurationInMinutes > _signInOptions.MaximumMagicSignInTokenDurationInMinutes)
-        {
-            var message = "Magic sign in token duration cannot be greater than " +
-                $"{_signInOptions.MaximumMagicSignInTokenDurationInMinutes} minutes";
-
-            throw new ArgumentException(message);
-        }
+        _signInOptions.ValidateOptions();
        
         _tldp = idp
             .CreateProtector(_signInOptions.MagicSignInTokenPurpose)
