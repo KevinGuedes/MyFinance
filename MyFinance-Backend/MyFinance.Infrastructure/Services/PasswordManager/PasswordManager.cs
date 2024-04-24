@@ -17,7 +17,7 @@ internal sealed class PasswordManager : IPasswordManager
     }
 
     public bool ShouldUpdatePassword(User user)
-        => user.LastPasswordUpdateOnUtc is null ? 
+        => user.LastPasswordUpdateOnUtc is null ?
             ShouldUpdatePassword(user.CreatedOnUtc) :
             ShouldUpdatePassword(user.LastPasswordUpdateOnUtc.Value);
 

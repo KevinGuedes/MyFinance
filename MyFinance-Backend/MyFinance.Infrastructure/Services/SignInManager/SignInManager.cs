@@ -61,7 +61,7 @@ internal sealed class SignInManager : ISignInManager
             var payload = _tldp.Unprotect(token);
             return Guid.TryParse(payload, out magicSignInId);
         }
-        catch(CryptographicException)
+        catch (CryptographicException)
         {
             magicSignInId = default;
             return false;

@@ -26,12 +26,12 @@ internal sealed class SendMagicSignInEmailHandler(
             await Task.Delay(delayInSeconds, cancellationToken);
             return Result.Ok();
         }
-     
+
         //0. If the email has been sent in less than 5 minutes ago, do not send a new one
         //1. Create a new token
         //2. Send the email with some resilience strategy (Polly)
         //3. If the email was sent, save the user data. If not, fail the request
-        
+
         //User data: MagicSignInId and MagicSignInEmailSentOnUtc
         //Polly for persistence in save changes?
 
