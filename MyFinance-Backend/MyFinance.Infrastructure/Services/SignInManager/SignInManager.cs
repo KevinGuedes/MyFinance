@@ -6,6 +6,7 @@ using Microsoft.Extensions.Options;
 using MyFinance.Application.Abstractions.Services;
 using MyFinance.Domain.Entities;
 using System.Security.Claims;
+using System.Security.Cryptography;
 
 namespace MyFinance.Infrastructure.Services.SignInManager;
 
@@ -51,28 +52,16 @@ internal sealed class SignInManager : ISignInManager
             .SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
 
     public string CreateMagicSignInToken(Guid magicSignInId)
-        => _tldp
-            .CreateProtector(_signInOptions.MagicSignInTokenPurpose)
-            .Protect(magicSignInId.ToString(), _signInOptions.MagicSignInTokenDuration);
+        => _tldp.Protect(magicSignInId.ToString(), _signInOptions.MagicSignInTokenDuration);
 
     public bool TryGetMagicSignInIdFromToken(string token, out Guid magicSignInId)
     {
         try
         {
-            var payload = _tldp
-                .CreateProtector(_signInOptions.MagicSignInTokenPurpose)
-                .Unprotect(token);
-
-            if (Guid.TryParse(payload, out var magicSignInIdFromToken))
-            {
-                magicSignInId = magicSignInIdFromToken;
-                return true;
-            }
-
-            magicSignInId = default;
-            return false;
+            var payload = _tldp.Unprotect(token);
+            return Guid.TryParse(payload, out magicSignInId);
         }
-        catch
+        catch(CryptographicException)
         {
             magicSignInId = default;
             return false;

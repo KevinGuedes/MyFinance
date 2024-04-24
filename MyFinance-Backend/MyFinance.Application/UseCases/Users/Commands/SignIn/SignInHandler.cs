@@ -37,8 +37,7 @@ internal sealed class SignInHandler(
             }
 
             await _signInManager.SignInAsync(user);
-            var shouldUpdatePassword = _passwordManager.ShouldUpdatePassword(user.LastPasswordUpdateOnUtc);
-            return Result.Ok(new SignInResponse(shouldUpdatePassword));
+            return Result.Ok(new SignInResponse(_passwordManager.ShouldUpdatePassword(user)));
         }
 
         user.IncrementFailedSignInAttempts();

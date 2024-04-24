@@ -10,13 +10,12 @@ public sealed class User : Entity
 
     public User(string name, string email, string passwordHash)
     {
-        var utcNow = DateTime.UtcNow;
         Name = name;
         Email = email;
         PasswordHash = passwordHash;
         FailedSignInAttempts = 0;
         LockoutEndOnUtc = null;
-        LastPasswordUpdateOnUtc = utcNow;
+        LastPasswordUpdateOnUtc = null;
         MagicSignInId = null;
     }
 
@@ -24,7 +23,7 @@ public sealed class User : Entity
     public string Email { get; private set; } = null!;
     public string PasswordHash { get; private set; } = null!;
     public int FailedSignInAttempts { get; private set; }
-    public DateTime LastPasswordUpdateOnUtc { get; private set; }
+    public DateTime? LastPasswordUpdateOnUtc { get; private set; }
     public DateTime? LockoutEndOnUtc { get; private set; }
     public Guid? MagicSignInId { get; private set; }
 
@@ -50,7 +49,7 @@ public sealed class User : Entity
     public void UpdatePasswordHash(string passwordHash)
     {
         var utcNow = DateTime.UtcNow;
-        SetUpdateOnToUtcNow(utcNow);
+        SetUpdatedOnTo(utcNow);
 
         PasswordHash = passwordHash;
         LastPasswordUpdateOnUtc = utcNow;

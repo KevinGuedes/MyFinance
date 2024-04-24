@@ -15,6 +15,6 @@ public abstract class Entity : IAuditableEntity
     public void SetUpdateOnToUtcNow()
         => UpdatedOnUtc = DateTime.UtcNow;
 
-    public void SetUpdateOnToUtcNow(DateTime dateTime)
-        => UpdatedOnUtc = dateTime;
+    public void SetUpdatedOnTo(DateTime updatedOnUtc)
+        => UpdatedOnUtc = updatedOnUtc;
 }

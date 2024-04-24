@@ -23,7 +23,7 @@ internal sealed class DeleteTransferHandler(
         }
 
         var businessUnit = transfer.BusinessUnit;
-        businessUnit.CancelValue(transfer.Value, transfer.Type);
+        businessUnit.CancelTransferValue(transfer.Value, transfer.Type);
         _businessUnitRepository.Update(businessUnit);
         _transferRepository.Delete(transfer);
 
