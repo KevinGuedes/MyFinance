@@ -8,4 +8,5 @@ public sealed class Paginated<T>(IReadOnlyCollection<T> items, int pageNumber, i
     public long TotalCount { get; init; } = totalCount;
     public bool HasNextPage => TotalCount > PageSize * PageNumber;
     public bool HasPreviousPage => PageNumber > 1;
+    public int TotalPages => (int)Math.Ceiling((double)TotalCount / PageSize);
 }
