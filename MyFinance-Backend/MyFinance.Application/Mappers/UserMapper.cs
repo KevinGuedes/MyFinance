@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MyFinance.Application.Common.Errors;
-using MyFinance.Application.UseCases.Users.Commands.CreateMagicSignInToken;
 using MyFinance.Application.UseCases.Users.Commands.MagicSignIn;
 using MyFinance.Application.UseCases.Users.Commands.RegisterUser;
+using MyFinance.Application.UseCases.Users.Commands.SendMagicSignInEmail;
 using MyFinance.Application.UseCases.Users.Commands.SignIn;
 using MyFinance.Application.UseCases.Users.Commands.UpdatePassword;
 using MyFinance.Contracts.User.Requests;
@@ -30,7 +30,7 @@ public static class UserMapper
                 request.PlainTextNewPassword,
                 request.PlainTextNewPasswordConfirmation);
 
-        public static CreateMagicSignInTokenCommand Map(CreateMagicSignInTokenRequest request)
+        public static SendMagicSignInEmailCommand Map(SendMagicSignInEmailRequest request)
             => new(request.Email);
 
         public static MagicSignInCommand Map(MagicSignInRequest request)

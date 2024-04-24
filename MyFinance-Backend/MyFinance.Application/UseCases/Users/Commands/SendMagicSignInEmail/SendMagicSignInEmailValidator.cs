@@ -1,10 +1,10 @@
 ﻿using FluentValidation;
 
-namespace MyFinance.Application.UseCases.Users.Commands.CreateMagicSignInToken;
+namespace MyFinance.Application.UseCases.Users.Commands.SendMagicSignInEmail;
 
-public sealed class CreateMagicSignInTokenValidator : AbstractValidator<CreateMagicSignInTokenCommand>
+public sealed class SendMagicSignInEmailValidator : AbstractValidator<SendMagicSignInEmailCommand>
 {
-    public CreateMagicSignInTokenValidator()
+    public SendMagicSignInEmailValidator()
     {
         RuleFor(command => command.Email)
             .NotNull().WithMessage("{PropertyName} must not be null")

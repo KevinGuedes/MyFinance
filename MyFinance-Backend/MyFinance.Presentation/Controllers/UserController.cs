@@ -50,13 +50,13 @@ public class UserController(IMediator mediator) : ApiController(mediator)
     }
 
     [AllowAnonymous]
-    [HttpPost("MagicSignInToken")]
-    [SwaggerOperation(Summary = "Signs in an existing User")]
+    [HttpPost("SendMagicSignInEmail")]
+    [SwaggerOperation(Summary = "Sends an email to the user with a link for magic sign in")]
     [SwaggerResponse(StatusCodes.Status204NoContent, "Email successfully sent to user's email")]
     [SwaggerResponse(StatusCodes.Status400BadRequest, "Invalid payload", typeof(ValidationProblemResponse))]
-    public async Task<IActionResult> CreateMagicSignInTokenAsync(
+    public async Task<IActionResult> SendMagicSignInEmailAsync(
         [FromBody] [SwaggerRequestBody("Create magic sign in token payload", Required = true)]
-        CreateMagicSignInTokenRequest request,
+        SendMagicSignInEmailRequest request,
         CancellationToken cancellationToken)
         => ProcessResult(await _mediator.Send(UserMapper.RTC.Map(request), cancellationToken));
 
