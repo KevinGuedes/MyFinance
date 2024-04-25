@@ -10,25 +10,17 @@ using System.Security.Cryptography;
 
 namespace MyFinance.Infrastructure.Services.SignInManager;
 
-internal sealed class SignInManager : ISignInManager
+internal sealed class SignInManager(
+    IOptions<SignInOptions> signInOptions,
+    IHttpContextAccessor httpContextAccessor,
+    IDataProtectionProvider idp)
+    : ISignInManager
 {
-    private readonly IHttpContextAccessor _httpContextAccessor;
-    private readonly ITimeLimitedDataProtector _tldp;
-    private readonly SignInOptions _signInOptions;
-
-    public SignInManager(
-        IHttpContextAccessor httpContextAccessor,
-        IDataProtectionProvider idp,
-        IOptions<SignInOptions> signInOptions)
-    {
-        _httpContextAccessor = httpContextAccessor;
-        _signInOptions = signInOptions.Value;
-        _signInOptions.ValidateOptions();
-
-        _tldp = idp
-            .CreateProtector(_signInOptions.MagicSignInTokenPurpose)
-            .ToTimeLimitedDataProtector();
-    }
+    private readonly SignInOptions _signInOptions = signInOptions.Value;
+    private readonly IHttpContextAccessor _httpContextAccessor = httpContextAccessor;
+    private readonly ITimeLimitedDataProtector _tldp = idp
+        .CreateProtector(signInOptions.Value.MagicSignInTokenPurpose)
+        .ToTimeLimitedDataProtector();
 
     public async Task SignInAsync(User user)
     {

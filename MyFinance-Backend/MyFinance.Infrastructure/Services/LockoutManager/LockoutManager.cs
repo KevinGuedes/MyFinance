@@ -3,15 +3,9 @@ using MyFinance.Application.Abstractions.Services;
 
 namespace MyFinance.Infrastructure.Services.LockoutManager;
 
-internal sealed class LockoutManager : ILockoutManager
+internal sealed class LockoutManager(IOptions<LockoutOptions> lockoutOptions) : ILockoutManager
 {
-    private readonly LockoutOptions _lockoutOptions;
-
-    public LockoutManager(IOptions<LockoutOptions> lockoutOptions)
-    {
-        _lockoutOptions = lockoutOptions.Value;
-        _lockoutOptions.ValidateOptions();
-    }
+    private readonly LockoutOptions _lockoutOptions = lockoutOptions.Value;
 
     public bool CanSignIn(DateTime? lockoutEndOnUtc)
         => !lockoutEndOnUtc.HasValue || lockoutEndOnUtc < DateTime.UtcNow;

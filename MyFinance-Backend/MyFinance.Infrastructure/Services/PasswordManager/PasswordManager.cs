@@ -6,15 +6,9 @@ using BC = BCrypt.Net.BCrypt;
 
 namespace MyFinance.Infrastructure.Services.PasswordManager;
 
-internal sealed class PasswordManager : IPasswordManager
+internal sealed class PasswordManager(IOptions<PasswordOptions> passwordOptions) : IPasswordManager
 {
-    private readonly PasswordOptions _passwordOptions;
-
-    public PasswordManager(IOptions<PasswordOptions> passwordOptions)
-    {
-        _passwordOptions = passwordOptions.Value;
-        _passwordOptions.ValidateOptions();
-    }
+    private readonly PasswordOptions _passwordOptions = passwordOptions.Value;
 
     public bool ShouldUpdatePassword(User user)
         => user.LastPasswordUpdateOnUtc is null ?
