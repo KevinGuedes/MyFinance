@@ -10,10 +10,12 @@ namespace MyFinance.Application.UseCases.Users.Commands.SignIn;
 internal sealed class SignInHandler(
     ISignInManager signInManager,
     IPasswordManager passwordManager,
+    ILockoutManager lockoutManager,
     IUserRepository userRepository) : ICommandHandler<SignInCommand, SignInResponse>
 {
     private readonly ISignInManager _signInManager = signInManager;
     private readonly IPasswordManager _passwordManager = passwordManager;
+    private readonly ILockoutManager _lockoutManager = lockoutManager;
     private readonly IUserRepository _userRepository = userRepository;
 
     public async Task<Result<SignInResponse>> Handle(SignInCommand command, CancellationToken cancellationToken)
@@ -22,7 +24,7 @@ internal sealed class SignInHandler(
         if (user is null)
             return HandleInvalidCredentials();
 
-        if (!_signInManager.CanSignIn(user.LockoutEndOnUtc))
+        if (!_lockoutManager.CanSignIn(user.LockoutEndOnUtc))
             return HandleLockout(user.LockoutEndOnUtc!.Value);
 
         var isPasswordValid = _passwordManager.VerifyPassword(command.PlainTextPassword, user.PasswordHash);
@@ -35,22 +37,21 @@ internal sealed class SignInHandler(
             }
 
             await _signInManager.SignInAsync(user);
-            var shouldUpdatePassword = _signInManager.ShouldUpdatePassword(user.LastPasswordUpdateOnUtc);
-            return Result.Ok(new SignInResponse(shouldUpdatePassword));
+            return Result.Ok(new SignInResponse(_passwordManager.ShouldUpdatePassword(user)));
         }
 
         user.IncrementFailedSignInAttempts();
 
-        if (_signInManager.ShouldLockout(user.FailedSignInAttempts))
+        if (_lockoutManager.ShouldLockout(user.FailedSignInAttempts))
         {
-            var lockoutEndOnUtc = _signInManager.GetLockoutEndOnUtc(user.FailedSignInAttempts);
+            var lockoutEndOnUtc = _lockoutManager.GetLockoutEndOnUtc(user.FailedSignInAttempts);
             user.SetLockoutEnd(lockoutEndOnUtc);
             return HandleLockout(lockoutEndOnUtc);
         }
 
-        if (_signInManager.WillLockoutOnNextAttempt(user.FailedSignInAttempts))
+        if (_lockoutManager.WillLockoutOnNextAttempt(user.FailedSignInAttempts))
         {
-            var nextLockoutDuration = _signInManager.GetNextLockoutDuration(user.FailedSignInAttempts);
+            var nextLockoutDuration = _lockoutManager.GetNextLockoutDuration(user.FailedSignInAttempts);
             return HandleNextLockout(nextLockoutDuration);
         }
 

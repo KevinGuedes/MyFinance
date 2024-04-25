@@ -57,7 +57,7 @@ internal sealed class RegisterTransferHandler(
             accountTag,
             category);
 
-        businessUnit.RegisterValue(transfer.Value, transfer.Type);
+        businessUnit.RegisterTransferValue(transfer.Value, transfer.Type);
 
         _businessUnitRepository.Update(businessUnit);
         _transferRepository.Insert(transfer);

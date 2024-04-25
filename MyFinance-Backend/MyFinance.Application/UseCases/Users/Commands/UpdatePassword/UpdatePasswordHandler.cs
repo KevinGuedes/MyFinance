@@ -8,7 +8,7 @@ namespace MyFinance.Application.UseCases.Users.Commands.UpdatePassword;
 
 internal sealed class UpdatePasswordHandler(
     IPasswordManager passwordManager,
-    IUserRepository userRepository) 
+    IUserRepository userRepository)
     : ICommandHandler<UpdatePasswordCommand>
 {
     private readonly IPasswordManager _passwordManager = passwordManager;
@@ -18,27 +18,27 @@ internal sealed class UpdatePasswordHandler(
     {
         var user = await _userRepository.GetByIdAsync(command.CurrentUserId, cancellationToken);
 
-        if(user is null)
+        if (user is null)
             return Result.Fail(new InternalServerError());
 
         var isPasswordValid = _passwordManager.VerifyPassword(
-            command.PlainTextCurrentPassword, 
+            command.PlainTextCurrentPassword,
             user.PasswordHash);
 
         if (!isPasswordValid)
         {
             var badRequestError = new BadRequestError(
-                nameof(command.PlainTextCurrentPassword), 
+                nameof(command.PlainTextCurrentPassword),
                 "Password is not valid");
 
             return Result.Fail(badRequestError);
         }
 
         var arePasswordsSimilar = _passwordManager.ArePasswordsSimilar(
-            command.PlainTextCurrentPassword, 
+            command.PlainTextCurrentPassword,
             command.PlainTextNewPassword);
 
-        if(arePasswordsSimilar)
+        if (arePasswordsSimilar)
         {
             var message = "The new password must not be similar to the current password";
             var unprocessableEntityError = new UnprocessableEntityError(message);

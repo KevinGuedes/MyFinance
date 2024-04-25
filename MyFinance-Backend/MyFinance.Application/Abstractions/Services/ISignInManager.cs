@@ -6,10 +6,6 @@ public interface ISignInManager
 {
     Task SignInAsync(User user);
     Task SignOutAsync();
-    bool ShouldUpdatePassword(DateTime lastPasswordUpdate);
-    bool CanSignIn(DateTime? lockoutEnd);
-    public bool WillLockoutOnNextAttempt(int failedSignInAttempts);
-    TimeSpan GetNextLockoutDuration(int failedSignInAttempts);
-    public bool ShouldLockout(int failedSignInAttempts);
-    DateTime GetLockoutEndOnUtc(int failedSignInAttempts);
+    string CreateMagicSignInToken(Guid magicSignInId);
+    bool TryGetMagicSignInIdFromToken(string token, out Guid magicSignInId);
 }

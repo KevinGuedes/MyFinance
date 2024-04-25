@@ -45,7 +45,7 @@ public sealed class BusinessUnit : Entity, IUserOwnedEntity, IArchivableEntity
     public void Archive(string? reasonToArchive)
     {
         var utcNow = DateTime.UtcNow;
-        SetUpdateOnToUtcNow(utcNow);
+        SetUpdatedOnTo(utcNow);
 
         ArchivedOnUtc = utcNow;
         IsArchived = true;
@@ -61,7 +61,7 @@ public sealed class BusinessUnit : Entity, IUserOwnedEntity, IArchivableEntity
         ReasonToArchive = null;
     }
 
-    public void RegisterValue(decimal transferValue, TransferType transferType)
+    public void RegisterTransferValue(decimal transferValue, TransferType transferType)
     {
         SetUpdateOnToUtcNow();
 
@@ -71,7 +71,7 @@ public sealed class BusinessUnit : Entity, IUserOwnedEntity, IArchivableEntity
             Outcome += transferValue;
     }
 
-    public void CancelValue(decimal transferValue, TransferType transferType)
+    public void CancelTransferValue(decimal transferValue, TransferType transferType)
     {
         SetUpdateOnToUtcNow();
 

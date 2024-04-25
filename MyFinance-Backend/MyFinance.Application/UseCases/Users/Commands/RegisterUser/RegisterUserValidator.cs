@@ -30,6 +30,7 @@ public sealed class RegisterUserValidator : AbstractValidator<RegisterUserComman
             .NotNull().WithMessage("{PropertyName} must not be null")
             .NotEmpty().WithMessage("{PropertyName} must not be empty")
             .MaximumLength(256).WithMessage("{PropertyName} must not exceed 256 characters")
+            .EmailAddress().WithMessage("{PropertyName} is not valid")
             .MustAsync(async (email, cancellationToken) =>
             {
                 var exists = await _userRepository.ExistsByEmailAsync(email, cancellationToken);

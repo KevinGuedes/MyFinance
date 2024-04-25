@@ -5,10 +5,12 @@ using Microsoft.Extensions.DependencyInjection;
 using MyFinance.Application.Abstractions.Persistence.Repositories;
 using MyFinance.Application.Abstractions.Persistence.UnitOfWork;
 using MyFinance.Application.Abstractions.Services;
+using MyFinance.Infrastructure.Abstractions;
 using MyFinance.Infrastructure.Persistence.Context;
 using MyFinance.Infrastructure.Persistence.Repositories;
 using MyFinance.Infrastructure.Persistence.UnitOfWork;
 using MyFinance.Infrastructure.Services.CurrentUserProvider;
+using MyFinance.Infrastructure.Services.LockoutManager;
 using MyFinance.Infrastructure.Services.PasswordManager;
 using MyFinance.Infrastructure.Services.SignInManager;
 using MyFinance.Infrastructure.Services.Summary;
@@ -19,12 +21,17 @@ namespace MyFinance.Infrastructure.IoC;
 public static class InfrastructureDependencyInjection
 {
     public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
-        => services
+    {
+        services
+            .AddDataProtection();
+
+        return services
             .AddHttpContextAccessor()
             .AddAuth()
-            .AddInfrastructureServices()
             .AddPersistence(configuration)
-            .AddHelthCheckForExternalServices();
+            .AddHelthCheckForExternalServices()
+            .AddInfrastructureServices();
+    }
 
     private static IServiceCollection AddAuth(this IServiceCollection services)
     {
@@ -34,32 +41,6 @@ public static class InfrastructureDependencyInjection
             .AddCookie();
 
         return services.AddAuthorization();
-    }
-
-    private static IServiceCollection AddInfrastructureServices(this IServiceCollection services)
-    {
-        services
-            .Configure<PasswordManagerOptions>(passwordManagerOptions =>
-            {
-                passwordManagerOptions.WorkFactor = 16;
-            })
-            .Configure<SignInOptions>(signInOptions =>
-            {
-                signInOptions.TimeInMonthsToRequestPasswordUpdate = 6;
-                signInOptions.LockoutOptions.LockoutThresholds = new Dictionary<int, TimeSpan>
-                {
-                    { 3, TimeSpan.FromMinutes(5) },
-                    { 6, TimeSpan.FromMinutes(10) },
-                    { 9, TimeSpan.FromHours(1) },
-                    { 12, TimeSpan.FromDays(1) },
-                }.AsReadOnly();
-            });
-
-        return services
-            .AddScoped<ISummaryService, SummaryService>()
-            .AddScoped<IPasswordManager, PasswordManager>()
-            .AddScoped<ISignInManager, SignInManager>()
-            .AddScoped<ICurrentUserProvider, CurrentUserProvider>();
     }
 
     private static IServiceCollection AddPersistence(this IServiceCollection services, IConfiguration configuration)
@@ -86,6 +67,37 @@ public static class InfrastructureDependencyInjection
         services
             .AddHealthChecks()
             .AddDbContextCheck<MyFinanceDbContext>("database");
+
+        return services;
+    }
+
+    private static IServiceCollection AddInfrastructureServices(this IServiceCollection services)
+    {
+        services
+            .AddOptionsWithValidationOnStart<LockoutOptions>()
+            .AddOptionsWithValidationOnStart<SignInOptions>()
+            .AddOptionsWithValidationOnStart<PasswordOptions>();
+
+        return services
+            .AddScoped<ISummaryService, SummaryService>()
+            .AddScoped<IPasswordManager, PasswordManager>()
+            .AddScoped<ILockoutManager, LockoutManager>()
+            .AddScoped<ISignInManager, SignInManager>()
+            .AddScoped<ICurrentUserProvider, CurrentUserProvider>();
+    }
+
+    private static IServiceCollection AddOptionsWithValidationOnStart<TOptions>(
+        this IServiceCollection services,
+        Action<TOptions>? configureOptions = null)
+        where TOptions : class, IValidatableOptions
+    {
+        var optionsBuilder = services
+            .AddOptions<TOptions>()
+            .ValidateOnStart()
+            .ValidateDataAnnotations();
+
+        if(configureOptions is not null)
+            optionsBuilder.Configure(configureOptions);
 
         return services;
     }

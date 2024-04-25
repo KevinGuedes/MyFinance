@@ -13,6 +13,5 @@ internal abstract class EntityConfiguration<TEntity> : IEntityTypeConfiguration<
 
         builder.Property(entity => entity.CreatedOnUtc).IsRequired();
         builder.Property(entity => entity.UpdatedOnUtc).IsRequired(false);
-        //builder.Property(e => e.RowVersion).IsRowVersion();
     }
 }

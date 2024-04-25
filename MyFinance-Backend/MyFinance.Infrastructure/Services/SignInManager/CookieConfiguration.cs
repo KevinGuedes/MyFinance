@@ -8,7 +8,7 @@ using MyFinance.Infrastructure.Extensions;
 
 namespace MyFinance.Infrastructure.Services.SignInManager;
 
-internal class CookieConfiguration(ProblemDetailsFactory problemDetailsFactory)
+internal sealed class CookieConfiguration(ProblemDetailsFactory problemDetailsFactory)
     : IConfigureNamedOptions<CookieAuthenticationOptions>
 {
     private readonly ProblemDetailsFactory _problemDetailsFactory = problemDetailsFactory;

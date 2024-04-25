@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using MyFinance.Infrastructure.Persistence.Context;
 
@@ -11,9 +12,11 @@ using MyFinance.Infrastructure.Persistence.Context;
 namespace MyFinance.Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(MyFinanceDbContext))]
-    partial class MyFinanceDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240419191246_MagicLink")]
+    partial class MagicLink
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -230,7 +233,7 @@ namespace MyFinance.Infrastructure.Persistence.Migrations
                     b.Property<int>("FailedSignInAttempts")
                         .HasColumnType("int");
 
-                    b.Property<DateTime?>("LastPasswordUpdateOnUtc")
+                    b.Property<DateTime>("LastPasswordUpdateOnUtc")
                         .HasColumnType("datetime2");
 
                     b.Property<DateTime?>("LockoutEndOnUtc")

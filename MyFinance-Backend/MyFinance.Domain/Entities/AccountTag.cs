@@ -39,7 +39,7 @@ public sealed class AccountTag : Entity, IUserOwnedEntity, IArchivableEntity
     public void Archive(string? reasonToArchive)
     {
         var utcNow = DateTime.UtcNow;
-        SetUpdateOnToUtcNow(utcNow);
+        SetUpdatedOnTo(utcNow);
 
         ArchivedOnUtc = DateTime.UtcNow;
         IsArchived = true;

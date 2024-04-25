@@ -1,32 +1,26 @@
 ﻿using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
 using MyFinance.Application.Abstractions.Services;
 using MyFinance.Domain.Entities;
 using System.Security.Claims;
+using System.Security.Cryptography;
 
 namespace MyFinance.Infrastructure.Services.SignInManager;
 
-public sealed class SignInManager : ISignInManager
+internal sealed class SignInManager(
+    IOptions<SignInOptions> signInOptions,
+    IHttpContextAccessor httpContextAccessor,
+    IDataProtectionProvider idp)
+    : ISignInManager
 {
-    private readonly IHttpContextAccessor _httpContextAccessor;
-    private readonly LockoutOptions _lockoutOptions;
-    private readonly SignInOptions _signInOptions;
-
-    public SignInManager(IHttpContextAccessor httpContextAccessor, IOptions<SignInOptions> signInOptions)
-    {
-        _httpContextAccessor = httpContextAccessor;
-        _signInOptions = signInOptions.Value;
-        _lockoutOptions = signInOptions.Value.LockoutOptions;
-
-        ArgumentNullException.ThrowIfNull(
-            _lockoutOptions.LockoutThresholds,
-            nameof(_lockoutOptions.LockoutThresholds));
-        ArgumentNullException.ThrowIfNull(
-            _signInOptions.TimeInMonthsToRequestPasswordUpdate,
-            nameof(_signInOptions.TimeInMonthsToRequestPasswordUpdate));
-    }
+    private readonly SignInOptions _signInOptions = signInOptions.Value;
+    private readonly IHttpContextAccessor _httpContextAccessor = httpContextAccessor;
+    private readonly ITimeLimitedDataProtector _tldp = idp
+        .CreateProtector(signInOptions.Value.MagicSignInTokenPurpose)
+        .ToTimeLimitedDataProtector();
 
     public async Task SignInAsync(User user)
     {
@@ -46,59 +40,23 @@ public sealed class SignInManager : ISignInManager
     }
 
     public Task SignOutAsync()
-        => _httpContextAccessor.HttpContext!.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+        => _httpContextAccessor.HttpContext!
+            .SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
 
-    public bool CanSignIn(DateTime? lockoutEnd)
-        => !lockoutEnd.HasValue || lockoutEnd < DateTime.UtcNow;
+    public string CreateMagicSignInToken(Guid magicSignInId)
+        => _tldp.Protect(magicSignInId.ToString(), _signInOptions.MagicSignInTokenDuration);
 
-    public bool WillLockoutOnNextAttempt(int failedSignInAttempts)
+    public bool TryGetMagicSignInIdFromToken(string token, out Guid magicSignInId)
     {
-        var nextFailedSignInAttempts = failedSignInAttempts + 1;
-
-        if (nextFailedSignInAttempts >= _lockoutOptions.UpperAttemptsThreshold)
-            return true;
-
-        if (_lockoutOptions.HasLockoutFor(nextFailedSignInAttempts))
-            return true;
-
-        return false;
-    }
-
-    public TimeSpan GetNextLockoutDuration(int failedSignInAttempts)
-    {
-        var nextFailedSignInAttempts = failedSignInAttempts + 1;
-
-        if (nextFailedSignInAttempts >= _lockoutOptions.UpperAttemptsThreshold)
-            return _lockoutOptions.UpperLockoutDurationThreshold;
-
-        if (_lockoutOptions.HasLockoutFor(nextFailedSignInAttempts))
-            return _lockoutOptions.LockoutThresholds[nextFailedSignInAttempts];
-
-        throw new InvalidOperationException("Lockout configuration not provided");
-    }
-
-    public bool ShouldLockout(int failedSignInAttempts)
-        => failedSignInAttempts >= _lockoutOptions.UpperAttemptsThreshold ||
-            _lockoutOptions.HasLockoutFor(failedSignInAttempts);
-
-    public DateTime GetLockoutEndOnUtc(int failedSignInAttempts)
-    {
-        var hasReachUpperAttemtpsThreshold = failedSignInAttempts >= _lockoutOptions.UpperAttemptsThreshold;
-        if (hasReachUpperAttemtpsThreshold)
-            return DateTime.UtcNow.Add(_lockoutOptions.UpperLockoutDurationThreshold);
-
-        if (_lockoutOptions.HasLockoutFor(failedSignInAttempts))
-            return DateTime.UtcNow.Add(_lockoutOptions.LockoutThresholds[failedSignInAttempts]);
-
-        throw new InvalidOperationException("Lockout configuration not provided");
-    }
-
-    public bool ShouldUpdatePassword(DateTime lastPasswordUpdate)
-    {
-        var utcNow = DateTime.UtcNow;
-        var timeToLastPasswordUpdateInMonths =
-            utcNow.Year - lastPasswordUpdate.Year * 12 + utcNow.Month - lastPasswordUpdate.Month;
-
-        return timeToLastPasswordUpdateInMonths >= _signInOptions.TimeInMonthsToRequestPasswordUpdate;
+        try
+        {
+            var payload = _tldp.Unprotect(token);
+            return Guid.TryParse(payload, out magicSignInId);
+        }
+        catch (CryptographicException)
+        {
+            magicSignInId = default;
+            return false;
+        }
     }
 }

@@ -31,7 +31,7 @@ internal sealed class UpdateTransferHandler(
         }
 
         var businessUnit = transfer.BusinessUnit;
-        businessUnit.CancelValue(transfer.Value, transfer.Type);
+        businessUnit.CancelTransferValue(transfer.Value, transfer.Type);
 
         var hasAccountTagChanged = transfer.AccountTagId != command.AccountTagId;
         if (hasAccountTagChanged)
@@ -71,7 +71,7 @@ internal sealed class UpdateTransferHandler(
             command.SettlementDate,
             command.Type);
 
-        businessUnit.RegisterValue(transfer.Value, transfer.Type);
+        businessUnit.RegisterTransferValue(transfer.Value, transfer.Type);
 
         _transferRepository.Update(transfer);
         _businessUnitRepository.Update(businessUnit);

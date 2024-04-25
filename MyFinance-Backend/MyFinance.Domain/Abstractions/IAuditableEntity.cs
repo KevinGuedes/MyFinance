@@ -5,5 +5,5 @@ public interface IAuditableEntity
     DateTime CreatedOnUtc { get; }
     DateTime? UpdatedOnUtc { get; }
     void SetUpdateOnToUtcNow();
-    void SetUpdateOnToUtcNow(DateTime dateTime);
+    void SetUpdatedOnTo(DateTime dateTime);
 }
