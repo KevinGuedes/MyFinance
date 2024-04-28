@@ -24,4 +24,8 @@ jobs:
       run: dotnet restore
       working-directory: MyFinance-Backend
     - name: Build
-      run: dotnet build --no-restore
+      run: dotnet build --no-restore --configuration Release
+      working-directory: MyFinance-Backend
+    - name: Test
+      run: dotnet test --no-restore --verbosity normal
+      working-directory: MyFinance-Backend
