@@ -14,18 +14,18 @@ public sealed class User : Entity
         Email = email;
         PasswordHash = passwordHash;
         FailedSignInAttempts = 0;
+        IsEmailVerified = false;
         LockoutEndOnUtc = null;
         LastPasswordUpdateOnUtc = null;
-        MagicSignInId = null;
     }
 
     public string Name { get; private set; } = null!;
     public string Email { get; private set; } = null!;
     public string PasswordHash { get; private set; } = null!;
     public int FailedSignInAttempts { get; private set; }
+    public bool IsEmailVerified { get; private set; }
     public DateTime? LastPasswordUpdateOnUtc { get; private set; }
     public DateTime? LockoutEndOnUtc { get; private set; }
-    public Guid? MagicSignInId { get; private set; }
 
     public void IncrementFailedSignInAttempts()
     {
@@ -55,15 +55,9 @@ public sealed class User : Entity
         LastPasswordUpdateOnUtc = utcNow;
     }
 
-    public void SetMagicSignInId(Guid magicSignInId)
+    public void VerifyEmail()
     {
         SetUpdateOnToUtcNow();
-        MagicSignInId = magicSignInId;
-    }
-
-    public void ResetMagicSignInId()
-    {
-        SetUpdateOnToUtcNow();
-        MagicSignInId = null;
+        IsEmailVerified = true;
     }
 }

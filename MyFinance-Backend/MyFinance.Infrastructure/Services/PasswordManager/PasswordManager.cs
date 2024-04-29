@@ -18,11 +18,13 @@ internal sealed class PasswordManager(IOptions<PasswordOptions> passwordOptions)
     private bool ShouldUpdatePassword(DateTime lastPasswordUpdateOnUtc)
         => DateTime.UtcNow > lastPasswordUpdateOnUtc.AddMonths(_passwordOptions.TimeInMonthsToRequestPasswordUpdate);
 
-    public bool ArePasswordsSimilar(string plainTextPassword, string plainTextNewPassword)
+    public bool ArePasswordsSimilar(string plainTextPassword, string plainTextOtherPassword)
     {
-        var cosineSimilarityAlgorithm = new Cosine(2);
-        var similarity = cosineSimilarityAlgorithm.Similarity(plainTextPassword, plainTextNewPassword);
-        return similarity > _passwordOptions.SimilarityThreshold;
+        var cosineSimilarity = new Cosine(2).Similarity(plainTextPassword, plainTextOtherPassword);
+        var jaroWinklerSimilarity = new JaroWinkler().Similarity(plainTextPassword, plainTextOtherPassword);
+        
+        return cosineSimilarity > _passwordOptions.CosineSimilarityThreshold && 
+            jaroWinklerSimilarity > _passwordOptions.JaroWinklerSimilarityThreshold;
     }
 
     public string HashPassword(string plainTextPassword)
