@@ -35,5 +35,5 @@ internal sealed class ConfirmRegistrationHandler(
     }
 
     private static Result HandleInvalidConfirmRegistrationToken()
-        => Result.Fail(new UnauthorizedError("Invalid confirm registration token"));
+        => Result.Fail(new InternalServerError("Invalid confirm registration token"));
 }

@@ -8,13 +8,11 @@ namespace MyFinance.Application.UseCases.Users.Commands.SendMagicSignInEmail;
 
 internal sealed class SendMagicSignInEmailHandler(
     ITokenProvider tokenProvider,
-    ISignInManager signInManager,
     IUserRepository userRepository,
     IEmailSender emailSender)
     : ICommandHandler<SendMagicSignInEmailCommand>
 {
     private readonly ITokenProvider _tokenProvider = tokenProvider;
-    private readonly ISignInManager _signInManager = signInManager;
     private readonly IUserRepository _userRepository = userRepository;
     private readonly IEmailSender _emailSender = emailSender;
 
