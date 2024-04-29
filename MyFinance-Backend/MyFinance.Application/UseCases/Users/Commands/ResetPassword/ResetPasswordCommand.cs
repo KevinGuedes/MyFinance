@@ -5,7 +5,7 @@ namespace MyFinance.Application.UseCases.Users.Commands.ResetPassword;
 public sealed record ResetPasswordCommand(
     string UrlSafeResetPasswordToken,
     string PlainTextNewPassword,
-    string PlainTextNewPasswordConfirmation) 
+    string PlainTextNewPasswordConfirmation)
     : ICommand
 {
 }

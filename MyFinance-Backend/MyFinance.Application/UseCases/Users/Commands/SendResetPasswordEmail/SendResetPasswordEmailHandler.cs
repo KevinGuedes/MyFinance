@@ -9,7 +9,7 @@ namespace MyFinance.Application.UseCases.Users.Commands.SendResetPasswordEmail;
 internal sealed class SendResetPasswordEmailHandler(
     ITokenProvider tokenProvider,
     IUserRepository userRepository,
-    IEmailSender emailSender) 
+    IEmailSender emailSender)
     : ICommandHandler<SendResetPasswordEmailCommand>
 {
     private readonly ITokenProvider _tokenProvider = tokenProvider;
@@ -29,11 +29,11 @@ internal sealed class SendResetPasswordEmailHandler(
             return Result.Ok();
         }
 
-        var urlSafeResetPasswordToken 
+        var urlSafeResetPasswordToken
             = _tokenProvider.CreateUrlSafeResetPasswordToken(user.Id);
 
         var (hasEmailBeenSent, exception) = await _emailSender.SendResetPasswordEmailAsync(
-            user.Email, 
+            user.Email,
             urlSafeResetPasswordToken);
 
         if (!hasEmailBeenSent)

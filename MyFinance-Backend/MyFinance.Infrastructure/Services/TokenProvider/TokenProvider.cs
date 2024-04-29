@@ -23,15 +23,15 @@ internal sealed class TokenProvider(
         => CreateTimeLimitedUrlSafeToken(_tokenOptions.ResetPasswordTokenPurposes, userId);
 
     public bool TryGetUserIdFromUrlSafeConfirmRegistrationToken(
-        string urlSafeConfirmRegistration, 
+        string urlSafeConfirmRegistration,
         out Guid userId)
         => TryGetUserIdFromUrlSafeToken(
             urlSafeConfirmRegistration,
-            _tokenOptions.ConfirmRegistrationTokenPurposes, 
+            _tokenOptions.ConfirmRegistrationTokenPurposes,
             out userId);
 
     public bool TryGetUserIdFromUrlSafeMagicSignInToken(
-        string urlSafeMagicSignInToken, 
+        string urlSafeMagicSignInToken,
         out Guid userId)
         => TryGetUserIdFromTimeLimitedUrlSafeToken(
             urlSafeMagicSignInToken,
@@ -39,11 +39,11 @@ internal sealed class TokenProvider(
             out userId);
 
     public bool TryGetUserIdFromUrlSafeResetPasswordToken(
-        string urlSafeResetPasswordToken, 
+        string urlSafeResetPasswordToken,
         out Guid userId)
         => TryGetUserIdFromTimeLimitedUrlSafeToken(
             urlSafeResetPasswordToken,
-            _tokenOptions.ResetPasswordTokenPurposes, 
+            _tokenOptions.ResetPasswordTokenPurposes,
             out userId);
 
     private string CreateUrlSafeToken(string[] purposes, Guid userId)
@@ -55,7 +55,7 @@ internal sealed class TokenProvider(
 
     private bool TryGetUserIdFromUrlSafeToken(
         string urlSafeToken,
-        string[] purposes, 
+        string[] purposes,
         out Guid userId)
     {
         var dp = _idp.CreateProtector(purposes);
@@ -75,17 +75,17 @@ internal sealed class TokenProvider(
     private string CreateTimeLimitedUrlSafeToken(string[] purposes, Guid userId)
     {
         var tldp = _idp.CreateProtector(purposes).ToTimeLimitedDataProtector();
-        
+
         var timeLimitedToken = tldp.Protect(
-            userId.ToString(), 
+            userId.ToString(),
             TimeSpan.FromMinutes(_tokenOptions.DefaultTokenDurationInMinutes));
 
         return WebUtility.UrlEncode(timeLimitedToken);
     }
 
     private bool TryGetUserIdFromTimeLimitedUrlSafeToken(
-        string timeLimitedUrlSafeToken, 
-        string[] purposes, 
+        string timeLimitedUrlSafeToken,
+        string[] purposes,
         out Guid userId)
     {
         var tldp = _idp.CreateProtector(purposes).ToTimeLimitedDataProtector();

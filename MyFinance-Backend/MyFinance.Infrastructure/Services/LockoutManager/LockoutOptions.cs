@@ -6,7 +6,7 @@ namespace MyFinance.Infrastructure.Services.LockoutManager;
 internal sealed class LockoutOptions : IValidatableOptions
 {
     [Required]
-    public IReadOnlyDictionary<int, TimeSpan> LockoutThresholds { get; set; } 
+    public IReadOnlyDictionary<int, TimeSpan> LockoutThresholds { get; set; }
         = new Dictionary<int, TimeSpan>
             {
                 { 3, TimeSpan.FromMinutes(5) },

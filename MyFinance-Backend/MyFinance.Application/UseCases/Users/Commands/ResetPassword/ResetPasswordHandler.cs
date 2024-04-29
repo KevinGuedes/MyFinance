@@ -22,7 +22,7 @@ public sealed class ResetPasswordHandler(
             command.UrlSafeResetPasswordToken,
             out var userId);
 
-        if(!isValidToken)
+        if (!isValidToken)
             return HandleInvalidResetPasswordToken();
 
         var user = await _userRepository.GetByIdAsync(userId, cancellationToken);

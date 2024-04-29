@@ -105,7 +105,7 @@ public class UserController(IMediator mediator) : ApiController(mediator)
         ResetPasswordRequest request,
         CancellationToken cancellationToken)
         => ProcessResult(await _mediator.Send(UserMapper.RTC.Map(request), cancellationToken));
-    
+
     [HttpPatch("UpdatePassword")]
     [SwaggerOperation(Summary = "Updates the User's password")]
     [SwaggerResponse(StatusCodes.Status200OK, "Password successfully updated")]

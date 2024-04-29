@@ -37,14 +37,14 @@ internal sealed class SendMagicSignInEmailHandler(
         //User data: MagicSignInId and MagicSignInEmailSentOnUtc
         //Polly for persistence in save changes?
 
-        var urlSafeMagicSignInToken 
+        var urlSafeMagicSignInToken
             = _tokenProvider.CreateUrlSafeMagicSignInToken(user.Id);
 
         var (hasEmailBeenSent, exception) = await _emailSender.SendMagicSignInEmailAsync(
-            user.Email, 
+            user.Email,
             urlSafeMagicSignInToken);
 
-        if(!hasEmailBeenSent)
+        if (!hasEmailBeenSent)
         {
             var errorMessage = "The magic sign-in email could not be sent. Please try again later.";
             var internalServerError = new InternalServerError(errorMessage).CausedBy(exception);

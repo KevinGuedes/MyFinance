@@ -2,7 +2,7 @@
 
 namespace MyFinance.Application.UseCases.Users.Commands.ConfirmRegistration;
 
-public sealed record ConfirmRegistrationCommand(string UrlSafeConfirmRegistrationToken) 
+public sealed record ConfirmRegistrationCommand(string UrlSafeConfirmRegistrationToken)
     : ICommand
 {
 }

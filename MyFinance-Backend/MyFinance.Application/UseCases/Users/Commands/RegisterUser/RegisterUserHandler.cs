@@ -25,11 +25,11 @@ internal sealed class RegisterUserHandler(
         var user = new User(command.Name, command.Email, passwordHash);
         _userRepository.Insert(user);
 
-        var urlSafeConfirmRegistrationToken 
+        var urlSafeConfirmRegistrationToken
             = _tokenProvider.CreateUrlSafeConfirmRegistrationToken(user.Id);
-        
+
         var (hasEmailBeenSent, exception) = await _emailSender.SendMagicSignInEmailAsync(
-            user.Email, 
+            user.Email,
             urlSafeConfirmRegistrationToken);
 
         if (!hasEmailBeenSent)

@@ -12,6 +12,6 @@ public interface ITokenProvider
         string urlSafeMagicSignInToken,
         out Guid userId);
     bool TryGetUserIdFromUrlSafeResetPasswordToken(
-        string urlSafeResetPasswordToken, 
+        string urlSafeResetPasswordToken,
         out Guid userId);
 }

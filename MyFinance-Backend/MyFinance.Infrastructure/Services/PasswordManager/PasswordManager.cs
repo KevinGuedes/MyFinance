@@ -22,8 +22,8 @@ internal sealed class PasswordManager(IOptions<PasswordOptions> passwordOptions)
     {
         var cosineSimilarity = new Cosine(2).Similarity(plainTextPassword, plainTextOtherPassword);
         var jaroWinklerSimilarity = new JaroWinkler().Similarity(plainTextPassword, plainTextOtherPassword);
-        
-        return cosineSimilarity > _passwordOptions.CosineSimilarityThreshold && 
+
+        return cosineSimilarity > _passwordOptions.CosineSimilarityThreshold &&
             jaroWinklerSimilarity > _passwordOptions.JaroWinklerSimilarityThreshold;
     }
 

@@ -100,7 +100,7 @@ public static class InfrastructureDependencyInjection
             .ValidateOnStart()
             .ValidateDataAnnotations();
 
-        if(configureOptions is not null)
+        if (configureOptions is not null)
             optionsBuilder.Configure(configureOptions);
 
         return services;

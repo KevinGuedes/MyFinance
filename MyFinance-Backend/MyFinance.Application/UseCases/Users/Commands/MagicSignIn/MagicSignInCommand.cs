@@ -3,7 +3,7 @@ using MyFinance.Contracts.User.Responses;
 
 namespace MyFinance.Application.UseCases.Users.Commands.MagicSignIn;
 
-public sealed record MagicSignInCommand(string UrlSafeMagicSignInToken) 
+public sealed record MagicSignInCommand(string UrlSafeMagicSignInToken)
     : ICommand<SignInResponse>
 {
 }

@@ -12,35 +12,35 @@ internal sealed class EmailSender : IEmailSender
     {
         _sendEmailRetryPolicy = Policy
             .Handle<Exception>()
-            .WaitAndRetryAsync(3, retryAttempt 
+            .WaitAndRetryAsync(3, retryAttempt
                 => TimeSpan.FromSeconds(Math.Pow(2, retryAttempt)));
     }
 
     public async Task<(bool HasEmailBeenSent, Exception? Exception)> SendConfirmRegistrationEmailAsync(
-        string email, 
+        string email,
         string urlSafeConfirmRegistrationToken)
     {
-        var result = await _sendEmailRetryPolicy.ExecuteAndCaptureAsync(() 
+        var result = await _sendEmailRetryPolicy.ExecuteAndCaptureAsync(()
             => SendEmailAsync(email, urlSafeConfirmRegistrationToken));
 
         return ProcessResult(result);
     }
 
     public async Task<(bool HasEmailBeenSent, Exception? Exception)> SendMagicSignInEmailAsync(
-        string email, 
+        string email,
         string urlSafeMagicSignInToken)
     {
-        var result = await _sendEmailRetryPolicy.ExecuteAndCaptureAsync(() 
+        var result = await _sendEmailRetryPolicy.ExecuteAndCaptureAsync(()
             => SendEmailAsync(email, urlSafeMagicSignInToken));
 
         return ProcessResult(result);
     }
 
     public async Task<(bool HasEmailBeenSent, Exception? Exception)> SendResetPasswordEmailAsync(
-        string email, 
+        string email,
         string urlSafeResetPasswordToken)
     {
-        var result = await _sendEmailRetryPolicy.ExecuteAndCaptureAsync(() 
+        var result = await _sendEmailRetryPolicy.ExecuteAndCaptureAsync(()
             => SendEmailAsync(email, urlSafeResetPasswordToken));
 
         return ProcessResult(result);

@@ -22,7 +22,7 @@ internal sealed class MagicSignInHandler(
     public async Task<Result<SignInResponse>> Handle(MagicSignInCommand command, CancellationToken cancellationToken)
     {
         var isValidToken = _tokenProvider.TryGetUserIdFromUrlSafeMagicSignInToken(
-            command.UrlSafeMagicSignInToken, 
+            command.UrlSafeMagicSignInToken,
             out var userId);
 
         if (!isValidToken)
@@ -33,7 +33,7 @@ internal sealed class MagicSignInHandler(
         if (user is null)
             return HandleInvalidMagicSignInToken();
 
-        if(user.FailedSignInAttempts != 0)
+        if (user.FailedSignInAttempts != 0)
         {
             user.ResetLockout();
             _userRepository.Update(user);
