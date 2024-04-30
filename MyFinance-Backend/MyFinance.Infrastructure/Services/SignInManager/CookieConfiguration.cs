@@ -1,10 +1,15 @@
-﻿using Microsoft.AspNetCore.Authentication.Cookies;
+﻿using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
+using MyFinance.Application.Abstractions.Persistence.Repositories;
+using MyFinance.Application.Abstractions.Services;
 using MyFinance.Contracts.Common;
 using MyFinance.Infrastructure.Extensions;
+using System.Security.Claims;
 
 namespace MyFinance.Infrastructure.Services.SignInManager;
 
@@ -55,6 +60,21 @@ internal sealed class CookieConfiguration(ProblemDetailsFactory problemDetailsFa
                 .Response
                 .WriteAsProblemPlusJsonAsync(unauthorizedProblemResponse);
         };
+
+        options.Events.OnValidatePrincipal = async context =>
+        {
+            var serviceProvider = context.HttpContext.RequestServices;
+            var signInManager = serviceProvider.GetRequiredService<ISignInManager>();
+            var userRepository = serviceProvider.GetRequiredService<IUserRepository>();
+            
+            var isSecurityStampValid = await ValidateSecurityStamp(context, userRepository);
+
+            if (!isSecurityStampValid)
+            {
+                context.RejectPrincipal();
+                await signInManager.SignOutAsync();
+            }
+        };
     }
 
     private ObjectResult BuildProblemResponse(HttpContext httpContext, int statusCode, string detail)
@@ -69,5 +89,48 @@ internal sealed class CookieConfiguration(ProblemDetailsFactory problemDetailsFa
         {
             StatusCode = problemDetails!.Status
         };
+    }
+
+    private static async Task<bool> ValidateSecurityStamp(
+        CookieValidatePrincipalContext context, IUserRepository userRepository)
+    {
+        if(context.Principal is null)
+            return false;
+
+        if(TryGetUserId(context.Principal, out var userId) && 
+            TryGetSecutiryStamp(context.Principal, out var securityStamp))
+        {
+            var user = await userRepository.GetByIdAsync(userId, default);
+            
+            return user is not null && user.SecurityStamp == securityStamp;
+        }
+
+        return false;
+    }
+
+    private static bool TryGetUserId(ClaimsPrincipal principal, out Guid userId)
+    {
+        var userIdClaim = principal.FindFirstValue("id");
+
+        if(userIdClaim is null)
+        {
+            userId = Guid.Empty;
+            return false;
+        }
+
+        return Guid.TryParse(userIdClaim, out userId);
+    }
+
+    private static bool TryGetSecutiryStamp(ClaimsPrincipal principal, out Guid securityStamp)
+    {
+        var securityStampClaim = principal.FindFirstValue("security-stamp");
+
+        if(securityStampClaim is null)
+        {
+            securityStamp = Guid.Empty;
+            return false;
+        }
+
+        return Guid.TryParse(securityStampClaim, out securityStamp);
     }
 }

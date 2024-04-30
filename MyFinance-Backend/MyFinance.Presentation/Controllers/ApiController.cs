@@ -46,6 +46,8 @@ public abstract class ApiController(IMediator mediator) : ControllerBase
                 => BuildProblemResponse(StatusCodes.Status401Unauthorized, unauthorizedError),
             ConflictError conflictError
                 => BuildProblemResponse(StatusCodes.Status409Conflict, conflictError),
+            InternalServerError internalServerError
+                => BuildProblemResponse(StatusCodes.Status500InternalServerError, internalServerError),
             null
                 => BuildProblemResponse(StatusCodes.Status500InternalServerError),
             _

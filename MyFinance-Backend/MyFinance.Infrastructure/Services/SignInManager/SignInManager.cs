@@ -16,6 +16,7 @@ internal sealed class SignInManager(IHttpContextAccessor httpContextAccessor)
     {
         var claims = new List<Claim>
         {
+            new("security-stamp", user.SecurityStamp.ToString()),
             new("id", user.Id.ToString())
         };
 

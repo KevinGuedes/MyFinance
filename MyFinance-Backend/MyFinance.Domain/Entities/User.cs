@@ -17,6 +17,7 @@ public sealed class User : Entity
         IsEmailVerified = false;
         LockoutEndOnUtc = null;
         LastPasswordUpdateOnUtc = null;
+        SecurityStamp = Guid.NewGuid();
     }
 
     public string Name { get; private set; } = null!;
@@ -26,6 +27,7 @@ public sealed class User : Entity
     public bool IsEmailVerified { get; private set; }
     public DateTime? LastPasswordUpdateOnUtc { get; private set; }
     public DateTime? LockoutEndOnUtc { get; private set; }
+    public Guid SecurityStamp { get; private set; }
 
     public void IncrementFailedSignInAttempts()
     {
@@ -53,6 +55,7 @@ public sealed class User : Entity
 
         PasswordHash = passwordHash;
         LastPasswordUpdateOnUtc = utcNow;
+        SecurityStamp = Guid.NewGuid();
     }
 
     public void VerifyEmail()

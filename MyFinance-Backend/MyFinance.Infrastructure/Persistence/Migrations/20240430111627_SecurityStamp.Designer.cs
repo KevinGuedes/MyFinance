@@ -12,8 +12,8 @@ using MyFinance.Infrastructure.Persistence.Context;
 namespace MyFinance.Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(MyFinanceDbContext))]
-    [Migration("20240424112354_OptionalPasswordUpdateDate")]
-    partial class OptionalPasswordUpdateDate
+    [Migration("20240430111627_SecurityStamp")]
+    partial class SecurityStamp
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -233,14 +233,14 @@ namespace MyFinance.Infrastructure.Persistence.Migrations
                     b.Property<int>("FailedSignInAttempts")
                         .HasColumnType("int");
 
+                    b.Property<bool>("IsEmailVerified")
+                        .HasColumnType("bit");
+
                     b.Property<DateTime?>("LastPasswordUpdateOnUtc")
                         .HasColumnType("datetime2");
 
                     b.Property<DateTime?>("LockoutEndOnUtc")
                         .HasColumnType("datetime2");
-
-                    b.Property<Guid?>("MagicSignInId")
-                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -250,6 +250,9 @@ namespace MyFinance.Infrastructure.Persistence.Migrations
                     b.Property<string>("PasswordHash")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("SecurityStamp")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime?>("UpdatedOnUtc")
                         .HasColumnType("datetime2");

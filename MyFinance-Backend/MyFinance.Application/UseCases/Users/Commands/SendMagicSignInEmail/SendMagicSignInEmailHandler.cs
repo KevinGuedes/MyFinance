@@ -29,27 +29,14 @@ internal sealed class SendMagicSignInEmailHandler(
             return Result.Ok();
         }
 
-        //0. If the email has been sent in less than 5 minutes ago, do not send a new one
-        //1. Create a new token
-        //2. Send the email with some resilience strategy (Polly)
-        //3. If the email was sent, save the user data. If not, fail the request
+        if (!user.IsEmailVerified)
+            return Result.Ok();
 
-        //User data: MagicSignInId and MagicSignInEmailSentOnUtc
+        //0. If the email has been sent in less than 5 minutes ago, do not send a new one
         //Polly for persistence in save changes?
 
-        var urlSafeMagicSignInToken
-            = _tokenProvider.CreateUrlSafeMagicSignInToken(user.Id);
-
-        var (hasEmailBeenSent, exception) = await _emailSender.SendMagicSignInEmailAsync(
-            user.Email,
-            urlSafeMagicSignInToken);
-
-        if (!hasEmailBeenSent)
-        {
-            var errorMessage = "The magic sign-in email could not be sent. Please try again later.";
-            var internalServerError = new InternalServerError(errorMessage).CausedBy(exception);
-            return Result.Fail(internalServerError);
-        }
+        var urlSafeMagicSignInToken = _tokenProvider.CreateUrlSafeMagicSignInToken(user.Id);
+        await _emailSender.SendMagicSignInEmailAsync(user.Email, urlSafeMagicSignInToken);
 
         return Result.Ok();
     }

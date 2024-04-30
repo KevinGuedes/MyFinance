@@ -29,19 +29,11 @@ internal sealed class SendResetPasswordEmailHandler(
             return Result.Ok();
         }
 
-        var urlSafeResetPasswordToken
-            = _tokenProvider.CreateUrlSafeResetPasswordToken(user.Id);
+        if (!user.IsEmailVerified)
+            return Result.Ok();
 
-        var (hasEmailBeenSent, exception) = await _emailSender.SendResetPasswordEmailAsync(
-            user.Email,
-            urlSafeResetPasswordToken);
-
-        if (!hasEmailBeenSent)
-        {
-            var errorMessage = "The reset password email could not be sent. Please try again later.";
-            var internalServerError = new InternalServerError(errorMessage).CausedBy(exception);
-            return Result.Fail(internalServerError);
-        }
+        var urlSafeResetPasswordToken = _tokenProvider.CreateUrlSafeResetPasswordToken(user.Id);
+        await _emailSender.SendResetPasswordEmailAsync(user.Email, urlSafeResetPasswordToken);
 
         return Result.Ok();
     }
