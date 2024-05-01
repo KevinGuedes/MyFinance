@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.Cookies;
+﻿using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
@@ -13,10 +12,13 @@ using System.Security.Claims;
 
 namespace MyFinance.Infrastructure.Services.SignInManager;
 
-internal sealed class CookieConfiguration(ProblemDetailsFactory problemDetailsFactory)
+internal sealed class CookieConfiguration(
+    ProblemDetailsFactory problemDetailsFactory,
+    IServiceScopeFactory serviceScopeFactory)
     : IConfigureNamedOptions<CookieAuthenticationOptions>
 {
     private readonly ProblemDetailsFactory _problemDetailsFactory = problemDetailsFactory;
+    private readonly IServiceScopeFactory _serviceScopeFactory = serviceScopeFactory;
 
     public void Configure(string? name, CookieAuthenticationOptions options)
         => Configure(options);
@@ -63,15 +65,14 @@ internal sealed class CookieConfiguration(ProblemDetailsFactory problemDetailsFa
 
         options.Events.OnValidatePrincipal = async context =>
         {
-            var serviceProvider = context.HttpContext.RequestServices;
-            var signInManager = serviceProvider.GetRequiredService<ISignInManager>();
-            var userRepository = serviceProvider.GetRequiredService<IUserRepository>();
-            
-            var isSecurityStampValid = await ValidateSecurityStamp(context, userRepository);
+            using IServiceScope scope = _serviceScopeFactory.CreateScope();
+
+            var isSecurityStampValid = await ValidateSecurityStamp(context, scope);
 
             if (!isSecurityStampValid)
             {
                 context.RejectPrincipal();
+                var signInManager = scope.ServiceProvider.GetRequiredService<ISignInManager>();
                 await signInManager.SignOutAsync();
             }
         };
@@ -92,7 +93,7 @@ internal sealed class CookieConfiguration(ProblemDetailsFactory problemDetailsFa
     }
 
     private static async Task<bool> ValidateSecurityStamp(
-        CookieValidatePrincipalContext context, IUserRepository userRepository)
+        CookieValidatePrincipalContext context, IServiceScope scope)
     {
         if(context.Principal is null)
             return false;
@@ -100,8 +101,8 @@ internal sealed class CookieConfiguration(ProblemDetailsFactory problemDetailsFa
         if(TryGetUserId(context.Principal, out var userId) && 
             TryGetSecutiryStamp(context.Principal, out var securityStamp))
         {
+            var userRepository = scope.ServiceProvider.GetRequiredService<IUserRepository>();
             var user = await userRepository.GetByIdAsync(userId, default);
-            
             return user is not null && user.SecurityStamp == securityStamp;
         }
 

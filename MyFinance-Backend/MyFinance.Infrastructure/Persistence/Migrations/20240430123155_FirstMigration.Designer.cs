@@ -12,7 +12,7 @@ using MyFinance.Infrastructure.Persistence.Context;
 namespace MyFinance.Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(MyFinanceDbContext))]
-    [Migration("20240429122838_FirstMigration")]
+    [Migration("20240430123155_FirstMigration")]
     partial class FirstMigration
     {
         /// <inheritdoc />
@@ -250,6 +250,9 @@ namespace MyFinance.Infrastructure.Persistence.Migrations
                     b.Property<string>("PasswordHash")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("SecurityStamp")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime?>("UpdatedOnUtc")
                         .HasColumnType("datetime2");

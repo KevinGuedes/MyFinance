@@ -28,7 +28,7 @@ internal sealed class PasswordManager(IOptions<PasswordOptions> passwordOptions)
     }
 
     public string HashPassword(string plainTextPassword)
-        => BC.EnhancedHashPassword(plainTextPassword, 10);
+        => BC.EnhancedHashPassword(plainTextPassword, _passwordOptions.WorkFactor);
 
     public bool VerifyPassword(string plainTextPassword, string passwordHash)
         => BC.EnhancedVerify(plainTextPassword, passwordHash);

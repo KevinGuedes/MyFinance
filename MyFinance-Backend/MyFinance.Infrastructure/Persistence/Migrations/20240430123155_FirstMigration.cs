@@ -23,6 +23,7 @@ namespace MyFinance.Infrastructure.Persistence.Migrations
                     IsEmailVerified = table.Column<bool>(type: "bit", nullable: false),
                     LastPasswordUpdateOnUtc = table.Column<DateTime>(type: "datetime2", nullable: true),
                     LockoutEndOnUtc = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    SecurityStamp = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     CreatedOnUtc = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UpdatedOnUtc = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
