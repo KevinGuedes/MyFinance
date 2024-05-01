@@ -13,8 +13,7 @@ internal sealed class BusinessUnitRepository(MyFinanceDbContext myFinanceDbConte
         int pageSize,
         CancellationToken cancellationToken)
         => await _myFinanceDbContext.BusinessUnits
-            .OrderByDescending(bu => bu.CreatedOnUtc)
-            .ThenByDescending(bu => bu.Name)
+            .OrderBy(bu => bu.Name)
             .Skip((pageNumber - 1) * pageSize)
             .Take(pageSize)
             .AsNoTracking()

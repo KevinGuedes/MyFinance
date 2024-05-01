@@ -13,8 +13,7 @@ internal class CategoryRepository(MyFinanceDbContext myFinanceDbContext)
          int pageSize,
          CancellationToken cancellationToken)
          => await _myFinanceDbContext.Categories
-             .OrderByDescending(category => category.CreatedOnUtc)
-             .ThenByDescending(category => category.Name)
+             .OrderBy(category => category.Name)
              .Skip((pageNumber - 1) * pageSize)
              .Take(pageSize)
              .AsNoTracking()

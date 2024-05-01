@@ -13,8 +13,7 @@ internal sealed class AccountTagRepository(MyFinanceDbContext myFinanceDbContext
         int pageSize,
         CancellationToken cancellationToken)
         => await _myFinanceDbContext.AccountTags
-            .OrderByDescending(at => at.CreatedOnUtc)
-            .ThenByDescending(at => at.Tag)
+            .OrderBy(at => at.Tag)
             .Skip((pageNumber - 1) * pageSize)
             .Take(pageSize)
             .AsNoTracking()
