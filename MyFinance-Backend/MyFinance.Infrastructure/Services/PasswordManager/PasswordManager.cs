@@ -16,7 +16,12 @@ internal sealed class PasswordManager(IOptions<PasswordOptions> passwordOptions)
             ShouldUpdatePassword(user.LastPasswordUpdateOnUtc.Value);
 
     private bool ShouldUpdatePassword(DateTime lastPasswordUpdateOnUtc)
-        => DateTime.UtcNow > lastPasswordUpdateOnUtc.AddMonths(_passwordOptions.TimeInMonthsToRequestPasswordUpdate);
+    {
+        if(!_passwordOptions.IsHashingAlgorithmUpToDate)
+            return true;
+
+        return DateTime.UtcNow > lastPasswordUpdateOnUtc.AddMonths(_passwordOptions.TimeInMonthsToRequestPasswordUpdate);
+    }
 
     public bool ArePasswordsSimilar(string plainTextPassword, string plainTextOtherPassword)
     {

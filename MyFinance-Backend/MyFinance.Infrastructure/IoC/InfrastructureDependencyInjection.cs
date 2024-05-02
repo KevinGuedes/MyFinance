@@ -78,7 +78,10 @@ public static class InfrastructureDependencyInjection
         services
             .AddOptionsWithValidationOnStart<TokenOptions>()
             .AddOptionsWithValidationOnStart<LockoutOptions>()
-            .AddOptionsWithValidationOnStart<PasswordOptions>();
+            .AddOptionsWithValidationOnStart<PasswordOptions>(passwordOptions =>
+            {
+                passwordOptions.IsHashingAlgorithmUpToDate = true;
+            });
 
         return services
             .AddScoped<ISummaryService, SummaryService>()

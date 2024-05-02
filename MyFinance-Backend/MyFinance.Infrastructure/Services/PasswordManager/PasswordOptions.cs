@@ -15,4 +15,7 @@ internal sealed class PasswordOptions : IValidatableOptions
     [Required]
     [Range(6, 18)]
     public int TimeInMonthsToRequestPasswordUpdate { get; set; } = 6;
+
+    [Required]
+    public bool IsHashingAlgorithmUpToDate { get; set; }
 }
