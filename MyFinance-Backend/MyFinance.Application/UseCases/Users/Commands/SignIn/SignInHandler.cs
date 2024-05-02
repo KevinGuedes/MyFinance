@@ -76,6 +76,7 @@ internal sealed class SignInHandler(
 
     private static Result HandleInvalidCredentials()
         => Result.Fail(new UnauthorizedError(
-            "Invalid credentials. Also, please check your email " +
-            "to make sure you have verified your account."));
+            "Invalid credentials. " +
+            "Your account may be blocked for excessive attempts. "+ 
+            "Also, please check your email to make sure you have verified your account."));
 }
