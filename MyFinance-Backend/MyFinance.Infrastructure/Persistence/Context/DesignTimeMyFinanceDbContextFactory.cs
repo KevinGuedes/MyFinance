@@ -1,6 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using MyFinance.Application.Abstractions.Services;
+using MyFinance.Infrastructure.Services.CurrentUserProvider;
 
 namespace MyFinance.Infrastructure.Persistence.Context;
 
@@ -18,10 +21,14 @@ internal class DesignTimeMyFinanceDbContextFactory : IDesignTimeDbContextFactory
         var optionsBuilder = new DbContextOptionsBuilder<MyFinanceDbContext>();
         optionsBuilder.UseSqlServer(connectionString);
 
-        //var serviceProvider = new ServiceCollection()
-        //    .AddScoped<ICurrentUserProvider, CurrentUserProvider>()
-        //    .BuildServiceProvider();
+        var services = new ServiceCollection();
+        services
+            .AddHttpContextAccessor()
+            .AddTransient<ICurrentUserProvider, CurrentUserProvider>();
 
-        return new MyFinanceDbContext(optionsBuilder.Options, currentUserProvider: null!);
+        var serviceProvider = services.BuildServiceProvider();
+        var currentUserProvider = serviceProvider.GetRequiredService<ICurrentUserProvider>();
+
+        return new MyFinanceDbContext(optionsBuilder.Options, currentUserProvider);
     }
 }

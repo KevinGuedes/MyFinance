@@ -17,16 +17,17 @@ internal sealed class UserProviderBehavior<TRequest, TResponse>(ICurrentUserProv
     {
         var currentUserId = _currentUserProvider.GetCurrentUserId();
 
-        if (currentUserId.HasValue && currentUserId.Value != default)
+        if (currentUserId == default)
         {
-            request.CurrentUserId = currentUserId.Value;
-            return await next();
+            var internalServerError = new InternalServerError("Failed to identify current User");
+            var internalServerErrorResponse = new TResponse();
+            internalServerErrorResponse.Reasons.AddRange(internalServerError.Reasons);
+
+            return internalServerErrorResponse;
         }
 
-        var internalServerError = new InternalServerError("Failed to identify current User");
-        var internalServerErrorResponse = new TResponse();
-        internalServerErrorResponse.Reasons.AddRange(internalServerError.Reasons);
+        request.CurrentUserId = currentUserId;
 
-        return internalServerErrorResponse;
+        return await next();
     }
 }

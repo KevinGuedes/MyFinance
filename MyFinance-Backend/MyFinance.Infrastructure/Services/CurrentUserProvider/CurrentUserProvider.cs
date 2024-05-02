@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using MyFinance.Application.Abstractions.Services;
+using System.Security.Claims;
 
 namespace MyFinance.Infrastructure.Services.CurrentUserProvider;
 
@@ -7,14 +8,16 @@ internal sealed class CurrentUserProvider(IHttpContextAccessor httpContextAccess
 {
     private readonly IHttpContextAccessor _httpContextAccessor = httpContextAccessor;
 
-    public bool IsAuthenticated
-        => _httpContextAccessor.HttpContext!.User.Identity?.IsAuthenticated ?? false;
+    public Guid GetCurrentUserId()
+    {
+        if(_httpContextAccessor.HttpContext is null)
+            return default;
 
-    public Guid? GetCurrentUserId()
-        => IsAuthenticated ? Guid.Parse(GetValueByClaimType("id")) : default;
+        return Guid.TryParse(GetValueByClaimType("id"), out var userId)
+            ? userId
+            : default;
+    }
 
-    private string GetValueByClaimType(string claimType)
-        => _httpContextAccessor.HttpContext!.User.Claims
-            .Single(claim => claim.Type == claimType)
-            .Value;
+    private string? GetValueByClaimType(string claimType)
+        => _httpContextAccessor.HttpContext!.User.FindFirstValue(claimType);
 }
