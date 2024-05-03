@@ -65,7 +65,7 @@ internal sealed class CookieConfiguration(
 
         options.Events.OnValidatePrincipal = async context =>
         {
-            using IServiceScope scope = _serviceScopeFactory.CreateScope();
+            using var scope = _serviceScopeFactory.CreateScope();
 
             var isSecurityStampValid = await ValidateSecurityStamp(context.Principal, scope);
             if (!isSecurityStampValid)
@@ -91,8 +91,7 @@ internal sealed class CookieConfiguration(
         };
     }
 
-    private static async Task<bool> ValidateSecurityStamp(
-       ClaimsPrincipal? claimsPrincipal, IServiceScope scope)
+    private static async Task<bool> ValidateSecurityStamp(ClaimsPrincipal? claimsPrincipal, IServiceScope scope)
     {
         var currentUserProvider = scope.ServiceProvider.GetRequiredService<ICurrentUserProvider>();
 
