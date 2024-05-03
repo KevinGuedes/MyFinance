@@ -67,13 +67,12 @@ internal sealed class CookieConfiguration(
         {
             using IServiceScope scope = _serviceScopeFactory.CreateScope();
 
-            var isSecurityStampValid = await ValidateSecurityStamp(context, scope);
-
+            var isSecurityStampValid = await ValidateSecurityStamp(context.Principal, scope);
             if (!isSecurityStampValid)
             {
-                context.RejectPrincipal();
                 var signInManager = scope.ServiceProvider.GetRequiredService<ISignInManager>();
                 await signInManager.SignOutAsync();
+                context.RejectPrincipal();
             }
         };
     }
@@ -93,13 +92,15 @@ internal sealed class CookieConfiguration(
     }
 
     private static async Task<bool> ValidateSecurityStamp(
-        CookieValidatePrincipalContext context, IServiceScope scope)
+       ClaimsPrincipal? claimsPrincipal, IServiceScope scope)
     {
-        if(context.Principal is null)
+        var currentUserProvider = scope.ServiceProvider.GetRequiredService<ICurrentUserProvider>();
+
+        if(claimsPrincipal is null)
             return false;
 
-        if(TryGetUserId(context.Principal, out var userId) && 
-            TryGetSecutiryStamp(context.Principal, out var securityStamp))
+        if(currentUserProvider.TryGetCurrentUserId(claimsPrincipal, out var userId) && 
+            currentUserProvider.TryGetCurrentUserSecurityStamp(claimsPrincipal, out var securityStamp))
         {
             var userRepository = scope.ServiceProvider.GetRequiredService<IUserRepository>();
             var user = await userRepository.GetByIdAsync(userId, default);
@@ -107,31 +108,5 @@ internal sealed class CookieConfiguration(
         }
 
         return false;
-    }
-
-    private static bool TryGetUserId(ClaimsPrincipal principal, out Guid userId)
-    {
-        var userIdClaim = principal.FindFirstValue("id");
-
-        if(userIdClaim is null)
-        {
-            userId = Guid.Empty;
-            return false;
-        }
-
-        return Guid.TryParse(userIdClaim, out userId);
-    }
-
-    private static bool TryGetSecutiryStamp(ClaimsPrincipal principal, out Guid securityStamp)
-    {
-        var securityStampClaim = principal.FindFirstValue("security-stamp");
-
-        if(securityStampClaim is null)
-        {
-            securityStamp = Guid.Empty;
-            return false;
-        }
-
-        return Guid.TryParse(securityStampClaim, out securityStamp);
     }
 }

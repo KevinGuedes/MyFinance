@@ -6,15 +6,11 @@ namespace MyFinance.Infrastructure.Services.EmailSender;
 
 internal sealed class EmailSender : IEmailSender
 {
-    private readonly AsyncRetryPolicy _sendEmailRetryPolicy;
-
-    public EmailSender()
-    {
-        _sendEmailRetryPolicy = Policy
-            .Handle<Exception>()
-            .WaitAndRetryAsync(3, retryAttempt
-                => TimeSpan.FromSeconds(Math.Pow(2, retryAttempt)));
-    }
+    private readonly AsyncRetryPolicy _sendEmailRetryPolicy = Policy
+        .Handle<Exception>()
+        .WaitAndRetryAsync(
+            3, 
+            retryAttempt => TimeSpan.FromSeconds(Math.Pow(2, retryAttempt)));
 
     public async Task<(bool HasEmailBeenSent, Exception? Exception)> SendConfirmRegistrationEmailAsync(
         string email,
@@ -52,8 +48,5 @@ internal sealed class EmailSender : IEmailSender
     }
 
     private static (bool HasEmailBeenSent, Exception? Exception) ProcessResult(PolicyResult result)
-    {
-        var hasEmailBeenSent = result.Outcome == OutcomeType.Successful;
-        return (HasEmailBeenSent: hasEmailBeenSent, Exception: result.FinalException);
-    }
+        => (HasEmailBeenSent: result.Outcome == OutcomeType.Successful, Exception: result.FinalException);
 }

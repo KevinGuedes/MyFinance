@@ -21,13 +21,7 @@ internal sealed class SendResetPasswordEmailHandler(
         var user = await _userRepository.GetByEmailAsync(command.Email, cancellationToken);
 
         if (user is null)
-        {
-            var random = new Random();
-            var randomNumberBetween0And2Inclusive = Math.Round(random.NextDouble() * 2, 3);
-            var delayInSeconds = Convert.ToInt32(randomNumberBetween0And2Inclusive * 1000);
-            await Task.Delay(delayInSeconds, cancellationToken);
             return Result.Ok();
-        }
 
         if (!user.IsEmailVerified)
             return Result.Ok();
