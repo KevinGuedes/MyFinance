@@ -1,6 +1,6 @@
 ﻿namespace MyFinance.Application.Common.Errors;
 
-public sealed class InternalServerError(string message = "Unexpected behavior when trying to handle request")
+public sealed class InternalServerError(string message = "MyFinance API went rogue! Sorry!")
     : BaseError(message)
 {
 }

@@ -21,7 +21,11 @@ internal sealed class SignInHandler(
     public async Task<Result<SignInResponse>> Handle(SignInCommand command, CancellationToken cancellationToken)
     {
         var user = await _userRepository.GetByEmailAsync(command.Email, cancellationToken);
+        
         if (user is null)
+            return HandleInvalidCredentials();
+
+        if(!user.IsEmailVerified)
             return HandleInvalidCredentials();
 
         if (!_lockoutManager.CanSignIn(user.LockoutEndOnUtc))
@@ -71,5 +75,8 @@ internal sealed class SignInHandler(
             $"hours and {nextLockoutDuration.Minutes} minutes"));
 
     private static Result HandleInvalidCredentials()
-        => Result.Fail(new UnauthorizedError("Invalid credentials"));
+        => Result.Fail(new UnauthorizedError(
+            "Invalid credentials. " +
+            "Your account may be blocked for excessive attempts. "+ 
+            "Also, please check your email to make sure you have verified your account."));
 }

@@ -6,7 +6,7 @@ namespace MyFinance.Infrastructure.Services.LockoutManager;
 internal sealed class LockoutOptions : IValidatableOptions
 {
     [Required]
-    public IReadOnlyDictionary<int, TimeSpan> LockoutThresholds { get; set; } 
+    public IReadOnlyDictionary<int, TimeSpan> LockoutThresholds { get; set; }
         = new Dictionary<int, TimeSpan>
             {
                 { 3, TimeSpan.FromMinutes(5) },
@@ -15,12 +15,7 @@ internal sealed class LockoutOptions : IValidatableOptions
                 { 12, TimeSpan.FromDays(1) },
             }.AsReadOnly();
 
-    public int UpperAttemptsThreshold => LockoutThresholds.Keys.Max();
-    public TimeSpan UpperLockoutDurationThreshold => LockoutThresholds[UpperAttemptsThreshold];
-
-    public bool HasLockoutFor(int failedSignInAttempts)
-        => LockoutThresholds.ContainsKey(failedSignInAttempts);
-
-    public TimeSpan GetLockoutDurationFor(int failedSignInAttempts)
-        => LockoutThresholds[failedSignInAttempts];
+    public int UpperFailedAttemptsThreshold => LockoutThresholds.Keys.Max();
+    public TimeSpan UpperLockoutDurationThreshold => LockoutThresholds[UpperFailedAttemptsThreshold];
+    public int[] FailedAttemptsThresholds => LockoutThresholds.Keys.ToArray();
 }

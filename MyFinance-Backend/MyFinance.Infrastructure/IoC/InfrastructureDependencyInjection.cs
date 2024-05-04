@@ -10,10 +10,12 @@ using MyFinance.Infrastructure.Persistence.Context;
 using MyFinance.Infrastructure.Persistence.Repositories;
 using MyFinance.Infrastructure.Persistence.UnitOfWork;
 using MyFinance.Infrastructure.Services.CurrentUserProvider;
+using MyFinance.Infrastructure.Services.EmailSender;
 using MyFinance.Infrastructure.Services.LockoutManager;
 using MyFinance.Infrastructure.Services.PasswordManager;
 using MyFinance.Infrastructure.Services.SignInManager;
 using MyFinance.Infrastructure.Services.Summary;
+using MyFinance.Infrastructure.Services.TokenProvider;
 using System.Reflection;
 
 namespace MyFinance.Infrastructure.IoC;
@@ -74,16 +76,21 @@ public static class InfrastructureDependencyInjection
     private static IServiceCollection AddInfrastructureServices(this IServiceCollection services)
     {
         services
+            .AddOptionsWithValidationOnStart<TokenOptions>()
             .AddOptionsWithValidationOnStart<LockoutOptions>()
-            .AddOptionsWithValidationOnStart<SignInOptions>()
-            .AddOptionsWithValidationOnStart<PasswordOptions>();
+            .AddOptionsWithValidationOnStart<PasswordOptions>(passwordOptions =>
+            {
+                passwordOptions.IsHashingAlgorithmUpToDate = true;
+            });
 
         return services
             .AddScoped<ISummaryService, SummaryService>()
+            .AddScoped<ITokenProvider, TokenProvider>()
             .AddScoped<IPasswordManager, PasswordManager>()
             .AddScoped<ILockoutManager, LockoutManager>()
             .AddScoped<ISignInManager, SignInManager>()
-            .AddScoped<ICurrentUserProvider, CurrentUserProvider>();
+            .AddScoped<ICurrentUserProvider, CurrentUserProvider>()
+            .AddScoped<IEmailSender, EmailSender>();
     }
 
     private static IServiceCollection AddOptionsWithValidationOnStart<TOptions>(
@@ -96,7 +103,7 @@ public static class InfrastructureDependencyInjection
             .ValidateOnStart()
             .ValidateDataAnnotations();
 
-        if(configureOptions is not null)
+        if (configureOptions is not null)
             optionsBuilder.Configure(configureOptions);
 
         return services;

@@ -63,7 +63,7 @@ namespace MyFinance.Infrastructure.Persistence.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("AccountTags");
+                    b.ToTable("AccountTags", (string)null);
                 });
 
             modelBuilder.Entity("MyFinance.Domain.Entities.BusinessUnit", b =>
@@ -113,7 +113,7 @@ namespace MyFinance.Infrastructure.Persistence.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("BusinessUnits");
+                    b.ToTable("BusinessUnits", (string)null);
                 });
 
             modelBuilder.Entity("MyFinance.Domain.Entities.Category", b =>
@@ -153,7 +153,7 @@ namespace MyFinance.Infrastructure.Persistence.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Categories");
+                    b.ToTable("Categories", (string)null);
                 });
 
             modelBuilder.Entity("MyFinance.Domain.Entities.Transfer", b =>
@@ -210,7 +210,7 @@ namespace MyFinance.Infrastructure.Persistence.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Transfers");
+                    b.ToTable("Transfers", (string)null);
                 });
 
             modelBuilder.Entity("MyFinance.Domain.Entities.User", b =>
@@ -230,14 +230,14 @@ namespace MyFinance.Infrastructure.Persistence.Migrations
                     b.Property<int>("FailedSignInAttempts")
                         .HasColumnType("int");
 
+                    b.Property<bool>("IsEmailVerified")
+                        .HasColumnType("bit");
+
                     b.Property<DateTime?>("LastPasswordUpdateOnUtc")
                         .HasColumnType("datetime2");
 
                     b.Property<DateTime?>("LockoutEndOnUtc")
                         .HasColumnType("datetime2");
-
-                    b.Property<Guid?>("MagicSignInId")
-                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -248,6 +248,9 @@ namespace MyFinance.Infrastructure.Persistence.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<Guid>("SecurityStamp")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<DateTime?>("UpdatedOnUtc")
                         .HasColumnType("datetime2");
 
@@ -256,7 +259,7 @@ namespace MyFinance.Infrastructure.Persistence.Migrations
                     b.HasIndex("Email")
                         .IsUnique();
 
-                    b.ToTable("Users");
+                    b.ToTable("Users", (string)null);
                 });
 
             modelBuilder.Entity("MyFinance.Domain.Entities.AccountTag", b =>

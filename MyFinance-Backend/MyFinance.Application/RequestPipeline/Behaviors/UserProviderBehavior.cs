@@ -15,18 +15,15 @@ internal sealed class UserProviderBehavior<TRequest, TResponse>(ICurrentUserProv
 
     public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
     {
-        var currentUserId = _currentUserProvider.GetCurrentUserId();
-
-        if (currentUserId.HasValue && currentUserId.Value != default)
+        if (_currentUserProvider.TryGetCurrentUserId(out var currentUserId))
         {
-            request.CurrentUserId = currentUserId.Value;
+            request.CurrentUserId = currentUserId;
             return await next();
         }
 
         var internalServerError = new InternalServerError("Failed to identify current User");
         var internalServerErrorResponse = new TResponse();
         internalServerErrorResponse.Reasons.AddRange(internalServerError.Reasons);
-
         return internalServerErrorResponse;
     }
 }

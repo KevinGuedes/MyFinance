@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using MyFinance.Application.Abstractions.Services;
+using MyFinance.Infrastructure.Common;
+using System.Security.Claims;
 
 namespace MyFinance.Infrastructure.Services.CurrentUserProvider;
 
@@ -7,14 +9,36 @@ internal sealed class CurrentUserProvider(IHttpContextAccessor httpContextAccess
 {
     private readonly IHttpContextAccessor _httpContextAccessor = httpContextAccessor;
 
-    public bool IsAuthenticated
-        => _httpContextAccessor.HttpContext!.User.Identity?.IsAuthenticated ?? false;
+    public Guid GetCurrentUserId()
+    {
+        if (_httpContextAccessor.HttpContext is null)
+            return default;
 
-    public Guid? GetCurrentUserId()
-        => IsAuthenticated ? Guid.Parse(GetValueByClaimType("id")) : default;
+        return Guid.TryParse(GetValueByClaimType(CustomClaimTypes.Id), out var userId)
+            ? userId
+            : default;
+    }
 
-    private string GetValueByClaimType(string claimType)
-        => _httpContextAccessor.HttpContext!.User.Claims
-            .Single(claim => claim.Type == claimType)
-            .Value;
+    public bool TryGetCurrentUserId(out Guid userId)
+    {
+        if(_httpContextAccessor.HttpContext is null)
+        {
+            userId = default;
+            return false;
+        }
+
+        return Guid.TryParse(GetValueByClaimType(CustomClaimTypes.Id), out userId);
+    }
+
+    public bool TryGetCurrentUserId(ClaimsPrincipal claimsPrincipal, out Guid userId)
+        => Guid.TryParse(GetValueByClaimType(claimsPrincipal, CustomClaimTypes.Id), out userId);
+    
+    public bool TryGetCurrentUserSecurityStamp(ClaimsPrincipal claimsPrincipal, out Guid securityStamp)
+        => Guid.TryParse(GetValueByClaimType(claimsPrincipal, CustomClaimTypes.SecurityStamp), out securityStamp);
+
+    private static string? GetValueByClaimType(ClaimsPrincipal claimsPrincipal, string claimType)
+        => claimsPrincipal.FindFirstValue(claimType);
+
+    private string? GetValueByClaimType(string claimType)
+        => _httpContextAccessor.HttpContext!.User.FindFirstValue(claimType);
 }

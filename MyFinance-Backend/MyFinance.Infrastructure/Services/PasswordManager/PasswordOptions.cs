@@ -5,12 +5,8 @@ namespace MyFinance.Infrastructure.Services.PasswordManager;
 
 internal sealed class PasswordOptions : IValidatableOptions
 {
-    public readonly double SimilarityThreshold = 0.25;
-    public readonly string[] ResetPasswordTokenPurpose = [
-        "MyFinance.Infrastructure.Services.PasswordManager",
-        "ResetPassword",
-        "v1"
-    ];
+    public readonly double CosineSimilarityThreshold = 0.25;
+    public readonly double JaroWinklerSimilarityThreshold = 0.45;
 
     [Required]
     [Range(14, int.MaxValue)]
@@ -19,4 +15,7 @@ internal sealed class PasswordOptions : IValidatableOptions
     [Required]
     [Range(6, 18)]
     public int TimeInMonthsToRequestPasswordUpdate { get; set; } = 6;
+
+    [Required]
+    public bool IsHashingAlgorithmUpToDate { get; set; }
 }

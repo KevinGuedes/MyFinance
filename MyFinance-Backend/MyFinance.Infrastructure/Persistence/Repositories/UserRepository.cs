@@ -13,7 +13,4 @@ internal class UserRepository(MyFinanceDbContext myFinanceDbContext)
 
     public Task<User?> GetByEmailAsync(string email, CancellationToken cancellationToken)
         => _myFinanceDbContext.Users.FirstOrDefaultAsync(user => user.Email == email, cancellationToken);
-
-    public Task<User> GetByMagicSignInIdAsync(Guid magicSignInId, CancellationToken cancellationToken)
-        => _myFinanceDbContext.Users.SingleAsync(user => user.MagicSignInId == magicSignInId, cancellationToken);
 }

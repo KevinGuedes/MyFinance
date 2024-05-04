@@ -10,7 +10,7 @@ internal sealed class MyFinanceDbContext(
     DbContextOptions<MyFinanceDbContext> options,
     ICurrentUserProvider currentUserProvider) : DbContext(options)
 {
-    private readonly Guid? _currentUserId = currentUserProvider?.GetCurrentUserId();
+    private readonly ICurrentUserProvider _currentUserProvider = currentUserProvider;
 
     public DbSet<BusinessUnit> BusinessUnits { get; set; }
     public DbSet<Transfer> Transfers { get; set; }
@@ -27,16 +27,14 @@ internal sealed class MyFinanceDbContext(
 
     private void ApplyGlobalFiltersForUserOwnedEntities(ModelBuilder modelBuilder)
     {
-        if (_currentUserId.HasValue)
-        {
-            ApplyGlobalFilterForUserOwnedEntity<BusinessUnit>(modelBuilder);
-            ApplyGlobalFilterForUserOwnedEntity<Transfer>(modelBuilder);
-            ApplyGlobalFilterForUserOwnedEntity<AccountTag>(modelBuilder);
-            ApplyGlobalFilterForUserOwnedEntity<Category>(modelBuilder);
-        }
+        ApplyGlobalFilterForUserOwnedEntity<BusinessUnit>(modelBuilder);
+        ApplyGlobalFilterForUserOwnedEntity<Transfer>(modelBuilder);
+        ApplyGlobalFilterForUserOwnedEntity<AccountTag>(modelBuilder);
+        ApplyGlobalFilterForUserOwnedEntity<Category>(modelBuilder);
     }
 
     private void ApplyGlobalFilterForUserOwnedEntity<TEntity>(ModelBuilder modelBuilder)
         where TEntity : class, IUserOwnedEntity
-        => modelBuilder.Entity<TEntity>().HasQueryFilter(entity => entity.UserId == _currentUserId!.Value);
+        => modelBuilder.Entity<TEntity>()
+            .HasQueryFilter(entity => entity.UserId == _currentUserProvider.GetCurrentUserId());
 }

@@ -12,7 +12,7 @@ using MyFinance.Infrastructure.Persistence.Context;
 namespace MyFinance.Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(MyFinanceDbContext))]
-    [Migration("20240413185924_FirstMigration")]
+    [Migration("20240430123155_FirstMigration")]
     partial class FirstMigration
     {
         /// <inheritdoc />
@@ -233,7 +233,10 @@ namespace MyFinance.Infrastructure.Persistence.Migrations
                     b.Property<int>("FailedSignInAttempts")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("LastPasswordUpdateOnUtc")
+                    b.Property<bool>("IsEmailVerified")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime?>("LastPasswordUpdateOnUtc")
                         .HasColumnType("datetime2");
 
                     b.Property<DateTime?>("LockoutEndOnUtc")
@@ -247,6 +250,9 @@ namespace MyFinance.Infrastructure.Persistence.Migrations
                     b.Property<string>("PasswordHash")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("SecurityStamp")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime?>("UpdatedOnUtc")
                         .HasColumnType("datetime2");

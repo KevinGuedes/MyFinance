@@ -26,6 +26,17 @@ public class UserController(IMediator mediator) : ApiController(mediator)
         => ProcessResult(await _mediator.Send(UserMapper.RTC.Map(request), cancellationToken));
 
     [AllowAnonymous]
+    [HttpPost("ConfirmRegistration")]
+    [SwaggerOperation(Summary = "Confirms the User's registration")]
+    [SwaggerResponse(StatusCodes.Status204NoContent, "User successfully confirmed")]
+    [SwaggerResponse(StatusCodes.Status400BadRequest, "Invalid payload", typeof(ValidationProblemResponse))]
+    public async Task<IActionResult> ConfirmRegistrationAsync(
+        [FromBody][SwaggerRequestBody("Confirm registration payload", Required = true)]
+        ConfirmRegistrationRequest request,
+        CancellationToken cancellationToken)
+        => ProcessResult(await _mediator.Send(UserMapper.RTC.Map(request), cancellationToken));
+
+    [AllowAnonymous]
     [HttpPost("SignIn")]
     [SwaggerOperation(Summary = "Signs in an existing User")]
     [SwaggerResponse(StatusCodes.Status200OK, "User successfully signed in", typeof(SignInResponse))]
@@ -69,6 +80,29 @@ public class UserController(IMediator mediator) : ApiController(mediator)
     public async Task<IActionResult> MagicSignInAsync(
         [FromBody] [SwaggerRequestBody("Magic sign in payload", Required = true)]
         MagicSignInRequest request,
+        CancellationToken cancellationToken)
+        => ProcessResult(await _mediator.Send(UserMapper.RTC.Map(request), cancellationToken));
+
+    [AllowAnonymous]
+    [HttpPost("SendResetPasswordEmail")]
+    [SwaggerOperation(Summary = "Sends an email to the user with a link to reset the password")]
+    [SwaggerResponse(StatusCodes.Status204NoContent, "Email successfully sent to user's email")]
+    [SwaggerResponse(StatusCodes.Status400BadRequest, "Invalid payload", typeof(ValidationProblemResponse))]
+    public async Task<IActionResult> SendResetPasswordEmailAsync(
+        [FromBody] [SwaggerRequestBody("Send reset password email payload", Required = true)]
+        SendResetPasswordEmailRequest request,
+        CancellationToken cancellationToken)
+        => ProcessResult(await _mediator.Send(UserMapper.RTC.Map(request), cancellationToken));
+
+    [AllowAnonymous]
+    [HttpPost("ResetPassword")]
+    [SwaggerOperation(Summary = "Resets the User's password")]
+    [SwaggerResponse(StatusCodes.Status204NoContent, "Password successfully reseted")]
+    [SwaggerResponse(StatusCodes.Status400BadRequest, "Invalid payload", typeof(ValidationProblemResponse))]
+    [SwaggerResponse(StatusCodes.Status401Unauthorized, "Invalid token", typeof(ProblemResponse))]
+    public async Task<IActionResult> ResetPasswordAsync(
+        [FromBody][SwaggerRequestBody("Reset password payload", Required = true)]
+        ResetPasswordRequest request,
         CancellationToken cancellationToken)
         => ProcessResult(await _mediator.Send(UserMapper.RTC.Map(request), cancellationToken));
 

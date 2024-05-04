@@ -2,20 +2,21 @@
 using MyFinance.Application.Abstractions.Persistence.Repositories;
 using MyFinance.Application.Abstractions.RequestHandling.Commands;
 using MyFinance.Application.Abstractions.Services;
+using MyFinance.Application.Common.Errors;
 
-namespace MyFinance.Application.UseCases.Users.Commands.SendMagicSignInEmail;
+namespace MyFinance.Application.UseCases.Users.Commands.SendResetPasswordEmail;
 
-internal sealed class SendMagicSignInEmailHandler(
+internal sealed class SendResetPasswordEmailHandler(
     ITokenProvider tokenProvider,
     IUserRepository userRepository,
     IEmailSender emailSender)
-    : ICommandHandler<SendMagicSignInEmailCommand>
+    : ICommandHandler<SendResetPasswordEmailCommand>
 {
     private readonly ITokenProvider _tokenProvider = tokenProvider;
     private readonly IUserRepository _userRepository = userRepository;
     private readonly IEmailSender _emailSender = emailSender;
 
-    public async Task<Result> Handle(SendMagicSignInEmailCommand command, CancellationToken cancellationToken)
+    public async Task<Result> Handle(SendResetPasswordEmailCommand command, CancellationToken cancellationToken)
     {
         var user = await _userRepository.GetByEmailAsync(command.Email, cancellationToken);
 
@@ -25,8 +26,8 @@ internal sealed class SendMagicSignInEmailHandler(
         if (!user.IsEmailVerified)
             return Result.Ok();
 
-        var urlSafeMagicSignInToken = _tokenProvider.CreateUrlSafeMagicSignInToken(user.Id);
-        await _emailSender.SendMagicSignInEmailAsync(user.Email, urlSafeMagicSignInToken);
+        var urlSafeResetPasswordToken = _tokenProvider.CreateUrlSafeResetPasswordToken(user.Id);
+        await _emailSender.SendResetPasswordEmailAsync(user.Email, urlSafeResetPasswordToken);
 
         return Result.Ok();
     }

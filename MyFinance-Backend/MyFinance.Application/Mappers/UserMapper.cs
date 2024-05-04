@@ -1,8 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MyFinance.Application.Common.Errors;
+using MyFinance.Application.UseCases.Users.Commands.ConfirmRegistration;
 using MyFinance.Application.UseCases.Users.Commands.MagicSignIn;
 using MyFinance.Application.UseCases.Users.Commands.RegisterUser;
+using MyFinance.Application.UseCases.Users.Commands.ResetPassword;
 using MyFinance.Application.UseCases.Users.Commands.SendMagicSignInEmail;
+using MyFinance.Application.UseCases.Users.Commands.SendResetPasswordEmail;
 using MyFinance.Application.UseCases.Users.Commands.SignIn;
 using MyFinance.Application.UseCases.Users.Commands.UpdatePassword;
 using MyFinance.Contracts.User.Requests;
@@ -15,18 +18,19 @@ public static class UserMapper
     public static class RTC
     {
         public static RegisterUserCommand Map(RegisterUserRequest request)
-            => new(
-                request.Name,
+            => new(request.Name,
                 request.Email,
                 request.PlainTextPassword,
                 request.PlainTextPasswordConfirmation);
+
+        public static ConfirmRegistrationCommand Map(ConfirmRegistrationRequest request)
+            => new(request.UrlSafeConfirmRegistrationToken);
 
         public static SignInCommand Map(SignInRequest request)
             => new(request.Email, request.PlainTextPassword);
 
         public static UpdatePasswordCommand Map(UpdatePasswordRequest request)
-            => new(
-                request.PlainTextCurrentPassword,
+            => new(request.PlainTextCurrentPassword,
                 request.PlainTextNewPassword,
                 request.PlainTextNewPasswordConfirmation);
 
@@ -34,7 +38,15 @@ public static class UserMapper
             => new(request.Email);
 
         public static MagicSignInCommand Map(MagicSignInRequest request)
-            => new(request.Token);
+            => new(request.UrlSafeMagicSignInToken);
+
+        public static SendResetPasswordEmailCommand Map(SendResetPasswordEmailRequest request)
+            => new(request.Email);
+
+        public static ResetPasswordCommand Map(ResetPasswordRequest request)
+            => new(request.UrlSafeResetPasswordToken,
+                request.PlainTextNewPassword,
+                request.PlainTextNewPasswordConfirmation);
     }
 
     public static class ETR
