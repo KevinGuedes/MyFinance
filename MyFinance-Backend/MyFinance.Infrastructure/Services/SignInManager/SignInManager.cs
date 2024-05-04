@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Http;
 using MyFinance.Application.Abstractions.Services;
 using MyFinance.Domain.Entities;
+using MyFinance.Infrastructure.Common;
 using System.Security.Claims;
 
 namespace MyFinance.Infrastructure.Services.SignInManager;
@@ -16,8 +17,8 @@ internal sealed class SignInManager(IHttpContextAccessor httpContextAccessor)
     {
         var claims = new List<Claim>
         {
-            new("security-stamp", user.SecurityStamp.ToString()),
-            new("id", user.Id.ToString())
+            new(CustomClaimTypes.Id, user.Id.ToString()),
+            new(CustomClaimTypes.SecurityStamp, user.SecurityStamp.ToString())
         };
 
         var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
