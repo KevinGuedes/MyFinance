@@ -152,9 +152,9 @@ namespace MyFinance.Infrastructure.Persistence.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_AccountTags_Tag",
+                name: "IX_AccountTags_Tag_UserId",
                 table: "AccountTags",
-                column: "Tag",
+                columns: new[] { "Tag", "UserId" },
                 unique: true);
 
             migrationBuilder.CreateIndex(
@@ -163,9 +163,9 @@ namespace MyFinance.Infrastructure.Persistence.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_BusinessUnits_Name",
+                name: "IX_BusinessUnits_Name_UserId",
                 table: "BusinessUnits",
-                column: "Name",
+                columns: new[] { "Name", "UserId" },
                 unique: true);
 
             migrationBuilder.CreateIndex(
@@ -174,9 +174,9 @@ namespace MyFinance.Infrastructure.Persistence.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Categories_Name",
+                name: "IX_Categories_Name_UserId",
                 table: "Categories",
-                column: "Name",
+                columns: new[] { "Name", "UserId" },
                 unique: true);
 
             migrationBuilder.CreateIndex(

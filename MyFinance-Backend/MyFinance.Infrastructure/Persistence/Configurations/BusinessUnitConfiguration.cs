@@ -10,7 +10,7 @@ internal sealed class BusinessUnitConfiguration : EntityConfiguration<BusinessUn
     {
         base.Configure(builder);
 
-        builder.HasIndex(bu => bu.Name).IsUnique();
+        builder.HasIndex(bu => new { bu.Name, bu.UserId }).IsUnique();
 
         builder.Property(bu => bu.Name).IsRequired().HasMaxLength(100);
         builder.Property(bu => bu.Income).IsRequired().HasColumnType("MONEY");

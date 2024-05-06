@@ -30,7 +30,7 @@ internal sealed class TransferConfiguration : EntityConfiguration<Transfer>
 
         builder
             .HasOne(transfer => transfer.Category)
-            .WithMany(at => at.Transfers)
+            .WithMany(category => category.Transfers)
             .HasForeignKey(transfer => transfer.CategoryId)
             .OnDelete(DeleteBehavior.NoAction);
 
