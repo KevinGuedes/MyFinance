@@ -63,4 +63,10 @@ public sealed class User : Entity
         SetUpdateOnToUtcNow();
         IsEmailVerified = true;
     }
+
+    public void UpdateSecurityStamp()
+    {
+        SetUpdateOnToUtcNow();
+        SecurityStamp = Guid.NewGuid();
+    }
 }
