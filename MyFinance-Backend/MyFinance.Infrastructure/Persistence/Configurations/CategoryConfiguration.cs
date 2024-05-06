@@ -11,7 +11,7 @@ internal class CategoryConfiguration : EntityConfiguration<Category>
         base.Configure(builder);
 
         builder
-            .HasIndex(category => new { category.Name , category.UserId})
+            .HasIndex(category => new { category.Name, category.UserId })
             .IsUnique();
 
         builder.Property(category => category.Name).IsRequired().HasMaxLength(50);

@@ -21,7 +21,7 @@ internal sealed class CurrentUserProvider(IHttpContextAccessor httpContextAccess
 
     public bool TryGetCurrentUserId(out Guid userId)
     {
-        if(_httpContextAccessor.HttpContext is null)
+        if (_httpContextAccessor.HttpContext is null)
         {
             userId = default;
             return false;
@@ -32,7 +32,7 @@ internal sealed class CurrentUserProvider(IHttpContextAccessor httpContextAccess
 
     public bool TryGetCurrentUserId(ClaimsPrincipal claimsPrincipal, out Guid userId)
         => Guid.TryParse(GetValueByClaimType(claimsPrincipal, CustomClaimTypes.Id), out userId);
-    
+
     public bool TryGetCurrentUserSecurityStamp(ClaimsPrincipal claimsPrincipal, out Guid securityStamp)
         => Guid.TryParse(GetValueByClaimType(claimsPrincipal, CustomClaimTypes.SecurityStamp), out securityStamp);
 

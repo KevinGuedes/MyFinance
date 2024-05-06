@@ -9,7 +9,7 @@ internal sealed class EmailSender : IEmailSender
     private readonly AsyncRetryPolicy _sendEmailRetryPolicy = Policy
         .Handle<Exception>()
         .WaitAndRetryAsync(
-            3, 
+            3,
             retryAttempt => TimeSpan.FromSeconds(Math.Pow(2, retryAttempt)));
 
     public async Task<(bool HasEmailBeenSent, Exception? Exception)> SendConfirmRegistrationEmailAsync(
