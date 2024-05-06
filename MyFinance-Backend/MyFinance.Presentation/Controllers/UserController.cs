@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using MyFinance.Application.Common.Errors;
 using MyFinance.Application.Mappers;
 using MyFinance.Application.UseCases.Users.Commands.SignOut;
+using MyFinance.Application.UseCases.Users.Commands.SignOutFromAllDevices;
 using MyFinance.Contracts.Common;
 using MyFinance.Contracts.User.Requests;
 using MyFinance.Contracts.User.Responses;
@@ -124,6 +125,13 @@ public class UserController(IMediator mediator) : ApiController(mediator)
     [SwaggerResponse(StatusCodes.Status401Unauthorized, "Unauthorized", typeof(ProblemResponse))]
     public async Task<IActionResult> SignOutAsync(CancellationToken cancellationToken)
         => ProcessResult(await _mediator.Send(new SignOutCommand(), cancellationToken));
+
+    [HttpPost("SignOut")]
+    [SwaggerOperation(Summary = "Signs out an existing User from all devices")]
+    [SwaggerResponse(StatusCodes.Status204NoContent, "User successfully signed out from all devices")]
+    [SwaggerResponse(StatusCodes.Status401Unauthorized, "Unauthorized", typeof(ProblemResponse))]
+    public async Task<IActionResult> SignOutFromAllDevicesAsync(CancellationToken cancellationToken)
+       => ProcessResult(await _mediator.Send(new SignOutFromAllDevicesCommand(), cancellationToken));
 
     private ObjectResult BuildTooManyFailedSignInAttemptsResponse(TooManyFailedSignInAttemptsError tooManyFailedSignInAttemptsError)
     {

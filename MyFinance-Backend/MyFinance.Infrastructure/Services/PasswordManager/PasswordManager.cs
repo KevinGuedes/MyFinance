@@ -17,7 +17,7 @@ internal sealed class PasswordManager(IOptions<PasswordOptions> passwordOptions)
 
     private bool ShouldUpdatePassword(DateTime lastPasswordUpdateOnUtc)
     {
-        if(!_passwordOptions.IsHashingAlgorithmUpToDate)
+        if (!_passwordOptions.IsHashingAlgorithmUpToDate)
             return true;
 
         return DateTime.UtcNow > lastPasswordUpdateOnUtc.AddMonths(_passwordOptions.TimeInMonthsToRequestPasswordUpdate);

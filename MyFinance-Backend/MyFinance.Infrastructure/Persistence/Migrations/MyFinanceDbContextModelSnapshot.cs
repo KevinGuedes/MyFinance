@@ -58,12 +58,12 @@ namespace MyFinance.Infrastructure.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("Tag")
-                        .IsUnique();
-
                     b.HasIndex("UserId");
 
-                    b.ToTable("AccountTags", (string)null);
+                    b.HasIndex("Tag", "UserId")
+                        .IsUnique();
+
+                    b.ToTable("AccountTags");
                 });
 
             modelBuilder.Entity("MyFinance.Domain.Entities.BusinessUnit", b =>
@@ -108,12 +108,12 @@ namespace MyFinance.Infrastructure.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("Name")
-                        .IsUnique();
-
                     b.HasIndex("UserId");
 
-                    b.ToTable("BusinessUnits", (string)null);
+                    b.HasIndex("Name", "UserId")
+                        .IsUnique();
+
+                    b.ToTable("BusinessUnits");
                 });
 
             modelBuilder.Entity("MyFinance.Domain.Entities.Category", b =>
@@ -148,12 +148,12 @@ namespace MyFinance.Infrastructure.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("Name")
-                        .IsUnique();
-
                     b.HasIndex("UserId");
 
-                    b.ToTable("Categories", (string)null);
+                    b.HasIndex("Name", "UserId")
+                        .IsUnique();
+
+                    b.ToTable("Categories");
                 });
 
             modelBuilder.Entity("MyFinance.Domain.Entities.Transfer", b =>
@@ -210,7 +210,7 @@ namespace MyFinance.Infrastructure.Persistence.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Transfers", (string)null);
+                    b.ToTable("Transfers");
                 });
 
             modelBuilder.Entity("MyFinance.Domain.Entities.User", b =>
@@ -259,7 +259,7 @@ namespace MyFinance.Infrastructure.Persistence.Migrations
                     b.HasIndex("Email")
                         .IsUnique();
 
-                    b.ToTable("Users", (string)null);
+                    b.ToTable("Users");
                 });
 
             modelBuilder.Entity("MyFinance.Domain.Entities.AccountTag", b =>

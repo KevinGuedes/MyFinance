@@ -13,10 +13,10 @@ internal class CategoryRepository(MyFinanceDbContext myFinanceDbContext)
          int pageSize,
          CancellationToken cancellationToken)
          => await _myFinanceDbContext.Categories
+             .AsNoTracking()
              .OrderBy(category => category.Name)
              .Skip((pageNumber - 1) * pageSize)
              .Take(pageSize)
-             .AsNoTracking()
              .ToListAsync(cancellationToken);
 
     public Task<bool> ExistsByNameAsync(
@@ -29,7 +29,7 @@ internal class CategoryRepository(MyFinanceDbContext myFinanceDbContext)
         string name,
         CancellationToken cancellationToken)
         => _myFinanceDbContext.Categories
-            .Where(category => category.Name == name)
             .AsNoTracking()
+            .Where(category => category.Name == name)
             .FirstOrDefaultAsync(cancellationToken);
 }

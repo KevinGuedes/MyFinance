@@ -10,17 +10,19 @@ internal class CategoryConfiguration : EntityConfiguration<Category>
     {
         base.Configure(builder);
 
-        builder.HasIndex(at => at.Name).IsUnique();
+        builder
+            .HasIndex(category => new { category.Name, category.UserId })
+            .IsUnique();
 
-        builder.Property(at => at.Name).IsRequired().HasMaxLength(50);
-        builder.Property(bu => bu.ReasonToArchive).IsRequired(false).HasMaxLength(300);
-        builder.Property(bu => bu.ArchivedOnUtc).IsRequired(false);
-        builder.Property(bu => bu.IsArchived).IsRequired();
+        builder.Property(category => category.Name).IsRequired().HasMaxLength(50);
+        builder.Property(category => category.ReasonToArchive).IsRequired(false).HasMaxLength(300);
+        builder.Property(category => category.ArchivedOnUtc).IsRequired(false);
+        builder.Property(category => category.IsArchived).IsRequired();
 
         builder
             .HasOne<User>()
             .WithMany()
-            .HasForeignKey(at => at.UserId)
+            .HasForeignKey(category => category.UserId)
             .OnDelete(DeleteBehavior.Cascade);
     }
 }

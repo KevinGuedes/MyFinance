@@ -13,10 +13,10 @@ internal sealed class BusinessUnitRepository(MyFinanceDbContext myFinanceDbConte
         int pageSize,
         CancellationToken cancellationToken)
         => await _myFinanceDbContext.BusinessUnits
+            .AsNoTracking()
             .OrderBy(bu => bu.Name)
             .Skip((pageNumber - 1) * pageSize)
             .Take(pageSize)
-            .AsNoTracking()
             .ToListAsync(cancellationToken);
 
     public Task<bool> ExistsByNameAsync(string name, CancellationToken cancellationToken)

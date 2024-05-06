@@ -12,7 +12,7 @@ using MyFinance.Infrastructure.Persistence.Context;
 namespace MyFinance.Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(MyFinanceDbContext))]
-    [Migration("20240430123155_FirstMigration")]
+    [Migration("20240506115553_FirstMigration")]
     partial class FirstMigration
     {
         /// <inheritdoc />
@@ -61,10 +61,10 @@ namespace MyFinance.Infrastructure.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("Tag")
-                        .IsUnique();
-
                     b.HasIndex("UserId");
+
+                    b.HasIndex("Tag", "UserId")
+                        .IsUnique();
 
                     b.ToTable("AccountTags");
                 });
@@ -111,10 +111,10 @@ namespace MyFinance.Infrastructure.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("Name")
-                        .IsUnique();
-
                     b.HasIndex("UserId");
+
+                    b.HasIndex("Name", "UserId")
+                        .IsUnique();
 
                     b.ToTable("BusinessUnits");
                 });
@@ -151,10 +151,10 @@ namespace MyFinance.Infrastructure.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("Name")
-                        .IsUnique();
-
                     b.HasIndex("UserId");
+
+                    b.HasIndex("Name", "UserId")
+                        .IsUnique();
 
                     b.ToTable("Categories");
                 });

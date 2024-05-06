@@ -95,10 +95,10 @@ internal sealed class CookieConfiguration(
     {
         var currentUserProvider = scope.ServiceProvider.GetRequiredService<ICurrentUserProvider>();
 
-        if(claimsPrincipal is null)
+        if (claimsPrincipal is null)
             return false;
 
-        if(currentUserProvider.TryGetCurrentUserId(claimsPrincipal, out var userId) && 
+        if (currentUserProvider.TryGetCurrentUserId(claimsPrincipal, out var userId) &&
             currentUserProvider.TryGetCurrentUserSecurityStamp(claimsPrincipal, out var securityStamp))
         {
             var userRepository = scope.ServiceProvider.GetRequiredService<IUserRepository>();

@@ -13,10 +13,10 @@ internal sealed class AccountTagRepository(MyFinanceDbContext myFinanceDbContext
         int pageSize,
         CancellationToken cancellationToken)
         => await _myFinanceDbContext.AccountTags
+            .AsNoTracking()
             .OrderBy(at => at.Tag)
             .Skip((pageNumber - 1) * pageSize)
             .Take(pageSize)
-            .AsNoTracking()
             .ToListAsync(cancellationToken);
 
     public Task<bool> ExistsByTagAsync(
@@ -29,7 +29,7 @@ internal sealed class AccountTagRepository(MyFinanceDbContext myFinanceDbContext
         string tag,
         CancellationToken cancellationToken)
         => _myFinanceDbContext.AccountTags
-            .Where(at => at.Tag == tag)
             .AsNoTracking()
+            .Where(at => at.Tag == tag)
             .FirstOrDefaultAsync(cancellationToken);
 }
