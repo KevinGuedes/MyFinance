@@ -126,7 +126,7 @@ public class UserController(IMediator mediator) : ApiController(mediator)
     public async Task<IActionResult> SignOutAsync(CancellationToken cancellationToken)
         => ProcessResult(await _mediator.Send(new SignOutCommand(), cancellationToken));
 
-    [HttpPost("SignOut")]
+    [HttpPost("SignOutFromAllDevices")]
     [SwaggerOperation(Summary = "Signs out an existing User from all devices")]
     [SwaggerResponse(StatusCodes.Status204NoContent, "User successfully signed out from all devices")]
     [SwaggerResponse(StatusCodes.Status401Unauthorized, "Unauthorized", typeof(ProblemResponse))]
