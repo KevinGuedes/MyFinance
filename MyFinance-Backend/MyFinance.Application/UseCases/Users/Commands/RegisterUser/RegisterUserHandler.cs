@@ -28,16 +28,10 @@ internal sealed class RegisterUserHandler(
         var urlSafeConfirmRegistrationToken
             = _tokenProvider.CreateUrlSafeConfirmRegistrationToken(user.Id);
 
-        var (hasEmailBeenSent, exception) = await _emailSender.SendMagicSignInEmailAsync(
+        await _emailSender.SendConfirmRegistrationEmailAsync(
             user.Email,
-            urlSafeConfirmRegistrationToken);
-
-        if (!hasEmailBeenSent)
-        {
-            var errorMessage = "The magic confirm registration email could not be sent. Please try again later.";
-            var internalServerError = new InternalServerError(errorMessage).CausedBy(exception);
-            return Result.Fail(internalServerError);
-        }
+            urlSafeConfirmRegistrationToken,
+            cancellationToken);
 
         return Result.Ok();
     }

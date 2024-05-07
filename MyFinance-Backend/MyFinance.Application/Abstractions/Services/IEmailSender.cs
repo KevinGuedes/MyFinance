@@ -4,11 +4,19 @@ public interface IEmailSender
 {
     Task<(bool HasEmailBeenSent, Exception? Exception)> SendConfirmRegistrationEmailAsync(
         string email,
-        string urlSafeConfirmRegistrationToken);
+        string urlSafeConfirmRegistrationToken,
+        CancellationToken cancellationToken);
     Task<(bool HasEmailBeenSent, Exception? Exception)> SendMagicSignInEmailAsync(
         string email,
-        string urlSafeMagicSignInToken);
+        string urlSafeMagicSignInToken,
+        CancellationToken cancellationToken);
     Task<(bool HasEmailBeenSent, Exception? Exception)> SendResetPasswordEmailAsync(
         string email,
-        string urlSafeResetPasswordToken);
+        string urlSafeResetPasswordToken,
+        CancellationToken cancellationToken);
+    Task<(bool HasEmailBeenSent, Exception? Exception)> SendUserLockedEmailAsync(
+        string email,
+        TimeSpan lockoutDuration,
+        DateTime lockoutEndOnUtc,
+        CancellationToken cancellationToken);
 }

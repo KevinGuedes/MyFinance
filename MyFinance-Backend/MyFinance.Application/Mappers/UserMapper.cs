@@ -3,6 +3,7 @@ using MyFinance.Application.Common.Errors;
 using MyFinance.Application.UseCases.Users.Commands.ConfirmRegistration;
 using MyFinance.Application.UseCases.Users.Commands.MagicSignIn;
 using MyFinance.Application.UseCases.Users.Commands.RegisterUser;
+using MyFinance.Application.UseCases.Users.Commands.ResendConfirmRegistrationEmail;
 using MyFinance.Application.UseCases.Users.Commands.ResetPassword;
 using MyFinance.Application.UseCases.Users.Commands.SendMagicSignInEmail;
 using MyFinance.Application.UseCases.Users.Commands.SendResetPasswordEmail;
@@ -22,6 +23,9 @@ public static class UserMapper
                 request.Email,
                 request.PlainTextPassword,
                 request.PlainTextPasswordConfirmation);
+
+        public static ResendConfirmRegistrationEmailCommand Map(ResendConfirmRegistrationEmailRequest request)
+            => new(request.Email);
 
         public static ConfirmRegistrationCommand Map(ConfirmRegistrationRequest request)
             => new(request.UrlSafeConfirmRegistrationToken);

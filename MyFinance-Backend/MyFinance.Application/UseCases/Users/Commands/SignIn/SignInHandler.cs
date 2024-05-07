@@ -11,11 +11,13 @@ internal sealed class SignInHandler(
     ISignInManager signInManager,
     IPasswordManager passwordManager,
     ILockoutManager lockoutManager,
+    IEmailSender emailSender,
     IUserRepository userRepository) : ICommandHandler<SignInCommand, SignInResponse>
 {
     private readonly ISignInManager _signInManager = signInManager;
     private readonly IPasswordManager _passwordManager = passwordManager;
     private readonly ILockoutManager _lockoutManager = lockoutManager;
+    private readonly IEmailSender _emailSender = emailSender;
     private readonly IUserRepository _userRepository = userRepository;
 
     public async Task<Result<SignInResponse>> Handle(SignInCommand command, CancellationToken cancellationToken)
@@ -41,6 +43,7 @@ internal sealed class SignInHandler(
             }
 
             await _signInManager.SignInAsync(user);
+
             return Result.Ok(new SignInResponse(_passwordManager.ShouldUpdatePassword(user)));
         }
 
@@ -49,13 +52,26 @@ internal sealed class SignInHandler(
         if (_lockoutManager.ShouldLockout(user.FailedSignInAttempts))
         {
             var lockoutEndOnUtc = _lockoutManager.GetLockoutEndOnUtc(user.FailedSignInAttempts);
+            var lockoutDuration = _lockoutManager.GetLockoutDurationFor(user.FailedSignInAttempts);
+            
+            await _emailSender.SendUserLockedEmailAsync(
+                user.Email, 
+                lockoutDuration, 
+                lockoutEndOnUtc, 
+                cancellationToken);
+
             user.SetLockoutEnd(lockoutEndOnUtc);
+            _userRepository.Update(user);
+
             return HandleLockout(lockoutEndOnUtc);
         }
 
         if (_lockoutManager.WillLockoutOnNextAttempt(user.FailedSignInAttempts))
         {
-            var nextLockoutDuration = _lockoutManager.GetNextLockoutDuration(user.FailedSignInAttempts);
+            var nextLockoutDuration = _lockoutManager.GetNextLockoutDurationFor(user.FailedSignInAttempts);
+            
+            _userRepository.Update(user);
+
             return HandleNextLockout(nextLockoutDuration);
         }
 

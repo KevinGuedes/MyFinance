@@ -12,39 +12,55 @@ internal sealed class EmailSender : IEmailSender
             3,
             retryAttempt => TimeSpan.FromSeconds(Math.Pow(2, retryAttempt)));
 
-    public async Task<(bool HasEmailBeenSent, Exception? Exception)> SendConfirmRegistrationEmailAsync(
+    public Task<(bool HasEmailBeenSent, Exception? Exception)> SendConfirmRegistrationEmailAsync(
         string email,
-        string urlSafeConfirmRegistrationToken)
+        string urlSafeConfirmRegistrationToken,
+        CancellationToken cancellationToken)
+        => SendEmailAsync(email, urlSafeConfirmRegistrationToken, cancellationToken);
+
+    public Task<(bool HasEmailBeenSent, Exception? Exception)> SendMagicSignInEmailAsync(
+        string email,
+        string urlSafeMagicSignInToken,
+        CancellationToken cancellationToken)
+        => SendEmailAsync(email, urlSafeMagicSignInToken, cancellationToken);
+
+    public Task<(bool HasEmailBeenSent, Exception? Exception)> SendResetPasswordEmailAsync(
+        string email,
+        string urlSafeResetPasswordToken,
+        CancellationToken cancellationToken)
+        => SendEmailAsync(email, urlSafeResetPasswordToken, cancellationToken);
+
+    public Task<(bool HasEmailBeenSent, Exception? Exception)> SendUserLockedEmailAsync(
+        string email,
+        TimeSpan lockoutDuration,
+        DateTime lockoutEndOnUtc,
+        CancellationToken cancellationToken)
+        => SendEmailAsync(email, cancellationToken);
+
+    private async Task<(bool HasEmailBeenSent, Exception? Exception)> SendEmailAsync(
+        string email,
+        CancellationToken cancellationToken)
     {
-        var result = await _sendEmailRetryPolicy.ExecuteAndCaptureAsync(()
-            => SendEmailAsync(email, urlSafeConfirmRegistrationToken));
+
+        var result = await _sendEmailRetryPolicy.ExecuteAndCaptureAsync((cancellationToken) =>
+        {
+            return Task.CompletedTask;
+        }, cancellationToken);
 
         return ProcessResult(result);
     }
 
-    public async Task<(bool HasEmailBeenSent, Exception? Exception)> SendMagicSignInEmailAsync(
+    private async Task<(bool HasEmailBeenSent, Exception? Exception)> SendEmailAsync(
         string email,
-        string urlSafeMagicSignInToken)
+        string urlSafeToken,
+        CancellationToken cancellationToken)
     {
-        var result = await _sendEmailRetryPolicy.ExecuteAndCaptureAsync(()
-            => SendEmailAsync(email, urlSafeMagicSignInToken));
+        var result = await _sendEmailRetryPolicy.ExecuteAndCaptureAsync((cancellationToken) =>
+        {
+            return Task.CompletedTask;
+        }, cancellationToken);
 
         return ProcessResult(result);
-    }
-
-    public async Task<(bool HasEmailBeenSent, Exception? Exception)> SendResetPasswordEmailAsync(
-        string email,
-        string urlSafeResetPasswordToken)
-    {
-        var result = await _sendEmailRetryPolicy.ExecuteAndCaptureAsync(()
-            => SendEmailAsync(email, urlSafeResetPasswordToken));
-
-        return ProcessResult(result);
-    }
-
-    private static Task SendEmailAsync(string email, string urlSafeToken)
-    {
-        return Task.CompletedTask;
     }
 
     private static (bool HasEmailBeenSent, Exception? Exception) ProcessResult(PolicyResult result)
