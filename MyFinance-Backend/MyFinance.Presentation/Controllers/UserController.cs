@@ -154,7 +154,7 @@ public class UserController(IMediator mediator) : ApiController(mediator)
         var problemDetails = ProblemDetailsFactory.CreateProblemDetails(
             HttpContext,
             statusCode: statusCode,
-            detail: "Service(s) currently unhealthy",
+            detail: "Failed sign in attempts threshold reached",
             instance: HttpContext.Request.Path);
 
         problemDetails.Type = "https://datatracker.ietf.org/doc/html/rfc6585#section-4";
