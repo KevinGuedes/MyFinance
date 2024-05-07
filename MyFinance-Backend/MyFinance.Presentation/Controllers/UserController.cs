@@ -22,7 +22,7 @@ public class UserController(IMediator mediator) : ApiController(mediator)
     [SwaggerResponse(StatusCodes.Status400BadRequest, "Invalid payload", typeof(ValidationProblemResponse))]
     public async Task<IActionResult> RegisterUserAsync(
         [FromBody] [SwaggerRequestBody("User's payload", Required = true)]
-        RegisterUserRequest request,
+        SignUpRequest request,
         CancellationToken cancellationToken)
         => ProcessResult(await _mediator.Send(UserMapper.RTC.Map(request), cancellationToken));
 
@@ -36,6 +36,17 @@ public class UserController(IMediator mediator) : ApiController(mediator)
         ConfirmRegistrationRequest request,
         CancellationToken cancellationToken)
         => ProcessResult(await _mediator.Send(UserMapper.RTC.Map(request), cancellationToken));
+
+    [AllowAnonymous]
+    [HttpPost("ResendConfirmRegistrationEmail")]
+    [SwaggerOperation(Summary = "Resends the User's confirm registration email")]
+    [SwaggerResponse(StatusCodes.Status204NoContent, "Confirm registration email successfully sent")]
+    [SwaggerResponse(StatusCodes.Status400BadRequest, "Invalid payload", typeof(ValidationProblemResponse))]
+    public async Task<IActionResult> ResendConfirmRegistrationEmailAsync(
+       [FromBody][SwaggerRequestBody("Resend confirm registration email payload", Required = true)]
+       ResendConfirmRegistrationEmailRequest request,
+       CancellationToken cancellationToken)
+       => ProcessResult(await _mediator.Send(UserMapper.RTC.Map(request), cancellationToken));
 
     [AllowAnonymous]
     [HttpPost("SignIn")]

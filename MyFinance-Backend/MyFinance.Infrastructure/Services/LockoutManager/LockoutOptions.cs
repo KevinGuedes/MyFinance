@@ -9,13 +9,13 @@ internal sealed class LockoutOptions : IValidatableOptions
     public IReadOnlyDictionary<int, TimeSpan> LockoutThresholds { get; set; }
         = new Dictionary<int, TimeSpan>
             {
-                { 3, TimeSpan.FromMinutes(5) },
-                { 6, TimeSpan.FromMinutes(10) },
-                { 9, TimeSpan.FromHours(1) },
-                { 12, TimeSpan.FromDays(1) },
+                { 4, TimeSpan.FromMinutes(5) },
+                { 7, TimeSpan.FromMinutes(10) },
+                { 10, TimeSpan.FromHours(1) },
+                { 13, TimeSpan.FromDays(1) },
             }.AsReadOnly();
 
     public int UpperFailedAttemptsThreshold => LockoutThresholds.Keys.Max();
-    public TimeSpan UpperLockoutDurationThreshold => LockoutThresholds[UpperFailedAttemptsThreshold];
     public int[] FailedAttemptsThresholds => LockoutThresholds.Keys.ToArray();
+    public TimeSpan UpperLockoutDurationThreshold => LockoutThresholds[UpperFailedAttemptsThreshold];
 }

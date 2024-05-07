@@ -20,11 +20,9 @@ internal sealed class ValidationBehavior<TRequest, TResponse>(
     public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next,
         CancellationToken cancellationToken)
     {
-        var requestName = request.GetType().Name;
-
         if (_validators.Count() is 0)
         {
-            _logger.LogWarning("No validators found for {RequestName}", requestName);
+            _logger.LogWarning("No validators found for {RequestName}", request.GetType().Name);
             return await next();
         }
 
@@ -41,9 +39,9 @@ internal sealed class ValidationBehavior<TRequest, TResponse>(
         if (validationErrors.Count is 0)
             return await next();
 
-        var invalidRequestResponse = new TResponse();
-        var invalidRequestErrorResult = Result.Fail(new BadRequestError(validationErrors));
-        invalidRequestResponse.Reasons.AddRange(invalidRequestErrorResult.Reasons);
-        return invalidRequestResponse;
+        var badRequestResponse = new TResponse();
+        var badRequestErrorResult = Result.Fail(new BadRequestError(validationErrors));
+        badRequestResponse.Reasons.AddRange(badRequestErrorResult.Reasons);
+        return badRequestResponse;
     }
 }

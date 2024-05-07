@@ -26,7 +26,11 @@ internal sealed class SendResetPasswordEmailHandler(
             return Result.Ok();
 
         var urlSafeResetPasswordToken = _tokenProvider.CreateUrlSafeResetPasswordToken(user.Id);
-        await _emailSender.SendResetPasswordEmailAsync(user.Email, urlSafeResetPasswordToken);
+
+        await _emailSender.SendResetPasswordEmailAsync(
+            user.Email,
+            urlSafeResetPasswordToken,
+            cancellationToken);
 
         return Result.Ok();
     }

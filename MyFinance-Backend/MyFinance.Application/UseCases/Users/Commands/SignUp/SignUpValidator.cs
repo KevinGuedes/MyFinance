@@ -2,13 +2,13 @@
 using MyFinance.Application.Abstractions.Persistence.Repositories;
 using MyFinance.Application.Common.CustomValidationRules;
 
-namespace MyFinance.Application.UseCases.Users.Commands.RegisterUser;
+namespace MyFinance.Application.UseCases.Users.Commands.SignUp;
 
-public sealed class RegisterUserValidator : AbstractValidator<RegisterUserCommand>
+public sealed class SignUpValidator : AbstractValidator<SignUpCommand>
 {
     private readonly IUserRepository _userRepository;
 
-    public RegisterUserValidator(IUserRepository userRepository)
+    public SignUpValidator(IUserRepository userRepository)
     {
         _userRepository = userRepository;
         ClassLevelCascadeMode = CascadeMode.Stop;

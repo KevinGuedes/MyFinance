@@ -28,6 +28,9 @@ internal sealed class ConfirmRegistrationHandler(
         if (user is null)
             return HandleInvalidConfirmRegistrationToken();
 
+        if (user.IsEmailVerified)
+            return Result.Ok();
+
         user.VerifyEmail();
         _userRepository.Update(user);
 
