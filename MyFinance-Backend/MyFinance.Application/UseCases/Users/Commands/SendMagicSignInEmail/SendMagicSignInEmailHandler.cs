@@ -26,9 +26,9 @@ internal sealed class SendMagicSignInEmailHandler(
             return Result.Ok();
 
         var urlSafeMagicSignInToken = _tokenProvider.CreateUrlSafeMagicSignInToken(user.Id);
-        
+
         await _emailSender.SendMagicSignInEmailAsync(
-            user.Email, 
+            user.Email,
             urlSafeMagicSignInToken,
             cancellationToken);
 

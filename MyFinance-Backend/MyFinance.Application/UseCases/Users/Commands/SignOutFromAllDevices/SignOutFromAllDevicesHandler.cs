@@ -8,7 +8,7 @@ namespace MyFinance.Application.UseCases.Users.Commands.SignOutFromAllDevices;
 
 internal sealed class SignOutFromAllDevicesHandler(
     ISignInManager signInManager,
-    IUserRepository userRepository) 
+    IUserRepository userRepository)
     : ICommandHandler<SignOutFromAllDevicesCommand>
 {
     private readonly ISignInManager _signInManager = signInManager;
@@ -24,7 +24,7 @@ internal sealed class SignOutFromAllDevicesHandler(
         await _signInManager.SignOutAsync();
 
         user.UpdateSecurityStamp();
-        _userRepository.Update(user);   
+        _userRepository.Update(user);
 
         return Result.Ok();
     }

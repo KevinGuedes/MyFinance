@@ -53,11 +53,11 @@ internal sealed class SignInHandler(
         {
             var lockoutEndOnUtc = _lockoutManager.GetLockoutEndOnUtc(user.FailedSignInAttempts);
             var lockoutDuration = _lockoutManager.GetLockoutDurationFor(user.FailedSignInAttempts);
-            
+
             await _emailSender.SendUserLockedEmailAsync(
-                user.Email, 
-                lockoutDuration, 
-                lockoutEndOnUtc, 
+                user.Email,
+                lockoutDuration,
+                lockoutEndOnUtc,
                 cancellationToken);
 
             user.SetLockoutEnd(lockoutEndOnUtc);
@@ -69,7 +69,7 @@ internal sealed class SignInHandler(
         if (_lockoutManager.WillLockoutOnNextAttempt(user.FailedSignInAttempts))
         {
             var nextLockoutDuration = _lockoutManager.GetNextLockoutDurationFor(user.FailedSignInAttempts);
-            
+
             _userRepository.Update(user);
 
             return HandleNextLockout(nextLockoutDuration);

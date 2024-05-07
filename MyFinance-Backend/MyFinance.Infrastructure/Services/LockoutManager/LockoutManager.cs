@@ -12,7 +12,7 @@ internal sealed class LockoutManager(IOptions<LockoutOptions> lockoutOptions) : 
 
     public bool ShouldLockout(int failedSignInAttempts)
         => HasLockoutFor(failedSignInAttempts);
- 
+
     public DateTime GetLockoutEndOnUtc(int failedSignInAttempts)
         => DateTime.UtcNow.Add(GetLockoutDurationFor(failedSignInAttempts));
 
@@ -24,7 +24,7 @@ internal sealed class LockoutManager(IOptions<LockoutOptions> lockoutOptions) : 
 
     public TimeSpan GetLockoutDurationFor(int failedSignInAttempts)
     {
-        if(!HasLockoutFor(failedSignInAttempts))
+        if (!HasLockoutFor(failedSignInAttempts))
             throw new InvalidOperationException("Lockout configuration not provided");
 
         if (failedSignInAttempts >= _lockoutOptions.UpperFailedAttemptsThreshold)

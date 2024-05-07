@@ -36,7 +36,7 @@ public class UserController(IMediator mediator) : ApiController(mediator)
         ConfirmRegistrationRequest request,
         CancellationToken cancellationToken)
         => ProcessResult(await _mediator.Send(UserMapper.RTC.Map(request), cancellationToken));
-    
+
     [AllowAnonymous]
     [HttpPost("ConfirmRegistration")]
     [SwaggerOperation(Summary = "Resends the User's confirm registration email")]

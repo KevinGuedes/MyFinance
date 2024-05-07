@@ -2,7 +2,6 @@
 using MyFinance.Application.Abstractions.Persistence.Repositories;
 using MyFinance.Application.Abstractions.RequestHandling.Commands;
 using MyFinance.Application.Abstractions.Services;
-using MyFinance.Application.Common.Errors;
 using MyFinance.Domain.Entities;
 
 namespace MyFinance.Application.UseCases.Users.Commands.RegisterUser;
