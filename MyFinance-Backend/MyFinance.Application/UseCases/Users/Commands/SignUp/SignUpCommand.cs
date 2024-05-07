@@ -1,8 +1,8 @@
 ﻿using MyFinance.Application.Abstractions.RequestHandling.Commands;
 
-namespace MyFinance.Application.UseCases.Users.Commands.RegisterUser;
+namespace MyFinance.Application.UseCases.Users.Commands.SignUp;
 
-public sealed record RegisterUserCommand(
+public sealed record SignUpCommand(
     string Name,
     string Email,
     string PlainTextPassword,

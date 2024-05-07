@@ -2,12 +2,12 @@
 using MyFinance.Application.Common.Errors;
 using MyFinance.Application.UseCases.Users.Commands.ConfirmRegistration;
 using MyFinance.Application.UseCases.Users.Commands.MagicSignIn;
-using MyFinance.Application.UseCases.Users.Commands.RegisterUser;
 using MyFinance.Application.UseCases.Users.Commands.ResendConfirmRegistrationEmail;
 using MyFinance.Application.UseCases.Users.Commands.ResetPassword;
 using MyFinance.Application.UseCases.Users.Commands.SendMagicSignInEmail;
 using MyFinance.Application.UseCases.Users.Commands.SendResetPasswordEmail;
 using MyFinance.Application.UseCases.Users.Commands.SignIn;
+using MyFinance.Application.UseCases.Users.Commands.SignUp;
 using MyFinance.Application.UseCases.Users.Commands.UpdatePassword;
 using MyFinance.Contracts.User.Requests;
 using MyFinance.Contracts.User.Responses;
@@ -18,7 +18,7 @@ public static class UserMapper
 {
     public static class RTC
     {
-        public static RegisterUserCommand Map(RegisterUserRequest request)
+        public static SignUpCommand Map(SignUpRequest request)
             => new(request.Name,
                 request.Email,
                 request.PlainTextPassword,
