@@ -1,4 +1,5 @@
 ﻿using FluentResults;
+using Humanizer;
 using MyFinance.Application.Abstractions.Persistence.Repositories;
 using MyFinance.Application.Abstractions.RequestHandling.Commands;
 using MyFinance.Application.Abstractions.Services;
@@ -87,8 +88,7 @@ internal sealed class SignInHandler(
         => Result.Fail(new UnauthorizedError(
             "Invalid credentials. " +
             "If you fail one more time you will be locked for " +
-            $"{nextLockoutDuration.Days} days {nextLockoutDuration.Hours} " +
-            $"hours and {nextLockoutDuration.Minutes} minutes"));
+            $"{nextLockoutDuration.Humanize()}"));
 
     private static Result HandleInvalidCredentials()
         => Result.Fail(new UnauthorizedError(
