@@ -10,5 +10,5 @@ public sealed class ValidationProblemResponse(ValidationProblemDetails validatio
     public string Detail { get; init; } = validationProblemDetails.Detail!;
     public string Instance { get; init; } = validationProblemDetails.Instance!;
     public IReadOnlyDictionary<string, string[]> Errors { get; init; }
-        = validationProblemDetails.Errors!.AsReadOnly();
+        = validationProblemDetails.Errors.AsReadOnly();
 }
