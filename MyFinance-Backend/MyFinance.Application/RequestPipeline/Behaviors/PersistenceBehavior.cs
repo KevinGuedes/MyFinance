@@ -5,7 +5,7 @@ using MyFinance.Application.Abstractions.RequestHandling.Commands;
 
 namespace MyFinance.Application.RequestPipeline.Behaviors;
 
-internal sealed class UnitOfWorkBehavior<TRequest, TResponse>(IUnitOfWork unitOfWork)
+internal sealed class PersistenceBehavior<TRequest, TResponse>(IUnitOfWork unitOfWork)
     : IPipelineBehavior<TRequest, TResponse>
     where TRequest : IBaseCommand
     where TResponse : ResultBase
@@ -14,19 +14,8 @@ internal sealed class UnitOfWorkBehavior<TRequest, TResponse>(IUnitOfWork unitOf
 
     public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
     {
-        await _unitOfWork.BeginTransactionAsync(cancellationToken);
-
-        try
-        {
-            var response = await next();
-            await _unitOfWork.SaveChangesAsync(cancellationToken);
-            await _unitOfWork.CommitTransactionAsync(cancellationToken);
-            return response;
-        }
-        catch
-        {
-            await _unitOfWork.RollbackTransactionAsync(cancellationToken);
-            throw;
-        }
+        var response = await next();
+        await _unitOfWork.SaveChangesAsync(cancellationToken);
+        return response;
     }
 }
