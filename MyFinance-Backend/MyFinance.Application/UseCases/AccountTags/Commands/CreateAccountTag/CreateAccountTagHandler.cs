@@ -12,12 +12,11 @@ internal sealed class CreateAccountTagHandler(IAccountTagRepository accountTagRe
 {
     private readonly IAccountTagRepository _accountTagRepository = accountTagRepository;
 
-    public Task<Result<AccountTagResponse>> Handle(CreateAccountTagCommand command, CancellationToken cancellationToken)
+    public async Task<Result<AccountTagResponse>> Handle(CreateAccountTagCommand command, CancellationToken cancellationToken)
     {
         var accountTag = new AccountTag(command.Tag, command.Description, command.CurrentUserId);
-        _accountTagRepository.Insert(accountTag);
+        await _accountTagRepository.InsertAsync(accountTag, cancellationToken);
 
-        var result = Result.Ok(AccountTagMapper.DTR.Map(accountTag));
-        return Task.FromResult(result);
+        return Result.Ok(AccountTagMapper.DTR.Map(accountTag));
     }
 }

@@ -30,7 +30,7 @@ public interface ITransferRepository
         int month,
         CancellationToken cancellationToken);
     Task<Transfer?> GetWithBusinessUnitByIdAsync(Guid id, CancellationToken cancellationToken);
+    Task InsertAsync(Transfer transfer, CancellationToken cancellationToken);
     void Update(Transfer transfer);
-    void Insert(Transfer transfer);
     void Delete(Transfer transfer);
 }

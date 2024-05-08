@@ -12,12 +12,11 @@ internal sealed class CreateCategoryHandler(ICategoryRepository categoryReposito
 {
     private readonly ICategoryRepository _categoryRepository = categoryRepository;
 
-    public Task<Result<CategoryResponse>> Handle(CreateCategoryCommand command, CancellationToken cancellationToken)
+    public async Task<Result<CategoryResponse>> Handle(CreateCategoryCommand command, CancellationToken cancellationToken)
     {
         var category = new Category(command.Name, command.CurrentUserId);
-        _categoryRepository.Insert(category);
+        await _categoryRepository.InsertAsync(category, cancellationToken);
 
-        var result = Result.Ok(CategoryMapper.DTR.Map(category));
-        return Task.FromResult(result);
+        return Result.Ok(CategoryMapper.DTR.Map(category));
     }
 }

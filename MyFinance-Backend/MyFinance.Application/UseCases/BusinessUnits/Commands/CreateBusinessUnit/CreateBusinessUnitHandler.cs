@@ -12,12 +12,11 @@ internal sealed class CreateBusinessUnitHandler(IBusinessUnitRepository business
 {
     private readonly IBusinessUnitRepository _businessUnitRepository = businessUnitRepository;
 
-    public Task<Result<BusinessUnitResponse>> Handle(CreateBusinessUnitCommand command,
-        CancellationToken cancellationToken)
+    public async Task<Result<BusinessUnitResponse>> Handle(CreateBusinessUnitCommand command, CancellationToken cancellationToken)
     {
         var businessUnit = new BusinessUnit(command.Name, command.Description, command.CurrentUserId);
-        _businessUnitRepository.Insert(businessUnit);
+        await _businessUnitRepository.InsertAsync(businessUnit, cancellationToken);
 
-        return Task.FromResult(Result.Ok(BusinessUnitMapper.DTR.Map(businessUnit)));
+        return Result.Ok(BusinessUnitMapper.DTR.Map(businessUnit));
     }
 }
