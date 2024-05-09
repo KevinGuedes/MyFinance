@@ -2,5 +2,5 @@
 
 public interface IUserOwnedEntity
 {
-    public Guid UserId { get; }
+    public Guid UserId { get; init; }
 }

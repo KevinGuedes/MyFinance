@@ -9,23 +9,31 @@ namespace MyFinance.Application.IoC;
 public static class ApplicationDependencyInjection
 {
     public static IServiceCollection AddApplication(this IServiceCollection services)
-        => services
-            .AddValidators()
-            .AddMediatR();
+    {
+        var applicationLayerAssembly = Assembly.GetExecutingAssembly();
 
-    public static IServiceCollection AddValidators(this IServiceCollection services)
+        return services
+            .AddValidators(applicationLayerAssembly)
+            .AddMediatR(applicationLayerAssembly);
+    }
+
+    public static IServiceCollection AddValidators(
+        this IServiceCollection services, 
+        Assembly applicationLayerAssembly)
         => services
             .AddFluentValidationClientsideAdapters()
-            .AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
+            .AddValidatorsFromAssembly(applicationLayerAssembly);
 
-    private static IServiceCollection AddMediatR(this IServiceCollection services)
+    private static IServiceCollection AddMediatR(
+        this IServiceCollection services, 
+        Assembly applicationLayerAssembly)
         => services
             .AddMediatR(cfg =>
                 cfg
-                    .RegisterServicesFromAssembly(Assembly.GetExecutingAssembly())
+                    .RegisterServicesFromAssembly(applicationLayerAssembly)
                     .AddOpenBehavior(typeof(TimingBehavior<,>))
                     .AddOpenBehavior(typeof(UserProviderBehavior<,>))
                     .AddOpenBehavior(typeof(ValidationBehavior<,>))
-                    .AddOpenBehavior(typeof(UnitOfWorkBehavior<,>))
-            );
+                    .AddOpenBehavior(typeof(TransactionManagementBehavior<,>))
+                    .AddOpenBehavior(typeof(PersistenceBehavior<,>)));
 }

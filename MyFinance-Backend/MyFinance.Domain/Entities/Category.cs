@@ -29,7 +29,6 @@ public sealed class Category : Entity, IUserOwnedEntity, IArchivableEntity
     public void Update(string name)
     {
         SetUpdateOnToUtcNow();
-
         Name = name;
     }
 

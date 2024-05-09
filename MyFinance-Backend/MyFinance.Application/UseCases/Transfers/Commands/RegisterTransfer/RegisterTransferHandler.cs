@@ -59,8 +59,8 @@ internal sealed class RegisterTransferHandler(
 
         businessUnit.RegisterTransferValue(transfer.Value, transfer.Type);
 
+        await _transferRepository.InsertAsync(transfer, cancellationToken);
         _businessUnitRepository.Update(businessUnit);
-        _transferRepository.Insert(transfer);
 
         return Result.Ok(TransferMapper.DTR.Map(transfer));
     }

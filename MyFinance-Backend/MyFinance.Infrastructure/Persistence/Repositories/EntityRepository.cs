@@ -18,8 +18,8 @@ internal abstract class EntityRepository<TEntity>(MyFinanceDbContext myFinanceDb
     public Task<bool> ExistsByIdAsync(Guid id, CancellationToken cancellationToken)
         => _myFinanceDbContext.Set<TEntity>().AnyAsync(entity => entity.Id == id, cancellationToken);
 
-    public void Insert(TEntity entity)
-        => _myFinanceDbContext.Set<TEntity>().Add(entity);
+    public async Task InsertAsync(TEntity entity, CancellationToken cancellationToken)
+        => await _myFinanceDbContext.Set<TEntity>().AddAsync(entity, cancellationToken);
 
     public void Update(TEntity entity)
         => _myFinanceDbContext.Set<TEntity>().Update(entity);

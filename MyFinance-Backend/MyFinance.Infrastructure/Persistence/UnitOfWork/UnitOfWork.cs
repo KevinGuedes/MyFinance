@@ -21,7 +21,4 @@ internal sealed class UnitOfWork(MyFinanceDbContext myFinanceDbContext) : IUnitO
 
     public Task SaveChangesAsync(CancellationToken cancellationToken)
         => _myFinanceDbContext.SaveChangesAsync(cancellationToken);
-
-    public bool HasChanges()
-        => _myFinanceDbContext.ChangeTracker.HasChanges();
 }

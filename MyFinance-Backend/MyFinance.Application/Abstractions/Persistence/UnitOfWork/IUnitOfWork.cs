@@ -6,5 +6,4 @@ public interface IUnitOfWork
     Task CommitTransactionAsync(CancellationToken cancellationToken);
     Task RollbackTransactionAsync(CancellationToken cancellationToken);
     Task SaveChangesAsync(CancellationToken cancellationToken);
-    bool HasChanges();
 }
