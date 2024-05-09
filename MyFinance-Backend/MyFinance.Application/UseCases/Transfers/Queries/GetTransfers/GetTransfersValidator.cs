@@ -7,7 +7,7 @@ public sealed class GetTransfersValidator : AbstractValidator<GetTransfersQuery>
 {
     public GetTransfersValidator()
     {
-        RuleFor(query => query.BusinessUnitId).MustBeAValidGuid();
+        RuleFor(query => query.ManagementUnitId).MustBeAValidGuid();
         RuleFor(query => query.PageNumber).MustBeAValidPageNumber();
         RuleFor(query => query.PageSize).MustBeLessThan100();
 

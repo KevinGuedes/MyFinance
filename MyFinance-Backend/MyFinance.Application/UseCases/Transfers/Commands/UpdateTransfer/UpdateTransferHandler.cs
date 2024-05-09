@@ -9,19 +9,19 @@ namespace MyFinance.Application.UseCases.Transfers.Commands.UpdateTransfer;
 
 internal sealed class UpdateTransferHandler(
     ITransferRepository transferRepository,
-    IBusinessUnitRepository businessUnitRepository,
+    IManagementUnitRepository managementUnitRepository,
     IAccountTagRepository accountTagRepository,
     ICategoryRepository categoryRepository) : ICommandHandler<UpdateTransferCommand, TransferResponse>
 {
     private readonly ITransferRepository _transferRepository = transferRepository;
-    private readonly IBusinessUnitRepository _businessUnitRepository = businessUnitRepository;
+    private readonly IManagementUnitRepository _managementUnitRepository = managementUnitRepository;
     private readonly IAccountTagRepository _accountTagRepository = accountTagRepository;
     private readonly ICategoryRepository _categoryRepository = categoryRepository;
 
     public async Task<Result<TransferResponse>> Handle(UpdateTransferCommand command,
         CancellationToken cancellationToken)
     {
-        var transfer = await _transferRepository.GetWithBusinessUnitByIdAsync(command.Id, cancellationToken);
+        var transfer = await _transferRepository.GetWithManagementUnitByIdAsync(command.Id, cancellationToken);
 
         if (transfer is null)
         {
@@ -30,8 +30,8 @@ internal sealed class UpdateTransferHandler(
             return Result.Fail(entityNotFoundError);
         }
 
-        var businessUnit = transfer.BusinessUnit;
-        businessUnit.CancelTransferValue(transfer.Value, transfer.Type);
+        var managementUnit = transfer.ManagementUnit;
+        managementUnit.CancelTransferValue(transfer.Value, transfer.Type);
 
         var hasAccountTagChanged = transfer.AccountTagId != command.AccountTagId;
         if (hasAccountTagChanged)
@@ -71,10 +71,10 @@ internal sealed class UpdateTransferHandler(
             command.SettlementDate,
             command.Type);
 
-        businessUnit.RegisterTransferValue(transfer.Value, transfer.Type);
+        managementUnit.RegisterTransferValue(transfer.Value, transfer.Type);
 
         _transferRepository.Update(transfer);
-        _businessUnitRepository.Update(businessUnit);
+        _managementUnitRepository.Update(managementUnit);
 
         return Result.Ok(TransferMapper.DTR.Map(transfer));
     }

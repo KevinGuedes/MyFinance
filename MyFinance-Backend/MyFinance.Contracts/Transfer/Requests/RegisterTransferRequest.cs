@@ -3,7 +3,7 @@
 namespace MyFinance.Contracts.Transfer.Requests;
 
 public sealed record RegisterTransferRequest(
-    Guid BusinessUnitId,
+    Guid ManagementUnitId,
     Guid AccountTagId,
     Guid CategoryId,
     decimal Value,

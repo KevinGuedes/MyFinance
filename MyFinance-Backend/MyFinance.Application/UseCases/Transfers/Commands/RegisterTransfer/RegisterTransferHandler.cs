@@ -9,12 +9,12 @@ using MyFinance.Domain.Entities;
 namespace MyFinance.Application.UseCases.Transfers.Commands.RegisterTransfer;
 
 internal sealed class RegisterTransferHandler(
-    IBusinessUnitRepository businessUnitRepository,
+    IManagementUnitRepository managementUnitRepository,
     ITransferRepository transferRepository,
     IAccountTagRepository accountTagRepository,
     ICategoryRepository categoryRepository) : ICommandHandler<RegisterTransferCommand, TransferResponse>
 {
-    private readonly IBusinessUnitRepository _businessUnitRepository = businessUnitRepository;
+    private readonly IManagementUnitRepository _managementUnitRepository = managementUnitRepository;
     private readonly ITransferRepository _transferRepository = transferRepository;
     private readonly IAccountTagRepository _accountTagRepository = accountTagRepository;
     private readonly ICategoryRepository _categoryRepository = categoryRepository;
@@ -22,10 +22,10 @@ internal sealed class RegisterTransferHandler(
     public async Task<Result<TransferResponse>> Handle(RegisterTransferCommand command,
         CancellationToken cancellationToken)
     {
-        var businessUnit = await _businessUnitRepository.GetByIdAsync(command.BusinessUnitId, cancellationToken);
-        if (businessUnit is null)
+        var managementUnit = await _managementUnitRepository.GetByIdAsync(command.ManagementUnitId, cancellationToken);
+        if (managementUnit is null)
         {
-            var errorMessage = $"Business Unit with Id {command.BusinessUnitId} not found";
+            var errorMessage = $"Management Unit with Id {command.ManagementUnitId} not found";
             var entityNotFoundError = new EntityNotFoundError(errorMessage);
             return Result.Fail(entityNotFoundError);
         }
@@ -53,14 +53,14 @@ internal sealed class RegisterTransferHandler(
             command.SettlementDate,
             command.Type,
             command.CurrentUserId,
-            businessUnit,
+            managementUnit,
             accountTag,
             category);
 
-        businessUnit.RegisterTransferValue(transfer.Value, transfer.Type);
+        managementUnit.RegisterTransferValue(transfer.Value, transfer.Type);
 
         await _transferRepository.InsertAsync(transfer, cancellationToken);
-        _businessUnitRepository.Update(businessUnit);
+        _managementUnitRepository.Update(managementUnit);
 
         return Result.Ok(TransferMapper.DTR.Map(transfer));
     }

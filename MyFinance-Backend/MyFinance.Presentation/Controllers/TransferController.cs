@@ -21,8 +21,8 @@ public class TransferController(IMediator mediator) : ApiController(mediator)
     [SwaggerResponse(StatusCodes.Status200OK, "List of Transfers", typeof(Paginated<TransferGroupResponse>))]
     [SwaggerResponse(StatusCodes.Status400BadRequest, "Invalid query parameters", typeof(ValidationProblemResponse))]
     public async Task<IActionResult> GetTransfersAsync(
-        [FromQuery][SwaggerParameter("Business Unit Id", Required = true)]
-        Guid businessUnitId,
+        [FromQuery][SwaggerParameter("Management Unit Id", Required = true)]
+        Guid managementUnitId,
         [FromQuery][SwaggerParameter("Start date")]
         DateOnly startDate,
         [FromQuery][SwaggerParameter("End date")]
@@ -38,7 +38,7 @@ public class TransferController(IMediator mediator) : ApiController(mediator)
         CancellationToken cancellationToken)
     {
         var query = new GetTransfersQuery(
-            businessUnitId,
+            managementUnitId,
             startDate,
             endDate,
             categoryId,
@@ -54,8 +54,8 @@ public class TransferController(IMediator mediator) : ApiController(mediator)
     [SwaggerResponse(StatusCodes.Status200OK, "Balance data", typeof(PeriodBalanceDataResponse))]
     [SwaggerResponse(StatusCodes.Status400BadRequest, "Invalid query parameters", typeof(ValidationProblemResponse))]
     public async Task<IActionResult> GetPeriodBalanceAsync(
-        [FromQuery][SwaggerParameter("Business Unit Id", Required = true)]
-        Guid businessUnitId,
+        [FromQuery][SwaggerParameter("Management Unit Id", Required = true)]
+        Guid managementUnitId,
         [FromQuery][SwaggerParameter("Start date")]
         DateOnly startDate,
         [FromQuery][SwaggerParameter("End date")]
@@ -67,7 +67,7 @@ public class TransferController(IMediator mediator) : ApiController(mediator)
         CancellationToken cancellationToken)
     {
         var query = new GetBalanceDataFromPeriodQuery(
-            businessUnitId,
+            managementUnitId,
             startDate,
             endDate,
             categoryId,
@@ -81,13 +81,13 @@ public class TransferController(IMediator mediator) : ApiController(mediator)
     [SwaggerResponse(StatusCodes.Status200OK, "Annual balance data", typeof(DiscriminatedAnnualBalanceDataResponse))]
     [SwaggerResponse(StatusCodes.Status400BadRequest, "Invalid query parameters", typeof(ValidationProblemResponse))]
     public async Task<IActionResult> GetDiscriminatedAnnualBalanceAsync(
-        [FromQuery][SwaggerParameter("Business Unit Id", Required = true)]
-        Guid businessUnitId,
+        [FromQuery][SwaggerParameter("Management Unit Id", Required = true)]
+        Guid managementUnitId,
         [FromQuery][SwaggerParameter("Year", Required = true)]
         int year,
         CancellationToken cancellationToken)
     {
-        var query = new GetDiscriminatedAnnualBalanceDataQuery(businessUnitId, year);
+        var query = new GetDiscriminatedAnnualBalanceDataQuery(managementUnitId, year);
         return ProcessResult(await _mediator.Send(query, cancellationToken));
     }
 
@@ -95,7 +95,7 @@ public class TransferController(IMediator mediator) : ApiController(mediator)
     [SwaggerOperation(Summary = "Registers a new Transfer")]
     [SwaggerResponse(StatusCodes.Status201Created, "Transfer registered", typeof(TransferResponse))]
     [SwaggerResponse(StatusCodes.Status400BadRequest, "Invalid payload", typeof(ValidationProblemResponse))]
-    [SwaggerResponse(StatusCodes.Status404NotFound, "Business Unit not found", typeof(ProblemResponse))]
+    [SwaggerResponse(StatusCodes.Status404NotFound, "Management Unit not found", typeof(ProblemResponse))]
     public async Task<IActionResult> RegisterTransfersAsync(
         [FromBody] [SwaggerRequestBody("Transfers' payload", Required = true)]
         RegisterTransferRequest request,

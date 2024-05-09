@@ -7,7 +7,7 @@ namespace MyFinance.Application.RequestPipeline.Behaviors;
 
 internal sealed class PersistenceBehavior<TRequest, TResponse>(IUnitOfWork unitOfWork)
     : IPipelineBehavior<TRequest, TResponse>
-    where TRequest : IAutomaticallyPersisted
+    where TRequest : IBaseCommand
     where TResponse : ResultBase
 {
     private readonly IUnitOfWork _unitOfWork = unitOfWork;

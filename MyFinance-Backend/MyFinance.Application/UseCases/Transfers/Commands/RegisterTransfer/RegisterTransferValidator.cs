@@ -7,7 +7,7 @@ public sealed class RegisterTransferValidator : AbstractValidator<RegisterTransf
 {
     public RegisterTransferValidator()
     {
-        RuleFor(command => command.BusinessUnitId).MustBeAValidGuid();
+        RuleFor(command => command.ManagementUnitId).MustBeAValidGuid();
         RuleFor(command => command.AccountTagId).MustBeAValidGuid();
         RuleFor(command => command.CategoryId).MustBeAValidGuid();
 

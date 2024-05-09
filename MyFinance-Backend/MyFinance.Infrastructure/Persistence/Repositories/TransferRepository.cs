@@ -9,24 +9,24 @@ namespace MyFinance.Infrastructure.Persistence.Repositories;
 internal sealed class TransferRepository(MyFinanceDbContext myFinanceDbContext)
     : EntityRepository<Transfer>(myFinanceDbContext), ITransferRepository
 {
-    public async Task<IEnumerable<Transfer>> GetWithSummaryDataAsync(Guid businessUnitId, int year, int month, CancellationToken cancellationToken)
+    public async Task<IEnumerable<Transfer>> GetWithSummaryDataAsync(Guid managementUnitId, int year, int month, CancellationToken cancellationToken)
         => await _myFinanceDbContext.Transfers
             .AsNoTracking()
             .Where(
                 transfer => transfer.SettlementDate.Year == year &&
                 transfer.SettlementDate.Month == month &&
-                transfer.BusinessUnitId == businessUnitId)
+                transfer.ManagementUnitId == managementUnitId)
             .Include(transfer => transfer.Category)
             .Include(transfer => transfer.AccountTag)
             .ToListAsync(cancellationToken);
 
-    public async Task<Transfer?> GetWithBusinessUnitByIdAsync(Guid id, CancellationToken cancellationToken)
+    public async Task<Transfer?> GetWithManagementUnitByIdAsync(Guid id, CancellationToken cancellationToken)
         => await _myFinanceDbContext.Transfers
-            .Include(transfer => transfer.BusinessUnit)
+            .Include(transfer => transfer.ManagementUnit)
             .FirstOrDefaultAsync(transfer => transfer.Id == id, cancellationToken);
 
     public async Task<(decimal Income, decimal Outcome)> GetBalanceDataFromPeriodAsync(
-        Guid businessUnitId,
+        Guid managementUnitId,
         DateOnly? startDate,
         DateOnly? endDate,
         Guid? categoryId,
@@ -34,7 +34,7 @@ internal sealed class TransferRepository(MyFinanceDbContext myFinanceDbContext)
         CancellationToken cancellationToken)
     {
         var transfers = GetByParams(
-            businessUnitId,
+            managementUnitId,
             startDate,
             endDate,
             categoryId,
@@ -65,7 +65,7 @@ internal sealed class TransferRepository(MyFinanceDbContext myFinanceDbContext)
     }
 
     public async Task<(long TotalCount, IEnumerable<Transfer> Transfers)> GetTransfersByParamsAsync(
-        Guid businessUnitId,
+        Guid managementUnitId,
         DateOnly? startDate,
         DateOnly? endDate,
         Guid? categoryId,
@@ -75,7 +75,7 @@ internal sealed class TransferRepository(MyFinanceDbContext myFinanceDbContext)
         CancellationToken cancellationToken)
     {
         var transfers = GetByParams(
-            businessUnitId,
+            managementUnitId,
             startDate,
             endDate,
             categoryId,
@@ -92,7 +92,7 @@ internal sealed class TransferRepository(MyFinanceDbContext myFinanceDbContext)
     }
 
     private IQueryable<Transfer> GetByParams(
-        Guid businessUnitId,
+        Guid managementUnitId,
         DateOnly? startDate,
         DateOnly? endDate,
         Guid? categoryId,
@@ -100,7 +100,7 @@ internal sealed class TransferRepository(MyFinanceDbContext myFinanceDbContext)
     {
         var transfers = _myFinanceDbContext.Transfers
             .AsNoTracking()
-            .Where(transfer => transfer.BusinessUnitId == businessUnitId);
+            .Where(transfer => transfer.ManagementUnitId == managementUnitId);
 
         if (startDate.HasValue && startDate.Value != default)
         {
@@ -124,20 +124,21 @@ internal sealed class TransferRepository(MyFinanceDbContext myFinanceDbContext)
     }
 
     public async Task<IEnumerable<(int Month, decimal Income, decimal Outcome)>> GetDiscriminatedAnnualBalanceDataAsync(
-        Guid businessUnitId,
+        Guid managementUnitId,
         int year,
         CancellationToken cancellationToken)
     {
         var result = await _myFinanceDbContext.Transfers
             .AsNoTracking()
-            .Where(transfer => transfer.SettlementDate.Year == year && transfer.BusinessUnitId == businessUnitId)
+            .Where(
+                transfer => transfer.SettlementDate.Year == year &&
+                transfer.ManagementUnitId == managementUnitId)
             .GroupBy(transfer => transfer.SettlementDate.Month)
             .Select(transferGroup => new Tuple<int, decimal, decimal>
             (
                 transferGroup.Key,
                 transferGroup.Sum(transfer => transfer.Type == TransferType.Profit ? transfer.Value : 0),
-                transferGroup.Sum(transfer => transfer.Type == TransferType.Expense ? transfer.Value : 0)
-            ))
+                transferGroup.Sum(transfer => transfer.Type == TransferType.Expense ? transfer.Value : 0)))
             .ToListAsync(cancellationToken);
 
         return result.Select(unnamedMonthlyBalanceData => (

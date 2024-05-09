@@ -15,7 +15,7 @@ internal sealed class GetTransfersHandler(ITransferRepository transferRepository
     public async Task<Result<Paginated<TransferGroupResponse>>> Handle(GetTransfersQuery query, CancellationToken cancellationToken)
     {
         var transfersData = await _transferRepository.GetTransfersByParamsAsync(
-            query.BusinessUnitId,
+            query.ManagementUnitId,
             query.StartDate,
             query.EndDate,
             query.CategoryId,

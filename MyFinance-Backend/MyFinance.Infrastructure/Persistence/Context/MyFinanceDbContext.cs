@@ -12,7 +12,7 @@ internal sealed class MyFinanceDbContext(
 {
     private readonly ICurrentUserProvider _currentUserProvider = currentUserProvider;
 
-    public DbSet<BusinessUnit> BusinessUnits { get; set; }
+    public DbSet<ManagementUnit> ManagementUnits { get; set; }
     public DbSet<Transfer> Transfers { get; set; }
     public DbSet<AccountTag> AccountTags { get; set; }
     public DbSet<Category> Categories { get; set; }
@@ -27,7 +27,7 @@ internal sealed class MyFinanceDbContext(
 
     private void ApplyGlobalFiltersForUserOwnedEntities(ModelBuilder modelBuilder)
     {
-        ApplyGlobalFilterForUserOwnedEntity<BusinessUnit>(modelBuilder);
+        ApplyGlobalFilterForUserOwnedEntity<ManagementUnit>(modelBuilder);
         ApplyGlobalFilterForUserOwnedEntity<Transfer>(modelBuilder);
         ApplyGlobalFilterForUserOwnedEntity<AccountTag>(modelBuilder);
         ApplyGlobalFilterForUserOwnedEntity<Category>(modelBuilder);

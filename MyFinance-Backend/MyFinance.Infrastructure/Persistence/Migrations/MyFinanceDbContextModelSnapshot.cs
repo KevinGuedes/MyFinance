@@ -66,7 +66,47 @@ namespace MyFinance.Infrastructure.Persistence.Migrations
                     b.ToTable("AccountTags");
                 });
 
-            modelBuilder.Entity("MyFinance.Domain.Entities.BusinessUnit", b =>
+            modelBuilder.Entity("MyFinance.Domain.Entities.Category", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime?>("ArchivedOnUtc")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("CreatedOnUtc")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsArchived")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("ReasonToArchive")
+                        .HasMaxLength(300)
+                        .HasColumnType("nvarchar(300)");
+
+                    b.Property<DateTime?>("UpdatedOnUtc")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.HasIndex("Name", "UserId")
+                        .IsUnique();
+
+                    b.ToTable("Categories");
+                });
+
+            modelBuilder.Entity("MyFinance.Domain.Entities.ManagementUnit", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -113,47 +153,7 @@ namespace MyFinance.Infrastructure.Persistence.Migrations
                     b.HasIndex("Name", "UserId")
                         .IsUnique();
 
-                    b.ToTable("BusinessUnits");
-                });
-
-            modelBuilder.Entity("MyFinance.Domain.Entities.Category", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime?>("ArchivedOnUtc")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("CreatedOnUtc")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool>("IsArchived")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<string>("ReasonToArchive")
-                        .HasMaxLength(300)
-                        .HasColumnType("nvarchar(300)");
-
-                    b.Property<DateTime?>("UpdatedOnUtc")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserId");
-
-                    b.HasIndex("Name", "UserId")
-                        .IsUnique();
-
-                    b.ToTable("Categories");
+                    b.ToTable("ManagementUnits");
                 });
 
             modelBuilder.Entity("MyFinance.Domain.Entities.Transfer", b =>
@@ -163,9 +163,6 @@ namespace MyFinance.Infrastructure.Persistence.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid>("AccountTagId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("BusinessUnitId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid>("CategoryId")
@@ -178,6 +175,9 @@ namespace MyFinance.Infrastructure.Persistence.Migrations
                         .IsRequired()
                         .HasMaxLength(300)
                         .HasColumnType("nvarchar(300)");
+
+                    b.Property<Guid>("ManagementUnitId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("RelatedTo")
                         .IsRequired()
@@ -204,9 +204,9 @@ namespace MyFinance.Infrastructure.Persistence.Migrations
 
                     b.HasIndex("AccountTagId");
 
-                    b.HasIndex("BusinessUnitId");
-
                     b.HasIndex("CategoryId");
+
+                    b.HasIndex("ManagementUnitId");
 
                     b.HasIndex("UserId");
 
@@ -271,7 +271,7 @@ namespace MyFinance.Infrastructure.Persistence.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("MyFinance.Domain.Entities.BusinessUnit", b =>
+            modelBuilder.Entity("MyFinance.Domain.Entities.Category", b =>
                 {
                     b.HasOne("MyFinance.Domain.Entities.User", null)
                         .WithMany()
@@ -280,7 +280,7 @@ namespace MyFinance.Infrastructure.Persistence.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("MyFinance.Domain.Entities.Category", b =>
+            modelBuilder.Entity("MyFinance.Domain.Entities.ManagementUnit", b =>
                 {
                     b.HasOne("MyFinance.Domain.Entities.User", null)
                         .WithMany()
@@ -297,15 +297,15 @@ namespace MyFinance.Infrastructure.Persistence.Migrations
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
-                    b.HasOne("MyFinance.Domain.Entities.BusinessUnit", "BusinessUnit")
-                        .WithMany("Transfers")
-                        .HasForeignKey("BusinessUnitId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
                     b.HasOne("MyFinance.Domain.Entities.Category", "Category")
                         .WithMany("Transfers")
                         .HasForeignKey("CategoryId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("MyFinance.Domain.Entities.ManagementUnit", "ManagementUnit")
+                        .WithMany("Transfers")
+                        .HasForeignKey("ManagementUnitId")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
@@ -317,9 +317,9 @@ namespace MyFinance.Infrastructure.Persistence.Migrations
 
                     b.Navigation("AccountTag");
 
-                    b.Navigation("BusinessUnit");
-
                     b.Navigation("Category");
+
+                    b.Navigation("ManagementUnit");
                 });
 
             modelBuilder.Entity("MyFinance.Domain.Entities.AccountTag", b =>
@@ -327,12 +327,12 @@ namespace MyFinance.Infrastructure.Persistence.Migrations
                     b.Navigation("Transfers");
                 });
 
-            modelBuilder.Entity("MyFinance.Domain.Entities.BusinessUnit", b =>
+            modelBuilder.Entity("MyFinance.Domain.Entities.Category", b =>
                 {
                     b.Navigation("Transfers");
                 });
 
-            modelBuilder.Entity("MyFinance.Domain.Entities.Category", b =>
+            modelBuilder.Entity("MyFinance.Domain.Entities.ManagementUnit", b =>
                 {
                     b.Navigation("Transfers");
                 });
