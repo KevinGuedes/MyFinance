@@ -5,7 +5,7 @@ using MyFinance.Application.Abstractions.RequestHandling.Commands;
 
 namespace MyFinance.Application.RequestPipeline.Behaviors;
 
-internal sealed class TransactionalBehavior<TRequest, TResponse>(IUnitOfWork unitOfWork)
+internal sealed class TransactionManagementBehavior<TRequest, TResponse>(IUnitOfWork unitOfWork)
     : IPipelineBehavior<TRequest, TResponse>
     where TRequest : IBaseCommand
     where TResponse : ResultBase
