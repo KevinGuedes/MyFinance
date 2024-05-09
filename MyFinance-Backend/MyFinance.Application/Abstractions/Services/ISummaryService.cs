@@ -5,7 +5,7 @@ namespace MyFinance.Application.Abstractions.Services;
 public interface ISummaryService
 {
     (string FileName, byte[] FileContent) GenerateMonthlySummary(
-        BusinessUnit businessUnit,
+        ManagementUnit managementUnit,
         IEnumerable<Transfer> transfers,
         int year,
         int month);

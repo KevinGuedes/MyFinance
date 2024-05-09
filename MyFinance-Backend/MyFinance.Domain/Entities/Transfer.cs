@@ -17,7 +17,7 @@ public sealed class Transfer : Entity, IUserOwnedEntity
         DateTime settlementDate,
         TransferType type,
         Guid userId,
-        BusinessUnit businessUnit,
+        ManagementUnit managementUnit,
         AccountTag accountTag,
         Category category)
     {
@@ -27,8 +27,8 @@ public sealed class Transfer : Entity, IUserOwnedEntity
         SettlementDate = settlementDate;
         Type = type;
         UserId = userId;
-        BusinessUnit = businessUnit;
-        BusinessUnitId = businessUnit.Id;
+        ManagementUnit = managementUnit;
+        ManagementUnitId = managementUnit.Id;
         AccountTag = accountTag;
         AccountTagId = accountTag.Id;
         Category = category;
@@ -41,8 +41,8 @@ public sealed class Transfer : Entity, IUserOwnedEntity
     public string Description { get; private set; } = null!;
     public DateTime SettlementDate { get; private set; }
     public TransferType Type { get; private set; }
-    public Guid BusinessUnitId { get; private set; }
-    public BusinessUnit BusinessUnit { get; private set; } = null!;
+    public Guid ManagementUnitId { get; private set; }
+    public ManagementUnit ManagementUnit { get; private set; } = null!;
     public Guid AccountTagId { get; private set; }
     public AccountTag AccountTag { get; private set; } = null!;
     public Guid CategoryId { get; private set; }

@@ -11,10 +11,12 @@ internal sealed class GetDiscriminatedAnnualBalanceDataHandler(ITransferReposito
 {
     private readonly ITransferRepository _transferRepository = transferRepository;
 
-    public async Task<Result<DiscriminatedAnnualBalanceDataResponse>> Handle(GetDiscriminatedAnnualBalanceDataQuery query, CancellationToken cancellationToken)
+    public async Task<Result<DiscriminatedAnnualBalanceDataResponse>> Handle(
+        GetDiscriminatedAnnualBalanceDataQuery query, 
+        CancellationToken cancellationToken)
     {
         var discriminatedAnnualBalanceData = await _transferRepository
-            .GetDiscriminatedAnnualBalanceDataAsync(query.BusinessUnitId, query.Year, cancellationToken);
+            .GetDiscriminatedAnnualBalanceDataAsync(query.ManagementUnitId, query.Year, cancellationToken);
 
         return Result.Ok(TransferMapper.DTR.Map(query.Year, discriminatedAnnualBalanceData));
     }

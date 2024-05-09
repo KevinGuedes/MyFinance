@@ -5,7 +5,7 @@ using MyFinance.Contracts.Transfer.Responses;
 namespace MyFinance.Application.UseCases.Transfers.Queries.GetTransfers;
 
 public sealed record GetTransfersQuery(
-    Guid BusinessUnitId,
+    Guid ManagementUnitId,
     DateOnly? StartDate,
     DateOnly? EndDate,
     Guid? CategoryId,

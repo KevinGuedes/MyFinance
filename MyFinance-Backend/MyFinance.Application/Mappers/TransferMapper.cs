@@ -117,7 +117,7 @@ public static class TransferMapper
     public static class RTC
     {
         public static RegisterTransferCommand Map(RegisterTransferRequest request)
-            => new(request.BusinessUnitId,
+            => new(request.ManagementUnitId,
                 request.AccountTagId,
                 request.CategoryId,
                 request.Value,

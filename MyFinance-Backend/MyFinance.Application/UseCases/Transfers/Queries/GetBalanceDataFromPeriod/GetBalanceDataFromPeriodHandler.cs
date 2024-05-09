@@ -14,7 +14,7 @@ internal sealed class GetPeriodBalanceHandler(ITransferRepository transferReposi
     public async Task<Result<PeriodBalanceDataResponse>> Handle(GetBalanceDataFromPeriodQuery query, CancellationToken cancellationToken)
     {
         var periodBalanceData = await _transferRepository.GetBalanceDataFromPeriodAsync(
-            query.BusinessUnitId,
+            query.ManagementUnitId,
             query.StartDate,
             query.EndDate,
             query.CategoryId,

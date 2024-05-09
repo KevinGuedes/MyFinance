@@ -7,7 +7,7 @@ public sealed class GetDiscriminatedAnnualBalanceDataValidator : AbstractValidat
 {
     public GetDiscriminatedAnnualBalanceDataValidator()
     {
-        RuleFor(query => query.BusinessUnitId).MustBeAValidGuid();
+        RuleFor(query => query.ManagementUnitId).MustBeAValidGuid();
 
         RuleFor(query => query.Year)
             .GreaterThan(1900).WithMessage("Invalid {PropertyName}");

@@ -7,7 +7,7 @@ public sealed class GetBalanceDataFromPeriodValidator : AbstractValidator<GetBal
 {
     public GetBalanceDataFromPeriodValidator()
     {
-        RuleFor(query => query.BusinessUnitId).MustBeAValidGuid();
+        RuleFor(query => query.ManagementUnitId).MustBeAValidGuid();
 
         When(query =>
             query.StartDate.HasValue && query.StartDate.Value != default &&

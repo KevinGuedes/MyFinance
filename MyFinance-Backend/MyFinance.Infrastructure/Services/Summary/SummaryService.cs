@@ -16,23 +16,23 @@ internal sealed class SummaryService : ISummaryService
         ["Value", "Related To", "Description", "Category", "Account Tag", "Settlement Date"];
 
     public (string FileName, byte[] FileContent) GenerateMonthlySummary(
-        BusinessUnit businessUnit,
+        ManagementUnit managementUnit,
         IEnumerable<Transfer> transfers,
         int year,
         int month)
     {
         var refrenceDateHumanized = new DateOnly(year, month, 1).ToString("MMMM yyyy");
-        var workbookName = $"{businessUnit.Name} Summary - {refrenceDateHumanized}.xlsx";
+        var workbookName = $"{managementUnit.Name} Summary - {refrenceDateHumanized}.xlsx";
         var wb = new XLWorkbook();
 
-        var balanceWorksheet = wb.AddWorksheet(businessUnit.Name, 1);
+        var balanceWorksheet = wb.AddWorksheet(managementUnit.Name, 1);
         FillGenerationData(balanceWorksheet);
-        FillCurrentBalanceData(businessUnit, balanceWorksheet);
+        FillCurrentBalanceData(managementUnit, balanceWorksheet);
         FillMonthlyBalanceData(transfers, balanceWorksheet, refrenceDateHumanized);
         balanceWorksheet.Columns().AdjustToContents();
 
         var transfersWorksheet = wb.AddWorksheet(refrenceDateHumanized, 2);
-        FillTransfersData(businessUnit.Transfers, transfersWorksheet, refrenceDateHumanized);
+        FillTransfersData(managementUnit.Transfers, transfersWorksheet, refrenceDateHumanized);
         transfersWorksheet.Columns().AdjustToContents();
 
         return (FileName: workbookName, FileContent: ConvertWorkbookToByteArray(wb));
@@ -51,7 +51,7 @@ internal sealed class SummaryService : ISummaryService
             .Border.SetOutsideBorder(XLBorderStyleValues.Thin);
     }
 
-    private static void FillCurrentBalanceData(BusinessUnit businessUnit, IXLWorksheet ws)
+    private static void FillCurrentBalanceData(ManagementUnit managementUnit, IXLWorksheet ws)
     {
         ws.Range(initalRowForBalanceData, 1, initalRowForBalanceData, 3)
           .SetValue($"Current Balance")
@@ -71,13 +71,13 @@ internal sealed class SummaryService : ISummaryService
 
         var currentBalanceData = new[]
         {
-           businessUnit.Income, -1 * businessUnit.Outcome, businessUnit.Balance
+           managementUnit.Income, -1 * managementUnit.Outcome, managementUnit.Balance
         };
 
         var currentBalanceRange = ws.Cell(initalRowForBalanceData + 2, 1).InsertData(currentBalanceData, true);
         currentBalanceRange.Column(1).LastCell().Style.Font.SetFontColor(XLColor.Green);
         currentBalanceRange.Column(2).LastCell().Style.Font.SetFontColor(XLColor.Red);
-        var currentBalanceColor = GetBalanceColor(businessUnit.Balance);
+        var currentBalanceColor = GetBalanceColor(managementUnit.Balance);
         currentBalanceRange.Column(3).LastCell().Style.Font.SetFontColor(currentBalanceColor);
         currentBalanceRange.LastRow()
             .Style

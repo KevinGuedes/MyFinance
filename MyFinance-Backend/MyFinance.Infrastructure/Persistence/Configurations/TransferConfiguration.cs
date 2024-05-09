@@ -35,9 +35,9 @@ internal sealed class TransferConfiguration : EntityConfiguration<Transfer>
             .OnDelete(DeleteBehavior.NoAction);
 
         builder
-            .HasOne(transfer => transfer.BusinessUnit)
+            .HasOne(transfer => transfer.ManagementUnit)
             .WithMany(bu => bu.Transfers)
-            .HasForeignKey(transfer => transfer.BusinessUnitId)
+            .HasForeignKey(transfer => transfer.ManagementUnitId)
             .OnDelete(DeleteBehavior.NoAction);
     }
 }

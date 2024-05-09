@@ -6,7 +6,7 @@ using MyFinance.Domain.Enums;
 namespace MyFinance.Application.UseCases.Transfers.Commands.RegisterTransfer;
 
 public sealed record RegisterTransferCommand(
-    Guid BusinessUnitId,
+    Guid ManagementUnitId,
     Guid AccountTagId,
     Guid CategoryId,
     decimal Value,

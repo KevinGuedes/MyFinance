@@ -29,7 +29,7 @@ public class CategoryController(IMediator mediator) : ApiController(mediator)
     [SwaggerResponse(StatusCodes.Status200OK, "List of all existing Categories with pagination",
         typeof(Paginated<CategoryResponse>))]
     [SwaggerResponse(StatusCodes.Status400BadRequest, "Invalid query parameters", typeof(ValidationProblemResponse))]
-    public async Task<IActionResult> GetBusinessUnitsAsync(
+    public async Task<IActionResult> GetCategoriesAsync(
         [FromQuery] [SwaggerParameter("Page number", Required = true)]
         int pageNumber,
         [FromQuery] [SwaggerParameter("Units per page", Required = true)]
@@ -44,7 +44,7 @@ public class CategoryController(IMediator mediator) : ApiController(mediator)
     [SwaggerResponse(StatusCodes.Status404NotFound, "Category not found", typeof(ProblemResponse))]
     [SwaggerResponse(StatusCodes.Status409Conflict, "The Category was updated after the request was sent",
         typeof(ProblemResponse))]
-    public async Task<IActionResult> UpdateBusinessUnitAsync(
+    public async Task<IActionResult> UpdateCategoryAsync(
         [FromBody] [SwaggerRequestBody("Category payload", Required = true)]
         UpdateCategoryRequest request,
         CancellationToken cancellationToken)
@@ -57,7 +57,7 @@ public class CategoryController(IMediator mediator) : ApiController(mediator)
     [SwaggerResponse(StatusCodes.Status404NotFound, "Category not found", typeof(ProblemResponse))]
     [SwaggerResponse(StatusCodes.Status409Conflict, "The Category was updated after the request was sent",
         typeof(ProblemResponse))]
-    public async Task<IActionResult> UnarchiveBusinessUnitAsync(
+    public async Task<IActionResult> UnarchiveCategortAsync(
         [FromRoute] [SwaggerParameter("Id of the Category to unarchive", Required = true)]
         Guid id,
         CancellationToken cancellationToken)
@@ -70,7 +70,7 @@ public class CategoryController(IMediator mediator) : ApiController(mediator)
     [SwaggerResponse(StatusCodes.Status404NotFound, "Category not found", typeof(ProblemResponse))]
     [SwaggerResponse(StatusCodes.Status409Conflict, "The Category was updated after the request was sent",
         typeof(ProblemResponse))]
-    public async Task<IActionResult> ArchiveBusinessUnitAsync(
+    public async Task<IActionResult> ArchiveCategoryAsync(
         [FromBody] [SwaggerRequestBody("Payload to archvie a Category", Required = true)]
         ArchiveCategoryRequest request,
         CancellationToken cancellationToken)

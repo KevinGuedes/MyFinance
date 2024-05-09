@@ -9,7 +9,6 @@ public interface IAccountTagRepository
         int pageNumber,
         int pageSize,
         CancellationToken cancellationToken);
-
     Task<bool> ExistsByTagAsync(string tag, CancellationToken cancellationToken);
     Task<AccountTag?> GetByIdAsync(Guid id, CancellationToken cancellationToken);
     Task<AccountTag?> GetByTagAsync(string tag, CancellationToken cancellationToken);

@@ -4,7 +4,7 @@ using MyFinance.Contracts.Transfer.Responses;
 namespace MyFinance.Application.UseCases.Transfers.Queries.GetBalanceDataFromPeriod;
 
 public sealed record class GetBalanceDataFromPeriodQuery(
-    Guid BusinessUnitId,
+    Guid ManagementUnitId,
     DateOnly? StartDate,
     DateOnly? EndDate,
     Guid? CategoryId,
