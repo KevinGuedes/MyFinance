@@ -1,8 +1,8 @@
 /** @type {import('tailwindcss').Config} */
 
 export const darkMode = ['class']
-export const plugins = [require('tailwindcss-animate')]
 export const prefix = ''
+export const plugins = [require('tailwindcss-animate')]
 export const content = [
   './pages/**/*.{ts,tsx}',
   './components/**/*.{ts,tsx}',

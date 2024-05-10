@@ -18,10 +18,10 @@ type ThemeProviderState = {
   setTheme: (theme: Theme) => void
 }
 
+const storageKey = 'my-finance-theme-v1.0'
 const ThemeProviderContext = createContext<ThemeProviderState>(
   {} as ThemeProviderState,
 )
-const storageKey = 'my-finance-theme-v1.0'
 
 export function ThemeProvider({
   children,
