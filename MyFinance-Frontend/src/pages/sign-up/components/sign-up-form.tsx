@@ -1,8 +1,9 @@
 import { zodResolver } from '@hookform/resolvers/zod'
+import { Loader2 } from 'lucide-react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 
-import { Button } from '@/components/ui/Button'
+import { Button } from '@/components/ui/button'
 import {
   Form,
   FormControl,
@@ -11,15 +12,36 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from '@/components/ui/Form'
-import { Input } from '@/components/ui/Input'
+} from '@/components/ui/form'
+import { Input } from '@/components/ui/input'
 
 const signUpFormSchema = z
   .object({
-    name: z.string().min(3, { message: 'Name is too short' }),
-    email: z.string().email({ message: 'Invalid email' }),
-    plainTextPassword: z.string().min(16, { message: 'Password is too short' }),
-    plainTextPasswordConfirmation: z.string(),
+    name: z
+      .string()
+      .min(1, { message: 'Name is required' })
+      .min(3, { message: 'Name must tbe at least 3 chracters long' }),
+    email: z
+      .string()
+      .min(1, { message: 'Email is required' })
+      .email({ message: 'Invalid email' }),
+    plainTextPassword: z
+      .string()
+      .min(1, { message: 'Password is required' })
+      .min(16, { message: 'Password is too short' })
+      .regex(/[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]/g, {
+        message: 'Password must include at least 2 special characters',
+      })
+      .regex(/\d/g, { message: 'Password must include at least 2 numbers' })
+      .regex(/[A-Z]/g, {
+        message: 'Password must include at least 2 uppercase letters',
+      })
+      .regex(/[a-z]/g, {
+        message: 'Password must include at least 2 lowercase letters',
+      }),
+    plainTextPasswordConfirmation: z
+      .string()
+      .min(1, { message: 'Confirm Password is required' }),
   })
   .refine(
     (data) => data.plainTextPassword === data.plainTextPasswordConfirmation,
@@ -88,8 +110,8 @@ export function SignUpForm() {
               </FormControl>
 
               <FormDescription>
-                At least 2 of upper and lower case letters, digitis and special
-                characters.
+                16 characters minimum and must include at least 2 numbers, 2
+                special characters, 2 capital and lower letters
               </FormDescription>
               <FormMessage />
             </FormItem>
@@ -110,9 +132,16 @@ export function SignUpForm() {
           )}
         />
 
-        <div className="flex justify-end">
-          <Button type="submit" variant="outline">
-            Submit
+        <div>
+          <Button
+            type="submit"
+            className="mt-2 w-full"
+            disabled={form.formState.isSubmitting}
+          >
+            {form.formState.isSubmitting && (
+              <Loader2 className="mr-2 size-4 animate-spin" />
+            )}
+            Sign Up
           </Button>
         </div>
       </form>

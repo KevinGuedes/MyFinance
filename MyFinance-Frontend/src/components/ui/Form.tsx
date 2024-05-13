@@ -11,7 +11,7 @@ import {
 } from 'react-hook-form'
 import { twMerge } from 'tailwind-merge'
 
-import { Label } from '@/components/ui/Label'
+import { Label } from '@/components/ui/label'
 
 const Form = FormProvider
 
