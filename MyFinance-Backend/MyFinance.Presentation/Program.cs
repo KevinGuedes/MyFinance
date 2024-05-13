@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Builder;
 using MyFinance.Application.IoC;
 using MyFinance.Infrastructure.IoC;
 using MyFinance.Presentation.IoC;
@@ -13,6 +14,12 @@ var builder = WebApplication.CreateBuilder(args);
 var app = builder.Build();
 {
     app.UseExceptionHandler();
+    app.UseCors(options =>
+        options
+            .AllowAnyHeader()
+            .AllowAnyMethod()
+            .WithOrigins("https://localhost:5173")
+            .AllowCredentials());
 
     if (!app.Environment.IsProduction())
     {
