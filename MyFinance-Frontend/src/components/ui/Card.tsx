@@ -8,7 +8,7 @@ const Card = React.forwardRef<
   <div
     ref={ref}
     className={twMerge(
-      'rounded-lg border border-neutral-200 bg-white text-neutral-950 shadow-sm dark:border-neutral-800 dark:bg-neutral-950 dark:text-neutral-50',
+      'rounded-lg border bg-card text-card-foreground shadow-sm',
       className,
     )}
     {...props}
@@ -49,10 +49,7 @@ const CardDescription = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <p
     ref={ref}
-    className={twMerge(
-      'text-sm text-neutral-500 dark:text-neutral-400',
-      className,
-    )}
+    className={twMerge('text-sm text-muted-foreground', className)}
     {...props}
   />
 ))
@@ -64,7 +61,6 @@ const CardContent = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <div ref={ref} className={twMerge('p-6 pt-0', className)} {...props} />
 ))
-
 CardContent.displayName = 'CardContent'
 
 const CardFooter = React.forwardRef<

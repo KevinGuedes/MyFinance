@@ -1,16 +1,11 @@
-import {
-  createContext,
-  ReactNode,
-  useContext,
-  useEffect,
-  useState,
-} from 'react'
+import { createContext, useContext, useEffect, useState } from 'react'
 
 type Theme = 'dark' | 'light' | 'system'
 
 type ThemeProviderProps = {
-  children: ReactNode
+  children: React.ReactNode
   defaultTheme?: Theme
+  storageKey?: string
 }
 
 type ThemeProviderState = {
@@ -18,14 +13,17 @@ type ThemeProviderState = {
   setTheme: (theme: Theme) => void
 }
 
-const storageKey = 'my-finance-theme-v1.0'
-const ThemeProviderContext = createContext<ThemeProviderState>(
-  {} as ThemeProviderState,
-)
+const initialState: ThemeProviderState = {
+  theme: 'system',
+  setTheme: () => null,
+}
+
+const ThemeProviderContext = createContext<ThemeProviderState>(initialState)
 
 export function ThemeProvider({
   children,
   defaultTheme = 'system',
+  storageKey = 'vite-ui-theme',
   ...props
 }: ThemeProviderProps) {
   const [theme, setTheme] = useState<Theme>(

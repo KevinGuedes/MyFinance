@@ -40,55 +40,70 @@ export function SignInForm() {
   }
 
   return (
-    <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-        <FormField
-          control={form.control}
-          name="email"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Email</FormLabel>
-              <FormControl>
-                <Input type="email" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="plainTextPassword"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Password</FormLabel>
-
-              <FormControl>
-                <Input type="password" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <div className="grid gap-y-4">
-          <Button
-            type="submit"
-            className="mt-2 w-full"
-            disabled={form.formState.isSubmitting}
-          >
-            {form.formState.isSubmitting && (
-              <Loader2 className="mr-2 size-4 animate-spin" />
+    <div className="grid gap-4">
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+          <FormField
+            control={form.control}
+            name="email"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Email</FormLabel>
+                <FormControl>
+                  <Input type="email" required {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
             )}
-            <LogIn className="mr-2 size-4" />
-            Sign In
-          </Button>
+          />
 
-          <Button className="float-right m-0 p-0" variant="link">
-            Forgot Password?
-          </Button>
-        </div>
-      </form>
-    </Form>
+          <FormField
+            control={form.control}
+            name="plainTextPassword"
+            render={({ field }) => (
+              <FormItem>
+                <div className="flex items-center">
+                  <FormLabel htmlFor="password">Password</FormLabel>
+                  <a
+                    href="#"
+                    className="ml-auto inline-block text-sm underline"
+                  >
+                    Forgot your password?
+                  </a>
+                </div>
+                <FormControl>
+                  <Input type="password" required {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <div className="grid gap-y-4">
+            <Button
+              type="submit"
+              className="mt-2 w-full"
+              disabled={form.formState.isSubmitting}
+            >
+              {form.formState.isSubmitting && (
+                <Loader2 className="mr-2 size-4 animate-spin" />
+              )}
+              <LogIn className="mr-2 size-4" />
+              Sign In
+            </Button>
+            {/* 
+            <Button className="float-right m-0 p-0" variant="link">
+              Forgot Password?
+            </Button> */}
+          </div>
+        </form>
+      </Form>
+      <div className="mt-4 text-center text-sm">
+        <p className="mr-1 inline">Don&apos;t have an account?</p>
+        <a href="#" className="underline">
+          Sign up
+        </a>
+      </div>
+    </div>
   )
 }

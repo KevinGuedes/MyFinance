@@ -1,12 +1,10 @@
-/** @type {import('tailwindcss').Config} */
+import { fontFamily } from 'tailwindcss/defaultTheme'
 
+/** @type {import('tailwindcss').Config} */
 export const darkMode = ['class']
-export const prefix = ''
-export const plugins = [require('tailwindcss-animate')]
 export const content = [
   './pages/**/*.{ts,tsx}',
   './components/**/*.{ts,tsx}',
-  './app/**/*.{ts,tsx}',
   './src/**/*.{ts,tsx}',
 ]
 
@@ -54,6 +52,14 @@ export const theme = {
         foreground: 'hsl(var(--card-foreground))',
       },
     },
+    borderRadius: {
+      lg: `var(--radius)`,
+      md: `calc(var(--radius) - 2px)`,
+      sm: 'calc(var(--radius) - 4px)',
+    },
+    fontFamily: {
+      sans: [...fontFamily.sans],
+    },
     keyframes: {
       'accordion-down': {
         from: { height: '0' },
@@ -70,3 +76,4 @@ export const theme = {
     },
   },
 }
+export const plugins = [require('tailwindcss-animate')]
