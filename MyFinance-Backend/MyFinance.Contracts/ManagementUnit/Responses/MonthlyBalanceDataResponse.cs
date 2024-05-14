@@ -1,4 +1,4 @@
-﻿namespace MyFinance.Contracts.Transfer.Responses;
+﻿namespace MyFinance.Contracts.ManagementUnit.Responses;
 
 public sealed class MonthlyBalanceDataResponse
 {

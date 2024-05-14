@@ -7,11 +7,9 @@ import { SignUp } from './pages/sign-up/sign-up'
 export function App() {
   return (
     <ThemeProvider defaultTheme="system" storageKey="vite-ui-theme">
-      <main className="grid justify-stretch gap-4">
-        <ThemeSwitcher />
-        <SignUp />
-        <SignIn />
-      </main>
+      <ThemeSwitcher />
+      <SignUp />
+      <SignIn />
     </ThemeProvider>
   )
 }

@@ -2,9 +2,9 @@
 using MyFinance.Application.Abstractions.Persistence.Repositories;
 using MyFinance.Application.Abstractions.RequestHandling.Queries;
 using MyFinance.Application.Mappers;
-using MyFinance.Contracts.Transfer.Responses;
+using MyFinance.Contracts.ManagementUnit.Responses;
 
-namespace MyFinance.Application.UseCases.Transfers.Queries.GetBalanceDataFromPeriod;
+namespace MyFinance.Application.UseCases.ManagementUnits.Queries.GetBalanceDataFromPeriod;
 
 internal sealed class GetPeriodBalanceHandler(ITransferRepository transferRepository)
     : IQueryHandler<GetBalanceDataFromPeriodQuery, PeriodBalanceDataResponse>
@@ -21,6 +21,6 @@ internal sealed class GetPeriodBalanceHandler(ITransferRepository transferReposi
             query.AccountTagId,
             cancellationToken);
 
-        return Result.Ok(TransferMapper.DTR.Map(periodBalanceData));
+        return Result.Ok(ManagementUnitMapper.DTR.Map(periodBalanceData));
     }
 }

@@ -1,7 +1,7 @@
 ﻿using MyFinance.Application.Abstractions.RequestHandling.Queries;
-using MyFinance.Contracts.Transfer.Responses;
+using MyFinance.Contracts.ManagementUnit.Responses;
 
-namespace MyFinance.Application.UseCases.Transfers.Queries.GetBalanceDataFromPeriod;
+namespace MyFinance.Application.UseCases.ManagementUnits.Queries.GetBalanceDataFromPeriod;
 
 public sealed record class GetBalanceDataFromPeriodQuery(
     Guid ManagementUnitId,

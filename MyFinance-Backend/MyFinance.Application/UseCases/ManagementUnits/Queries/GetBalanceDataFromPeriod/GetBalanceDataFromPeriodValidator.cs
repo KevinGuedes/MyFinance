@@ -1,7 +1,7 @@
 ﻿using FluentValidation;
 using MyFinance.Application.Common.CustomValidators;
 
-namespace MyFinance.Application.UseCases.Transfers.Queries.GetBalanceDataFromPeriod;
+namespace MyFinance.Application.UseCases.ManagementUnits.Queries.GetBalanceDataFromPeriod;
 
 public sealed class GetBalanceDataFromPeriodValidator : AbstractValidator<GetBalanceDataFromPeriodQuery>
 {

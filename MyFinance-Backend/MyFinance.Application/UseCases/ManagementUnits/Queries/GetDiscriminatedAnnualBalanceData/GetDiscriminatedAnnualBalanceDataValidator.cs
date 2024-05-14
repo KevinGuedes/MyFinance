@@ -1,7 +1,7 @@
 ﻿using FluentValidation;
 using MyFinance.Application.Common.CustomValidators;
 
-namespace MyFinance.Application.UseCases.Transfers.Queries.GetDiscriminatedAnnualBalanceData;
+namespace MyFinance.Application.UseCases.ManagementUnits.Queries.GetDiscriminatedAnnualBalanceData;
 
 public sealed class GetDiscriminatedAnnualBalanceDataValidator : AbstractValidator<GetDiscriminatedAnnualBalanceDataQuery>
 {
