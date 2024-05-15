@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import {
   Bar,
   ComposedChart,
@@ -5,7 +6,11 @@ import {
   Line,
   ResponsiveContainer,
   Tooltip,
+  XAxis,
+  YAxis,
 } from 'recharts'
+
+import { toMoney } from '@/utils/to-money'
 
 import { useTheme } from './theme-provider'
 import {
@@ -37,16 +42,6 @@ const data = months.map((month, index) => {
   const outcome = Math.floor(Math.random() * 10000)
   const balance = income - outcome
 
-  if (index === 0) {
-    return {
-      monthNumber: index + 1,
-      month,
-      income: 10000,
-      outcome: 3000,
-      balance: 7000,
-    }
-  }
-
   return {
     monthNumber: index + 1,
     month,
@@ -57,9 +52,23 @@ const data = months.map((month, index) => {
 })
 
 export function AnnualBalanceChart() {
-  const { theme: mode } = useTheme()
-  console.log(mode)
+  const { theme } = useTheme()
+  const [opacity, setOpacity] = useState({
+    outcome: 1,
+    income: 1,
+  })
 
+  const handleMouseEnter = (o) => {
+    const { dataKey } = o
+
+    setOpacity((op) => ({ ...op, [dataKey]: 0.5 }))
+  }
+
+  const handleMouseLeave = (o) => {
+    const { dataKey } = o
+
+    setOpacity((op) => ({ ...op, [dataKey]: 1 }))
+  }
   return (
     <Card className="mx-auto w-full max-w-2xl">
       <CardHeader>
@@ -74,10 +83,10 @@ export function AnnualBalanceChart() {
             <ComposedChart
               data={data}
               margin={{
-                top: 5,
-                right: 10,
-                left: 10,
-                bottom: 0,
+                top: 20,
+                right: 20,
+                left: 20,
+                bottom: 20,
               }}
             >
               <Tooltip
@@ -85,30 +94,36 @@ export function AnnualBalanceChart() {
                   if (active && payload && payload.length) {
                     return (
                       <div className="rounded-lg border bg-background p-2 shadow-sm">
-                        <div className="grid grid-cols-3 gap-2">
-                          <div className="flex flex-col">
-                            <span className="text-[0.70rem] uppercase text-muted-foreground">
-                              Outcome
-                            </span>
-                            <span className="font-bold text-muted-foreground">
-                              {payload[0].value}
-                            </span>
-                          </div>
+                        <div className="grid gap-2.5">
                           <div className="flex flex-col">
                             <span className="text-[0.70rem] uppercase text-muted-foreground">
                               Income
                             </span>
-                            <span className="font-bold">
-                              {payload[1].value}
+                            <span className="font-bold text-emerald-600">
+                              {toMoney(Number(payload[1].value))}
+                            </span>
+                          </div>
+                          <div className="flex flex-col">
+                            <span className="text-[0.70rem] uppercase text-muted-foreground">
+                              Outcome
+                            </span>
+                            <span className="font-bold text-destructive">
+                              -{toMoney(Number(payload[2].value))}
                             </span>
                           </div>
                           <div className="flex flex-col">
                             <span className="text-[0.70rem] uppercase text-muted-foreground">
                               Balance
                             </span>
-                            <span className="font-bold">
-                              {payload[2].value}
-                            </span>
+                            {Number(payload[0].value) > 0 ? (
+                              <span className="font-bold text-emerald-600">
+                                {toMoney(Number(payload[0].value))}
+                              </span>
+                            ) : (
+                              <span className="font-bold text-destructive">
+                                {toMoney(Number(payload[0].value))}
+                              </span>
+                            )}
                           </div>
                         </div>
                       </div>
@@ -118,11 +133,39 @@ export function AnnualBalanceChart() {
                   return null
                 }}
               />
+
               <Bar dataKey="balance" barSize={20} fill="#413ea0" />
+
+              {/* <Bar
+                dataKey="balance"
+                barSize={20}
+                fill={
+                  theme === 'dark'
+                    ? 'hsl(217.2 91.2% 59.8%)'
+                    : 'hsl(222.2 84% 4.9%)'
+                }
+              /> */}
+
+              {/* <Bar
+                dataKey="balance"
+                barSize={20}
+                style={
+                  {
+                    fill: 'var(--theme-primary)',
+                    opacity: 1,
+                    '--theme-primary': `hsl(${
+                      theme === 'dark'
+                        ? '217.2 91.2% 59.8%'
+                        : '221.2 83.2% 53.3%'
+                    })`,
+                  } as React.CSSProperties
+                }
+              /> */}
 
               <Line
                 type="monotone"
                 dataKey="income"
+                strokeOpacity={opacity.income}
                 strokeWidth={2}
                 activeDot={{
                   r: 8,
@@ -132,7 +175,7 @@ export function AnnualBalanceChart() {
                   {
                     stroke: 'var(--theme-primary)',
                     '--theme-primary': `hsl(${
-                      mode === 'dark'
+                      theme === 'dark'
                         ? '217.2 91.2% 59.8%'
                         : '221.2 83.2% 53.3%'
                     })`,
@@ -143,6 +186,7 @@ export function AnnualBalanceChart() {
                 type="monotone"
                 strokeWidth={2}
                 dataKey="outcome"
+                strokeOpacity={opacity.outcome}
                 activeDot={{
                   r: 6,
                   style: { fill: 'var(--theme-primary)', opacity: 0.25 },
@@ -152,14 +196,70 @@ export function AnnualBalanceChart() {
                     stroke: 'var(--theme-primary)',
                     opacity: 0.25,
                     '--theme-primary': `hsl(${
-                      mode === 'dark'
+                      theme === 'dark'
                         ? '217.2 91.2% 59.8%'
                         : '221.2 83.2% 53.3%'
                     })`,
                   } as React.CSSProperties
                 }
               />
-              <Legend />
+              {/* <Line
+                type="monotone"
+                strokeWidth={2}
+                dataKey="outcome"
+                strokeOpacity={opacity.outcome}
+                activeDot={{
+                  r: 6,
+                  style: { fill: 'var(--theme-primary)', opacity: 0.25 },
+                }}
+                style={
+                  {
+                    stroke: 'var(--theme-primary)',
+                    opacity: 0.25,
+                    '--theme-primary': `hsl(${
+                      theme === 'dark'
+                        ? '217.2 91.2% 59.8%'
+                        : '221.2 83.2% 53.3%'
+                    })`,
+                  } as React.CSSProperties
+                }
+              /> */}
+
+              {/* <YAxis
+                style={
+                  {
+                    stroke: 'var(--theme-primary)',
+                    '--theme-primary': `hsl(${
+                      theme === 'dark'
+                        ? '217.2 91.2% 59.8%'
+                        : '221.2 83.2% 53.3%'
+                    })`,
+                  } as React.CSSProperties
+                }
+              />
+              <XAxis
+                dataKey="month"
+                style={
+                  {
+                    stroke: 'var(--theme-primary)',
+                    '--theme-primary': `hsl(${
+                      theme === 'dark'
+                        ? '217.2 91.2% 59.8%'
+                        : '221.2 83.2% 53.3%'
+                    })`,
+                  } as React.CSSProperties
+                }
+              /> */}
+              <Legend
+                className="mb-4"
+                onMouseEnter={handleMouseEnter}
+                onMouseLeave={handleMouseLeave}
+                verticalAlign="top"
+                iconSize={20}
+                formatter={(value) => (
+                  <span className="capitalize">{value}</span>
+                )}
+              />
             </ComposedChart>
           </ResponsiveContainer>
         </div>
