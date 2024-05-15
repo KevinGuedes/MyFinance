@@ -41,7 +41,7 @@ const signUpFormSchema = z
       }),
     plainTextPasswordConfirmation: z
       .string()
-      .min(1, { message: 'Confirm Password is required' }),
+      .min(1, { message: 'Password confirmation is required' }),
   })
   .refine(
     (data) => data.plainTextPassword === data.plainTextPasswordConfirmation,
