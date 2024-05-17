@@ -5,7 +5,7 @@ import {
   Legend,
   Line,
   ResponsiveContainer,
-  Tooltip,
+  Tooltip as ChartTooltip,
   XAxis,
   YAxis,
 } from 'recharts'
@@ -91,13 +91,13 @@ export function AnnualBalanceChart({
             bottom: 20,
           }}
         >
-          <Tooltip
-            content={(tooltipContent) => {
+          <ChartTooltip
+            content={(chartTooltipContent) => {
               return (
                 <BalanceDataTooltip
-                  active={tooltipContent.active}
-                  payload={tooltipContent.payload}
-                  label={tooltipContent.label}
+                  active={chartTooltipContent.active}
+                  payload={chartTooltipContent.payload}
+                  label={chartTooltipContent.label}
                 />
               )
             }}
