@@ -12,7 +12,6 @@ export function App() {
     <ThemeProvider defaultTheme="system" storageKey="vite-ui-theme">
       <main className="flex w-full flex-col items-stretch justify-stretch gap-4 p-16">
         <ThemeSwitcher />
-        <p className="selection:bg-primary selection:text-muted">asdasds</p>
         <AmountCards />
         <RegisterTransferSheet />
         <AnnualBalanceCard />

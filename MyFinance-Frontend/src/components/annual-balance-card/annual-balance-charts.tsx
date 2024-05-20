@@ -107,6 +107,7 @@ export function AnnualBalanceChart({
           <XAxis dataKey="month" stroke={axesColor} />
 
           <Bar
+            animationDuration={2000}
             dataKey="balance"
             opacity={opacity.balance}
             fill={balanceBarColor}
@@ -114,6 +115,7 @@ export function AnnualBalanceChart({
           />
 
           <Line
+            animationDuration={2000}
             type="monotone"
             dataKey="income"
             legendType="plainline"
@@ -135,6 +137,7 @@ export function AnnualBalanceChart({
           />
 
           <Line
+            animationDuration={2000}
             type="monotone"
             dataKey="outcome"
             legendType="plainline"
