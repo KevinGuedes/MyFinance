@@ -9,17 +9,17 @@ import {
 } from '../ui/sheet'
 import { TransferForm } from './transfer-form'
 
-export function AddTransferSheet() {
+export function RegisterTransferSheet() {
   return (
     <Sheet>
       <SheetTrigger asChild>
-        <Button variant="outline">Add Transfer</Button>
+        <Button variant="outline">Register Transfer</Button>
       </SheetTrigger>
       <SheetContent>
         <SheetHeader>
-          <SheetTitle>Add Transfer</SheetTitle>
+          <SheetTitle>Register Transfer</SheetTitle>
           <SheetDescription>
-            Fill in the form below to add a new transfer.
+            Fill in the form below to register a new transfer.
           </SheetDescription>
         </SheetHeader>
         <TransferForm />
