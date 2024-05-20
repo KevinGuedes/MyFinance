@@ -1,13 +1,10 @@
 import { zodResolver } from '@hookform/resolvers/zod'
-import { format } from 'date-fns'
-import { Calendar as CalendarIcon } from 'lucide-react'
 import { useForm } from 'react-hook-form'
-import { twMerge } from 'tailwind-merge'
 import { z } from 'zod'
 
 import { MoneyInput } from '../money-input'
 import { Button } from '../ui/button'
-import { Calendar } from '../ui/calendar'
+import { DatePicker } from '../ui/date-picker'
 import {
   Form,
   FormControl,
@@ -17,7 +14,6 @@ import {
   FormMessage,
 } from '../ui/form'
 import { Input } from '../ui/input'
-import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover'
 import { Textarea } from '../ui/textarea'
 
 const transferFormSchema = z.object({
@@ -46,7 +42,7 @@ export function TransferForm() {
   }
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
         <FormField
           control={form.control}
           name="value"
@@ -95,40 +91,17 @@ export function TransferForm() {
           render={({ field }) => (
             <FormItem className="flex flex-col">
               <FormLabel>Date of birth</FormLabel>
-              <Popover>
-                <PopoverTrigger asChild>
-                  <FormControl>
-                    <Button
-                      variant={'outline'}
-                      className={twMerge(
-                        'w-full pl-3 text-left font-normal',
-                        !field.value && 'text-muted-foreground',
-                      )}
-                    >
-                      {field.value ? (
-                        format(field.value, 'PPP')
-                      ) : (
-                        <span>Pick a date</span>
-                      )}
-                      <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                    </Button>
-                  </FormControl>
-                </PopoverTrigger>
-                <PopoverContent className="w-auto p-0" align="start">
-                  <Calendar
-                    mode="single"
-                    selected={field.value}
-                    onSelect={field.onChange}
-                    initialFocus
-                  />
-                </PopoverContent>
-              </Popover>
+              <DatePicker {...field} />
               <FormMessage />
             </FormItem>
           )}
         />
 
-        <Button type="submit" disabled={!form.formState.isValid}>
+        <Button
+          type="submit"
+          className="w-full"
+          disabled={!form.formState.isValid}
+        >
           Add Transfer
         </Button>
       </form>

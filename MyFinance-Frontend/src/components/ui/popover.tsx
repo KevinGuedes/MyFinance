@@ -4,6 +4,8 @@ import { twMerge } from 'tailwind-merge'
 
 const Popover = PopoverPrimitive.Root
 
+const PopoverClose = PopoverPrimitive.PopoverClose
+
 const PopoverTrigger = PopoverPrimitive.Trigger
 
 const PopoverContent = React.forwardRef<
@@ -25,4 +27,4 @@ const PopoverContent = React.forwardRef<
 ))
 PopoverContent.displayName = PopoverPrimitive.Content.displayName
 
-export { Popover, PopoverContent, PopoverTrigger }
+export { Popover, PopoverClose, PopoverContent, PopoverTrigger }
