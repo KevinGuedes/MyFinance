@@ -4,7 +4,7 @@ import {
   ValueType,
 } from 'recharts/types/component/DefaultTooltipContent'
 
-import { toMoney } from '@/utils/to-money'
+import { toMoney } from '@/lib/utils'
 
 type BalanceDataTooltipProps = {
   active: boolean | undefined

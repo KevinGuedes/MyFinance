@@ -20,7 +20,7 @@ export function AnnualBalanceCard() {
   return (
     <Card className="mx-auto w-full max-w-2xl">
       <CardHeader>
-        <CardTitle className="text-2xl">Annual Balance Data</CardTitle>
+        <CardTitle>Annual Balance Data</CardTitle>
         <CardDescription>
           <span className="flex items-center justify-between">
             Income, Outcome and Balance for the last 12 months

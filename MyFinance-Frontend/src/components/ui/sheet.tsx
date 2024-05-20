@@ -3,7 +3,7 @@ import { X } from 'lucide-react'
 import * as React from 'react'
 import { tv, type VariantProps } from 'tailwind-variants'
 
-import { cn } from '@/lib/cn'
+import { cn } from '@/lib/utils'
 
 const Sheet = SheetPrimitive.Root
 

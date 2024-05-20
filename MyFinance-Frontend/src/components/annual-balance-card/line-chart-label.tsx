@@ -1,6 +1,6 @@
 import { LabelProps } from 'recharts'
 
-import { toMoney } from '@/utils/to-money'
+import { toMoney } from '@/lib/utils'
 
 export function LineChartLabel(labelData: LabelProps) {
   const { x, y, stroke, value } = labelData
