@@ -100,7 +100,8 @@ export function PeriodBalanceChart() {
           y={ey}
           dy={18}
           textAnchor={textAnchor}
-          fill="#64748b"
+          fill={fill}
+          className="text-xs font-bold"
         >
           {`${(percent! * 100).toFixed(2)}%`}
         </text>
