@@ -22,10 +22,14 @@ export function AnnualBalanceCard() {
       <CardHeader>
         <CardTitle>Annual Balance Data</CardTitle>
         <CardDescription>
-          <span className="flex items-center justify-between">
+          <span className="flex items-center justify-between gap-4">
             Income, Outcome and Balance for the last 12 months. Hover the chart
-            for more details
-            <Toggle variant="outline" onClick={toggleYAxis}>
+            or the legend for more details
+            <Toggle
+              variant="outline"
+              onClick={toggleYAxis}
+              className="shrink-0"
+            >
               Toggle Y Axis
             </Toggle>
           </span>

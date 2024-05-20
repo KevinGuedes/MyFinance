@@ -68,6 +68,8 @@ export function PeriodBalanceChart() {
           startAngle={startAngle}
           endAngle={endAngle}
           fill={fill}
+          stroke="white"
+          strokeWidth={2}
         />
         <Sector
           cx={cx}
@@ -114,18 +116,20 @@ export function PeriodBalanceChart() {
             onMouseLeave={() => setActiveIndex(undefined)}
             onMouseEnter={(_, index) => setActiveIndex(index)}
             data={data}
+            legendType="rect"
             cx="50%"
             cy="50%"
             activeIndex={activeIndex}
-            labelLine={false}
             activeShape={renderActiveShape}
             outerRadius={80}
             innerRadius={60}
             dataKey="value"
+            paddingAngle={3}
           >
             {data.map((_, index) => (
               <Cell
                 key={`cell-${index}`}
+                stroke="none"
                 fill={COLORS[index % COLORS.length]}
               />
             ))}

@@ -13,8 +13,8 @@ export function PeriodBalanceCard() {
       <CardHeader>
         <CardTitle>Period Balance Data</CardTitle>
         <CardDescription>
-          Income, Outcome and Balance of the selected period. Hover the chart
-          for more details
+          Income, Outcome and Balance of the selected period. Hover the chart or
+          the legend for more details
         </CardDescription>
       </CardHeader>
       <CardContent>
