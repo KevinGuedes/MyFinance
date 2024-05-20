@@ -17,7 +17,7 @@ export function AmountCards() {
       />
       <AmountCard
         variant="outcome"
-        amount={30200}
+        amount={-30200}
         title="Outcome"
         description="Amount transfered"
       />

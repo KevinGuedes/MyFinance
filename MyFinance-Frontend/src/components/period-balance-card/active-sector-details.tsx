@@ -75,7 +75,7 @@ export function ActiveSectorDetails({
         fill={fill}
         className="font-bold"
       >
-        {toMoney(value!)}
+        {name === 'Outcome' ? toMoney(-1 * value!) : toMoney(value!)}
       </text>
       <text
         x={ex + (cos >= 0 ? 1 : -1) * 12}

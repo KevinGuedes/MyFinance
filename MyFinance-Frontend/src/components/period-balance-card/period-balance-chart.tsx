@@ -4,9 +4,9 @@ import { Cell, Legend, Pie, PieChart, ResponsiveContainer } from 'recharts'
 import { ActiveSectorDetails } from './active-sector-details'
 
 const data = [
-  { name: 'Balance', value: 322 },
-  { name: 'Income', value: 440 },
-  { name: 'Outcome', value: 673 },
+  { type: 'Balance', value: 322 },
+  { type: 'Income', value: 440 },
+  { type: 'Outcome', value: 673 },
 ]
 const COLORS = ['#64748b', '#2563eb', '#7f1d1d']
 
@@ -28,6 +28,7 @@ export function PeriodBalanceChart() {
           <Pie
             data={data}
             dataKey="value"
+            nameKey="type"
             legendType="rect"
             cx="50%"
             cy="50%"
@@ -41,7 +42,7 @@ export function PeriodBalanceChart() {
           >
             {data.map((_, index) => (
               <Cell
-                key={`cell-${index}`}
+                key={`sector-${index}`}
                 stroke="none"
                 fill={COLORS[index % COLORS.length]}
               />
