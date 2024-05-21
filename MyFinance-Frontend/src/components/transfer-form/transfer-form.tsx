@@ -1,4 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod'
+import { TrendingDown, TrendingUp } from 'lucide-react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 
@@ -78,25 +79,45 @@ export function TransferForm() {
           control={form.control}
           name="type"
           render={({ field }) => (
-            <FormItem className="space-y-3">
+            <FormItem>
               <FormLabel>Type</FormLabel>
               <FormControl>
                 <RadioGroup
                   onValueChange={field.onChange}
                   defaultValue={field.value}
-                  className="flex flex-col space-y-1"
+                  className="grid grid-cols-2 gap-4"
                 >
-                  <FormItem className="flex items-center space-x-3 space-y-0">
+                  <FormItem>
                     <FormControl>
-                      <RadioGroupItem value="Income" />
+                      <RadioGroupItem
+                        value="Income"
+                        id="income"
+                        className="peer sr-only"
+                      />
                     </FormControl>
-                    <FormLabel className="font-normal">Income</FormLabel>
+                    <FormLabel
+                      htmlFor="income"
+                      className="group flex flex-row-reverse items-center justify-center gap-3 rounded-md border-2 border-transparent bg-primary/20 p-1 text-base font-bold text-primary transition-all duration-150 hover:bg-primary/50 hover:text-accent-foreground peer-data-[state=checked]:border-primary peer-data-[state=checked]:bg-primary/50 peer-data-[state=checked]:text-accent-foreground [&:has([data-state=checked])]:border-primary"
+                    >
+                      <TrendingUp className="mb-1 size-6" />
+                      Income
+                    </FormLabel>
                   </FormItem>
-                  <FormItem className="flex items-center space-x-3 space-y-0">
+                  <FormItem>
                     <FormControl>
-                      <RadioGroupItem value="Outcome" />
+                      <RadioGroupItem
+                        value="Outcome"
+                        id="outcome"
+                        className="peer sr-only"
+                      />
                     </FormControl>
-                    <FormLabel className="font-normal">Outcome</FormLabel>
+                    <FormLabel
+                      htmlFor="outcome"
+                      className="peer-data-[state=checked] :text-accent-foreground group flex flex-row-reverse items-center justify-center gap-3 rounded-md border-2 border-transparent bg-destructive/25 p-1 text-base font-bold text-destructive transition-all duration-150 hover:bg-destructive/50 hover:text-accent-foreground peer-data-[state=checked]:border-2 peer-data-[state=checked]:border-destructive peer-data-[state=checked]:bg-destructive/50 peer-data-[state=checked]:text-accent-foreground [&:has([data-state=checked])]:border-destructive"
+                    >
+                      <TrendingDown className="group mb-1 size-6" />
+                      Outcome
+                    </FormLabel>
                   </FormItem>
                 </RadioGroup>
               </FormControl>
@@ -114,6 +135,18 @@ export function TransferForm() {
               <FormControl>
                 <Input {...field} />
               </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="settlementDate"
+          render={({ field }) => (
+            <FormItem className="flex flex-col">
+              <FormLabel>Settlement Date</FormLabel>
+              <DatePicker {...field} />
               <FormMessage />
             </FormItem>
           )}
@@ -171,18 +204,6 @@ export function TransferForm() {
 
         <FormField
           control={form.control}
-          name="settlementDate"
-          render={({ field }) => (
-            <FormItem className="flex flex-col">
-              <FormLabel>Settlement Date</FormLabel>
-              <DatePicker {...field} showPresetDates />
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
           name="description"
           render={({ field }) => (
             <FormItem>
@@ -195,11 +216,7 @@ export function TransferForm() {
           )}
         />
 
-        <Button
-          type="submit"
-          className="w-full"
-          disabled={!form.formState.isValid}
-        >
+        <Button type="submit" className="w-full">
           Add Transfer
         </Button>
       </form>
