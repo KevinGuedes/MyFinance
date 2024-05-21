@@ -13,9 +13,9 @@ export function App() {
     <ThemeProvider defaultTheme="system" storageKey="vite-ui-theme">
       <main className="flex w-full flex-col items-stretch justify-stretch gap-4 p-16">
         <ThemeSwitcher />
+        <RegisterTransferSheet />
         <PeriodBalanceCard />
         <AmountCards />
-        <RegisterTransferSheet />
         <AnnualBalanceCard />
         <SignUp />
         <SignIn />

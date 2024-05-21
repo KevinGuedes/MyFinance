@@ -3,7 +3,9 @@ import { PieSectorDataItem } from 'recharts/types/polar/Pie'
 
 import { toMoney } from '@/lib/utils'
 
-interface ActiveSectorDetailsProps extends PieSectorDataItem {}
+interface ActiveSectorDetailsProps extends PieSectorDataItem {
+  isNegativeBalance: boolean
+}
 
 export function ActiveSectorDetails({
   cx,
@@ -17,6 +19,7 @@ export function ActiveSectorDetails({
   name,
   percent,
   value,
+  isNegativeBalance,
 }: ActiveSectorDetailsProps) {
   const RADIAN = Math.PI / 180
 
@@ -29,6 +32,15 @@ export function ActiveSectorDetails({
   const ex = mx + (cos >= 0 ? 1 : -1) * 22
   const ey = my
   const textAnchor = cos >= 0 ? 'start' : 'end'
+
+  const isOutcomeValue = name === 'Outcome'
+  const isBalanceValue = name === 'Balance'
+  const shouldAddNegativeSign =
+    (isNegativeBalance && isBalanceValue) || isOutcomeValue
+
+  const formattedValue = shouldAddNegativeSign
+    ? toMoney(-1 * value!)
+    : toMoney(value!)
 
   return (
     <g>
@@ -75,7 +87,7 @@ export function ActiveSectorDetails({
         fill={fill}
         className="font-bold"
       >
-        {name === 'Outcome' ? toMoney(-1 * value!) : toMoney(value!)}
+        {formattedValue}
       </text>
       <text
         x={ex + (cos >= 0 ? 1 : -1) * 12}
