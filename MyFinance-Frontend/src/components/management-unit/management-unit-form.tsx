@@ -12,13 +12,14 @@ import {
   FormMessage,
 } from '../ui/form'
 import { Input } from '../ui/input'
+import { RangeDatePicker } from '../ui/range-date-picker'
 import { Textarea } from '../ui/textarea'
 
-const managementUnitFormSchema = z
-  .object({
-    name: z.string().min(1, { message: 'Name is required' }),
-    description: z.string().optional(),
-    dateRange: z.object(
+const managementUnitFormSchema = z.object({
+  name: z.string().min(1, { message: 'Name is required' }),
+  description: z.string().optional(),
+  dateRange: z
+    .object(
       {
         from: z.date(),
         to: z.date(),
@@ -26,12 +27,12 @@ const managementUnitFormSchema = z
       {
         required_error: 'Please select a date range',
       },
-    ),
-  })
-  .refine((data) => data.dateRange.from < data.dateRange.to, {
-    path: ['dateRange'],
-    message: 'From date must be before to date',
-  })
+    )
+    .refine((dateRange) => dateRange.from < dateRange.to, {
+      path: ['dateRange'],
+      message: 'From date must be before to date',
+    }),
+})
 
 type ManagementUnitFormSchema = z.infer<typeof managementUnitFormSchema>
 
@@ -41,6 +42,10 @@ export function ManagementUnitForm() {
     defaultValues: {
       name: '',
       description: '',
+      dateRange: {
+        from: new Date(),
+        to: new Date(),
+      },
     },
   })
 
@@ -74,6 +79,18 @@ export function ManagementUnitForm() {
               <FormControl>
                 <Textarea {...field} />
               </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="dateRange"
+          render={({ field }) => (
+            <FormItem className="flex flex-col">
+              <FormLabel>Start and End Date</FormLabel>
+              <RangeDatePicker {...field} />
               <FormMessage />
             </FormItem>
           )}

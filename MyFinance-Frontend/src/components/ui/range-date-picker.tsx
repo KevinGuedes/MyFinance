@@ -1,9 +1,7 @@
 import { format } from 'date-fns'
 import { Calendar as CalendarIcon } from 'lucide-react'
-import { useState } from 'react'
 import * as React from 'react'
-import { DateRange, SelectSingleEventHandler } from 'react-day-picker'
-import { twMerge } from 'tailwind-merge'
+import { DateRange, SelectRangeEventHandler } from 'react-day-picker'
 
 import { Button } from '@/components/ui/button'
 import { Calendar } from '@/components/ui/calendar'
@@ -12,62 +10,59 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover'
+import { cn } from '@/lib/utils'
 
-export interface DatePickerProps {
+export interface RangeDatePickerProps {
   value?: DateRange
   disabled?: boolean
-  onChange: (value: Date | undefined) => void
+  onChange: (value: DateRange | undefined) => void
 }
 
 export const RangeDatePicker = React.forwardRef<
   React.ElementRef<typeof Popover>,
-  DatePickerProps
+  RangeDatePickerProps
 >(({ value, disabled, onChange }, ref) => {
-  const [isCalendarOpen, setIsCalendarOpen] = useState(false)
-
-  const handleOnSelect: SelectSingleEventHandler = (date) => {
-    onChange(date)
-    setIsCalendarOpen(false)
-  }
-
-  function handlePresetDate(date: Date) {
-    onChange(date)
-    setIsCalendarOpen(false)
+  const handleOnSelect: SelectRangeEventHandler = (dateRange) => {
+    onChange(dateRange)
   }
 
   return (
-    <Popover open={isCalendarOpen} onOpenChange={setIsCalendarOpen}>
+    <Popover modal={true}>
       <PopoverTrigger asChild>
         <Button
           variant="outline"
           disabled={disabled}
-          className={twMerge(
+          className={cn(
             'w-full justify-start text-left font-normal',
-            !value && 'text-muted-foreground',
+            value?.from && 'text-muted-foreground',
           )}
         >
           <CalendarIcon className="mr-2 h-4 w-4" />
           {value?.from ? (
-            value.to ? (
+            value?.to ? (
               <>
-                {format(value.from, 'LLL dd, y')} -{' '}
-                {format(value.to, 'LLL dd, y')}
+                {format(value?.from, 'LLL dd, y')} -{' '}
+                {format(value?.to, 'LLL dd, y')}
               </>
             ) : (
-              format(value.from, 'LLL dd, y')
+              format(value?.from, 'LLL dd, y')
             )
           ) : (
             <span>Pick a date</span>
           )}
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="flex w-auto flex-col space-y-2 p-2" ref={ref}>
+      <PopoverContent className="w-auto p-0" align="center" ref={ref}>
         <Calendar
-          mode="single"
-          selected={value}
-          defaultMonth={value?.from || new Date()}
-          onSelect={handleOnSelect}
           initialFocus
+          mode="range"
+          defaultMonth={value?.from}
+          selected={{
+            from: value?.from,
+            to: value?.to,
+          }}
+          onSelect={handleOnSelect}
+          numberOfMonths={2}
         />
       </PopoverContent>
     </Popover>

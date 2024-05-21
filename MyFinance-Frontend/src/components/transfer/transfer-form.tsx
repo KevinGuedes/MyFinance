@@ -26,31 +26,17 @@ import {
 } from '../ui/select'
 import { Textarea } from '../ui/textarea'
 
-const transferFormSchema = z
-  .object({
-    value: z.string().min(1, { message: 'Value is required' }),
-    relatedTo: z.string().min(1, { message: 'Related to is required' }),
-    description: z.string().optional(),
-    settlementDate: z.date({ required_error: 'Settlement date is required' }),
-    category: z.string().min(1, { message: 'Category  is required' }),
-    accountTag: z.string().min(1, { message: 'Account Tag is required' }),
-    type: z.enum(['Income', 'Outcome'], {
-      required_error: 'Transfer type is required',
-    }),
-    dateRange: z.object(
-      {
-        from: z.date(),
-        to: z.date(),
-      },
-      {
-        required_error: 'Please select a date range',
-      },
-    ),
-  })
-  .refine((data) => data.dateRange.from < data.dateRange.to, {
-    path: ['dateRange'],
-    message: 'From date must be before to date',
-  })
+const transferFormSchema = z.object({
+  value: z.string().min(1, { message: 'Value is required' }),
+  relatedTo: z.string().min(1, { message: 'Related to is required' }),
+  description: z.string().optional(),
+  settlementDate: z.date({ required_error: 'Settlement date is required' }),
+  category: z.string().min(1, { message: 'Category  is required' }),
+  accountTag: z.string().min(1, { message: 'Account Tag is required' }),
+  type: z.enum(['Income', 'Outcome'], {
+    required_error: 'Transfer type is required',
+  }),
+})
 
 type TransferFormSchema = z.infer<typeof transferFormSchema>
 
@@ -111,7 +97,7 @@ export function TransferForm() {
                     </FormControl>
                     <FormLabel
                       htmlFor="income"
-                      className="group flex flex-row-reverse items-center justify-center gap-3 rounded-md border-2 border-transparent bg-primary/20 p-1 text-base font-bold text-primary transition-all duration-150 hover:bg-primary/50 hover:text-accent-foreground peer-data-[state=checked]:border-primary peer-data-[state=checked]:bg-primary/50 peer-data-[state=checked]:text-accent-foreground [&:has([data-state=checked])]:border-primary"
+                      className="group flex cursor-pointer flex-row-reverse items-center justify-center gap-3 rounded-md border-2 border-transparent bg-primary/20 p-1 text-base font-bold text-primary transition-all duration-150 hover:bg-primary/50 hover:text-accent-foreground peer-data-[state=checked]:border-primary peer-data-[state=checked]:bg-primary/50 peer-data-[state=checked]:text-accent-foreground [&:has([data-state=checked])]:border-primary"
                     >
                       <TrendingUp className="mb-1 size-6" />
                       Income
@@ -127,7 +113,7 @@ export function TransferForm() {
                     </FormControl>
                     <FormLabel
                       htmlFor="outcome"
-                      className="peer-data-[state=checked] :text-accent-foreground group flex flex-row-reverse items-center justify-center gap-3 rounded-md border-2 border-transparent bg-destructive/25 p-1 text-base font-bold text-destructive transition-all duration-150 hover:bg-destructive/50 hover:text-accent-foreground peer-data-[state=checked]:border-2 peer-data-[state=checked]:border-destructive peer-data-[state=checked]:bg-destructive/50 peer-data-[state=checked]:text-accent-foreground [&:has([data-state=checked])]:border-destructive"
+                      className="group flex cursor-pointer flex-row-reverse items-center justify-center gap-3 rounded-md border-2 border-transparent bg-destructive/25 p-1 text-base font-bold text-destructive transition-all duration-150 hover:bg-destructive/50 hover:text-accent-foreground peer-data-[state=checked]:border-2 peer-data-[state=checked]:border-destructive peer-data-[state=checked]:bg-destructive/50 peer-data-[state=checked]:text-accent-foreground [&:has([data-state=checked])]:border-destructive"
                     >
                       <TrendingDown className="group mb-1 size-6" />
                       Outcome

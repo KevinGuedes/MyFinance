@@ -3,7 +3,6 @@ import { Calendar as CalendarIcon } from 'lucide-react'
 import { useState } from 'react'
 import * as React from 'react'
 import { SelectSingleEventHandler } from 'react-day-picker'
-import { twMerge } from 'tailwind-merge'
 
 import { Button } from '@/components/ui/button'
 import { Calendar } from '@/components/ui/calendar'
@@ -19,6 +18,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
+import { cn } from '@/lib/utils'
 
 export interface DatePickerProps {
   value?: Date
@@ -44,12 +44,16 @@ export const DatePicker = React.forwardRef<
   }
 
   return (
-    <Popover open={isCalendarOpen} onOpenChange={setIsCalendarOpen}>
+    <Popover
+      open={isCalendarOpen}
+      onOpenChange={setIsCalendarOpen}
+      modal={true}
+    >
       <PopoverTrigger asChild>
         <Button
           variant="outline"
           disabled={disabled}
-          className={twMerge(
+          className={cn(
             'w-full justify-start text-left font-normal',
             !value && 'text-muted-foreground',
           )}
