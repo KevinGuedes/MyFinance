@@ -26,17 +26,31 @@ import {
 } from '../ui/select'
 import { Textarea } from '../ui/textarea'
 
-const transferFormSchema = z.object({
-  value: z.string().min(1, { message: 'Value is required' }),
-  relatedTo: z.string().min(1, { message: 'Related to is required' }),
-  description: z.string().optional(),
-  settlementDate: z.date({ required_error: 'Settlement date is required' }),
-  category: z.string().min(1, { message: 'Category  is required' }),
-  accountTag: z.string().min(1, { message: 'Account Tag is required' }),
-  type: z.enum(['Income', 'Outcome'], {
-    required_error: 'Transfer type is required',
-  }),
-})
+const transferFormSchema = z
+  .object({
+    value: z.string().min(1, { message: 'Value is required' }),
+    relatedTo: z.string().min(1, { message: 'Related to is required' }),
+    description: z.string().optional(),
+    settlementDate: z.date({ required_error: 'Settlement date is required' }),
+    category: z.string().min(1, { message: 'Category  is required' }),
+    accountTag: z.string().min(1, { message: 'Account Tag is required' }),
+    type: z.enum(['Income', 'Outcome'], {
+      required_error: 'Transfer type is required',
+    }),
+    dateRange: z.object(
+      {
+        from: z.date(),
+        to: z.date(),
+      },
+      {
+        required_error: 'Please select a date range',
+      },
+    ),
+  })
+  .refine((data) => data.dateRange.from < data.dateRange.to, {
+    path: ['dateRange'],
+    message: 'From date must be before to date',
+  })
 
 type TransferFormSchema = z.infer<typeof transferFormSchema>
 
