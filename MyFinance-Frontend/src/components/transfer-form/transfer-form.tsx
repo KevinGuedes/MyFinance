@@ -3,7 +3,6 @@ import { TrendingDown, TrendingUp } from 'lucide-react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 
-import { MoneyInput } from '../money-input'
 import { Button } from '../ui/button'
 import { DatePicker } from '../ui/date-picker'
 import {
@@ -16,6 +15,7 @@ import {
   FormMessage,
 } from '../ui/form'
 import { Input } from '../ui/input'
+import { MoneyInput } from '../ui/money-input'
 import { RadioGroup, RadioGroupItem } from '../ui/radio-group'
 import {
   Select,
@@ -216,7 +216,11 @@ export function TransferForm() {
           )}
         />
 
-        <Button type="submit" className="w-full">
+        <Button
+          type="submit"
+          className="w-full"
+          disabled={!form.formState.isValid || form.formState.isSubmitting}
+        >
           Add Transfer
         </Button>
       </form>
