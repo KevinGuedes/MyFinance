@@ -15,6 +15,7 @@ import {
   FormMessage,
 } from '../ui/form'
 import { Input } from '../ui/input'
+import { RadioGroup, RadioGroupItem } from '../ui/radio-group'
 import {
   Select,
   SelectContent,
@@ -31,6 +32,9 @@ const transferFormSchema = z.object({
   settlementDate: z.date({ required_error: 'Settlement date is required' }),
   category: z.string().min(1, { message: 'Category  is required' }),
   accountTag: z.string().min(1, { message: 'Account Tag is required' }),
+  type: z.enum(['Income', 'Outcome'], {
+    required_error: 'Transfer type is required',
+  }),
 })
 
 type TransferFormSchema = z.infer<typeof transferFormSchema>
@@ -64,6 +68,37 @@ export function TransferForm() {
               <FormLabel>Value (R$)</FormLabel>
               <FormControl>
                 <MoneyInput {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="type"
+          render={({ field }) => (
+            <FormItem className="space-y-3">
+              <FormLabel>Type</FormLabel>
+              <FormControl>
+                <RadioGroup
+                  onValueChange={field.onChange}
+                  defaultValue={field.value}
+                  className="flex flex-col space-y-1"
+                >
+                  <FormItem className="flex items-center space-x-3 space-y-0">
+                    <FormControl>
+                      <RadioGroupItem value="Income" />
+                    </FormControl>
+                    <FormLabel className="font-normal">Income</FormLabel>
+                  </FormItem>
+                  <FormItem className="flex items-center space-x-3 space-y-0">
+                    <FormControl>
+                      <RadioGroupItem value="Outcome" />
+                    </FormControl>
+                    <FormLabel className="font-normal">Outcome</FormLabel>
+                  </FormItem>
+                </RadioGroup>
               </FormControl>
               <FormMessage />
             </FormItem>

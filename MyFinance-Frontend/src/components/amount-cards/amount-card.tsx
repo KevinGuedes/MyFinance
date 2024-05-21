@@ -1,3 +1,4 @@
+import { PiggyBank, TrendingDown, TrendingUp } from 'lucide-react'
 import CountUp from 'react-countup'
 import { tv, type VariantProps } from 'tailwind-variants'
 
@@ -40,14 +41,27 @@ export function AmountCard({
   return (
     <Card>
       <CardHeader className="pb-2">
-        <CardTitle
-          className={cn('line-clamp-1', amountCardVariants({ variant }))}
-        >
-          {title}
-        </CardTitle>
-        <CardDescription className="line-clamp-1">
-          {description}
-        </CardDescription>
+        <div className="flex justify-between gap-8">
+          <div className="space-y-2">
+            <CardTitle
+              className={cn('line-clamp-1', amountCardVariants({ variant }))}
+            >
+              {title}
+            </CardTitle>
+            <CardDescription className="line-clamp-1">
+              {description}
+            </CardDescription>
+          </div>
+          {variant === 'income' && (
+            <TrendingUp className="inline-block size-10 rounded-md bg-primary/20 p-2 text-primary" />
+          )}
+          {variant === 'outcome' && (
+            <TrendingDown className="inline-block size-10 rounded-md bg-destructive/25 p-2 text-destructive" />
+          )}
+          {variant === 'balance' && (
+            <PiggyBank className="inline-block size-10 rounded-md bg-muted-foreground/30 p-2 text-muted-foreground" />
+          )}
+        </div>
       </CardHeader>
       <CardContent>
         <h2
