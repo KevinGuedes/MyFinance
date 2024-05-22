@@ -4,6 +4,7 @@ import { AmountCards } from './components/amount-cards/amount-cards'
 import { AnnualBalanceCard } from './components/annual-balance-card/annual-balance-card'
 import { CreateManagementUnitDialog } from './components/management-unit/create-management-unit-dialogs'
 import { PeriodBalanceCard } from './components/period-balance-card/period-balance-card'
+import { SearchManagementUnits } from './components/search-management-units/search-management-units'
 import { ThemeSwitcher } from './components/theme/theme-switcher'
 import { RegisterTransferDialog } from './components/transfer/register-transfer-dialog'
 import { Input } from './components/ui/input'
@@ -17,6 +18,7 @@ export function App() {
         <ThemeSwitcher />
         <RegisterTransferDialog />
         <CreateManagementUnitDialog />
+        <SearchManagementUnits />
         {/* <PeriodBalanceCard /> */}
         {/* <AmountCards />
         <AnnualBalanceCard />

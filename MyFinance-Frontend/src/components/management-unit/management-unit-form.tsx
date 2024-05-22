@@ -79,7 +79,7 @@ export function ManagementUnitForm() {
           name="description"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Description</FormLabel>
+              <FormLabel>Description (Optional)</FormLabel>
               <FormControl>
                 <Textarea {...field} />
               </FormControl>
