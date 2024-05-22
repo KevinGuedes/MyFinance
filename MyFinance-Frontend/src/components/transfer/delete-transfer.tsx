@@ -11,8 +11,18 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog'
+import { useToast } from '@/components/ui/toast/use-toast'
 
 export function DeleteTransfer() {
+  const { toast } = useToast()
+
+  function showResultToast() {
+    toast({
+      title: 'Transfer successfully deleted!',
+      description: 'Management Unit data has been updated.',
+    })
+  }
+
   return (
     <AlertDialog>
       <AlertDialogTrigger>
@@ -31,7 +41,9 @@ export function DeleteTransfer() {
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel>Cancel</AlertDialogCancel>
-          <AlertDialogAction>Continue</AlertDialogAction>
+          <AlertDialogAction onClick={showResultToast}>
+            Continue
+          </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>

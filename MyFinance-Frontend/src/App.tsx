@@ -9,6 +9,7 @@ import { ThemeSwitcher } from './components/theme/theme-switcher'
 import { DeleteTransfer } from './components/transfer/delete-transfer'
 import { RegisterTransferDialog } from './components/transfer/register-transfer-dialog'
 import { Input } from './components/ui/input'
+import { Toaster } from './components/ui/toast/toaster'
 import { SignIn } from './pages/sign-in/sign-in'
 import { SignUp } from './pages/sign-up/sign-up'
 
@@ -16,6 +17,7 @@ export function App() {
   return (
     <ThemeProvider defaultTheme="system" storageKey="vite-ui-theme">
       <main className="flex w-full flex-col items-stretch justify-stretch gap-4 p-16">
+        <Toaster />
         <ThemeSwitcher />
         <RegisterTransferDialog />
         <CreateManagementUnitDialog />
