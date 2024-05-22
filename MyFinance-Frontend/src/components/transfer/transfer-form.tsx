@@ -165,6 +165,20 @@ export function TransferForm() {
         <div className="mt-4 space-y-4 sm:mt-0">
           <FormField
             control={form.control}
+            name="description"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Description</FormLabel>
+                <FormControl>
+                  <Textarea {...field} className="resize-none" />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
             name="accountTag"
             render={({ field }) => (
               <FormItem>
@@ -232,20 +246,6 @@ export function TransferForm() {
                     <SelectItem value="guidId84">Not Planned</SelectItem>
                   </SelectContent>
                 </Select>
-              </FormItem>
-            )}
-          />
-
-          <FormField
-            control={form.control}
-            name="description"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Description</FormLabel>
-                <FormControl>
-                  <Textarea {...field} className="resize-none" />
-                </FormControl>
-                <FormMessage />
               </FormItem>
             )}
           />
