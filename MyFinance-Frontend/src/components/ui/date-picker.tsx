@@ -1,6 +1,5 @@
 import { addDays, format } from 'date-fns'
 import { Calendar as CalendarIcon } from 'lucide-react'
-import { useState } from 'react'
 import * as React from 'react'
 import { SelectSingleEventHandler } from 'react-day-picker'
 
@@ -31,7 +30,7 @@ export const DatePicker = React.forwardRef<
   React.ElementRef<typeof Popover>,
   DatePickerProps
 >(({ value, disabled, showPresetDates = false, onChange }, ref) => {
-  const [isCalendarOpen, setIsCalendarOpen] = useState(false)
+  const [isCalendarOpen, setIsCalendarOpen] = React.useState(false)
 
   const handleOnSelect: SelectSingleEventHandler = (date) => {
     onChange(date)
@@ -59,7 +58,11 @@ export const DatePicker = React.forwardRef<
           )}
         >
           <CalendarIcon className="mr-2 h-4 w-4" />
-          {value ? format(value, 'PPP') : <span>Pick a value</span>}
+          {value ? (
+            format(value, 'PPP')
+          ) : (
+            <span className="text-muted-foreground">Select a date</span>
+          )}
         </Button>
       </PopoverTrigger>
       <PopoverContent className="flex w-auto flex-col space-y-2 p-2" ref={ref}>

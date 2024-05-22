@@ -18,6 +18,7 @@ const MoneyInput = React.forwardRef<HTMLInputElement, MoneyInputProps>(
         )}
         ref={ref}
         prefix="R$"
+        inputMode="text"
         placeholder="R$ 0,00"
         decimalScale={2}
         decimalsLimit={2}

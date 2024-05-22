@@ -15,11 +15,11 @@ import { Input } from '../ui/input'
 import { RangeDatePicker } from '../ui/range-date-picker'
 import { Textarea } from '../ui/textarea'
 
-const managementUnitFormSchema = z.object({
-  name: z.string().min(1, { message: 'Name is required' }),
-  description: z.string().optional(),
-  dateRange: z
-    .object(
+const managementUnitFormSchema = z
+  .object({
+    name: z.string().min(1, { message: 'Name is required' }),
+    description: z.string().optional(),
+    dateRange: z.object(
       {
         from: z.date(),
         to: z.date(),
@@ -27,12 +27,12 @@ const managementUnitFormSchema = z.object({
       {
         required_error: 'Please select a date range',
       },
-    )
-    .refine((dateRange) => dateRange.from < dateRange.to, {
-      path: ['dateRange'],
-      message: 'From date must be before to date',
-    }),
-})
+    ),
+  })
+  .refine((data) => data.dateRange.from <= data.dateRange.to, {
+    path: ['dateRange'],
+    message: 'From date must be before to date',
+  })
 
 type ManagementUnitFormSchema = z.infer<typeof managementUnitFormSchema>
 
@@ -43,19 +43,23 @@ export function ManagementUnitForm() {
       name: '',
       description: '',
       dateRange: {
-        from: new Date(),
-        to: new Date(),
+        from: undefined,
+        to: undefined,
       },
     },
   })
 
   function onSubmit(values: ManagementUnitFormSchema) {
     console.log(values)
+    console.log(form.formState.isDirty)
   }
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+      <form
+        onSubmit={form.handleSubmit(onSubmit)}
+        className="flex grow flex-col gap-4"
+      >
         <FormField
           control={form.control}
           name="name"
@@ -96,13 +100,15 @@ export function ManagementUnitForm() {
           )}
         />
 
-        <Button
-          type="submit"
-          className="w-full"
-          disabled={!form.formState.isValid || form.formState.isSubmitting}
-        >
-          Create Management Unit
-        </Button>
+        <div className="flex grow items-end">
+          <Button
+            type="submit"
+            className="w-full"
+            disabled={!form.formState.isValid || form.formState.isSubmitting}
+          >
+            Create Management Unit
+          </Button>
+        </div>
       </form>
     </Form>
   )
