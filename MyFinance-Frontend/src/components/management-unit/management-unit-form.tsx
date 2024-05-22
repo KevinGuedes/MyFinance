@@ -1,6 +1,9 @@
 import { zodResolver } from '@hookform/resolvers/zod'
+import { Loader2 } from 'lucide-react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
+
+import { useCreateManagementUnit } from '@/http/management-units/use-create-management-unit'
 
 import { Button } from '../ui/button'
 import {
@@ -12,46 +15,28 @@ import {
   FormMessage,
 } from '../ui/form'
 import { Input } from '../ui/input'
-import { RangeDatePicker } from '../ui/range-date-picker'
 import { Textarea } from '../ui/textarea'
 
-const managementUnitFormSchema = z
-  .object({
-    name: z.string().min(1, { message: 'Name is required' }),
-    description: z.string().optional(),
-    dateRange: z.object(
-      {
-        from: z.date(),
-        to: z.date(),
-      },
-      {
-        required_error: 'Please select a date range',
-      },
-    ),
-  })
-  .refine((data) => data.dateRange.from <= data.dateRange.to, {
-    path: ['dateRange'],
-    message: 'From date must be before to date',
-  })
+const managementUnitFormSchema = z.object({
+  name: z.string().min(1, { message: 'Name is required' }),
+  description: z.string().optional(),
+})
 
 type ManagementUnitFormSchema = z.infer<typeof managementUnitFormSchema>
 
 export function ManagementUnitForm() {
+  const { mutation, isCreating } = useCreateManagementUnit()
+
   const form = useForm<ManagementUnitFormSchema>({
     resolver: zodResolver(managementUnitFormSchema),
     defaultValues: {
       name: '',
       description: '',
-      dateRange: {
-        from: undefined,
-        to: undefined,
-      },
     },
   })
 
-  function onSubmit(values: ManagementUnitFormSchema) {
-    console.log(values)
-    console.log(form.formState.isDirty)
+  async function onSubmit(values: ManagementUnitFormSchema) {
+    mutation.mutate(values)
   }
 
   return (
@@ -88,25 +73,23 @@ export function ManagementUnitForm() {
           )}
         />
 
-        <FormField
-          control={form.control}
-          name="dateRange"
-          render={({ field }) => (
-            <FormItem className="flex flex-col">
-              <FormLabel>Start and End Date</FormLabel>
-              <RangeDatePicker {...field} />
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
         <div className="flex grow items-end">
           <Button
             type="submit"
             className="w-full"
-            disabled={!form.formState.isValid || form.formState.isSubmitting}
+            disabled={
+              !form.formState.isValid ||
+              form.formState.isSubmitting ||
+              isCreating
+            }
           >
-            Create Management Unit
+            {isCreating ? (
+              <>
+                <Loader2 className="mr-2 size-4 animate-spin" />
+              </>
+            ) : (
+              <>Create Management Unit</>
+            )}
           </Button>
         </div>
       </form>
