@@ -20,8 +20,9 @@ export function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <ThemeProvider defaultTheme="system" storageKey="vite-ui-theme">
-        <main className="flex w-full flex-col items-stretch justify-stretch gap-4 p-16">
+        <main className="flex w-full flex-col items-stretch justify-stretch gap-4 p-4">
           <ThemeSwitcher />
+
           <SignIn />
           <SignUp />
           <Toaster />

@@ -53,7 +53,7 @@ export function AmountCard({
             </CardDescription>
           </div>
           {variant === 'income' && (
-            <TrendingUp className="inline-block size-10 rounded-md bg-primary/20 p-2 text-primary" />
+            <TrendingUp className="inline-block size-10 rounded-md bg-primary/10 p-2 text-primary" />
           )}
           {variant === 'outcome' && (
             <TrendingDown className="inline-block size-10 rounded-md bg-destructive/25 p-2 text-destructive" />

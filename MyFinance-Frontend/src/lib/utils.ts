@@ -15,7 +15,3 @@ export function toMoney(number: number, useCompactMode = false) {
     }),
   }).format(number)
 }
-
-export function BRLToFloat(value: string) {
-  return parseFloat(value.replace(',', '.'))
-}

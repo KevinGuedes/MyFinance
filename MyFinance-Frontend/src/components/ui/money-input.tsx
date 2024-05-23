@@ -1,16 +1,37 @@
 import * as React from 'react'
 import CurrencyInput from 'react-currency-input-field'
+import { CurrencyInput as CurrencyMask } from 'react-currency-mask'
 
 import { cn } from '@/lib/utils'
 
+import { Input } from './input'
+
 export interface MoneyInputProps {
-  value?: string
+  value?: number
   disabled?: boolean
-  onChange: (value: string | undefined) => void
+  onChange: (value: string | number | undefined) => void
+  useMaskInput?: boolean
 }
 
 const MoneyInput = React.forwardRef<HTMLInputElement, MoneyInputProps>(
-  ({ onChange, value, disabled }, ref) => {
+  ({ onChange, value, disabled, useMaskInput = true }, ref) => {
+    if (useMaskInput)
+      return (
+        <CurrencyMask
+          value={value}
+          defaultValue={0}
+          onChangeValue={(_, originalValue) => onChange(originalValue)}
+          InputElement={
+            <Input
+              placeholder="R$ 0,00"
+              disabled={disabled}
+              inputMode="numeric"
+              ref={ref}
+            />
+          }
+        />
+      )
+
     return (
       <CurrencyInput
         className={cn(

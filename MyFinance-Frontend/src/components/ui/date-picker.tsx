@@ -43,11 +43,7 @@ export const DatePicker = React.forwardRef<
   }
 
   return (
-    <Popover
-      open={isCalendarOpen}
-      onOpenChange={setIsCalendarOpen}
-      modal={true}
-    >
+    <Popover open={isCalendarOpen} onOpenChange={setIsCalendarOpen}>
       <PopoverTrigger asChild>
         <Button
           variant="outline"
