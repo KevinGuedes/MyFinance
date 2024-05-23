@@ -27,12 +27,12 @@ export function App() {
           <Toaster />
           <RegisterTransferDialog />
           <CreateManagementUnitDialog />
-          <SearchManagementUnits />
           <DeleteTransfer />
+          {/* <SearchManagementUnits />
           <PeriodBalanceCard />
           <AmountCards />
           <AnnualBalanceCard />
-          <ReactQueryDevtools initialIsOpen={true} />
+          <ReactQueryDevtools initialIsOpen={true} /> */}
         </main>
       </ThemeProvider>
     </QueryClientProvider>

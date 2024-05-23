@@ -109,9 +109,9 @@ export function SignUpForm() {
                 <Input type="password" {...field} />
               </FormControl>
 
-              <FormDescription>
-                16 characters minimum and must include at least 2 numbers, 2
-                special characters, 2 capital and lower letters
+              <FormDescription className="text-justify">
+                16 characters minimum and must include at least 2 capital and
+                lower letters, 2 numbers and 2 special characters
               </FormDescription>
               <FormMessage />
             </FormItem>
@@ -132,18 +132,16 @@ export function SignUpForm() {
           )}
         />
 
-        <div>
-          <Button
-            type="submit"
-            className="mt-2 w-full"
-            disabled={form.formState.isSubmitting}
-          >
-            {form.formState.isSubmitting && (
-              <Loader2 className="mr-2 size-4 animate-spin" />
-            )}
-            Sign Up
-          </Button>
-        </div>
+        <Button
+          type="submit"
+          className="w-full"
+          disabled={!form.formState.isValid || form.formState.isSubmitting}
+        >
+          {form.formState.isSubmitting && (
+            <Loader2 className="mr-2 size-4 animate-spin" />
+          )}
+          Sign Up
+        </Button>
       </form>
     </Form>
   )

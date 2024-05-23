@@ -251,10 +251,22 @@ export function TransferForm() {
           />
         </div>
 
-        <div className="mt-4 flex grow items-end sm:col-span-2 sm:mt-0 sm:w-1/2 sm:justify-self-center">
+        {/* <div className="mt-4 flex grow flex-wrap content-end items-end justify-end gap-4 sm:col-span-2 sm:mt-0 sm:justify-self-end"> */}
+        <div className="mt-4 flex flex-wrap-reverse content-start justify-end gap-4 sm:col-span-2 sm:mt-0">
+          <Button type="button" variant="outline" className="grow sm:grow-0">
+            Cancel
+          </Button>
+          <Button
+            type="button"
+            className="grow sm:grow-0"
+            variant="secondary"
+            disabled={!form.formState.isValid || form.formState.isSubmitting}
+          >
+            Register and Add More
+          </Button>
           <Button
             type="submit"
-            className="w-full"
+            className="grow sm:grow-0"
             disabled={!form.formState.isValid || form.formState.isSubmitting}
           >
             Add Transfer

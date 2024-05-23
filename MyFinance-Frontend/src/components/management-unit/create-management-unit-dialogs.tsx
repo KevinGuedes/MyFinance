@@ -1,3 +1,5 @@
+import { useState } from 'react'
+
 import { Button } from '@/components/ui/button'
 import {
   Dialog,
@@ -7,12 +9,31 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog'
+import { useCreateManagementUnit } from '@/http/management-units/use-create-management-unit'
 
-import { ManagementUnitForm } from './management-unit-form'
+import {
+  ManagementUnitForm,
+  ManagementUnitFormSchema,
+} from './management-unit-form'
 
 export function CreateManagementUnitDialog() {
+  const [isDialogOpen, setIsDialogOpen] = useState(false)
+  const mutation = useCreateManagementUnit()
+
+  async function onSubmit(values: ManagementUnitFormSchema) {
+    await mutation.mutateAsync(values, {
+      onSuccess: () => {
+        setIsDialogOpen(false)
+      },
+    })
+  }
+
+  function onCancel() {
+    setIsDialogOpen(false)
+  }
+
   return (
-    <Dialog>
+    <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
       <DialogTrigger asChild>
         <Button variant="outline">Create Management Unit</Button>
       </DialogTrigger>
@@ -26,7 +47,14 @@ export function CreateManagementUnitDialog() {
             Fill in the form below to create a new management unit.
           </DialogDescription>
         </DialogHeader>
-        <ManagementUnitForm />
+        <ManagementUnitForm
+          onSubmit={onSubmit}
+          onCancel={onCancel}
+          defaultValues={{
+            name: '',
+            description: '',
+          }}
+        />
       </DialogContent>
     </Dialog>
   )

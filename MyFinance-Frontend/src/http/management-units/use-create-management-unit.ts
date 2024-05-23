@@ -1,5 +1,4 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { useState } from 'react'
 
 import { useToast } from '@/components/ui/toast/use-toast'
 
@@ -20,7 +19,6 @@ type CreateManagementUnitRequest = Pick<
 >
 
 export function useCreateManagementUnit() {
-  const [isCreating, setIsCreating] = useState(false)
   const queryClient = useQueryClient()
   const { toast } = useToast()
 
@@ -29,16 +27,13 @@ export function useCreateManagementUnit() {
     Error,
     CreateManagementUnitRequest
   >({
-    mutationFn: async (data) => {
+    mutationFn: async (createManagementUnitRequest) => {
       const response = await api.post<CreateManagementUnitResponse>(
         '/managementunit',
-        data,
+        createManagementUnitRequest,
       )
 
       return response.data
-    },
-    onMutate: () => {
-      setIsCreating(true)
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['management-units'] })
@@ -53,10 +48,7 @@ export function useCreateManagementUnit() {
         description: 'Try again later',
       })
     },
-    onSettled: () => {
-      setIsCreating(false)
-    },
   })
 
-  return { mutation, isCreating }
+  return mutation
 }

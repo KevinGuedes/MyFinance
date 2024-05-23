@@ -17,8 +17,14 @@ export function SignUp() {
           Enter your information to create an account
         </CardDescription>
       </CardHeader>
-      <CardContent>
+      <CardContent className="space-y-6">
         <SignUpForm />
+        <div className="text-center text-sm">
+          <p className="mr-1 inline">Already have an account?</p>
+          <a href="#" className="underline">
+            Sign In
+          </a>
+        </div>
       </CardContent>
     </Card>
   )

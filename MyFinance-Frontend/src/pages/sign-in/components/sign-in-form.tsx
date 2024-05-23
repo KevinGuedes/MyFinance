@@ -1,5 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Loader2, LogIn } from 'lucide-react'
+import { LogIn } from 'lucide-react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 
@@ -15,7 +15,6 @@ import {
 import { Input } from '@/components/ui/input'
 
 const signInFormSchema = z.object({
-  name: z.string().min(1, { message: 'Name is required' }),
   email: z
     .string()
     .min(1, { message: 'Email is required' })
@@ -23,26 +22,27 @@ const signInFormSchema = z.object({
   plainTextPassword: z.string().min(1, { message: 'Password is required' }),
 })
 
-type SignInFormSchema = z.infer<typeof signInFormSchema>
+export type SignInFormSchema = z.infer<typeof signInFormSchema>
 
-export function SignInForm() {
+type SignInFormProps = {
+  defaultValues: SignInFormSchema
+  onSubmit: (values: SignInFormSchema) => Promise<void>
+}
+
+export function SignInForm({ defaultValues, onSubmit }: SignInFormProps) {
   const form = useForm<SignInFormSchema>({
     resolver: zodResolver(signInFormSchema),
-    defaultValues: {
-      name: '',
-      email: '',
-      plainTextPassword: '',
-    },
+    defaultValues,
   })
 
-  function onSubmit(values: SignInFormSchema) {
-    console.log(values)
+  async function handleSubmit(values: SignInFormSchema) {
+    await onSubmit(values)
   }
 
   return (
-    <div className="grid gap-4">
+    <div className="space-y-4">
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+        <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4">
           <FormField
             control={form.control}
             name="email"
@@ -79,31 +79,16 @@ export function SignInForm() {
             )}
           />
 
-          <div className="grid gap-y-4">
-            <Button
-              type="submit"
-              className="mt-2 w-full"
-              disabled={form.formState.isSubmitting}
-            >
-              {form.formState.isSubmitting && (
-                <Loader2 className="mr-2 size-4 animate-spin" />
-              )}
-              <LogIn className="mr-2 size-4" />
-              Sign In
-            </Button>
-            {/* 
-            <Button className="float-right m-0 p-0" variant="link">
-              Forgot Password?
-            </Button> */}
-          </div>
+          <Button
+            type="submit"
+            className="w-full"
+            disabled={form.formState.isSubmitting || !form.formState.isValid}
+          >
+            <LogIn className="mr-2 size-4" />
+            Sign In
+          </Button>
         </form>
       </Form>
-      <div className="mt-4 text-center text-sm">
-        <p className="mr-1 inline">Don&apos;t have an account?</p>
-        <a href="#" className="underline">
-          Sign up
-        </a>
-      </div>
     </div>
   )
 }

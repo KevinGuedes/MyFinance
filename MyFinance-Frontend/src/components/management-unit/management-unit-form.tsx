@@ -1,9 +1,6 @@
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Loader2 } from 'lucide-react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
-
-import { useCreateManagementUnit } from '@/http/management-units/use-create-management-unit'
 
 import { Button } from '../ui/button'
 import {
@@ -22,27 +19,33 @@ const managementUnitFormSchema = z.object({
   description: z.string().optional(),
 })
 
-type ManagementUnitFormSchema = z.infer<typeof managementUnitFormSchema>
+export type ManagementUnitFormSchema = z.infer<typeof managementUnitFormSchema>
 
-export function ManagementUnitForm() {
-  const { mutation, isCreating } = useCreateManagementUnit()
+type ManagementUnitFormProps = {
+  defaultValues: ManagementUnitFormSchema
+  onSubmit: (values: ManagementUnitFormSchema) => Promise<void>
+  onCancel: () => void
+}
 
+export function ManagementUnitForm({
+  defaultValues,
+  onSubmit,
+  onCancel,
+}: ManagementUnitFormProps) {
   const form = useForm<ManagementUnitFormSchema>({
     resolver: zodResolver(managementUnitFormSchema),
-    defaultValues: {
-      name: '',
-      description: '',
-    },
+    defaultValues,
   })
 
-  async function onSubmit(values: ManagementUnitFormSchema) {
-    mutation.mutate(values)
+  async function handleSubmit(values: ManagementUnitFormSchema) {
+    await new Promise((resolve) => setTimeout(resolve, 5000))
+    await onSubmit(values)
   }
 
   return (
     <Form {...form}>
       <form
-        onSubmit={form.handleSubmit(onSubmit)}
+        onSubmit={form.handleSubmit(handleSubmit)}
         className="flex grow flex-col gap-4"
       >
         <FormField
@@ -73,23 +76,21 @@ export function ManagementUnitForm() {
           )}
         />
 
-        <div className="flex grow items-end">
+        <div className="flex grow flex-wrap-reverse content-start items-end gap-4 self-end">
+          <Button
+            type="button"
+            variant="outline"
+            onClick={onCancel}
+            className="grow sm:grow-0"
+          >
+            Cancel
+          </Button>
           <Button
             type="submit"
-            className="w-full"
-            disabled={
-              !form.formState.isValid ||
-              form.formState.isSubmitting ||
-              isCreating
-            }
+            className="grow"
+            disabled={!form.formState.isValid || form.formState.isSubmitting}
           >
-            {isCreating ? (
-              <>
-                <Loader2 className="mr-2 size-4 animate-spin" />
-              </>
-            ) : (
-              <>Create Management Unit</>
-            )}
+            Create Management Unit
           </Button>
         </div>
       </form>
