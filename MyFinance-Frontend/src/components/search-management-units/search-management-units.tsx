@@ -7,10 +7,14 @@ import {
   CommandInput,
   CommandItem,
   CommandList,
+  CommandLoading,
 } from '@/components/ui/command'
 
 const managementUnits = [
-  'Gastos Da Casa',
+  'Gastos Da Casa MUITO GRANDE ESSE NOME MINHA NOSSA ONDE VAMOS PARAR?',
+  'Casa Kariny',
+  'Casa Kevin',
+  'Casarão',
   'Imprevistos',
   'Mercantil',
   'Pessoal',
@@ -21,6 +25,34 @@ const managementUnits = [
 
 export function SearchManagementUnits() {
   const [open, setOpen] = React.useState(false)
+  const [loading, setLoading] = React.useState(false)
+  const [items, setItems] = React.useState<string[]>([])
+  const [searchTerm, setSearchTerm] = React.useState<string>('')
+
+  React.useEffect(() => {
+    async function getItems(searchTerm: string) {
+      if (searchTerm === '') return
+      const data = await new Promise<string[]>((resolve) =>
+        setTimeout(
+          () =>
+            resolve(
+              managementUnits.filter((item) =>
+                item.toLowerCase().includes(searchTerm.toLowerCase()),
+              ),
+            ),
+          500,
+        ),
+      )
+      setItems(data)
+      setLoading(false)
+    }
+
+    setLoading(searchTerm !== '')
+    setItems([])
+    const timeout = setTimeout(async () => getItems(searchTerm), 500)
+
+    return () => clearTimeout(timeout)
+  }, [searchTerm])
 
   React.useEffect(() => {
     const down = (e: KeyboardEvent) => {
@@ -34,35 +66,46 @@ export function SearchManagementUnits() {
     return () => document.removeEventListener('keydown', down)
   }, [])
 
+  function handleChange(value: string) {
+    setSearchTerm(value)
+  }
+
   function navigateToManagementUnit() {
     console.log('Navigate to management unit')
   }
 
+  function handleOpen(open: boolean) {
+    setItems([])
+    setOpen(open)
+  }
+
   return (
-    <>
-      <p className="text-sm text-muted-foreground">
-        Press
-        <kbd className="pointer-events-none inline-flex h-5 select-none items-center gap-1 rounded border bg-muted px-1.5 font-mono text-[10px] font-medium text-muted-foreground opacity-100">
-          <span className="text-xs">CTRL</span>K
-        </kbd>
-      </p>
-      <CommandDialog open={open} onOpenChange={setOpen}>
-        <CommandInput placeholder="Search for a management unit" />
-        <CommandList>
+    <CommandDialog open={open} onOpenChange={handleOpen}>
+      <CommandInput
+        isLoading={loading}
+        placeholder="Search for a management unit"
+        onValueChange={handleChange}
+      />
+      <CommandList>
+        {loading ? (
+          <CommandLoading>Fetching Management Units...</CommandLoading>
+        ) : (
           <CommandEmpty>No results found.</CommandEmpty>
+        )}
+        {items.length > 0 && (
           <CommandGroup>
-            {managementUnits.map((mu) => (
+            {items.map((mu) => (
               <CommandItem
                 key={mu}
-                className="cursor-pointer"
                 onSelect={navigateToManagementUnit}
+                className="cursor-pointer"
               >
                 {mu}
               </CommandItem>
             ))}
           </CommandGroup>
-        </CommandList>
-      </CommandDialog>
-    </>
+        )}
+      </CommandList>
+    </CommandDialog>
   )
 }

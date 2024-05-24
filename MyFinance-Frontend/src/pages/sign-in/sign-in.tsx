@@ -5,7 +5,7 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
-import { useSignIn } from '@/http/user/useSignIn'
+import { useSignIn } from '@/http/user/use-sign-in'
 
 import { SignInForm, SignInFormSchema } from './components/sign-in-form'
 
