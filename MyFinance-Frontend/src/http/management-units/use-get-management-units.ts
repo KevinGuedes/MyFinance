@@ -12,7 +12,7 @@ export const useGetManagementUnits = (pageNumber: number, pageSize: number) => {
     queryKey: ['management-units', { pageNumber, pageSize }],
     queryFn: async () => {
       const response = await managementUnitApi.get<GetManagementUnitsResponse>(
-        '/managementunit',
+        '',
         {
           params: {
             pageNumber,

@@ -38,7 +38,6 @@ export function ManagementUnitForm({
   })
 
   async function handleSubmit(values: ManagementUnitFormSchema) {
-    await new Promise((resolve) => setTimeout(resolve, 5000))
     await onSubmit(values)
   }
 
@@ -55,7 +54,7 @@ export function ManagementUnitForm({
             <FormItem>
               <FormLabel>Name</FormLabel>
               <FormControl>
-                <Input {...field} />
+                <Input {...field} autoComplete="off" />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -69,7 +68,7 @@ export function ManagementUnitForm({
             <FormItem>
               <FormLabel>Description (Optional)</FormLabel>
               <FormControl>
-                <Textarea {...field} />
+                <Textarea {...field} className="resize-none" />
               </FormControl>
               <FormMessage />
             </FormItem>

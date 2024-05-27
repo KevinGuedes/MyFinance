@@ -3,6 +3,9 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useToast } from '@/components/ui/toast/use-toast'
 
 import { managementUnitApi } from '../api'
+import { ApiError } from '../common/api-error'
+import { handleError } from '../common/handle-error'
+import { handleValidationErrors } from '../common/handle-validation-errors'
 
 type CreateManagementUnitResponse = {
   id: string
@@ -24,13 +27,13 @@ export function useCreateManagementUnit() {
 
   const mutation = useMutation<
     CreateManagementUnitResponse,
-    Error,
+    ApiError,
     CreateManagementUnitRequest
   >({
     mutationFn: async (createManagementUnitRequest) => {
       const response =
         await managementUnitApi.post<CreateManagementUnitResponse>(
-          '/managementunit',
+          '',
           createManagementUnitRequest,
         )
 
@@ -42,12 +45,28 @@ export function useCreateManagementUnit() {
         title: 'Management Unit successfully created!',
       })
     },
-    onError: () => {
-      toast({
-        variant: 'destructive',
-        title: 'Failed to create Management Unit',
-        description: 'Try again later',
-      })
+    onError: (error) => {
+      const {
+        errorData: { detail },
+        isBadRequest,
+        validationErrors,
+      } = handleError(error)
+
+      if (isBadRequest) {
+        handleValidationErrors(validationErrors, (_, message) => {
+          toast({
+            variant: 'destructive',
+            title: 'Failed to create Management Unit',
+            description: message,
+          })
+        })
+      } else {
+        toast({
+          variant: 'destructive',
+          title: 'Uh oh! Something went wrong!',
+          description: detail,
+        })
+      }
     },
   })
 

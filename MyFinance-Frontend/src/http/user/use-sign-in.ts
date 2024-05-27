@@ -1,9 +1,11 @@
 import { useMutation } from '@tanstack/react-query'
-import { AxiosError } from 'axios'
 
 import { useToast } from '@/components/ui/toast/use-toast'
 
 import { userApi } from '../api'
+import { ApiError } from '../common/api-error'
+import { ProblemResponse } from '../common/problem-response'
+import { ValidationProblemResponse } from '../common/validation-problem-response'
 import { queryClient } from '../query-client/query-client'
 
 type SignInRequest = {
@@ -15,18 +17,6 @@ export type SignInResponse = {
   shouldUpdatePassword: boolean
 }
 
-type ProblemResponse = {
-  title: string
-  type: string
-  status: number
-  detail: string
-  instance: string
-}
-
-type ValidationProblemResponse = ProblemResponse & {
-  errors: Map<string, string[]>
-}
-
 type TooManyFailedSignInAttemptsResponse = ProblemResponse & {
   lockoutEndOnUtc: Date
 }
@@ -36,12 +26,12 @@ export const useSignIn = () => {
 
   const mutation = useMutation<
     SignInResponse,
-    AxiosError<ProblemResponse | ValidationProblemResponse>,
+    ApiError<TooManyFailedSignInAttemptsResponse>,
     SignInRequest
   >({
     mutationFn: async (signInRequest) => {
       const { data: signInResponse } = await userApi.post<SignInResponse>(
-        '/user/signin',
+        '/signin',
         signInRequest,
       )
 
