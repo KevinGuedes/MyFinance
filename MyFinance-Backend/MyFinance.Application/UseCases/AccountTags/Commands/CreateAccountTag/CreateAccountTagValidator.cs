@@ -24,6 +24,6 @@ public sealed class CreateAccountTagValidator : AbstractValidator<CreateAccountT
             {
                 var exists = await _accountTagRepository.ExistsByTagAsync(tag, cancellationToken);
                 return !exists;
-            }).WithMessage("This {PropertyName} has already been taken");
+            }).WithMessage("The name '{PropertyName}' has already been taken");
     }
 }
