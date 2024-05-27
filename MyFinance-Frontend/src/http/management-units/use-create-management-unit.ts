@@ -2,7 +2,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 
 import { useToast } from '@/components/ui/toast/use-toast'
 
-import { api } from '../api'
+import { managementUnitApi } from '../api'
 
 type CreateManagementUnitResponse = {
   id: string
@@ -28,10 +28,11 @@ export function useCreateManagementUnit() {
     CreateManagementUnitRequest
   >({
     mutationFn: async (createManagementUnitRequest) => {
-      const response = await api.post<CreateManagementUnitResponse>(
-        '/managementunit',
-        createManagementUnitRequest,
-      )
+      const response =
+        await managementUnitApi.post<CreateManagementUnitResponse>(
+          '/managementunit',
+          createManagementUnitRequest,
+        )
 
       return response.data
     },
