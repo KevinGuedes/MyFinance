@@ -269,6 +269,7 @@ export function TransferForm({
             className="grow sm:grow-0"
             variant="secondary"
             onClick={handleRegisterAndAddMore}
+            disabled={!form.formState.isValid || form.formState.isSubmitting}
           >
             Register and Add More
           </Button>

@@ -3,7 +3,7 @@ import { AxiosError } from 'axios'
 
 import { useToast } from '@/components/ui/toast/use-toast'
 
-import { api } from '../api'
+import { userApi } from '../api'
 import { queryClient } from '../query-client/query-client'
 
 type SignInRequest = {
@@ -40,7 +40,7 @@ export const useSignIn = () => {
     SignInRequest
   >({
     mutationFn: async (signInRequest) => {
-      const { data: signInResponse } = await api.post<SignInResponse>(
+      const { data: signInResponse } = await userApi.post<SignInResponse>(
         '/user/signin',
         signInRequest,
       )

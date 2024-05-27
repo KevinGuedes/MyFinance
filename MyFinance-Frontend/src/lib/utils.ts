@@ -20,7 +20,7 @@ export function getEnumKeys<T>(
   enumType: {
     [key: string]: T
   },
-  includeDefaultOption: boolean | undefined = true,
+  includeDefaultOption: boolean = true,
 ) {
   if (includeDefaultOption)
     return Object.keys(enumType).concat('') as [string, ...string[]]
