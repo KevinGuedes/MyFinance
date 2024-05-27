@@ -3,6 +3,9 @@ import { TrendingDown, TrendingUp } from 'lucide-react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 
+import { getEnumKeys, isValidEnumKey } from '@/lib/utils'
+import { TransferType } from '@/models/enums/transfer-type'
+
 import { Button } from '../ui/button'
 import { DatePicker } from '../ui/date-picker'
 import {
@@ -35,20 +38,19 @@ const transferFormSchema = z.object({
   settlementDate: z
     .date({ required_error: 'Settlement Date is required' })
     .optional()
-    .refine((value) => Boolean(value), {
+    .refine((settlementDate) => settlementDate !== undefined, {
       message: 'Settlement Date is required',
     }),
-  category: z.string().min(1, { message: 'Category  is required' }),
-  accountTag: z
+  categoryId: z.string().min(1, { message: 'Category  is required' }),
+  accountTagId: z
     .string()
     .min(1, { message: 'Account Tag is required' })
     .optional(),
   type: z
-    .enum(['Income', 'Outcome', ''], {
-      required_error: 'Transfer type is required',
+    .enum(getEnumKeys(TransferType), {
+      message: 'Transfer type is required',
     })
-    .optional()
-    .refine((transferType) => Boolean(transferType), {
+    .refine((type) => isValidEnumKey(TransferType, type), {
       message: 'Transfer type is required',
     }),
 })
@@ -188,21 +190,7 @@ export function TransferForm({
           <div className="flex basis-1/2 flex-col gap-4">
             <FormField
               control={form.control}
-              name="description"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Description</FormLabel>
-                  <FormControl>
-                    <Textarea {...field} className="resize-none" />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="accountTag"
+              name="accountTagId"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Account Tag</FormLabel>
@@ -217,14 +205,6 @@ export function TransferForm({
                       <SelectItem value="guidId2">BB</SelectItem>
                       <SelectItem value="guidId3">BRAD</SelectItem>
                       <SelectItem value="guidId4">Not Planned</SelectItem>
-                      <SelectItem value="guidId5">Not Planned</SelectItem>
-                      <SelectItem value="guidId6">Not Planned</SelectItem>
-                      <SelectItem value="guidId7">Not Planned</SelectItem>
-                      <SelectItem value="guidId8">Not Planned</SelectItem>
-                      <SelectItem value="guidId81">Not Planned</SelectItem>
-                      <SelectItem value="guidId82">Not Planned</SelectItem>
-                      <SelectItem value="guidId83">Not Planned</SelectItem>
-                      <SelectItem value="guidId84">Not Planned</SelectItem>
                     </SelectContent>
                   </Select>
                   <FormDescription>
@@ -238,7 +218,7 @@ export function TransferForm({
 
             <FormField
               control={form.control}
-              name="category"
+              name="categoryId"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Category</FormLabel>
@@ -253,16 +233,21 @@ export function TransferForm({
                       <SelectItem value="guidId2">Groceries</SelectItem>
                       <SelectItem value="guidId3">Emergency</SelectItem>
                       <SelectItem value="guidId4">Not Planned</SelectItem>
-                      <SelectItem value="guidId5">Not Planned</SelectItem>
-                      <SelectItem value="guidId6">Not Planned</SelectItem>
-                      <SelectItem value="guidId7">Not Planned</SelectItem>
-                      <SelectItem value="guidId8">Not Planned</SelectItem>
-                      <SelectItem value="guidId81">Not Planned</SelectItem>
-                      <SelectItem value="guidId82">Not Planned</SelectItem>
-                      <SelectItem value="guidId83">Not Planned</SelectItem>
-                      <SelectItem value="guidId84">Not Planned</SelectItem>
                     </SelectContent>
                   </Select>
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="description"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Description</FormLabel>
+                  <FormControl>
+                    <Textarea {...field} className="resize-none" />
+                  </FormControl>
+                  <FormMessage />
                 </FormItem>
               )}
             />
@@ -284,7 +269,6 @@ export function TransferForm({
             className="grow sm:grow-0"
             variant="secondary"
             onClick={handleRegisterAndAddMore}
-            disabled={!form.formState.isValid || form.formState.isSubmitting}
           >
             Register and Add More
           </Button>

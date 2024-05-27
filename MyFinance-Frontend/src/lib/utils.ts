@@ -15,3 +15,38 @@ export function toMoney(number: number, useCompactMode = false) {
     }),
   }).format(number)
 }
+
+export function getEnumKeys<T>(
+  enumType: {
+    [key: string]: T
+  },
+  includeDefaultOption: boolean | undefined = true,
+) {
+  if (includeDefaultOption)
+    return Object.keys(enumType).concat('') as [string, ...string[]]
+
+  return Object.keys(enumType) as [string, ...string[]]
+}
+
+export function isValidEnumKey<T>(
+  enumType: { [key: string]: T },
+  value?: string,
+): boolean {
+  if (value === undefined) return false
+  return Object.keys(enumType).includes(value)
+}
+
+export function getEnumValueByKey<T>(
+  enumType: { [key: string]: T },
+  key: string,
+): T {
+  const enumKey = key as keyof typeof enumType
+  return enumType[enumKey]
+}
+
+export function getKeyByEnumValue<T>(
+  enumType: { [key: string]: T },
+  value: T,
+): string {
+  return Object.keys(enumType).find((key) => enumType[key] === value) || ''
+}
