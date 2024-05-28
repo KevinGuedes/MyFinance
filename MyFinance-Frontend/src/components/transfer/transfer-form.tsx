@@ -254,7 +254,6 @@ export function TransferForm({
           </div>
         </div>
 
-        {/* <div className="mt-4 flex grow flex-wrap content-end items-end justify-end gap-4 sm:col-span-2 sm:mt-0 sm:justify-self-end"> */}
         <div className="flex flex-wrap-reverse content-start justify-end gap-4">
           <Button
             type="button"

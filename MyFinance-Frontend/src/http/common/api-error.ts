@@ -1,8 +1,14 @@
 import { AxiosError } from 'axios'
 
-import { ProblemResponse } from './problem-response'
-import { ValidationProblemResponse } from './validation-problem-response'
+export type ApiErrorResponse = {
+  title: string
+  type: string
+  status: number
+  detail: string
+  instance: string
+  errors?: {
+    [key: string]: string[]
+  }
+}
 
-export type ApiError<T = unknown> = AxiosError<
-  ProblemResponse | ValidationProblemResponse | T
->
+export type ApiError<T = unknown> = AxiosError<ApiErrorResponse & T>

@@ -15,8 +15,12 @@ import { Input } from '../ui/input'
 import { Textarea } from '../ui/textarea'
 
 const managementUnitFormSchema = z.object({
-  name: z.string().min(1, { message: 'Name is required' }),
-  description: z.string().optional(),
+  name: z.string().min(1, { message: 'Name is required' }).max(100, {
+    message: 'Name must be less than 100 characters',
+  }),
+  description: z.string().max(300, {
+    message: 'Description must be less than 300 characters',
+  }),
 })
 
 export type ManagementUnitFormSchema = z.infer<typeof managementUnitFormSchema>
@@ -68,7 +72,7 @@ export function ManagementUnitForm({
             <FormItem>
               <FormLabel>Description (Optional)</FormLabel>
               <FormControl>
-                <Textarea {...field} className="resize-none" />
+                <Textarea {...field} className="resize-none" maxLength={300} />
               </FormControl>
               <FormMessage />
             </FormItem>
