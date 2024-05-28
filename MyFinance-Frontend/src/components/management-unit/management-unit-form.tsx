@@ -1,4 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod'
+import { Loader2 } from 'lucide-react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 
@@ -90,10 +91,16 @@ export function ManagementUnitForm({
           </Button>
           <Button
             type="submit"
-            className="grow"
+            className="min-w-48 grow"
             disabled={!form.formState.isValid || form.formState.isSubmitting}
           >
-            Create Management Unit
+            <>
+              {form.formState.isSubmitting ? (
+                <Loader2 className="size-4 animate-spin" />
+              ) : (
+                'Create Management Unit'
+              )}
+            </>
           </Button>
         </div>
       </form>
