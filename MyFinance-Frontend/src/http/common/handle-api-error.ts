@@ -2,7 +2,7 @@ import { HttpStatusCode } from 'axios'
 
 import { ApiError } from './api-error'
 
-export function handleApiError(apiError: ApiError) {
+export function handleApiError<T>(apiError: ApiError<T>) {
   if (apiError.response === undefined) {
     return {
       statusCode: HttpStatusCode.ServiceUnavailable,
@@ -11,14 +11,15 @@ export function handleApiError(apiError: ApiError) {
     }
   }
 
-  const isBadRequest = apiError.response?.status === HttpStatusCode.BadRequest
-  const errorData = apiError.response?.data
+  const isBadRequest = apiError.response.status === HttpStatusCode.BadRequest
+  const errorData = apiError.response.data
 
   return {
-    statusCode: apiError.response?.status,
-    validationErrors: errorData?.errors,
+    statusCode: apiError.response.status,
+    validationErrors: errorData.errors,
     isBadRequest,
-    title: errorData?.title,
-    description: errorData?.detail,
+    response: apiError.response.data,
+    title: errorData.title,
+    description: errorData.detail,
   }
 }
