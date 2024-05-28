@@ -91,16 +91,17 @@ export function ManagementUnitForm({
           </Button>
           <Button
             type="submit"
-            className="min-w-48 grow"
+            className="min-w-52 grow"
             disabled={!form.formState.isValid || form.formState.isSubmitting}
           >
-            <>
-              {form.formState.isSubmitting ? (
-                <Loader2 className="size-4 animate-spin" />
-              ) : (
-                'Create Management Unit'
-              )}
-            </>
+            {form.formState.isSubmitting ? (
+              <>
+                <Loader2 className="mr-2 size-4 animate-spin" />
+                Creating...
+              </>
+            ) : (
+              'Create Management Unit'
+            )}
           </Button>
         </div>
       </form>

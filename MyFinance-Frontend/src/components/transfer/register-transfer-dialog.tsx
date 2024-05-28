@@ -17,12 +17,12 @@ import { TransferForm, TransferFormSchema } from './transfer-form'
 export function RegisterTransferDialog() {
   const [isDialogOpen, setIsDialogOpen] = useState(false)
 
-  async function onSubmit(values: TransferFormSchema) {
+  async function onSubmit(
+    values: TransferFormSchema,
+    shouldCloseDialog: boolean = true,
+  ) {
     console.log(formatValues(values))
-  }
-
-  async function onRegisterAndAddMore(values: TransferFormSchema) {
-    console.log(formatValues(values))
+    setIsDialogOpen(!shouldCloseDialog)
   }
 
   function onCancel() {
@@ -57,7 +57,6 @@ export function RegisterTransferDialog() {
         </DialogHeader>
         <TransferForm
           onSubmit={onSubmit}
-          onRegisterAndAddMore={onRegisterAndAddMore}
           onCancel={onCancel}
           defaultValues={{
             value: 0,
