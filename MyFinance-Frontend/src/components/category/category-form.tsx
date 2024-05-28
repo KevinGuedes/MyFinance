@@ -7,45 +7,39 @@ import { Button } from '../ui/button'
 import {
   Form,
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
   FormMessage,
 } from '../ui/form'
 import { Input } from '../ui/input'
-import { Textarea } from '../ui/textarea'
 
-const managementUnitFormSchema = z.object({
-  name: z.string().min(1, { message: 'Name is required' }).max(100, {
+const categoryFormSchema = z.object({
+  name: z.string().min(3, { message: 'Name is required' }).max(50, {
     message: 'Name must be less than 100 characters',
   }),
-  description: z
-    .string()
-    .max(300, {
-      message: 'Description must be less than 300 characters',
-    })
-    .optional(),
 })
 
-export type ManagementUnitFormSchema = z.infer<typeof managementUnitFormSchema>
+export type CategoryFormSchema = z.infer<typeof categoryFormSchema>
 
-type ManagementUnitFormProps = {
-  defaultValues: ManagementUnitFormSchema
-  onSubmit: (values: ManagementUnitFormSchema) => Promise<void>
+type CategoryFormProps = {
+  defaultValues: CategoryFormSchema
+  onSubmit: (values: CategoryFormSchema) => Promise<void>
   onCancel: () => void
 }
 
-export function ManagementUnitForm({
+export function CategoryForm({
   defaultValues,
   onSubmit,
   onCancel,
-}: ManagementUnitFormProps) {
-  const form = useForm<ManagementUnitFormSchema>({
-    resolver: zodResolver(managementUnitFormSchema),
+}: CategoryFormProps) {
+  const form = useForm<CategoryFormSchema>({
+    resolver: zodResolver(categoryFormSchema),
     defaultValues,
   })
 
-  async function handleSubmit(values: ManagementUnitFormSchema) {
+  async function handleSubmit(values: CategoryFormSchema) {
     await onSubmit(values)
   }
 
@@ -64,20 +58,10 @@ export function ManagementUnitForm({
               <FormControl>
                 <Input {...field} autoComplete="off" />
               </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="description"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Description (Optional)</FormLabel>
-              <FormControl>
-                <Textarea {...field} className="resize-none" maxLength={300} />
-              </FormControl>
+              <FormDescription>
+                Unique category name with a minimum of 3 characters and maximum
+                of 50 characters.
+              </FormDescription>
               <FormMessage />
             </FormItem>
           )}
@@ -94,7 +78,7 @@ export function ManagementUnitForm({
           </Button>
           <Button
             type="submit"
-            className="min-w-52 grow"
+            className="min-w-36 grow"
             disabled={!form.formState.isValid || form.formState.isSubmitting}
           >
             {form.formState.isSubmitting ? (
@@ -103,7 +87,7 @@ export function ManagementUnitForm({
                 Creating...
               </>
             ) : (
-              'Create Management Unit'
+              'Create Category'
             )}
           </Button>
         </div>

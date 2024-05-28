@@ -1,5 +1,6 @@
 import { zodResolver } from '@hookform/resolvers/zod'
-import { TrendingDown, TrendingUp } from 'lucide-react'
+import { Loader2, TrendingDown, TrendingUp } from 'lucide-react'
+import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 
@@ -59,30 +60,37 @@ export type TransferFormSchema = z.infer<typeof transferFormSchema>
 
 type TransferFormProps = {
   defaultValues?: TransferFormSchema
-  onSubmit: (values: TransferFormSchema) => Promise<void>
-  onRegisterAndAddMore: (values: TransferFormSchema) => Promise<void>
+  onSubmit: (
+    values: TransferFormSchema,
+    shouldCloseDialog?: boolean,
+  ) => Promise<void>
   onCancel: () => void
 }
 
 export function TransferForm({
   defaultValues,
   onSubmit,
-  onRegisterAndAddMore,
   onCancel,
 }: TransferFormProps) {
+  const [isRegistering, setIsRegistering] = useState(false)
+  const [isRegisteringAndAddingMore, setIsRegisteringAndAddingMore] =
+    useState(false)
   const form = useForm<TransferFormSchema>({
     resolver: zodResolver(transferFormSchema),
     defaultValues,
   })
 
   async function handleSubmit(values: TransferFormSchema) {
+    setIsRegistering(true)
     await onSubmit(values)
+    setIsRegistering(false)
   }
 
-  async function handleRegisterAndAddMore() {
-    const values = form.getValues()
-    await onRegisterAndAddMore(values)
+  async function handleRegisterAndAddMore(values: TransferFormSchema) {
+    setIsRegisteringAndAddingMore(true)
+    await onSubmit(values, false)
     form.reset()
+    setIsRegisteringAndAddingMore(false)
   }
 
   return (
@@ -265,19 +273,33 @@ export function TransferForm({
           </Button>
           <Button
             type="button"
-            className="grow sm:grow-0"
+            className="min-w-48 grow sm:grow-0"
             variant="secondary"
-            onClick={handleRegisterAndAddMore}
+            onClick={form.handleSubmit(handleRegisterAndAddMore)}
             disabled={!form.formState.isValid || form.formState.isSubmitting}
           >
-            Register and Add More
+            {isRegisteringAndAddingMore ? (
+              <>
+                <Loader2 className="mr-2 size-4 animate-spin" />
+                Registering...
+              </>
+            ) : (
+              'Register and Add More'
+            )}
           </Button>
           <Button
             type="submit"
-            className="grow sm:grow-0"
+            className="min-w-36 grow sm:grow-0"
             disabled={!form.formState.isValid || form.formState.isSubmitting}
           >
-            Register Transfer
+            {isRegistering ? (
+              <>
+                <Loader2 className="size-4 animate-spin" />
+                Registering...
+              </>
+            ) : (
+              'Register Transfer'
+            )}
           </Button>
         </div>
       </form>

@@ -7,6 +7,7 @@ import { Button } from '../ui/button'
 import {
   Form,
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -15,37 +16,34 @@ import {
 import { Input } from '../ui/input'
 import { Textarea } from '../ui/textarea'
 
-const managementUnitFormSchema = z.object({
-  name: z.string().min(1, { message: 'Name is required' }).max(100, {
-    message: 'Name must be less than 100 characters',
+const accountTagFormSchema = z.object({
+  tag: z.string().min(2, { message: 'Tag is required' }).max(10, {
+    message: 'Tag must be less than 100 characters',
   }),
-  description: z
-    .string()
-    .max(300, {
-      message: 'Description must be less than 300 characters',
-    })
-    .optional(),
+  description: z.string().max(300, {
+    message: 'Description must be less than 300 characters',
+  }),
 })
 
-export type ManagementUnitFormSchema = z.infer<typeof managementUnitFormSchema>
+export type AccountTagFormSchema = z.infer<typeof accountTagFormSchema>
 
-type ManagementUnitFormProps = {
-  defaultValues: ManagementUnitFormSchema
-  onSubmit: (values: ManagementUnitFormSchema) => Promise<void>
+type AccountTagFormProps = {
+  defaultValues: AccountTagFormSchema
+  onSubmit: (values: AccountTagFormSchema) => Promise<void>
   onCancel: () => void
 }
 
-export function ManagementUnitForm({
+export function AccountTagForm({
   defaultValues,
   onSubmit,
   onCancel,
-}: ManagementUnitFormProps) {
-  const form = useForm<ManagementUnitFormSchema>({
-    resolver: zodResolver(managementUnitFormSchema),
+}: AccountTagFormProps) {
+  const form = useForm<AccountTagFormSchema>({
+    resolver: zodResolver(accountTagFormSchema),
     defaultValues,
   })
 
-  async function handleSubmit(values: ManagementUnitFormSchema) {
+  async function handleSubmit(values: AccountTagFormSchema) {
     await onSubmit(values)
   }
 
@@ -57,13 +55,17 @@ export function ManagementUnitForm({
       >
         <FormField
           control={form.control}
-          name="name"
+          name="tag"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Name</FormLabel>
+              <FormLabel>Tag</FormLabel>
               <FormControl>
                 <Input {...field} autoComplete="off" />
               </FormControl>
+              <FormDescription>
+                The tag is an unique identifier for an account and must be
+                between 2 and 10 characters.
+              </FormDescription>
               <FormMessage />
             </FormItem>
           )}
@@ -94,7 +96,7 @@ export function ManagementUnitForm({
           </Button>
           <Button
             type="submit"
-            className="min-w-52 grow"
+            className="min-w-40 grow"
             disabled={!form.formState.isValid || form.formState.isSubmitting}
           >
             {form.formState.isSubmitting ? (
@@ -103,7 +105,7 @@ export function ManagementUnitForm({
                 Creating...
               </>
             ) : (
-              'Create Management Unit'
+              'Create Account Tag'
             )}
           </Button>
         </div>
