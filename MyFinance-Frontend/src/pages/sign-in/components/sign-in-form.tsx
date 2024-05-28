@@ -1,5 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod'
-import { LogIn } from 'lucide-react'
+import { Loader2, LogIn } from 'lucide-react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 
@@ -84,8 +84,17 @@ export function SignInForm({ defaultValues, onSubmit }: SignInFormProps) {
             className="w-full"
             disabled={form.formState.isSubmitting || !form.formState.isValid}
           >
-            <LogIn className="mr-2 size-4" />
-            Sign In
+            {form.formState.isSubmitting ? (
+              <>
+                <Loader2 className="mr-2 size-4 animate-spin" />
+                Signing In...
+              </>
+            ) : (
+              <>
+                <LogIn className="mr-2 size-4" />
+                Sign In
+              </>
+            )}
           </Button>
         </form>
       </Form>
