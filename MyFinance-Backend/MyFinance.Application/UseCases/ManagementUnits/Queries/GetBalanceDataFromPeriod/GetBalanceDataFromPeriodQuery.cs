@@ -3,7 +3,7 @@ using MyFinance.Contracts.ManagementUnit.Responses;
 
 namespace MyFinance.Application.UseCases.ManagementUnits.Queries.GetBalanceDataFromPeriod;
 
-public sealed record class GetBalanceDataFromPeriodQuery(
+public sealed record GetBalanceDataFromPeriodQuery(
     Guid ManagementUnitId,
     DateOnly? StartDate,
     DateOnly? EndDate,
