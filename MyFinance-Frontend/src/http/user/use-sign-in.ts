@@ -4,8 +4,8 @@ import { useToast } from '@/components/ui/toast/use-toast'
 
 import { userApi } from '../api'
 import { ApiError } from '../common/api-error'
-import { ProblemResponse } from '../common/problem-response'
-import { ValidationProblemResponse } from '../common/validation-problem-response'
+import { handleApiError } from '../common/handle-api-error'
+import { handleValidationErrors } from '../common/handle-validation-errors'
 import { queryClient } from '../query-client/query-client'
 
 type SignInRequest = {
@@ -17,7 +17,7 @@ export type SignInResponse = {
   shouldUpdatePassword: boolean
 }
 
-type TooManyFailedSignInAttemptsResponse = ProblemResponse & {
+type TooManyFailedSignInAttemptsResponse = {
   lockoutEndOnUtc: Date
 }
 
@@ -41,44 +41,39 @@ export const useSignIn = () => {
       queryClient.clear()
     },
     onError: (error) => {
-      const status = error.response?.status
-      const response = error.response?.data
+      const {
+        description,
+        validationErrors,
+        isBadRequest,
+        statusCode,
+        response,
+        title,
+      } = handleApiError(error)
 
-      switch (status) {
-        case 401:
-          return toast({
-            variant: 'destructive',
-            title: 'Invalid sign in credentials',
-          })
-        case 400: {
-          const validationProblemResponse =
-            response as ValidationProblemResponse
-
-          console.log(validationProblemResponse.errors)
-          break
-        }
-        case 429: {
-          const tooManyFailedSignInAttemptsResponse =
-            response as TooManyFailedSignInAttemptsResponse
-
-          console.log(tooManyFailedSignInAttemptsResponse.lockoutEndOnUtc)
-
-          const lockoutEnd = new Date(
-            tooManyFailedSignInAttemptsResponse.lockoutEndOnUtc + 'Z',
-          )
-
-          return toast({
-            variant: 'destructive',
-            title: `User locked due to too many failed sign in attempts`,
-            description: `Try again after ${lockoutEnd}`,
-          })
-        }
-        default:
+      if (isBadRequest) {
+        handleValidationErrors(validationErrors, (_, description) => {
           toast({
             variant: 'destructive',
-            title: 'Something went really wrong!',
-            description: 'Sorry for this! Try again later',
+            title: 'Failed to create Management Unit',
+            description,
           })
+        })
+      } else {
+        if (statusCode === 429) {
+          const lockoutEndOnUtc = response?.lockoutEndOnUtc
+
+          toast({
+            variant: 'destructive',
+            title: 'Too many failed sign in attempts',
+            description: `Try again after ${new Date(lockoutEndOnUtc!).toLocaleString()}`,
+          })
+        } else {
+          toast({
+            variant: 'destructive',
+            title,
+            description,
+          })
+        }
       }
     },
   })

@@ -56,7 +56,12 @@ export function CategoryForm({
             <FormItem>
               <FormLabel>Name</FormLabel>
               <FormControl>
-                <Input {...field} autoComplete="off" />
+                <Input
+                  {...field}
+                  autoComplete="off"
+                  minLength={3}
+                  maxLength={50}
+                />
               </FormControl>
               <FormDescription>
                 Unique category name with a minimum of 3 characters and maximum

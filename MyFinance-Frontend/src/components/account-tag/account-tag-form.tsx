@@ -60,7 +60,15 @@ export function AccountTagForm({
             <FormItem>
               <FormLabel>Tag</FormLabel>
               <FormControl>
-                <Input {...field} autoComplete="off" />
+                <Input
+                  {...field}
+                  autoComplete="off"
+                  minLength={2}
+                  maxLength={10}
+                  onChange={(e) => {
+                    field.onChange(e.target.value.toUpperCase())
+                  }}
+                />
               </FormControl>
               <FormDescription>
                 The tag is an unique identifier for an account and must be

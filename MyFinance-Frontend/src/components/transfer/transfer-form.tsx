@@ -253,7 +253,11 @@ export function TransferForm({
                 <FormItem>
                   <FormLabel>Description</FormLabel>
                   <FormControl>
-                    <Textarea {...field} className="resize-none" />
+                    <Textarea
+                      {...field}
+                      className="resize-none"
+                      maxLength={300}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

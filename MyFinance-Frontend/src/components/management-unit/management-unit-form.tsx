@@ -62,7 +62,12 @@ export function ManagementUnitForm({
             <FormItem>
               <FormLabel>Name</FormLabel>
               <FormControl>
-                <Input {...field} autoComplete="off" />
+                <Input
+                  {...field}
+                  autoComplete="off"
+                  minLength={1}
+                  maxLength={100}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
