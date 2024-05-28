@@ -4,7 +4,7 @@ import { useToast } from '@/components/ui/toast/use-toast'
 
 import { managementUnitApi } from '../api'
 import { ApiError } from '../common/api-error'
-import { handleError } from '../common/handle-error'
+import { handleApiError } from '../common/handle-api-error'
 import { handleValidationErrors } from '../common/handle-validation-errors'
 
 type CreateManagementUnitResponse = {
@@ -46,25 +46,22 @@ export function useCreateManagementUnit() {
       })
     },
     onError: (error) => {
-      const {
-        errorData: { detail },
-        isBadRequest,
-        validationErrors,
-      } = handleError(error)
+      const { description, validationErrors, isBadRequest } =
+        handleApiError(error)
 
       if (isBadRequest) {
-        handleValidationErrors(validationErrors, (_, message) => {
+        handleValidationErrors(validationErrors, (_, description) => {
           toast({
             variant: 'destructive',
             title: 'Failed to create Management Unit',
-            description: message,
+            description,
           })
         })
       } else {
         toast({
           variant: 'destructive',
           title: 'Uh oh! Something went wrong!',
-          description: detail,
+          description,
         })
       }
     },

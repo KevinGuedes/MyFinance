@@ -1,6 +1,6 @@
 export function handleValidationErrors(
   validationErrors: Record<string, string[]> | undefined,
-  toastCallback: (title: string, message: string) => void,
+  toastCallback: (title: string, description: string) => void,
 ) {
   if (validationErrors === undefined) return
 

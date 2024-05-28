@@ -7,7 +7,7 @@ export function handleApiError(apiError: ApiError) {
     return {
       statusCode: HttpStatusCode.ServiceUnavailable,
       title: 'Services currently unavailable',
-      message: 'Please try again later.',
+      description: 'Please try again later.',
     }
   }
 
@@ -19,6 +19,6 @@ export function handleApiError(apiError: ApiError) {
     validationErrors: errorData?.errors,
     isBadRequest,
     title: errorData?.title,
-    message: errorData?.detail,
+    description: errorData?.detail,
   }
 }
