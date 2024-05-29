@@ -7,7 +7,6 @@ import { Button } from '@/components/ui/button'
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -15,12 +14,14 @@ import {
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 
+import { PasswordValidation } from './password-validation'
+
 const signUpFormSchema = z
   .object({
     name: z
       .string()
       .min(1, { message: 'Name is required' })
-      .min(3, { message: 'Name must tbe at least 3 chracters long' }),
+      .min(3, { message: 'Name must be at least 3 chracters long' }),
     email: z
       .string()
       .min(1, { message: 'Email is required' })
@@ -29,15 +30,17 @@ const signUpFormSchema = z
       .string()
       .min(1, { message: 'Password is required' })
       .min(16, { message: 'Password is too short' })
-      .regex(/[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]/g, {
-        message: 'Password must include at least 2 special characters',
+      .regex(/(?=(.*[^a-zA-Z0-9]){2,})/, {
+        message: 'Password must have at least 2 special characters',
       })
-      .regex(/\d/g, { message: 'Password must include at least 2 numbers' })
-      .regex(/[A-Z]/g, {
-        message: 'Password must include at least 2 uppercase letters',
+      .regex(/(\D*\d){2,}/, {
+        message: 'Password must have at least 2 numbers',
       })
-      .regex(/[a-z]/g, {
-        message: 'Password must include at least 2 lowercase letters',
+      .regex(/(?=(.*[A-Z]){2,})/, {
+        message: 'Password must have at least 2 uppercase letters',
+      })
+      .regex(/(?=(.*[a-z]){2,})/, {
+        message: 'Password must have at least 2 lowercase letters',
       }),
     plainTextPasswordConfirmation: z
       .string()
@@ -68,9 +71,16 @@ export function SignUpForm() {
     console.log(values)
   }
 
+  const password = form.watch('plainTextPassword')
+
+  // https://stackoverflow.com/questions/15738259/disabling-chrome-autofill
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+      <form
+        onSubmit={form.handleSubmit(onSubmit)}
+        className="space-y-4"
+        autoComplete="chrome-off"
+      >
         <FormField
           control={form.control}
           name="name"
@@ -78,7 +88,7 @@ export function SignUpForm() {
             <FormItem>
               <FormLabel>Name</FormLabel>
               <FormControl>
-                <Input {...field} />
+                <Input {...field} autoComplete="one-time-code" />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -92,31 +102,33 @@ export function SignUpForm() {
             <FormItem>
               <FormLabel>Email</FormLabel>
               <FormControl>
-                <Input type="email" {...field} />
+                <Input type="email" {...field} autoComplete="one-time-code" />
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
 
-        <FormField
-          control={form.control}
-          name="plainTextPassword"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Password</FormLabel>
-              <FormControl>
-                <Input type="password" {...field} />
-              </FormControl>
-
-              <FormDescription className="text-justify">
-                16 characters minimum and must include at least 2 capital and
-                lower letters, 2 numbers and 2 special characters
-              </FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+        <div>
+          <FormField
+            control={form.control}
+            name="plainTextPassword"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Password</FormLabel>
+                <FormControl>
+                  <Input
+                    type="password"
+                    {...field}
+                    autoComplete="one-time-code"
+                  />
+                </FormControl>
+                <PasswordValidation password={password} />
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
 
         <FormField
           control={form.control}
@@ -125,7 +137,11 @@ export function SignUpForm() {
             <FormItem>
               <FormLabel>Password Confirmation</FormLabel>
               <FormControl>
-                <Input type="password" {...field} />
+                <Input
+                  type="password"
+                  {...field}
+                  autoComplete="one-time-code"
+                />
               </FormControl>
               <FormMessage />
             </FormItem>

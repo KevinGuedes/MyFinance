@@ -1,4 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod'
+import { Link } from '@tanstack/react-router'
 import { Loader2, LogIn } from 'lucide-react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
@@ -64,12 +65,13 @@ export function SignInForm({ defaultValues, onSubmit }: SignInFormProps) {
               <FormItem>
                 <div className="flex items-center">
                   <FormLabel htmlFor="password">Password</FormLabel>
-                  <a
-                    href="#"
-                    className="ml-auto inline-block text-sm underline"
+                  <Button
+                    variant="link"
+                    asChild
+                    className="ml-auto inline-block h-auto p-0 text-sm"
                   >
-                    Forgot your password?
-                  </a>
+                    <Link to="/forgot-password">Forgot your password?</Link>
+                  </Button>
                 </div>
                 <FormControl>
                   <Input type="password" {...field} />
