@@ -1,6 +1,7 @@
 ﻿namespace MyFinance.Contracts.User.Responses;
 
-public sealed class SignInResponse(bool shouldUpdatePassword)
+public sealed class SignInResponse
 {
-    public bool ShouldUpdatePassword { get; init; } = shouldUpdatePassword;
+    public required string Name { get; init; }
+    public required bool ShouldUpdatePassword { get; init; }
 }

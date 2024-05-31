@@ -11,11 +11,22 @@ using MyFinance.Application.UseCases.Users.Commands.SignUp;
 using MyFinance.Application.UseCases.Users.Commands.UpdatePassword;
 using MyFinance.Contracts.User.Requests;
 using MyFinance.Contracts.User.Responses;
+using MyFinance.Domain.Entities;
 
 namespace MyFinance.Application.Mappers;
 
 public static class UserMapper
 {
+    public static class DTR
+    {
+        public static SignInResponse Map(User user, bool shouldUpdatePassword)
+            => new()
+            {
+                Name = user.Name,
+                ShouldUpdatePassword = shouldUpdatePassword
+            };
+    }
+
     public static class RTC
     {
         public static SignUpCommand Map(SignUpRequest request)

@@ -3,6 +3,7 @@ using MyFinance.Application.Abstractions.Persistence.Repositories;
 using MyFinance.Application.Abstractions.RequestHandling.Commands;
 using MyFinance.Application.Abstractions.Services;
 using MyFinance.Application.Common.Errors;
+using MyFinance.Application.Mappers;
 using MyFinance.Contracts.User.Responses;
 
 namespace MyFinance.Application.UseCases.Users.Commands.MagicSignIn;
@@ -40,7 +41,10 @@ internal sealed class MagicSignInHandler(
         }
 
         await _signInManager.SignInAsync(user);
-        return Result.Ok(new SignInResponse(_passwordManager.ShouldUpdatePassword(user)));
+
+        var signInResponse = UserMapper.DTR.Map(user, _passwordManager.ShouldUpdatePassword(user));
+       
+        return Result.Ok(signInResponse);
     }
 
     private static Result HandleInvalidMagicSignInToken()
