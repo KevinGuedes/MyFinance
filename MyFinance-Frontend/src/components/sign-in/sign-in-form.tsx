@@ -15,6 +15,8 @@ import {
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 
+import { PasswordInput } from '../ui/password-input'
+
 const signInFormSchema = z.object({
   email: z
     .string()
@@ -70,11 +72,11 @@ export function SignInForm({ defaultValues, onSubmit }: SignInFormProps) {
                     asChild
                     className="ml-auto inline-block h-auto p-0 text-sm"
                   >
-                    <Link to="/forgot-password">Forgot your password?</Link>
+                    <Link to="/">Forgot your password?</Link>
                   </Button>
                 </div>
                 <FormControl>
-                  <Input type="password" {...field} />
+                  <PasswordInput {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>

@@ -1,4 +1,4 @@
-import { CheckCircle, XCircle } from 'lucide-react'
+import { Validation } from './validation'
 
 type PasswordValidationProps = {
   password?: string
@@ -15,7 +15,7 @@ export function PasswordValidation({ password }: PasswordValidationProps) {
       regex: /(?=(.*[^a-zA-Z0-9]){2,})/,
     },
     {
-      label: '2 digits',
+      label: '2 numbers',
       regex: /(\D*\d){2,}/,
     },
     {
@@ -32,17 +32,7 @@ export function PasswordValidation({ password }: PasswordValidationProps) {
     <ul className="space-y-1">
       {validations.map(({ label, regex }) => (
         <li key={label} className="flex items-center gap-2">
-          {password && regex.test(password) ? (
-            <>
-              <CheckCircle className="size-4 text-primary" />
-              <span className="text-sm text-muted-foreground">{label}</span>
-            </>
-          ) : (
-            <>
-              <XCircle className="size-4 text-muted-foreground" />
-              <span className="text-sm text-muted-foreground">{label}</span>
-            </>
-          )}
+          <Validation isValid={regex.test(password ?? '')} label={label} />
         </li>
       ))}
     </ul>

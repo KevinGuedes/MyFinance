@@ -14,6 +14,8 @@ import {
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 
+import { PasswordInput } from '../ui/password-input'
+import { PasswordConfirmationValidation } from './password-confirmation-validation'
 import { PasswordValidation } from './password-validation'
 
 const signUpFormSchema = z
@@ -72,6 +74,7 @@ export function SignUpForm() {
   }
 
   const password = form.watch('plainTextPassword')
+  const passwordConfirmation = form.watch('plainTextPasswordConfirmation')
 
   // https://stackoverflow.com/questions/15738259/disabling-chrome-autofill
   return (
@@ -117,11 +120,7 @@ export function SignUpForm() {
               <FormItem>
                 <FormLabel>Password</FormLabel>
                 <FormControl>
-                  <Input
-                    type="password"
-                    {...field}
-                    autoComplete="one-time-code"
-                  />
+                  <PasswordInput {...field} autoComplete="one-time-code" />
                 </FormControl>
                 <PasswordValidation password={password} />
                 <FormMessage />
@@ -137,12 +136,12 @@ export function SignUpForm() {
             <FormItem>
               <FormLabel>Password Confirmation</FormLabel>
               <FormControl>
-                <Input
-                  type="password"
-                  {...field}
-                  autoComplete="one-time-code"
-                />
+                <PasswordInput {...field} autoComplete="one-time-code" />
               </FormControl>
+              <PasswordConfirmationValidation
+                password={password}
+                passwordConfirmation={passwordConfirmation}
+              />
               <FormMessage />
             </FormItem>
           )}
