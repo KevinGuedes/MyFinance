@@ -7,7 +7,7 @@ public static class PresentationDependencyInjection
 {
     public static IServiceCollection AddPresentation(this IServiceCollection services)
     {
-        services.AddControllers();
+        //services.AddControllers();
         services
             .AddEndpointsApiExplorer()
             .AddCustomSwaggerConfiguration()

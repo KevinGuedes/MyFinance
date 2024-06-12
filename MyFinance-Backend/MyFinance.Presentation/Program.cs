@@ -1,5 +1,6 @@
 using MyFinance.Application.IoC;
 using MyFinance.Infrastructure.IoC;
+using MyFinance.Presentation.Endpoints;
 using MyFinance.Presentation.IoC;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -7,7 +8,8 @@ var builder = WebApplication.CreateBuilder(args);
     builder.Services
         .AddInfrastructure(builder.Configuration)
         .AddApplication()
-        .AddPresentation();
+        .AddPresentation()
+        .AddMvcCore(); //required for some services to be injected
 }
 
 var app = builder.Build();
@@ -30,7 +32,11 @@ var app = builder.Build();
     app.UseHttpsRedirection();
     app.UseAuthentication();
     app.UseAuthorization();
-    app.MapControllers().RequireAuthorization();
+    //app.MapControllers().RequireAuthorization();
+    app
+        .MapGroup("")
+        .RequireAuthorization()
+        .AddUserEndpoints(); //approach using extension methods
 
     app.Run();
 }
