@@ -14,7 +14,7 @@ internal sealed class SignInHandler(
     IPasswordManager passwordManager,
     ILockoutManager lockoutManager,
     IEmailSender emailSender,
-    IUserRepository userRepository) : ICommandHandler<SignInCommand, SignInResponse>
+    IUserRepository userRepository) : ICommandHandler<SignInCommand, UserResponse>
 {
     private readonly ISignInManager _signInManager = signInManager;
     private readonly IPasswordManager _passwordManager = passwordManager;
@@ -22,7 +22,7 @@ internal sealed class SignInHandler(
     private readonly IEmailSender _emailSender = emailSender;
     private readonly IUserRepository _userRepository = userRepository;
 
-    public async Task<Result<SignInResponse>> Handle(SignInCommand command, CancellationToken cancellationToken)
+    public async Task<Result<UserResponse>> Handle(SignInCommand command, CancellationToken cancellationToken)
     {
         var user = await _userRepository.GetByEmailAsync(command.Email, cancellationToken);
 

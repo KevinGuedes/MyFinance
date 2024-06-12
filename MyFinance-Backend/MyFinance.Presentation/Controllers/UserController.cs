@@ -5,6 +5,7 @@ using MyFinance.Application.Common.Errors;
 using MyFinance.Application.Mappers;
 using MyFinance.Application.UseCases.Users.Commands.SignOut;
 using MyFinance.Application.UseCases.Users.Commands.SignOutFromAllDevices;
+using MyFinance.Application.UseCases.Users.Queries;
 using MyFinance.Contracts.Common;
 using MyFinance.Contracts.User.Requests;
 using MyFinance.Contracts.User.Responses;
@@ -51,7 +52,7 @@ public class UserController(IMediator mediator) : ApiController(mediator)
     [AllowAnonymous]
     [HttpPost("SignIn")]
     [SwaggerOperation(Summary = "Signs in an existing User")]
-    [SwaggerResponse(StatusCodes.Status200OK, "User successfully signed in", typeof(SignInResponse))]
+    [SwaggerResponse(StatusCodes.Status200OK, "User successfully signed in", typeof(UserResponse))]
     [SwaggerResponse(StatusCodes.Status401Unauthorized, "Invalid credentials", typeof(ProblemResponse))]
     [SwaggerResponse(StatusCodes.Status429TooManyRequests, "Too many failed sign in attempts", typeof(TooManyFailedSignInAttemptsResponse))]
     public async Task<IActionResult> SignInAsync(
@@ -86,7 +87,7 @@ public class UserController(IMediator mediator) : ApiController(mediator)
     [AllowAnonymous]
     [HttpPost("MagicSignIn")]
     [SwaggerOperation(Summary = "Magically signs in an existing User")]
-    [SwaggerResponse(StatusCodes.Status200OK, "User successfully signed in", typeof(SignInResponse))]
+    [SwaggerResponse(StatusCodes.Status200OK, "User successfully signed in", typeof(UserResponse))]
     [SwaggerResponse(StatusCodes.Status400BadRequest, "Invalid payload", typeof(ValidationProblemResponse))]
     [SwaggerResponse(StatusCodes.Status401Unauthorized, "Invalid token", typeof(ProblemResponse))]
     public async Task<IActionResult> MagicSignInAsync(
@@ -117,6 +118,13 @@ public class UserController(IMediator mediator) : ApiController(mediator)
         ResetPasswordRequest request,
         CancellationToken cancellationToken)
         => ProcessResult(await _mediator.Send(UserMapper.RTC.Map(request), cancellationToken));
+    
+    [HttpGet("Info")]
+    [SwaggerOperation(Summary = "Gets the current user basic data")]
+    [SwaggerResponse(StatusCodes.Status200OK, "User data", typeof(UserResponse))]
+    [SwaggerResponse(StatusCodes.Status401Unauthorized, "User not signed in", typeof(ProblemResponse))]
+    public async Task<IActionResult> GetUserAsync(CancellationToken cancellationToken)
+      => ProcessResult(await _mediator.Send(new GetUserInfoQuery(), cancellationToken));
 
     [HttpPatch("UpdatePassword")]
     [SwaggerOperation(Summary = "Updates the User's password")]

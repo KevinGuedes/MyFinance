@@ -13,14 +13,14 @@ internal sealed class MagicSignInHandler(
     ISignInManager signInManager,
     IPasswordManager passwordManager,
     IUserRepository userRepository)
-    : ICommandHandler<MagicSignInCommand, SignInResponse>
+    : ICommandHandler<MagicSignInCommand, UserResponse>
 {
     private readonly ITokenProvider _tokenProvider = tokenProvider;
     private readonly ISignInManager _signInManager = signInManager;
     private readonly IPasswordManager _passwordManager = passwordManager;
     private readonly IUserRepository _userRepository = userRepository;
 
-    public async Task<Result<SignInResponse>> Handle(MagicSignInCommand command, CancellationToken cancellationToken)
+    public async Task<Result<UserResponse>> Handle(MagicSignInCommand command, CancellationToken cancellationToken)
     {
         var isValidToken = _tokenProvider.TryGetUserIdFromUrlSafeMagicSignInToken(
             command.UrlSafeMagicSignInToken,
