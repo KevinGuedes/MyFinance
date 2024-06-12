@@ -2,7 +2,7 @@ import { HttpStatusCode } from 'axios'
 
 import { ApiError } from './api-error'
 
-export function handleApiError<T>(apiError: ApiError<T>) {
+export function handleError<T>(apiError: ApiError<T>) {
   if (apiError.response === undefined) {
     return {
       statusCode: HttpStatusCode.ServiceUnavailable,

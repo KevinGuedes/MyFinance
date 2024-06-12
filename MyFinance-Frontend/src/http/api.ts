@@ -1,10 +1,25 @@
 import axios from 'axios'
 
+import { useUserStore } from '@/stores/user-store'
+
 function createApi(resourcePath: string) {
-  return axios.create({
+  const api = axios.create({
     baseURL: 'https://localhost:7286/' + resourcePath,
     withCredentials: true,
   })
+
+  api.interceptors.response.use(
+    (response) => response,
+    (error) => {
+      if (error.response?.status === 401) {
+        useUserStore.getState().clearUserInfo()
+      }
+
+      return Promise.reject(error)
+    },
+  )
+
+  return api
 }
 
 export const userApi = createApi('user')

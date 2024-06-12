@@ -9,6 +9,7 @@ export type ApiErrorResponse = {
   errors?: {
     [key: string]: string[]
   }
+  // Record<string, string[]>
 }
 
 export type ApiError<T = unknown> = AxiosError<ApiErrorResponse & T>

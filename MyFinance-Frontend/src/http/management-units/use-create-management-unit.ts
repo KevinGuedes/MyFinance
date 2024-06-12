@@ -4,7 +4,7 @@ import { useToast } from '@/components/ui/toast/use-toast'
 
 import { managementUnitApi } from '../api'
 import { ApiError } from '../common/api-error'
-import { handleApiError } from '../common/handle-api-error'
+import { handleError } from '../common/handle-error'
 import { handleValidationErrors } from '../common/handle-validation-errors'
 
 type CreateManagementUnitResponse = {
@@ -31,13 +31,13 @@ export function useCreateManagementUnit() {
     CreateManagementUnitRequest
   >({
     mutationFn: async (createManagementUnitRequest) => {
-      const response =
+      const { data: createManagementUnitResponse } =
         await managementUnitApi.post<CreateManagementUnitResponse>(
           '',
           createManagementUnitRequest,
         )
 
-      return response.data
+      return createManagementUnitResponse
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['management-units'] })
@@ -46,8 +46,7 @@ export function useCreateManagementUnit() {
       })
     },
     onError: (error) => {
-      const { description, validationErrors, isBadRequest } =
-        handleApiError(error)
+      const { description, validationErrors, isBadRequest } = handleError(error)
 
       if (isBadRequest) {
         handleValidationErrors(validationErrors, (_, description) => {

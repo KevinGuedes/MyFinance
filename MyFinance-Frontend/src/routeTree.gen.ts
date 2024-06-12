@@ -13,54 +13,96 @@ import { createFileRoute } from '@tanstack/react-router'
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
-import { Route as HomeImport } from './routes/home'
-import { Route as IndexImport } from './routes/index'
+import { Route as DefaultImport } from './routes/_default'
+import { Route as AuthenticatedImport } from './routes/_authenticated'
+import { Route as AuthenticatedIndexImport } from './routes/_authenticated/index'
+import { Route as DefaultSignInImport } from './routes/_default/sign-in'
+import { Route as AuthenticatedManagementUnitDashboardImport } from './routes/_authenticated/management-unit-dashboard'
 
 // Create Virtual Routes
 
-const SignUpLazyImport = createFileRoute('/sign-up')()
+const DefaultSignUpLazyImport = createFileRoute('/_default/sign-up')()
 
 // Create/Update Routes
 
-const SignUpLazyRoute = SignUpLazyImport.update({
-  path: '/sign-up',
-  getParentRoute: () => rootRoute,
-} as any).lazy(() => import('./routes/sign-up.lazy').then((d) => d.Route))
-
-const HomeRoute = HomeImport.update({
-  path: '/home',
+const DefaultRoute = DefaultImport.update({
+  id: '/_default',
   getParentRoute: () => rootRoute,
 } as any)
 
-const IndexRoute = IndexImport.update({
+const AuthenticatedRoute = AuthenticatedImport.update({
+  id: '/_authenticated',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const AuthenticatedIndexRoute = AuthenticatedIndexImport.update({
   path: '/',
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => AuthenticatedRoute,
 } as any)
+
+const DefaultSignUpLazyRoute = DefaultSignUpLazyImport.update({
+  path: '/sign-up',
+  getParentRoute: () => DefaultRoute,
+} as any).lazy(() =>
+  import('./routes/_default/sign-up.lazy').then((d) => d.Route),
+)
+
+const DefaultSignInRoute = DefaultSignInImport.update({
+  path: '/sign-in',
+  getParentRoute: () => DefaultRoute,
+} as any)
+
+const AuthenticatedManagementUnitDashboardRoute =
+  AuthenticatedManagementUnitDashboardImport.update({
+    path: '/management-unit-dashboard',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
 
 // Populate the FileRoutesByPath interface
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof IndexImport
+    '/_authenticated': {
+      id: '/_authenticated'
+      path: ''
+      fullPath: ''
+      preLoaderRoute: typeof AuthenticatedImport
       parentRoute: typeof rootRoute
     }
-    '/home': {
-      id: '/home'
-      path: '/home'
-      fullPath: '/home'
-      preLoaderRoute: typeof HomeImport
+    '/_default': {
+      id: '/_default'
+      path: ''
+      fullPath: ''
+      preLoaderRoute: typeof DefaultImport
       parentRoute: typeof rootRoute
     }
-    '/sign-up': {
-      id: '/sign-up'
+    '/_authenticated/management-unit-dashboard': {
+      id: '/_authenticated/management-unit-dashboard'
+      path: '/management-unit-dashboard'
+      fullPath: '/management-unit-dashboard'
+      preLoaderRoute: typeof AuthenticatedManagementUnitDashboardImport
+      parentRoute: typeof AuthenticatedImport
+    }
+    '/_default/sign-in': {
+      id: '/_default/sign-in'
+      path: '/sign-in'
+      fullPath: '/sign-in'
+      preLoaderRoute: typeof DefaultSignInImport
+      parentRoute: typeof DefaultImport
+    }
+    '/_default/sign-up': {
+      id: '/_default/sign-up'
       path: '/sign-up'
       fullPath: '/sign-up'
-      preLoaderRoute: typeof SignUpLazyImport
-      parentRoute: typeof rootRoute
+      preLoaderRoute: typeof DefaultSignUpLazyImport
+      parentRoute: typeof DefaultImport
+    }
+    '/_authenticated/': {
+      id: '/_authenticated/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof AuthenticatedIndexImport
+      parentRoute: typeof AuthenticatedImport
     }
   }
 }
@@ -68,9 +110,14 @@ declare module '@tanstack/react-router' {
 // Create and export the route tree
 
 export const routeTree = rootRoute.addChildren({
-  IndexRoute,
-  HomeRoute,
-  SignUpLazyRoute,
+  AuthenticatedRoute: AuthenticatedRoute.addChildren({
+    AuthenticatedManagementUnitDashboardRoute,
+    AuthenticatedIndexRoute,
+  }),
+  DefaultRoute: DefaultRoute.addChildren({
+    DefaultSignInRoute,
+    DefaultSignUpLazyRoute,
+  }),
 })
 
 /* prettier-ignore-end */
@@ -81,19 +128,39 @@ export const routeTree = rootRoute.addChildren({
     "__root__": {
       "filePath": "__root.tsx",
       "children": [
-        "/",
-        "/home",
-        "/sign-up"
+        "/_authenticated",
+        "/_default"
       ]
     },
-    "/": {
-      "filePath": "index.tsx"
+    "/_authenticated": {
+      "filePath": "_authenticated.tsx",
+      "children": [
+        "/_authenticated/management-unit-dashboard",
+        "/_authenticated/"
+      ]
     },
-    "/home": {
-      "filePath": "home.tsx"
+    "/_default": {
+      "filePath": "_default.tsx",
+      "children": [
+        "/_default/sign-in",
+        "/_default/sign-up"
+      ]
     },
-    "/sign-up": {
-      "filePath": "sign-up.lazy.tsx"
+    "/_authenticated/management-unit-dashboard": {
+      "filePath": "_authenticated/management-unit-dashboard.tsx",
+      "parent": "/_authenticated"
+    },
+    "/_default/sign-in": {
+      "filePath": "_default/sign-in.tsx",
+      "parent": "/_default"
+    },
+    "/_default/sign-up": {
+      "filePath": "_default/sign-up.lazy.tsx",
+      "parent": "/_default"
+    },
+    "/_authenticated/": {
+      "filePath": "_authenticated/index.tsx",
+      "parent": "/_authenticated"
     }
   }
 }

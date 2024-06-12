@@ -7,11 +7,8 @@ export const Route = createRootRoute({
 
 export function Root() {
   return (
-    <div className="flex h-dvh flex-col">
-      <hr />
-      <main className="flex grow items-center justify-center p-8">
-        <Outlet />
-      </main>
+    <div className="flex min-h-dvh flex-col overflow-auto">
+      <Outlet />
       <TanStackRouterDevtools initialIsOpen={false} />
     </div>
   )

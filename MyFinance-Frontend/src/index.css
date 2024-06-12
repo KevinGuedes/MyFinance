@@ -1,7 +1,7 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-  
+
 @layer base {
   :root {
     --background: 0 0% 100%;
@@ -62,5 +62,12 @@
   body {
     @apply bg-background text-foreground antialiased;
     font-feature-settings: "rlig" 1, "calt" 1;
+  }
+
+  .hide-password-toggle::-ms-reveal,
+  .hide-password-toggle::-ms-clear {
+      visibility: hidden;
+      pointer-events: none;
+      display: none;
   }
 }
