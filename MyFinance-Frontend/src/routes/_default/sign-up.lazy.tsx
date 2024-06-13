@@ -28,7 +28,7 @@ function SignUp() {
         <div className="text-center text-sm">
           <p className="mr-1 inline">Already have an account?</p>
           <Button asChild variant="link" className="h-auto p-0">
-            <Link to="/sign-in">Sign In</Link>
+            <Link to="/">Sign In</Link>
           </Button>
         </div>
       </CardContent>

@@ -1,5 +1,4 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { useRouter } from '@tanstack/react-router'
 
 import { useToast } from '@/components/ui/toast/use-toast'
 import { useUserStore } from '@/stores/user-store'
@@ -9,12 +8,9 @@ import { ApiError } from '../common/api-error'
 import { handleError } from '../common/handle-error'
 import { handleValidationErrors } from '../common/handle-validation-errors'
 
-type SignInPayload = {
-  redirectTo?: string
-  signInRequest: {
-    email: string
-    plainTextPassword: string
-  }
+type SignInRequest = {
+  email: string
+  plainTextPassword: string
 }
 
 type UserResponse = {
@@ -29,15 +25,14 @@ type TooManyFailedSignInAttemptsResponse = {
 export const useSignIn = () => {
   const setUserInfo = useUserStore((state) => state.setUserInfo)
   const queryClient = useQueryClient()
-  const router = useRouter()
   const { toast } = useToast()
 
   const mutation = useMutation<
     UserResponse,
     ApiError<TooManyFailedSignInAttemptsResponse>,
-    SignInPayload
+    SignInRequest
   >({
-    mutationFn: async ({ signInRequest }) => {
+    mutationFn: async (signInRequest) => {
       const { data: userResponse } = await userApi.post<UserResponse>(
         '/signin',
         signInRequest,
@@ -45,10 +40,9 @@ export const useSignIn = () => {
 
       return userResponse
     },
-    onSuccess: (userResponse, { redirectTo }) => {
+    onSuccess: (userResponse) => {
       setUserInfo(userResponse)
       queryClient.clear()
-      router.navigate({ to: redirectTo ?? '/' })
     },
     onError: (error) => {
       const {

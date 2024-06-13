@@ -16,7 +16,6 @@ import { Route as rootRoute } from './routes/__root'
 import { Route as DefaultImport } from './routes/_default'
 import { Route as AuthenticatedImport } from './routes/_authenticated'
 import { Route as AuthenticatedIndexImport } from './routes/_authenticated/index'
-import { Route as DefaultSignInImport } from './routes/_default/sign-in'
 import { Route as AuthenticatedManagementUnitDashboardImport } from './routes/_authenticated/management-unit-dashboard'
 
 // Create Virtual Routes
@@ -46,11 +45,6 @@ const DefaultSignUpLazyRoute = DefaultSignUpLazyImport.update({
 } as any).lazy(() =>
   import('./routes/_default/sign-up.lazy').then((d) => d.Route),
 )
-
-const DefaultSignInRoute = DefaultSignInImport.update({
-  path: '/sign-in',
-  getParentRoute: () => DefaultRoute,
-} as any)
 
 const AuthenticatedManagementUnitDashboardRoute =
   AuthenticatedManagementUnitDashboardImport.update({
@@ -83,13 +77,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedManagementUnitDashboardImport
       parentRoute: typeof AuthenticatedImport
     }
-    '/_default/sign-in': {
-      id: '/_default/sign-in'
-      path: '/sign-in'
-      fullPath: '/sign-in'
-      preLoaderRoute: typeof DefaultSignInImport
-      parentRoute: typeof DefaultImport
-    }
     '/_default/sign-up': {
       id: '/_default/sign-up'
       path: '/sign-up'
@@ -114,10 +101,7 @@ export const routeTree = rootRoute.addChildren({
     AuthenticatedManagementUnitDashboardRoute,
     AuthenticatedIndexRoute,
   }),
-  DefaultRoute: DefaultRoute.addChildren({
-    DefaultSignInRoute,
-    DefaultSignUpLazyRoute,
-  }),
+  DefaultRoute: DefaultRoute.addChildren({ DefaultSignUpLazyRoute }),
 })
 
 /* prettier-ignore-end */
@@ -142,17 +126,12 @@ export const routeTree = rootRoute.addChildren({
     "/_default": {
       "filePath": "_default.tsx",
       "children": [
-        "/_default/sign-in",
         "/_default/sign-up"
       ]
     },
     "/_authenticated/management-unit-dashboard": {
       "filePath": "_authenticated/management-unit-dashboard.tsx",
       "parent": "/_authenticated"
-    },
-    "/_default/sign-in": {
-      "filePath": "_default/sign-in.tsx",
-      "parent": "/_default"
     },
     "/_default/sign-up": {
       "filePath": "_default/sign-up.lazy.tsx",

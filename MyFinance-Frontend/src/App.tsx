@@ -8,6 +8,7 @@ import { Toaster } from './components/ui/toast/toaster'
 import { routeTree } from './routeTree.gen'
 
 const queryClient = new QueryClient()
+
 export const router = createRouter({
   routeTree,
   context: {
