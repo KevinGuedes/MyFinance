@@ -2,39 +2,37 @@
 using MyFinance.Application.Mappers;
 using MyFinance.Contracts.User.Requests;
 using MyFinance.Contracts.User.Responses;
-using Swashbuckle.AspNetCore.Annotations;
+using MyFinance.Presentation.Interfaces;
 
 namespace MyFinance.Presentation.Endpoints;
 
-public static class UserEndpoints
+public class UserEndpoints : IEndpointGroupDefinition
+    //EndpointGroupDefinition (has the methods from ApiController)
 {
-    public static void AddUserEndpoints(this IEndpointRouteBuilder app)
+    public void MapEndpoint(IEndpointRouteBuilder builder)
     {
-        var userGroup = app
+        var userGroup = builder
             .MapGroup("/user")
             .WithTags("User")
             .WithSummary("Endpoints related to user management")
             .WithDisplayName("user")
-            .WithDescription("Endpoints related to user management")
-            .AllowAnonymous();
+            .WithDescription("Endpoints related to user management");
 
-        userGroup.MapPost(
-            "/sign-in",
-            async (
-                [SwaggerRequestBody("User's sign in credentials", Required = true)]
-                SignInRequest request,
-                IMediator mediator,
-                CancellationToken cancellationToken) =>
-        {
-            var response = await mediator.Send(UserMapper.RTC.Map(request), cancellationToken);
-            return TypedResults.Ok(response.Value);
-
-        })
+        userGroup.MapPost("/sign-in", SignInAsync)
             .WithSummary("Signs in a user")
             .WithDescription("Signs in a user")
-            .Produces<SignInResponse>(StatusCodes.Status200OK)
             .Produces<TooManyFailedSignInAttemptsResponse>(StatusCodes.Status429TooManyRequests)
+            .Produces<SignInResponse>(StatusCodes.Status200OK)
             .ProducesProblem(StatusCodes.Status500InternalServerError)
             .ProducesValidationProblem();
+    }
+
+    private static async Task<IResult> SignInAsync(
+        SignInRequest request, 
+        IMediator mediator,
+        CancellationToken cancellationToken)
+    {
+        var response = await mediator.Send(UserMapper.RTC.Map(request), cancellationToken);
+        return TypedResults.Ok(response.Value);
     }
 }
