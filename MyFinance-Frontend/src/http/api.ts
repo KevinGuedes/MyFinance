@@ -1,4 +1,4 @@
-import axios from 'axios'
+import axios, { AxiosError, HttpStatusCode } from 'axios'
 
 import { useUserStore } from '@/stores/user-store'
 
@@ -10,8 +10,8 @@ function createApi(resourcePath: string) {
 
   api.interceptors.response.use(
     (response) => response,
-    (error) => {
-      if (error.response?.status === 401) {
+    (error: AxiosError) => {
+      if (error.response?.status === HttpStatusCode.Unauthorized) {
         useUserStore.getState().clearUserInfo()
       }
 
