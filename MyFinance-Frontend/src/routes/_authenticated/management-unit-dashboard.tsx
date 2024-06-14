@@ -4,6 +4,9 @@ export const Route = createFileRoute(
   '/_authenticated/management-unit-dashboard',
 )({
   component: ManagementUnitDashboard,
+  staticData: {
+    name: 'Management Unit Dashboard',
+  },
 })
 
 function ManagementUnitDashboard() {

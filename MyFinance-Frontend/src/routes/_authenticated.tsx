@@ -43,9 +43,9 @@ function AuthenticatedLayout() {
       <div className="flex grow flex-col">
         <NavBar />
         <div className="flex grow flex-col bg-background sm:gap-4 sm:pl-14 sm:pt-4">
-          <div className="grow rounded-tl-2xl bg-muted/40">
+          <div className="grow bg-muted/40 sm:rounded-tl-2xl sm:border-l-2 sm:border-t-2 sm:p-6">
             <Header />
-            <main className="grid flex-1 items-start gap-4 p-4 sm:px-6 sm:py-0 md:gap-8 lg:grid-cols-3 xl:grid-cols-3">
+            <main className="p-4 sm:px-0">
               <Outlet />
             </main>
           </div>

@@ -1,14 +1,11 @@
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from '@radix-ui/react-tooltip'
 import { Link } from '@tanstack/react-router'
 import { Home, Package2 } from 'lucide-react'
 
+import { Tooltip, TooltipContent, TooltipTrigger } from './ui/tooltip'
+
 export function NavBar() {
   return (
-    <aside className="fixed inset-y-0 left-0 z-10 hidden w-14 flex-col bg-background sm:flex">
+    <aside className="= fixed inset-y-0 left-0 z-10 hidden w-14 flex-col sm:flex">
       <nav className="flex flex-col items-center gap-4 px-2 sm:py-5">
         <Link
           href="#"
