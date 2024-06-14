@@ -11,7 +11,7 @@ import {
 } from '@/components/ui/card'
 import { cn, toMoney } from '@/lib/utils'
 
-const amountCardVariants = tv({
+const summaryCardVariants = tv({
   base: 'font-bold',
   variants: {
     variant: {
@@ -25,25 +25,25 @@ const amountCardVariants = tv({
   },
 })
 
-interface AmountCardProps extends VariantProps<typeof amountCardVariants> {
+interface SummaryCardProps extends VariantProps<typeof summaryCardVariants> {
   title: string
   description: string
   amount: number
 }
 
-export function AmountCard({
+export function SummaryCard({
   title,
   description,
   amount,
   variant,
-}: AmountCardProps) {
+}: SummaryCardProps) {
   return (
     <Card>
       <CardHeader className="pb-2">
         <div className="flex justify-between gap-8">
           <div className="space-y-2">
             <CardTitle
-              className={cn('line-clamp-1', amountCardVariants({ variant }))}
+              className={cn('line-clamp-1', summaryCardVariants({ variant }))}
             >
               {title}
             </CardTitle>
@@ -66,7 +66,7 @@ export function AmountCard({
         <h2
           className={cn(
             'line-clamp-1 break-all text-2xl font-bold',
-            amountCardVariants({ variant }),
+            summaryCardVariants({ variant }),
           )}
         >
           <CountUp

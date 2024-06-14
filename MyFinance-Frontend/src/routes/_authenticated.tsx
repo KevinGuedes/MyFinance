@@ -47,7 +47,7 @@ function AuthenticatedLayout() {
         <div className="flex grow flex-col bg-background sm:gap-4 sm:pl-14 sm:pt-4">
           <div className="grow bg-muted/40 sm:rounded-tl-2xl sm:border-l-2 sm:border-t-2 sm:p-6">
             <Header />
-            <main className="p-4 sm:px-0">
+            <main className="p-4 pb-0 sm:px-0">
               <Outlet />
             </main>
           </div>

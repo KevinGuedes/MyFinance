@@ -16,7 +16,7 @@ const x: ManagementUnit[] = [
   {
     id: '1',
     name: 'Management Unit 1',
-    income: 1000,
+    income: 1000000,
     outcome: 500,
     balance: 500,
   },
@@ -51,7 +51,7 @@ const x: ManagementUnit[] = [
   {
     id: '6',
     name: 'Management Unit 3',
-    income: 1000,
+    income: 1244400,
     outcome: 500,
     balance: 500,
   },
