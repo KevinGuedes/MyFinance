@@ -17,8 +17,20 @@ type ManagementUnitCardProps = {
 export function ManagementUnitCard({
   managementUnit,
 }: ManagementUnitCardProps) {
+  function handleManagementUnitSelection(managementUnitId: string) {
+    console.log('Management Unit selected:', managementUnitId)
+  }
+
   return (
-    <Card className="border-2 shadow-2xl transition-colors hover:cursor-pointer hover:border-ring">
+    <Card
+      className="border-2 shadow-lg ring-offset-background transition-colors hover:cursor-pointer hover:border-ring focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+      tabIndex={0}
+      onClick={() => handleManagementUnitSelection(managementUnit.id)}
+      onKeyDown={(key) => {
+        if (key.key === 'Enter')
+          handleManagementUnitSelection(managementUnit.id)
+      }}
+    >
       <CardHeader className="p-4 pb-0">
         <CardTitle className="text-xl">{managementUnit.name}</CardTitle>
       </CardHeader>

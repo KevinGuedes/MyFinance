@@ -1,6 +1,7 @@
 import { Link } from '@tanstack/react-router'
 import { Home, Package2 } from 'lucide-react'
 
+import { ThemeSwitcher } from './ui/theme-switcher'
 import { Tooltip, TooltipContent, TooltipTrigger } from './ui/tooltip'
 
 export function NavBar() {
@@ -18,12 +19,12 @@ export function NavBar() {
           <TooltipTrigger asChild>
             <Link
               to="/"
-              className="flex size-9 items-center justify-center rounded-lg transition-colors hover:text-foreground md:size-8"
+              className="flex size-9 items-center justify-center rounded-lg transition-colors md:size-8"
               inactiveProps={{
-                className: 'text-muted-foreground',
+                className: 'text-muted-foreground hover:text-primary ',
               }}
               activeProps={{
-                className: 'bg-muted/40 text-accent-foreground',
+                className: 'bg-muted/40 text-primary border',
               }}
             >
               <Home className="size-5" />
@@ -33,6 +34,9 @@ export function NavBar() {
           <TooltipContent side="right">Home</TooltipContent>
         </Tooltip>
       </nav>
+      <div className="flex grow items-end justify-center pb-2">
+        <ThemeSwitcher />
+      </div>
     </aside>
   )
 }
