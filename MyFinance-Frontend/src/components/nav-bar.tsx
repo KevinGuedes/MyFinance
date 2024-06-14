@@ -31,7 +31,9 @@ export function NavBar() {
               <span className="sr-only">Home</span>
             </Link>
           </TooltipTrigger>
-          <TooltipContent side="right">Home</TooltipContent>
+          <TooltipContent side="right" className="font-bold">
+            Home
+          </TooltipContent>
         </Tooltip>
       </nav>
       <div className="flex grow items-end justify-center pb-2">
