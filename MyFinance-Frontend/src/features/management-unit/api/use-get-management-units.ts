@@ -5,19 +5,19 @@ import { ManagementUnit } from '@/features/management-unit/models/management-uni
 import { managementUnitApi } from '../../common/api'
 import { Paginated } from '../../common/paginated'
 
-type GetManagementUnitsResponse = Paginated<ManagementUnit>
-
 export const useGetManagementUnits = (pageNumber: number, pageSize: number) => {
   const query = useQuery({
     queryKey: ['management-units', { pageNumber, pageSize }],
+    staleTime: Infinity,
     queryFn: async () => {
-      const { data: getManagementUnitsResponse } =
-        await managementUnitApi.get<GetManagementUnitsResponse>('', {
-          params: {
-            pageNumber,
-            pageSize,
-          },
-        })
+      const { data: getManagementUnitsResponse } = await managementUnitApi.get<
+        Paginated<ManagementUnit>
+      >('', {
+        params: {
+          pageNumber,
+          pageSize,
+        },
+      })
 
       return getManagementUnitsResponse
     },

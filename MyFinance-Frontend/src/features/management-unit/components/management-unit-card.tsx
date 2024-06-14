@@ -21,6 +21,16 @@ export function ManagementUnitCard({
     console.log('Management Unit selected:', managementUnitId)
   }
 
+  const description =
+    managementUnit.description ||
+    `Financial management for ${managementUnit.name}`
+  const income = managementUnit.income
+  const outcome = managementUnit.outcome * -1
+  const balance =
+    managementUnit.balance >= 0
+      ? managementUnit.balance
+      : -1 * managementUnit.balance
+
   return (
     <Card
       className="border-2 shadow-lg ring-offset-background transition-colors hover:cursor-pointer hover:border-ring focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
@@ -37,12 +47,7 @@ export function ManagementUnitCard({
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-4 p-4 pt-2">
-        <p className="line-clamp-2 text-muted-foreground">
-          Lorem ipsum dolor sit, amet consectetur adipisicing elit. In facilis
-          maxime cupiditate beatae quod neque! Mollitia, adipisci ab ut unde
-          laboriosam corrupti deserunt similique beatae assumenda sunt
-          voluptatum obcaecati et?
-        </p>
+        <p className="line-clamp-1 text-muted-foreground">{description}</p>
         <div className="grid grid-cols-3 gap-2">
           <Tooltip>
             <TooltipTrigger asChild>
@@ -52,14 +57,12 @@ export function ManagementUnitCard({
                   <p className="font-bold text-muted-foreground">Balance</p>
                 </div>
                 <p className="text-lg font-bold text-muted-foreground">
-                  {toMoney(managementUnit.balance, true)}
+                  {toMoney(balance, true)}
                 </p>
               </div>
             </TooltipTrigger>
-            <TooltipContent>
-              <p className="text-base font-bold text-muted-foreground">
-                {toMoney(managementUnit.balance)}
-              </p>
+            <TooltipContent className="font-bold text-muted-foreground">
+              {toMoney(balance)}
             </TooltipContent>
           </Tooltip>
           <Tooltip>
@@ -70,14 +73,12 @@ export function ManagementUnitCard({
                   <p className="font-bold text-primary">Income</p>
                 </div>
                 <p className="text-lg font-bold text-primary">
-                  {toMoney(managementUnit.income, true)}
+                  {toMoney(income, true)}
                 </p>
               </div>
             </TooltipTrigger>
-            <TooltipContent>
-              <p className="text-base font-bold text-primary">
-                {toMoney(managementUnit.income)}
-              </p>
+            <TooltipContent className="font-bold text-primary">
+              {toMoney(income)}
             </TooltipContent>
           </Tooltip>
           <Tooltip>
@@ -89,14 +90,12 @@ export function ManagementUnitCard({
                 </div>
 
                 <p className="text-lg font-bold text-destructive">
-                  {toMoney(managementUnit.outcome, true)}
+                  {toMoney(outcome, true)}
                 </p>
               </div>
             </TooltipTrigger>
-            <TooltipContent>
-              <p className="text-base font-bold text-destructive">
-                {toMoney(managementUnit.outcome)}
-              </p>
+            <TooltipContent className="font-bold text-destructive">
+              {toMoney(outcome)}
             </TooltipContent>
           </Tooltip>
         </div>

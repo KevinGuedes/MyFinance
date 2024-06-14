@@ -1,3 +1,4 @@
+import { PlusCircle } from 'lucide-react'
 import { useState } from 'react'
 
 import { Button } from '@/components/ui/button'
@@ -9,8 +10,13 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog'
-import { useCreateManagementUnit } from '@/http/management-units/use-create-management-unit'
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from '@/components/ui/tooltip'
 
+import { useCreateManagementUnit } from '../api/use-create-management-unit'
 import {
   ManagementUnitForm,
   ManagementUnitFormSchema,
@@ -34,9 +40,17 @@ export function CreateManagementUnitDialog() {
 
   return (
     <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-      <DialogTrigger asChild>
-        <Button variant="outline">Create Management Unit</Button>
-      </DialogTrigger>
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <DialogTrigger asChild>
+            <Button variant="default" size="icon">
+              <PlusCircle className="size-5" />
+              <span className="sr-only">Create Management Unit</span>
+            </Button>
+          </DialogTrigger>
+        </TooltipTrigger>
+        <TooltipContent>Create Management Unit</TooltipContent>
+      </Tooltip>
       <DialogContent
         className="sm:max-w-md"
         onOpenAutoFocus={(e) => e.preventDefault()}
