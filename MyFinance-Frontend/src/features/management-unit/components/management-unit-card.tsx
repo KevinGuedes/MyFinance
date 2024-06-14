@@ -32,7 +32,9 @@ export function ManagementUnitCard({
       }}
     >
       <CardHeader className="p-4 pb-0">
-        <CardTitle className="text-xl">{managementUnit.name}</CardTitle>
+        <CardTitle className="line-clamp-1 text-xl">
+          {managementUnit.name}
+        </CardTitle>
       </CardHeader>
       <CardContent className="space-y-4 p-4 pt-2">
         <p className="line-clamp-2 text-muted-foreground">
