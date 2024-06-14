@@ -1,3 +1,4 @@
+import { TooltipProvider } from '@radix-ui/react-tooltip'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import { createRouter, RouterProvider } from '@tanstack/react-router'
@@ -16,12 +17,16 @@ export const router = createRouter({
   },
 })
 
+// type ValidRoutes = ParseRoute<typeof routeTree>['fullPath']
+
 export function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <ThemeProvider>
-        <Toaster />
-        <RouterProvider router={router} />
+        <TooltipProvider delayDuration={300}>
+          <Toaster />
+          <RouterProvider router={router} />
+        </TooltipProvider>
       </ThemeProvider>
       <ReactQueryDevtools initialIsOpen={false} />
     </QueryClientProvider>

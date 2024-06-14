@@ -10,7 +10,7 @@ export const Route = createRootRouteWithContext<{
 
 export function Root() {
   return (
-    <div className="flex min-h-dvh flex-col overflow-auto">
+    <div className="flex min-h-dvh flex-col overflow-auto bg-muted/40">
       <Outlet />
       <TanStackRouterDevtools initialIsOpen={false} />
     </div>
