@@ -67,14 +67,14 @@ const x: ManagementUnit[] = [
 function Home() {
   return (
     <section className="flex flex-col gap-4">
-      <header className="flex flex-col gap-2 sm:flex-row sm:justify-between">
+      <header className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
         <h2 className="shrink-0 text-xl">Management Units</h2>
-        <div className="relative">
+        <div className="md:col-star-2 relative xl:col-start-3">
           <Search className="absolute left-2.5 top-3 size-4 text-muted-foreground" />
           <Input
             type="search"
             placeholder="Search Management Unit..."
-            className="w-full rounded-lg bg-background pl-8 placeholder-shown:text-ellipsis sm:w-[280px]"
+            className="w-full rounded-lg bg-background pl-8 placeholder-shown:text-ellipsis"
           />
         </div>
       </header>

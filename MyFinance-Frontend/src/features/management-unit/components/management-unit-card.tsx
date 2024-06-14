@@ -29,12 +29,12 @@ export function ManagementUnitCard({
           laboriosam corrupti deserunt similique beatae assumenda sunt
           voluptatum obcaecati et?
         </p>
-        <div className="grid grid-cols-3">
+        <div className="grid grid-cols-3 gap-2">
           <Tooltip>
             <TooltipTrigger asChild>
               <div className="flex flex-col gap-2">
                 <div className="flex gap-2">
-                  <PiggyBank className="inline-block size-6 rounded-md bg-muted-foreground/30 p-1 text-muted-foreground" />
+                  <PiggyBank className="inline-block size-6 shrink-0 rounded-md bg-muted-foreground/30 p-1 text-muted-foreground" />
                   <p className="font-bold text-muted-foreground">Balance</p>
                 </div>
                 <p className="text-lg font-bold text-muted-foreground">
@@ -52,7 +52,7 @@ export function ManagementUnitCard({
             <TooltipTrigger asChild>
               <div className="flex flex-col gap-2">
                 <div className="flex gap-2">
-                  <TrendingUp className="inline-block size-6 rounded-md bg-primary/10 p-1 text-primary" />
+                  <TrendingUp className="inline-block size-6 shrink-0 rounded-md bg-primary/10 p-1 text-primary" />
                   <p className="font-bold text-primary">Income</p>
                 </div>
                 <p className="text-lg font-bold text-primary">
@@ -70,7 +70,7 @@ export function ManagementUnitCard({
             <TooltipTrigger asChild>
               <div className="flex flex-col gap-2">
                 <div className="flex gap-2">
-                  <TrendingDown className="inline-block size-6 rounded-md bg-destructive/25 p-1 text-destructive" />
+                  <TrendingDown className="inline-block size-6 shrink-0 rounded-md bg-destructive/25 p-1 text-destructive" />
                   <p className="font-bold text-destructive">Outcome</p>
                 </div>
 
