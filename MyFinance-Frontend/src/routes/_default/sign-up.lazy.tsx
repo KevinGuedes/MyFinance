@@ -1,6 +1,6 @@
 import { createLazyFileRoute, Link } from '@tanstack/react-router'
 
-import { SignUpForm } from '@/components/sign-up/sign-up-form'
+import { SignUpForm } from '@/features/user/components/sign-up-form'
 import { Button } from '@/components/ui/button'
 import {
   Card,
