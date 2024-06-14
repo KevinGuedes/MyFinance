@@ -47,7 +47,9 @@ export function ManagementUnitCard({
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-4 p-4 pt-2">
-        <p className="line-clamp-1 text-muted-foreground">{description}</p>
+        <p className="line-clamp-1 break-all text-muted-foreground">
+          {description}
+        </p>
         <div className="grid grid-cols-3 gap-2">
           <Tooltip>
             <TooltipTrigger asChild>

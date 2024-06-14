@@ -12,7 +12,7 @@ export function Root() {
   return (
     <div className="flex min-h-dvh flex-col overflow-auto">
       <Outlet />
-      {/* <TanStackRouterDevtools initialIsOpen={false} /> */}
+      <TanStackRouterDevtools initialIsOpen={false} />
     </div>
   )
 }
