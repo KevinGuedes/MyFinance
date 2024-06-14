@@ -1,4 +1,4 @@
-import { createLazyFileRoute, Link } from '@tanstack/react-router'
+import { Link } from '@tanstack/react-router'
 
 import { Button } from '@/components/ui/button'
 import {
@@ -8,27 +8,24 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
-import { SignUpForm } from '@/features/user/components/sign-up-form'
 
-export const Route = createLazyFileRoute('/_default/sign-up')({
-  component: SignUp,
-})
+import { SignInForm } from './sign-in-form'
 
-function SignUp() {
+export function SignIn() {
   return (
     <Card className="mx-auto w-full max-w-sm">
       <CardHeader>
-        <CardTitle className="text-2xl">Sign Up</CardTitle>
+        <CardTitle className="text-2xl">Sign In</CardTitle>
         <CardDescription>
-          Enter your information to create an account
+          Enter your email below to login to your account
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
-        <SignUpForm />
+        <SignInForm />
         <div className="text-center text-sm">
-          <p className="mr-1 inline">Already have an account?</p>
+          <p className="mr-1 inline">Don&apos;t have an account?</p>
           <Button asChild variant="link" className="h-auto p-0">
-            <Link to="/">Sign In</Link>
+            <Link to="/sign-up">Sign Up</Link>
           </Button>
         </div>
       </CardContent>

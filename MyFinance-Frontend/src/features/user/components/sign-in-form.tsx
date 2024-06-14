@@ -16,6 +16,8 @@ import {
 import { Input } from '@/components/ui/input'
 import { PasswordInput } from '@/components/ui/password-input'
 
+import { useSignIn } from '../api/use-sign-in'
+
 const signInFormSchema = z.object({
   email: z
     .string()
@@ -26,19 +28,18 @@ const signInFormSchema = z.object({
 
 export type SignInFormSchema = z.infer<typeof signInFormSchema>
 
-type SignInFormProps = {
-  defaultValues: SignInFormSchema
-  onSubmit: (values: SignInFormSchema) => Promise<void>
-}
-
-export function SignInForm({ defaultValues, onSubmit }: SignInFormProps) {
+export function SignInForm() {
+  const signInMutation = useSignIn()
   const form = useForm<SignInFormSchema>({
     resolver: zodResolver(signInFormSchema),
-    defaultValues,
+    defaultValues: {
+      email: '',
+      plainTextPassword: '',
+    },
   })
 
   async function handleSubmit(values: SignInFormSchema) {
-    await onSubmit(values)
+    await signInMutation.mutateAsync(values)
   }
 
   return (
