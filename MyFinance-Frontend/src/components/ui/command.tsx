@@ -81,7 +81,7 @@ const CommandLoading = React.forwardRef<
 >((props, ref) => (
   <CommandPrimitive.Loading
     ref={ref}
-    className="py-5 text-center text-sm"
+    className="py-5 text-center text-sm text-muted-foreground"
     {...props}
   />
 ))
@@ -93,7 +93,7 @@ const CommandEmpty = React.forwardRef<
 >((props, ref) => (
   <CommandPrimitive.Empty
     ref={ref}
-    className="py-5 text-center text-sm"
+    className="py-5 text-center text-sm text-muted-foreground"
     {...props}
   />
 ))

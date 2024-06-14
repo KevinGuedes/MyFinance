@@ -4,6 +4,7 @@ import { useEffect } from 'react'
 
 import { Header } from '@/components/header'
 import { NavBar } from '@/components/nav-bar'
+import { SearchManagementUnits } from '@/features/management-unit/components/search-management-units'
 import { useGetUserInfo } from '@/features/user/api/use-get-user-info'
 import { SignIn } from '@/features/user/components/sign-in'
 import { useUserStore } from '@/features/user/stores/user-store'
@@ -41,6 +42,7 @@ function AuthenticatedLayout() {
   } else if (authenticationStatus === 'signed-in' && user) {
     return (
       <div className="flex grow flex-col">
+        <SearchManagementUnits />
         <NavBar />
         <div className="flex grow flex-col bg-background sm:gap-4 sm:pl-14 sm:pt-4">
           <div className="grow bg-muted/40 sm:rounded-tl-2xl sm:border-l-2 sm:border-t-2 sm:p-6">
