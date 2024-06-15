@@ -41,8 +41,13 @@ public class ManagementUnitController(IMediator mediator) : ApiController(mediat
         int pageNumber,
         [FromQuery] [SwaggerParameter("Units per page", Required = true)]
         int pageSize,
+        [FromQuery] [SwaggerParameter("Search term. It will be used get only Management Units which contain the search term in their name", Required = false)]
+        string? searchTerm,
         CancellationToken cancellationToken)
-        => ProcessResult(await _mediator.Send(new GetManagementUnitsQuery(pageNumber, pageSize), cancellationToken));
+    {
+        var query = new GetManagementUnitsQuery(pageNumber, pageSize, searchTerm);
+        return ProcessResult(await _mediator.Send(query, cancellationToken));
+    }
 
     [HttpGet("{id:guid}/MonthlySummary")]
     [SwaggerOperation(Summary = "Generates a monthly summary for a Management Unit")]

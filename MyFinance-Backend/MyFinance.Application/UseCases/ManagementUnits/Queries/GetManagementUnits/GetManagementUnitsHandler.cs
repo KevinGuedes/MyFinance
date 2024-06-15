@@ -15,11 +15,14 @@ internal sealed class GetManagementUnitsHandler(IManagementUnitRepository manage
     public async Task<Result<Paginated<ManagementUnitResponse>>> Handle(GetManagementUnitsQuery query,
         CancellationToken cancellationToken)
     {
-        var totalCount = await _managementUnitRepository.GetTotalCountAsync(cancellationToken);
+        var totalCount = await _managementUnitRepository.GetTotalCountAsync(
+            query.SearchTerm,
+            cancellationToken);
 
         var managementUnits = await _managementUnitRepository.GetPaginatedAsync(
             query.PageNumber,
             query.PageSize,
+            query.SearchTerm,
             cancellationToken);
 
         var response = ManagementUnitMapper.DTR.Map(
