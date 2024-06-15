@@ -29,7 +29,7 @@ export function Header() {
   }
 
   return (
-    <header className="sticky top-0 z-30 flex h-14 items-center justify-between gap-4 border-b bg-background px-4 sm:static sm:h-auto sm:border-0 sm:bg-transparent sm:p-0">
+    <header className="sticky top-0 z-30 flex h-14 items-center justify-between gap-4 border-b bg-background px-4 sm:static sm:z-auto sm:h-auto sm:border-0 sm:bg-transparent sm:p-0">
       <Sheet>
         <SheetTrigger asChild>
           <Button size="icon" variant="outline" className="sm:hidden">
@@ -38,23 +38,27 @@ export function Header() {
           </Button>
         </SheetTrigger>
         <SheetContent side="left" className="sm:max-w-xs">
-          <nav className="grid gap-6 text-lg font-medium">
-            <Link
-              to="/"
-              className="flex items-center gap-4 px-2.5"
-              inactiveProps={{
-                className: 'text-muted-foreground hover:text-foreground',
-              }}
-              activeProps={{
-                className: 'text-foreground',
-              }}
-            >
-              <Home className="size-5" />
-              Home
-            </Link>
-          </nav>
+          <div className="space-y-4">
+            <h3 className="text-lg">Pages</h3>
+
+            <nav className="grid gap-6 text-lg font-medium">
+              <Link
+                to="/"
+                className="flex items-center gap-4 px-2.5"
+                inactiveProps={{
+                  className: 'text-muted-foreground hover:text-foreground',
+                }}
+                activeProps={{
+                  className: 'text-foreground',
+                }}
+              >
+                <Home className="size-5" />
+                Home
+              </Link>
+            </nav>
+          </div>
         </SheetContent>
-        <div className="flex grow items-end justify-between gap-8 sm:border-b-2 sm:pb-2">
+        <div className="flex grow items-end justify-end gap-8 sm:justify-between sm:border-b-2 sm:pb-2">
           <h1 className="hidden text-3xl sm:block">{pageName}</h1>
           {user && (
             <div className="flex items-center gap-2">
