@@ -49,7 +49,7 @@ export function CreateManagementUnitDialog() {
             </Button>
           </DialogTrigger>
         </TooltipTrigger>
-        <TooltipContent>Create Management Unit</TooltipContent>
+        <TooltipContent side="bottom">Create Management Unit</TooltipContent>
       </Tooltip>
       <DialogContent
         className="sm:max-w-md"
