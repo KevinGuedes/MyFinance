@@ -51,7 +51,7 @@ export function ManagementUnitCard({
           {description}
         </p>
         <div className="grid grid-cols-3 gap-2">
-          <Tooltip>
+          <Tooltip delayDuration={700}>
             <TooltipTrigger asChild>
               <div className="flex flex-col gap-2">
                 <div className="flex gap-2">
@@ -67,7 +67,7 @@ export function ManagementUnitCard({
               {toMoney(balance)}
             </TooltipContent>
           </Tooltip>
-          <Tooltip>
+          <Tooltip delayDuration={700}>
             <TooltipTrigger asChild>
               <div className="flex flex-col gap-2">
                 <div className="flex gap-2">
@@ -83,7 +83,7 @@ export function ManagementUnitCard({
               {toMoney(income)}
             </TooltipContent>
           </Tooltip>
-          <Tooltip>
+          <Tooltip delayDuration={700}>
             <TooltipTrigger asChild>
               <div className="flex flex-col gap-2">
                 <div className="flex gap-2">
