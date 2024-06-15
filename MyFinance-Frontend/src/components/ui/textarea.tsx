@@ -121,7 +121,7 @@ const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
           onChange={handleChange}
         />
         {isSpeechRecognitionApiAvailable && useSpeechRecognition && (
-          <div className="absolute bottom-1 right-0.5 ">
+          <div className="absolute bottom-1 right-1 ">
             {isRecording ? (
               <Tooltip delayDuration={1000}>
                 <TooltipTrigger asChild>
