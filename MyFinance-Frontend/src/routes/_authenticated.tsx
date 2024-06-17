@@ -4,6 +4,7 @@ import { useCallback, useEffect } from 'react'
 
 import { Header } from '@/components/header'
 import { NavBar } from '@/components/nav-bar'
+import { Button } from '@/components/ui/button'
 import { SearchManagementUnits } from '@/features/management-unit/components/search-management-units'
 import { useGetUserInfo } from '@/features/user/api/use-get-user-info'
 import { SignIn } from '@/features/user/components/sign-in'
@@ -15,7 +16,7 @@ export const Route = createFileRoute('/_authenticated')({
 
 function AuthenticatedLayout() {
   const { authenticationStatus, setUserInfo, user } = useUserStore()
-  const { refetch } = useGetUserInfo()
+  const { refetch, isError } = useGetUserInfo()
 
   const getUserInfo = useCallback(async () => {
     if (authenticationStatus === 'indeterminated') {
@@ -30,25 +31,10 @@ function AuthenticatedLayout() {
     getUserInfo()
   }, [getUserInfo])
 
-  // else if (isError) {
-  //   return (
-  //     <main className="flex grow items-center justify-center">
-  //       <div className="flex flex-col items-center gap-6" role="status">
-  //         <div className="flex flex-col items-center">
-  //           <p className="text-muted-foreground">
-  //             Uh oh! My Finance seems to be offline now, please try again later.
-  //           </p>
-  //           <p className="text-muted-foreground">
-  //             Sorry for the inconvenience.
-  //           </p>
-  //         </div>
-  //         <Button onClick={handleRetry} variant="default">
-  //           Retry
-  //         </Button>
-  //       </div>
-  //     </main>
-  //   )
-  // }
+  function handleRetry() {
+    getUserInfo()
+  }
+
   if (authenticationStatus === 'signed-in' && user) {
     return (
       <div className="flex grow flex-col">
@@ -68,6 +54,25 @@ function AuthenticatedLayout() {
     return (
       <main className="flex grow items-center justify-center bg-muted/40">
         <SignIn />
+      </main>
+    )
+  } else if (isError) {
+    // Make this a generic error comp
+    return (
+      <main className="flex grow items-center justify-center">
+        <div className="flex flex-col items-center gap-6" role="status">
+          <div className="flex flex-col items-center">
+            <p className="text-muted-foreground">
+              Uh oh! My Finance seems to be offline now, please try again later.
+            </p>
+            <p className="text-muted-foreground">
+              Sorry for the inconvenience.
+            </p>
+          </div>
+          <Button variant="default" onClick={handleRetry}>
+            Retry
+          </Button>
+        </div>
       </main>
     )
   } else {
