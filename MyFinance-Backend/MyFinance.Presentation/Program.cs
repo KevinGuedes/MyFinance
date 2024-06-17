@@ -18,7 +18,7 @@ var app = builder.Build();
         options
             .AllowAnyHeader()
             .AllowAnyMethod()
-            .WithOrigins("https://localhost:5173")
+            .WithOrigins("https://localhost:5173", "https://localhost:4173")
             .AllowCredentials());
 
     if (!app.Environment.IsProduction())
