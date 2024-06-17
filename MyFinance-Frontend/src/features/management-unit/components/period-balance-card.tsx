@@ -4,7 +4,8 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
-} from '../ui/card'
+} from '@/components/ui/card'
+
 import { PeriodBalanceChart } from './period-balance-chart'
 
 export function PeriodBalanceCard() {
