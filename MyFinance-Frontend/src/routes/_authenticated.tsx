@@ -57,7 +57,9 @@ function AuthenticatedLayout() {
       </main>
     )
   } else if (isError) {
-    // Make this a generic error comp
+    // Make this a generic error comp. Or maybe a status store, if services are offline the whole app will show a nice error comp. 500 and 401 are api error right? So we know when the api is working. Currently this error html onle handles error for the user info api. If we have a ping endpoint we can use that to check if the api is online, and if not, we can show a nice error comp globally using the store and axios interceptors. Ping and err connection refused can be sued
+    // Global layout to handle app status. Inside it we have all the pages, if the ping is working, all good. If ping is not, and connection refused show error comp. This way we can handle also a signup when the api is offline
+    // see if router has something to handle this with error comp and before load
     return (
       <main className="flex grow items-center justify-center">
         <div className="flex flex-col items-center gap-6" role="status">
