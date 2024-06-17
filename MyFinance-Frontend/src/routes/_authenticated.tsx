@@ -4,7 +4,6 @@ import { useCallback, useEffect } from 'react'
 
 import { Header } from '@/components/header'
 import { NavBar } from '@/components/nav-bar'
-import { Button } from '@/components/ui/button'
 import { SearchManagementUnits } from '@/features/management-unit/components/search-management-units'
 import { useGetUserInfo } from '@/features/user/api/use-get-user-info'
 import { SignIn } from '@/features/user/components/sign-in'
@@ -16,14 +15,7 @@ export const Route = createFileRoute('/_authenticated')({
 
 function AuthenticatedLayout() {
   const { authenticationStatus, setUserInfo, user } = useUserStore()
-  const { refetch, isFetching, isError } = useGetUserInfo()
-
-  async function handleRetry() {
-    const { data: userInfo } = await refetch()
-    if (userInfo) {
-      setUserInfo(userInfo)
-    }
-  }
+  const { refetch } = useGetUserInfo()
 
   const getUserInfo = useCallback(async () => {
     if (authenticationStatus === 'indeterminated') {
@@ -38,16 +30,6 @@ function AuthenticatedLayout() {
     getUserInfo()
   }, [getUserInfo])
 
-  if (authenticationStatus === 'indeterminated' && isFetching) {
-    return (
-      <main className="flex grow items-center justify-center">
-        <div className="flex flex-col items-center gap-2" role="status">
-          <Loader2 size={112} className="animate-spin text-muted-foreground" />
-          <p className="text-muted-foreground">Checking user data...</p>
-        </div>
-      </main>
-    )
-  }
   // else if (isError) {
   //   return (
   //     <main className="flex grow items-center justify-center">
@@ -67,7 +49,7 @@ function AuthenticatedLayout() {
   //     </main>
   //   )
   // }
-  else if (authenticationStatus === 'signed-in' && user) {
+  if (authenticationStatus === 'signed-in' && user) {
     return (
       <div className="flex grow flex-col">
         <SearchManagementUnits />
@@ -82,10 +64,19 @@ function AuthenticatedLayout() {
         </div>
       </div>
     )
-  } else {
+  } else if (authenticationStatus === 'signed-out') {
     return (
       <main className="flex grow items-center justify-center bg-muted/40">
         <SignIn />
+      </main>
+    )
+  } else {
+    return (
+      <main className="flex grow items-center justify-center">
+        <div className="flex flex-col items-center gap-2" role="status">
+          <Loader2 size={112} className="animate-spin text-muted-foreground" />
+          <p className="text-muted-foreground">Checking user data...</p>
+        </div>
       </main>
     )
   }
