@@ -27,7 +27,6 @@ function AuthenticatedLayout() {
 
   const getUserInfo = useCallback(async () => {
     if (authenticationStatus === 'indeterminated') {
-      console.log('in')
       const { data: userInfo } = await refetch()
       if (userInfo) {
         setUserInfo(userInfo)

@@ -2,12 +2,9 @@ import { useEffect, useState } from 'react'
 
 export default function useDebounceValue<T = unknown>(value: T, delay: number) {
   const [debouncedValue, setDebouncedValue] = useState(value)
-  const [isChanging, setIsChanging] = useState(false)
 
   useEffect(() => {
-    setIsChanging(true)
     const handler = setTimeout(() => {
-      setIsChanging(false)
       setDebouncedValue(value)
     }, delay)
 
@@ -16,5 +13,5 @@ export default function useDebounceValue<T = unknown>(value: T, delay: number) {
     }
   }, [value, delay])
 
-  return { debouncedValue, isChanging }
+  return debouncedValue
 }

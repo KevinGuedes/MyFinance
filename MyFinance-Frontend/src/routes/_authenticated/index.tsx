@@ -1,6 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { ChevronLeft, ChevronRight, Loader2, Search } from 'lucide-react'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { z } from 'zod'
 
 import { Button } from '@/components/ui/button'
@@ -13,6 +13,7 @@ import useDebouncedValue from '@/hooks/useDebouncedValue'
 
 const searchManagementUnitsSchema = z.object({
   pageNumber: z.number().optional(),
+  searchTerm: z.string().optional(),
 })
 
 type SearchManagementUnitsSchema = z.infer<typeof searchManagementUnitsSchema>
@@ -25,51 +26,60 @@ export const Route = createFileRoute('/_authenticated/')({
   },
 })
 
+const PAGE_SIZE = 9
+
 function Home() {
   const [searchTerm, setSearchTerm] = useState('')
-  const { debouncedValue: debouncedSearchTerm, isChanging } = useDebouncedValue(
-    searchTerm,
-    500,
-  )
+  const debouncedSearchTerm = useDebouncedValue(searchTerm, 500)
   const navigate = Route.useNavigate()
   const { pageNumber } = Route.useSearch()
   const { data, isSuccess, isFetching } = useGetManagementUnits(
     pageNumber || 1,
-    9,
+    PAGE_SIZE,
     debouncedSearchTerm,
   )
 
-  const skeletonItems = Array.from({ length: 9 }).map((_, index) => ({
-    id: index,
-  }))
+  useEffect(() => {
+    navigate({
+      search: () => {
+        return {
+          pageNumber: undefined,
+          searchTerm:
+            debouncedSearchTerm === '' ? undefined : debouncedSearchTerm,
+        }
+      },
+    })
+  }, [debouncedSearchTerm, navigate])
 
   function handleSearchTermChange(e: React.ChangeEvent<HTMLInputElement>) {
     setSearchTerm(e.target.value)
-    navigate({
-      search: () => {
-        return { pageNumber: 1 }
-      },
-    })
   }
 
   function handleGoToNextPage() {
     navigate({
       search: (prev: SearchManagementUnitsSchema) => {
-        if (prev.pageNumber === undefined) return { pageNumber: 2 }
-        return { pageNumber: prev.pageNumber + 1 }
+        const nexPageNumber =
+          prev.pageNumber === undefined ? 2 : prev.pageNumber! + 1
+        return { ...prev, pageNumber: nexPageNumber }
       },
     })
   }
 
   function handleBackToPreviousPage() {
     navigate({
-      search: (prev: SearchManagementUnitsSchema) => ({
-        pageNumber: prev.pageNumber! - 1,
-      }),
+      search: (prev: SearchManagementUnitsSchema) => {
+        const peviousPageNumber = prev.pageNumber! - 1
+        return {
+          ...prev,
+          pageNumber: peviousPageNumber === 1 ? undefined : peviousPageNumber,
+        }
+      },
     })
   }
 
-  const isLoading = isChanging || isFetching
+  const skeletonItems = Array.from({ length: PAGE_SIZE }).map(() => ({
+    id: crypto.randomUUID(),
+  }))
 
   return (
     <section className="flex grow flex-col gap-4">
@@ -77,7 +87,7 @@ function Home() {
         <h2 className="shrink-0 text-xl">Management Units</h2>
         <div className="md:col-star-2 flex gap-2 xl:col-start-3">
           <div className="relative grow">
-            {isLoading ? (
+            {isFetching ? (
               <Loader2 className="absolute left-2.5 top-3 size-4 animate-spin text-muted-foreground" />
             ) : (
               <Search className="absolute left-2.5 top-3 size-4 text-muted-foreground" />
@@ -87,14 +97,14 @@ function Home() {
               value={searchTerm}
               onChange={handleSearchTermChange}
               placeholder="Search Management Unit..."
-              className="w-full rounded-lg bg-background pl-8 placeholder-shown:text-ellipsis"
+              className="pl-8 placeholder-shown:text-ellipsis"
             />
           </div>
           <CreateManagementUnitDialog />
         </div>
       </header>
       <>
-        {isLoading && (
+        {isFetching && (
           <div
             className="grid gap-4 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4"
             role="status"
