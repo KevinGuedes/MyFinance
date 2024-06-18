@@ -21,12 +21,11 @@ internal sealed class TimingBehavior<TRequest, TResponse>(ILogger<TimingBehavior
         _logger.LogInformation("Handling {RequestName}", requestName);
         var response = await next();
 
-        var elapsedTime = Stopwatch.GetElapsedTime(startTime);
         _logger.LogInformation(
             "{RequestName} {Status} - Main flow execution time: {ElapsedTime}ms",
             requestName,
             response.IsSuccess ? "succeeded" : "failed",
-            elapsedTime);
+            Stopwatch.GetElapsedTime(startTime));
 
         return response;
     }

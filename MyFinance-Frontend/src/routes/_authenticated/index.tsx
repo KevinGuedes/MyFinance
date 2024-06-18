@@ -13,7 +13,7 @@ import useDebouncedValue from '@/hooks/useDebouncedValue'
 
 const searchManagementUnitsSchema = z.object({
   pageNumber: z.number().optional(),
-  searchTerm: z.string().optional(),
+  search: z.string().optional().catch(undefined),
 })
 
 type SearchManagementUnitsSchema = z.infer<typeof searchManagementUnitsSchema>
@@ -26,52 +26,69 @@ export const Route = createFileRoute('/_authenticated/')({
   },
 })
 
-const PAGE_SIZE = 9
+const PAGE_SIZE = 1
 
 function Home() {
-  const [searchTerm, setSearchTerm] = useState('')
-  const debouncedSearchTerm = useDebouncedValue(searchTerm, 500)
   const navigate = Route.useNavigate()
-  const { pageNumber } = Route.useSearch()
-  const { data, isSuccess, isFetching } = useGetManagementUnits(
-    pageNumber || 1,
-    PAGE_SIZE,
-    debouncedSearchTerm,
-  )
+  const [areaInUse, setAreaInUse] = useState<
+    'next' | 'previous' | 'search' | undefined
+  >()
+  const { pageNumber, search } = Route.useSearch()
+  const [searchTerm, setSearchTerm] = useState(search)
+  const debouncedSearchTerm = useDebouncedValue(searchTerm, 500)
+  const {
+    data,
+    isSuccess,
+    isFetching,
+    isPlaceholderData,
+    isPending,
+    isRefetching,
+  } = useGetManagementUnits(pageNumber || 1, PAGE_SIZE, debouncedSearchTerm)
 
   useEffect(() => {
     navigate({
-      search: () => {
+      search: (prev: SearchManagementUnitsSchema) => {
         return {
-          pageNumber: undefined,
-          searchTerm:
-            debouncedSearchTerm === '' ? undefined : debouncedSearchTerm,
+          pageNumber: prev.pageNumber,
+          search:
+            debouncedSearchTerm === '' || debouncedSearchTerm === undefined
+              ? undefined
+              : debouncedSearchTerm,
         }
       },
     })
   }, [debouncedSearchTerm, navigate])
 
   function handleSearchTermChange(e: React.ChangeEvent<HTMLInputElement>) {
+    navigate({
+      search: () => {
+        return {
+          pageNumber: 1,
+          search: e.target.value === '' ? undefined : e.target.value,
+        }
+      },
+    })
+    setAreaInUse('search')
     setSearchTerm(e.target.value)
   }
 
   function handleGoToNextPage() {
+    setAreaInUse('next')
     navigate({
       search: (prev: SearchManagementUnitsSchema) => {
-        const nexPageNumber =
-          prev.pageNumber === undefined ? 2 : prev.pageNumber! + 1
-        return { ...prev, pageNumber: nexPageNumber }
+        if (prev.pageNumber === undefined) return { ...prev, pageNumber: 2 }
+        else return { ...prev, pageNumber: prev.pageNumber + 1 }
       },
     })
   }
 
   function handleBackToPreviousPage() {
+    setAreaInUse('previous')
     navigate({
       search: (prev: SearchManagementUnitsSchema) => {
-        const peviousPageNumber = prev.pageNumber! - 1
         return {
           ...prev,
-          pageNumber: peviousPageNumber === 1 ? undefined : peviousPageNumber,
+          pageNumber: prev.pageNumber! - 1,
         }
       },
     })
@@ -81,20 +98,24 @@ function Home() {
     id: crypto.randomUUID(),
   }))
 
+  const isLoadingNextPage = isFetching && areaInUse === 'next'
+  const isLoadingPreviousPage = isFetching && areaInUse === 'previous'
+  const shouldShowSearchSpinner = isRefetching && areaInUse === 'search'
+
   return (
     <section className="flex grow flex-col gap-4">
       <header className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
         <h2 className="shrink-0 text-xl">Management Units</h2>
         <div className="md:col-star-2 flex gap-2 xl:col-start-3">
           <div className="relative grow">
-            {isFetching ? (
+            {shouldShowSearchSpinner ? (
               <Loader2 className="absolute left-2.5 top-3 size-4 animate-spin text-muted-foreground" />
             ) : (
               <Search className="absolute left-2.5 top-3 size-4 text-muted-foreground" />
             )}
             <Input
               type="search"
-              value={searchTerm}
+              value={searchTerm || ''}
               onChange={handleSearchTermChange}
               placeholder="Search Management Unit..."
               className="pl-8 placeholder-shown:text-ellipsis"
@@ -104,7 +125,7 @@ function Home() {
         </div>
       </header>
       <>
-        {isFetching && (
+        {isPending && !isPlaceholderData && (
           <div
             className="grid gap-4 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4"
             role="status"
@@ -137,21 +158,29 @@ function Home() {
       <footer className="item-center mt-auto flex justify-center gap-2 justify-self-end">
         <Button
           onClick={handleBackToPreviousPage}
-          disabled={!data?.hasPreviousPage}
+          disabled={!data?.hasPreviousPage || isLoadingPreviousPage}
           variant="outline"
           className="w-28"
         >
-          <ChevronLeft className="mr-2 size-4" />
+          {isLoadingPreviousPage ? (
+            <Loader2 className="mr-2 size-4 animate-spin" />
+          ) : (
+            <ChevronLeft className="mr-2 size-4" />
+          )}
           Previous
         </Button>
         <Button
           onClick={handleGoToNextPage}
-          disabled={!data?.hasNextPage}
+          disabled={!data?.hasNextPage || isLoadingNextPage}
           variant="outline"
           className="w-28"
         >
           Next
-          <ChevronRight className="ml-2 size-4" />
+          {isLoadingNextPage ? (
+            <Loader2 className="ml-2 size-4 animate-spin" />
+          ) : (
+            <ChevronRight className="ml-2 size-4" />
+          )}
         </Button>
       </footer>
     </section>

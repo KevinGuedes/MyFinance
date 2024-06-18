@@ -81,7 +81,11 @@ export function ManagementUnitForm({
             <FormItem>
               <FormLabel>Description (Optional)</FormLabel>
               <FormControl>
-                <Textarea {...field} className="resize-none" maxLength={300} />
+                <Textarea
+                  {...field}
+                  className="min-h-[138px] resize-none"
+                  maxLength={300}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
