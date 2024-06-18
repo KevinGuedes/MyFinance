@@ -13,19 +13,21 @@ import { createFileRoute } from '@tanstack/react-router'
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
-import { Route as DefaultImport } from './routes/_default'
+import { Route as NonAuthenticatedImport } from './routes/_non-authenticated'
 import { Route as AuthenticatedImport } from './routes/_authenticated'
 import { Route as AuthenticatedIndexImport } from './routes/_authenticated/index'
 import { Route as AuthenticatedManagementUnitDashboardImport } from './routes/_authenticated/management-unit-dashboard'
 
 // Create Virtual Routes
 
-const DefaultSignUpLazyImport = createFileRoute('/_default/sign-up')()
+const NonAuthenticatedSignUpLazyImport = createFileRoute(
+  '/_non-authenticated/sign-up',
+)()
 
 // Create/Update Routes
 
-const DefaultRoute = DefaultImport.update({
-  id: '/_default',
+const NonAuthenticatedRoute = NonAuthenticatedImport.update({
+  id: '/_non-authenticated',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -39,11 +41,13 @@ const AuthenticatedIndexRoute = AuthenticatedIndexImport.update({
   getParentRoute: () => AuthenticatedRoute,
 } as any)
 
-const DefaultSignUpLazyRoute = DefaultSignUpLazyImport.update({
-  path: '/sign-up',
-  getParentRoute: () => DefaultRoute,
-} as any).lazy(() =>
-  import('./routes/_default/sign-up.lazy').then((d) => d.Route),
+const NonAuthenticatedSignUpLazyRoute = NonAuthenticatedSignUpLazyImport.update(
+  {
+    path: '/sign-up',
+    getParentRoute: () => NonAuthenticatedRoute,
+  } as any,
+).lazy(() =>
+  import('./routes/_non-authenticated/sign-up.lazy').then((d) => d.Route),
 )
 
 const AuthenticatedManagementUnitDashboardRoute =
@@ -63,11 +67,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedImport
       parentRoute: typeof rootRoute
     }
-    '/_default': {
-      id: '/_default'
+    '/_non-authenticated': {
+      id: '/_non-authenticated'
       path: ''
       fullPath: ''
-      preLoaderRoute: typeof DefaultImport
+      preLoaderRoute: typeof NonAuthenticatedImport
       parentRoute: typeof rootRoute
     }
     '/_authenticated/management-unit-dashboard': {
@@ -77,12 +81,12 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedManagementUnitDashboardImport
       parentRoute: typeof AuthenticatedImport
     }
-    '/_default/sign-up': {
-      id: '/_default/sign-up'
+    '/_non-authenticated/sign-up': {
+      id: '/_non-authenticated/sign-up'
       path: '/sign-up'
       fullPath: '/sign-up'
-      preLoaderRoute: typeof DefaultSignUpLazyImport
-      parentRoute: typeof DefaultImport
+      preLoaderRoute: typeof NonAuthenticatedSignUpLazyImport
+      parentRoute: typeof NonAuthenticatedImport
     }
     '/_authenticated/': {
       id: '/_authenticated/'
@@ -101,7 +105,9 @@ export const routeTree = rootRoute.addChildren({
     AuthenticatedManagementUnitDashboardRoute,
     AuthenticatedIndexRoute,
   }),
-  DefaultRoute: DefaultRoute.addChildren({ DefaultSignUpLazyRoute }),
+  NonAuthenticatedRoute: NonAuthenticatedRoute.addChildren({
+    NonAuthenticatedSignUpLazyRoute,
+  }),
 })
 
 /* prettier-ignore-end */
@@ -113,7 +119,7 @@ export const routeTree = rootRoute.addChildren({
       "filePath": "__root.tsx",
       "children": [
         "/_authenticated",
-        "/_default"
+        "/_non-authenticated"
       ]
     },
     "/_authenticated": {
@@ -123,19 +129,19 @@ export const routeTree = rootRoute.addChildren({
         "/_authenticated/"
       ]
     },
-    "/_default": {
-      "filePath": "_default.tsx",
+    "/_non-authenticated": {
+      "filePath": "_non-authenticated.tsx",
       "children": [
-        "/_default/sign-up"
+        "/_non-authenticated/sign-up"
       ]
     },
     "/_authenticated/management-unit-dashboard": {
       "filePath": "_authenticated/management-unit-dashboard.tsx",
       "parent": "/_authenticated"
     },
-    "/_default/sign-up": {
-      "filePath": "_default/sign-up.lazy.tsx",
-      "parent": "/_default"
+    "/_non-authenticated/sign-up": {
+      "filePath": "_non-authenticated/sign-up.lazy.tsx",
+      "parent": "/_non-authenticated"
     },
     "/_authenticated/": {
       "filePath": "_authenticated/index.tsx",

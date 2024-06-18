@@ -10,7 +10,7 @@ import {
 } from '@/components/ui/card'
 import { SignUpForm } from '@/features/user/components/sign-up-form'
 
-export const Route = createLazyFileRoute('/_default/sign-up')({
+export const Route = createLazyFileRoute('/_non-authenticated/sign-up')({
   component: SignUp,
 })
 
