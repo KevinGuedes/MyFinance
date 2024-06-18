@@ -49,7 +49,19 @@ function Home() {
     navigate({
       search: (prev: SearchManagementUnitsSchema) => {
         return {
-          pageNumber: prev.pageNumber,
+          pageNumber: prev.pageNumber || undefined,
+          search: prev.search || undefined,
+        }
+      },
+    })
+  }, [navigate])
+
+  useEffect(() => {
+    navigate({
+      search: (prev: SearchManagementUnitsSchema) => {
+        const searchTermChanged = debouncedSearchTerm !== prev.search
+        return {
+          pageNumber: searchTermChanged ? undefined : prev.pageNumber,
           search:
             debouncedSearchTerm === '' || debouncedSearchTerm === undefined
               ? undefined
@@ -60,14 +72,6 @@ function Home() {
   }, [debouncedSearchTerm, navigate])
 
   function handleSearchTermChange(e: React.ChangeEvent<HTMLInputElement>) {
-    navigate({
-      search: () => {
-        return {
-          pageNumber: 1,
-          search: e.target.value === '' ? undefined : e.target.value,
-        }
-      },
-    })
     setAreaInUse('search')
     setSearchTerm(e.target.value)
   }
@@ -86,6 +90,9 @@ function Home() {
     setAreaInUse('previous')
     navigate({
       search: (prev: SearchManagementUnitsSchema) => {
+        if (prev.pageNumber! - 1 === 1)
+          return { ...prev, pageNumber: undefined }
+
         return {
           ...prev,
           pageNumber: prev.pageNumber! - 1,
@@ -94,13 +101,12 @@ function Home() {
     })
   }
 
-  const skeletonItems = Array.from({ length: PAGE_SIZE }).map(() => ({
-    id: crypto.randomUUID(),
-  }))
-
   const isLoadingNextPage = isFetching && areaInUse === 'next'
   const isLoadingPreviousPage = isFetching && areaInUse === 'previous'
   const shouldShowSearchSpinner = isRefetching && areaInUse === 'search'
+  const skeletonItems = Array.from({ length: PAGE_SIZE }).map(() => ({
+    id: crypto.randomUUID(),
+  }))
 
   return (
     <section className="flex grow flex-col gap-4">
