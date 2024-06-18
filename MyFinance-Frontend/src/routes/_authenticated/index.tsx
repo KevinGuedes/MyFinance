@@ -26,7 +26,7 @@ export const Route = createFileRoute('/_authenticated/')({
   },
 })
 
-const PAGE_SIZE = 1
+const PAGE_SIZE = 3
 
 function Home() {
   const navigate = Route.useNavigate()
@@ -45,16 +45,16 @@ function Home() {
     isRefetching,
   } = useGetManagementUnits(pageNumber || 1, PAGE_SIZE, debouncedSearchTerm)
 
-  useEffect(() => {
-    navigate({
-      search: (prev: SearchManagementUnitsSchema) => {
-        return {
-          pageNumber: prev.pageNumber || undefined,
-          search: prev.search || undefined,
-        }
-      },
-    })
-  }, [navigate])
+  // useEffect(() => {
+  //   navigate({
+  //     search: (prev: SearchManagementUnitsSchema) => {
+  //       return {
+  //         pageNumber: prev.pageNumber || undefined,
+  //         search: prev.search || undefined,
+  //       }
+  //     },
+  //   })
+  // }, [navigate])
 
   useEffect(() => {
     navigate({
