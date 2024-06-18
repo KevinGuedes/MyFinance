@@ -30,6 +30,7 @@ const PAGE_SIZE = 3
 
 function Home() {
   const navigate = Route.useNavigate()
+  const [isSerchTermChaging, setIsSearchTermChanging] = useState(false)
   const [areaInUse, setAreaInUse] = useState<
     'next' | 'previous' | 'search' | undefined
   >()
@@ -69,11 +70,13 @@ function Home() {
         }
       },
     })
+    setIsSearchTermChanging(false)
   }, [debouncedSearchTerm, navigate])
 
   function handleSearchTermChange(e: React.ChangeEvent<HTMLInputElement>) {
     setAreaInUse('search')
     setSearchTerm(e.target.value)
+    setIsSearchTermChanging(true)
   }
 
   function handleGoToNextPage() {
@@ -104,6 +107,15 @@ function Home() {
   const isLoadingNextPage = isFetching && areaInUse === 'next'
   const isLoadingPreviousPage = isFetching && areaInUse === 'previous'
   const shouldShowSearchSpinner = isRefetching && areaInUse === 'search'
+
+  const isNextButtonDisabled =
+    !data?.hasNextPage || isLoadingNextPage || isFetching || isSerchTermChaging
+  const isPreviousButtonDisabled =
+    !data?.hasPreviousPage ||
+    isLoadingPreviousPage ||
+    isFetching ||
+    isSerchTermChaging
+
   const skeletonItems = Array.from({ length: PAGE_SIZE }).map(() => ({
     id: crypto.randomUUID(),
   }))
@@ -164,7 +176,7 @@ function Home() {
       <footer className="item-center mt-auto flex justify-center gap-2 justify-self-end">
         <Button
           onClick={handleBackToPreviousPage}
-          disabled={!data?.hasPreviousPage || isLoadingPreviousPage}
+          disabled={isPreviousButtonDisabled}
           variant="outline"
           className="w-28"
         >
@@ -177,7 +189,7 @@ function Home() {
         </Button>
         <Button
           onClick={handleGoToNextPage}
-          disabled={!data?.hasNextPage || isLoadingNextPage}
+          disabled={isNextButtonDisabled}
           variant="outline"
           className="w-28"
         >
