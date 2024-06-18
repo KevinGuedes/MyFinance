@@ -136,7 +136,7 @@ function Home() {
               value={searchTerm || ''}
               onChange={handleSearchTermChange}
               placeholder="Search Management Unit..."
-              className="pl-8 placeholder-shown:text-ellipsis"
+              className="pl-8"
             />
           </div>
           <CreateManagementUnitDialog />
