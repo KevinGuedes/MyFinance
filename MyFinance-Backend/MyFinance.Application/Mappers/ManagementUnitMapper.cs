@@ -30,8 +30,6 @@ public class ManagementUnitMapper
                 Outcome = managementUnit.Outcome,
                 Balance = managementUnit.Balance,
                 Description = managementUnit.Description,
-                IsArchived = managementUnit.IsArchived,
-                ReasonToArchive = managementUnit.ReasonToArchive
             };
 
         public static IReadOnlyCollection<ManagementUnitResponse> Map(
