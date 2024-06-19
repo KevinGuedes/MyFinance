@@ -36,7 +36,7 @@ function Home() {
   >()
   const { pageNumber, search } = Route.useSearch()
   const [searchTerm, setSearchTerm] = useState(search)
-  const debouncedSearchTerm = useDebouncedValue(searchTerm, 500)
+  const debouncedSearchTerm = useDebouncedValue(searchTerm, 700)
   const {
     data,
     isSuccess,
