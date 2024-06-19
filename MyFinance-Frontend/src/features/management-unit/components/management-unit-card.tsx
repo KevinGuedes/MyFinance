@@ -1,3 +1,4 @@
+import { useRouter } from '@tanstack/react-router'
 import { PiggyBank, TrendingDown, TrendingUp } from 'lucide-react'
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
@@ -17,8 +18,12 @@ type ManagementUnitCardProps = {
 export function ManagementUnitCard({
   managementUnit,
 }: ManagementUnitCardProps) {
+  const router = useRouter()
   function handleManagementUnitSelection(managementUnitId: string) {
-    console.log('Management Unit selected:', managementUnitId)
+    router.navigate({
+      to: '/management-unit/$managementUnitId',
+      params: { managementUnitId },
+    })
   }
 
   const description =

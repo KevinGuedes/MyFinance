@@ -39,7 +39,7 @@ export function SummaryCard({
 }: SummaryCardProps) {
   return (
     <Card>
-      <CardHeader className="pb-2">
+      <CardHeader className="p-4">
         <div className="flex justify-between gap-8">
           <div className="space-y-2">
             <CardTitle
@@ -62,7 +62,7 @@ export function SummaryCard({
           )}
         </div>
       </CardHeader>
-      <CardContent>
+      <CardContent className="px-4 pb-4">
         <h2
           className={cn(
             'line-clamp-1 break-all text-2xl font-bold',
