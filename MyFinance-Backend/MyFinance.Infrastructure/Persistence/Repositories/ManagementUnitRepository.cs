@@ -11,10 +11,7 @@ internal sealed class ManagementUnitRepository(MyFinanceDbContext myFinanceDbCon
     public Task<long> GetTotalCountAsync(string? searchTerm, CancellationToken cancellationToken)
     {
         if (string.IsNullOrWhiteSpace(searchTerm))
-        {
-            return _myFinanceDbContext.ManagementUnits
-                .LongCountAsync(cancellationToken);
-        }
+            return _myFinanceDbContext.ManagementUnits.LongCountAsync(cancellationToken);
 
         return _myFinanceDbContext.ManagementUnits
             .Where(mu => mu.Name.Contains(searchTerm))
