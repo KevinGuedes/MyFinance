@@ -47,8 +47,8 @@ export function PaginationBuilder({
   }, [data])
 
   return (
-    <div className="flex w-full flex-col-reverse flex-wrap content-center items-center justify-center gap-1 md:flex-row lg:flex-nowrap">
-      {data ? (
+    <div className="flex w-full flex-col-reverse flex-wrap content-center items-center justify-center gap-1 lg:flex-row lg:flex-nowrap">
+      {data && (
         <p className="shrink-0 text-muted-foreground">
           Showing{' '}
           <strong>
@@ -56,11 +56,6 @@ export function PaginationBuilder({
             {data.pageSize * data.pageNumber}
           </strong>{' '}
           of <strong>{data.totalPages * data.pageSize}</strong> Management Units
-        </p>
-      ) : (
-        <p className="flex items-center gap-2 text-muted-foreground">
-          <Loader2 className="size-4 animate-spin" />
-          Loading data...
         </p>
       )}
       <Pagination className="justify-center lg:justify-end">

@@ -95,7 +95,6 @@ function Home() {
 
   function handleGoToPage(page: number) {
     setAreaInUse('page')
-    console.log('page', page)
     navigate({
       search: (prev: SearchManagementUnitsSchema) => {
         return { ...prev, pageNumber: page }
