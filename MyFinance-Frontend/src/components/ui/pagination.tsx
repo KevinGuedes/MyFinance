@@ -1,7 +1,12 @@
-import { ChevronLeft, ChevronRight, MoreHorizontal } from 'lucide-react'
+import {
+  ChevronLeft,
+  ChevronRight,
+  Loader2,
+  MoreHorizontal,
+} from 'lucide-react'
 import * as React from 'react'
 
-import { ButtonProps, buttonVariants } from '@/components/ui/button'
+import { Button, ButtonProps } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
 
 const Pagination = ({ className, ...props }: React.ComponentProps<'nav'>) => (
@@ -36,8 +41,8 @@ PaginationItem.displayName = 'PaginationItem'
 
 type PaginationLinkProps = {
   isActive?: boolean
-} & Pick<ButtonProps, 'size'> &
-  React.ComponentProps<'a'>
+  isLoading?: boolean
+} & ButtonProps
 
 const PaginationLink = ({
   className,
@@ -45,15 +50,11 @@ const PaginationLink = ({
   size = 'icon',
   ...props
 }: PaginationLinkProps) => (
-  <a
+  <Button
     aria-current={isActive ? 'page' : undefined}
-    className={cn(
-      buttonVariants({
-        variant: isActive ? 'outline' : 'ghost',
-        size,
-      }),
-      className,
-    )}
+    variant={isActive ? 'outline' : 'ghost'}
+    size={size}
+    className={cn(className, 'transition-none')}
     {...props}
   />
 )
@@ -61,15 +62,22 @@ PaginationLink.displayName = 'PaginationLink'
 
 const PaginationPrevious = ({
   className,
+  isLoading = false,
+  disabled,
   ...props
 }: React.ComponentProps<typeof PaginationLink>) => (
   <PaginationLink
     aria-label="Go to previous page"
     size="default"
-    className={cn('gap-1 pl-2.5', className)}
+    disabled={disabled}
+    className={cn('gap-2', className)}
     {...props}
   >
-    <ChevronLeft className="h-4 w-4" />
+    {isLoading ? (
+      <Loader2 className="size-4 animate-spin" />
+    ) : (
+      <ChevronLeft className="size-4" />
+    )}
     <span>Previous</span>
   </PaginationLink>
 )
@@ -77,16 +85,23 @@ PaginationPrevious.displayName = 'PaginationPrevious'
 
 const PaginationNext = ({
   className,
+  isLoading = false,
+  disabled,
   ...props
 }: React.ComponentProps<typeof PaginationLink>) => (
   <PaginationLink
     aria-label="Go to next page"
     size="default"
-    className={cn('gap-1 pr-2.5', className)}
+    disabled={disabled}
+    className={cn('min-w-[6.25rem] gap-2', className)}
     {...props}
   >
     <span>Next</span>
-    <ChevronRight className="h-4 w-4" />
+    {isLoading ? (
+      <Loader2 className="size-4 animate-spin" />
+    ) : (
+      <ChevronRight className="size-4" />
+    )}
   </PaginationLink>
 )
 PaginationNext.displayName = 'PaginationNext'

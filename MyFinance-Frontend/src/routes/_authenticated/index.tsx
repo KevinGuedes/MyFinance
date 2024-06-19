@@ -1,9 +1,9 @@
 import { createFileRoute } from '@tanstack/react-router'
-import { ChevronLeft, ChevronRight, Loader2, Search } from 'lucide-react'
+import { Loader2, Search } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { z } from 'zod'
 
-import { Button } from '@/components/ui/button'
+import { PaginationBuilder } from '@/components/pagination-builder'
 import { Input } from '@/components/ui/input'
 import { useGetManagementUnits } from '@/features/management-unit/api/use-get-management-units'
 import { CreateManagementUnitDialog } from '@/features/management-unit/components/create-management-unit-dialogs'
@@ -26,7 +26,7 @@ export const Route = createFileRoute('/_authenticated/')({
   },
 })
 
-const PAGE_SIZE = 3
+const PAGE_SIZE = 9
 
 function Home() {
   const navigate = Route.useNavigate()
@@ -45,17 +45,6 @@ function Home() {
     isPending,
     isRefetching,
   } = useGetManagementUnits(pageNumber || 1, PAGE_SIZE, debouncedSearchTerm)
-
-  // useEffect(() => {
-  //   navigate({
-  //     search: (prev: SearchManagementUnitsSchema) => {
-  //       return {
-  //         pageNumber: prev.pageNumber || undefined,
-  //         search: prev.search || undefined,
-  //       }
-  //     },
-  //   })
-  // }, [navigate])
 
   useEffect(() => {
     navigate({
@@ -100,6 +89,16 @@ function Home() {
           ...prev,
           pageNumber: prev.pageNumber! - 1,
         }
+      },
+    })
+  }
+
+  function handleGoToPage(page: number) {
+    setAreaInUse(undefined)
+    console.log('page', page)
+    navigate({
+      search: (prev: SearchManagementUnitsSchema) => {
+        return { ...prev, pageNumber: page }
       },
     })
   }
@@ -174,6 +173,18 @@ function Home() {
         )}
       </>
       <footer className="item-center mt-auto flex justify-center gap-2 justify-self-end">
+        <PaginationBuilder
+          data={data}
+          onPageClick={handleGoToPage}
+          onNextClick={handleGoToNextPage}
+          isLoadingNext={isLoadingNextPage}
+          isNextButtonDisabled={isNextButtonDisabled}
+          onPreviousClick={handleBackToPreviousPage}
+          isLoadingPrevious={isLoadingPreviousPage}
+          isPreviousButtonDisabled={isPreviousButtonDisabled}
+        />
+      </footer>
+      {/* <footer className="item-center mt-auto flex items-center justify-center gap-2 justify-self-end">
         <Button
           onClick={handleBackToPreviousPage}
           disabled={isPreviousButtonDisabled}
@@ -200,7 +211,7 @@ function Home() {
             <ChevronRight className="ml-2 size-4" />
           )}
         </Button>
-      </footer>
+      </footer> */}
     </section>
   )
 }

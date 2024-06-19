@@ -52,3 +52,44 @@ export function getKeyByEnumValue<T>(
 ): string {
   return Object.keys(enumType).find((key) => enumType[key] === value) || ''
 }
+
+export function buildPagination(
+  currentPage: number,
+  totalPages: number,
+  adjacentPages: number,
+) {
+  const pages = new Set<number>()
+  pages.add(1)
+  pages.add(totalPages)
+  pages.add(currentPage)
+
+  if (totalPages > 1) {
+    pages.add(2)
+  }
+
+  if (totalPages > 2) {
+    pages.add(totalPages - 1)
+  }
+
+  for (let i = 1; i <= adjacentPages; i++) {
+    if (currentPage - i > 1) {
+      pages.add(currentPage - i)
+    }
+    if (currentPage + i < totalPages) {
+      pages.add(currentPage + i)
+    }
+  }
+
+  const sortedPages = Array.from(pages).sort((a, b) => a - b)
+
+  const result = []
+
+  for (let i = 0; i < sortedPages.length; i++) {
+    result.push(sortedPages[i])
+    if (i < sortedPages.length - 1 && sortedPages[i + 1] > sortedPages[i] + 1) {
+      result.push(0)
+    }
+  }
+
+  return result
+}
