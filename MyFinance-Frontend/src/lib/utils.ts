@@ -93,3 +93,18 @@ export function buildPagination(
 
   return result
 }
+
+export function buildPaginationInfo(
+  page: number,
+  pageSize: number,
+  totalCount: number,
+) {
+  const start = (page - 1) * pageSize + 1
+  const end = Math.min(page * pageSize, totalCount)
+
+  if (start > totalCount) {
+    return { start: totalCount + 1, end: totalCount, total: totalCount }
+  }
+
+  return { start, end, total: totalCount }
+}

@@ -2,7 +2,7 @@ import { Loader2 } from 'lucide-react'
 import { useMemo } from 'react'
 
 import { Paginated } from '@/features/common/paginated'
-import { buildPagination } from '@/lib/utils'
+import { buildPagination, buildPaginationInfo } from '@/lib/utils'
 
 import {
   Pagination,
@@ -46,16 +46,20 @@ export function PaginationBuilder({
     return buildPagination(data.pageNumber, data.totalPages, 1)
   }, [data])
 
+  const paginationInfo = useMemo(() => {
+    if (data === undefined) return undefined
+    return buildPaginationInfo(data.pageNumber, data.pageSize, data.totalCount)
+  }, [data])
+
   return (
     <div className="flex w-full flex-col-reverse flex-wrap content-center items-center justify-center gap-1 lg:flex-row lg:flex-nowrap">
-      {data && (
+      {paginationInfo && (
         <p className="shrink-0 text-muted-foreground">
           Showing{' '}
           <strong>
-            {((data.pageNumber || 1) - 1) * data.pageSize + 1} -{' '}
-            {data.pageSize * data.pageNumber}
+            {paginationInfo.start} - {paginationInfo.end}
           </strong>{' '}
-          of <strong>{data.totalPages * data.pageSize}</strong> Management Units
+          of <strong>{paginationInfo.total}</strong> Management Unit(s)
         </p>
       )}
       <Pagination className="justify-center lg:justify-end">
