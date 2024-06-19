@@ -88,12 +88,9 @@ export function PaginationBuilder({
                       onClick={() => onPageClick(page)}
                       isActive={data.pageNumber === page}
                       disabled={isPageDisabled}
+                      isLoading={isLoadingPage && currentRoutePage === page}
                     >
-                      {isLoadingPage && currentRoutePage === page ? (
-                        <Loader2 className="size-4 animate-spin text-muted-foreground" />
-                      ) : (
-                        page
-                      )}
+                      {page}
                     </PaginationLink>
                   </PaginationItem>
                 )

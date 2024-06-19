@@ -42,12 +42,15 @@ PaginationItem.displayName = 'PaginationItem'
 type PaginationLinkProps = {
   isActive?: boolean
   isLoading?: boolean
+  isPageOnlyLink?: boolean
 } & ButtonProps
 
 const PaginationLink = ({
   className,
   isActive,
   size = 'icon',
+  isPageOnlyLink = true,
+  isLoading = false,
   ...props
 }: PaginationLinkProps) => (
   <Button
@@ -56,7 +59,13 @@ const PaginationLink = ({
     size={size}
     className={cn(className, 'transition-none')}
     {...props}
-  />
+  >
+    {isPageOnlyLink && isLoading ? (
+      <Loader2 className="size-4 animate-spin" />
+    ) : (
+      props.children
+    )}
+  </Button>
 )
 PaginationLink.displayName = 'PaginationLink'
 
@@ -71,6 +80,7 @@ const PaginationPrevious = ({
     size="default"
     disabled={disabled}
     className={cn('gap-2', className)}
+    isPageOnlyLink={false}
     {...props}
   >
     {isLoading ? (
@@ -94,6 +104,7 @@ const PaginationNext = ({
     size="default"
     disabled={disabled}
     className={cn('min-w-[6.25rem] gap-2', className)}
+    isPageOnlyLink={false}
     {...props}
   >
     <span>Next</span>
