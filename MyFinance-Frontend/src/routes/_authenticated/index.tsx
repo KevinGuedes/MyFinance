@@ -122,7 +122,7 @@ function Home() {
 
   return (
     <section className="flex grow flex-col gap-4">
-      <header className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+      <header className="grid items-center gap-4 md:grid-cols-2 xl:grid-cols-3">
         <h2 className="shrink-0 text-xl">Management Units</h2>
         <div className="md:col-star-2 flex gap-2 xl:col-start-3">
           <div className="relative grow">
@@ -142,19 +142,19 @@ function Home() {
           <CreateManagementUnitDialog />
         </div>
       </header>
-      <>
-        {isPending && !isPlaceholderData && (
-          <div
-            className="grid gap-4 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4"
-            role="status"
-          >
-            {skeletonItems.map((skeleton) => (
-              <ManagementUnitCardSkeleton key={skeleton.id} />
-            ))}
-          </div>
-        )}
-        {isSuccess && (
-          <>
+      {isPending && !isPlaceholderData && (
+        <div
+          className="grid gap-4 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4"
+          role="status"
+        >
+          {skeletonItems.map((skeleton) => (
+            <ManagementUnitCardSkeleton key={skeleton.id} />
+          ))}
+        </div>
+      )}
+      {isSuccess && (
+        <>
+          {data.items.length > 0 ? (
             <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
               {data.items.map((managementUnit) => (
                 <ManagementUnitCard
@@ -163,16 +163,15 @@ function Home() {
                 />
               ))}
             </div>
-          </>
-        )}
-        {isSuccess && data.items.length === 0 && (
-          <div className="flex grow items-center justify-center">
-            <p className="text-center text-muted-foreground">
-              No management units found!
-            </p>
-          </div>
-        )}
-      </>
+          ) : (
+            <div className="flex grow items-center justify-center">
+              <p className="text-center text-muted-foreground">
+                No management units found!
+              </p>
+            </div>
+          )}
+        </>
+      )}
       <footer className="item-center mt-auto flex justify-center gap-2 justify-self-end">
         <PaginationBuilder
           data={data}
