@@ -16,7 +16,7 @@ import { Route as rootRoute } from './routes/__root'
 import { Route as NonAuthenticatedImport } from './routes/_non-authenticated'
 import { Route as AuthenticatedImport } from './routes/_authenticated'
 import { Route as AuthenticatedIndexImport } from './routes/_authenticated/index'
-import { Route as AuthenticatedManagementUnitDashboardImport } from './routes/_authenticated/management-unit-dashboard'
+import { Route as AuthenticatedManagementUnitManagementUnitIdImport } from './routes/_authenticated/management-unit.$managementUnitId'
 
 // Create Virtual Routes
 
@@ -50,9 +50,9 @@ const NonAuthenticatedSignUpLazyRoute = NonAuthenticatedSignUpLazyImport.update(
   import('./routes/_non-authenticated/sign-up.lazy').then((d) => d.Route),
 )
 
-const AuthenticatedManagementUnitDashboardRoute =
-  AuthenticatedManagementUnitDashboardImport.update({
-    path: '/management-unit-dashboard',
+const AuthenticatedManagementUnitManagementUnitIdRoute =
+  AuthenticatedManagementUnitManagementUnitIdImport.update({
+    path: '/management-unit/$managementUnitId',
     getParentRoute: () => AuthenticatedRoute,
   } as any)
 
@@ -74,13 +74,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof NonAuthenticatedImport
       parentRoute: typeof rootRoute
     }
-    '/_authenticated/management-unit-dashboard': {
-      id: '/_authenticated/management-unit-dashboard'
-      path: '/management-unit-dashboard'
-      fullPath: '/management-unit-dashboard'
-      preLoaderRoute: typeof AuthenticatedManagementUnitDashboardImport
-      parentRoute: typeof AuthenticatedImport
-    }
     '/_non-authenticated/sign-up': {
       id: '/_non-authenticated/sign-up'
       path: '/sign-up'
@@ -95,6 +88,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedIndexImport
       parentRoute: typeof AuthenticatedImport
     }
+    '/_authenticated/management-unit/$managementUnitId': {
+      id: '/_authenticated/management-unit/$managementUnitId'
+      path: '/management-unit/$managementUnitId'
+      fullPath: '/management-unit/$managementUnitId'
+      preLoaderRoute: typeof AuthenticatedManagementUnitManagementUnitIdImport
+      parentRoute: typeof AuthenticatedImport
+    }
   }
 }
 
@@ -102,8 +102,8 @@ declare module '@tanstack/react-router' {
 
 export const routeTree = rootRoute.addChildren({
   AuthenticatedRoute: AuthenticatedRoute.addChildren({
-    AuthenticatedManagementUnitDashboardRoute,
     AuthenticatedIndexRoute,
+    AuthenticatedManagementUnitManagementUnitIdRoute,
   }),
   NonAuthenticatedRoute: NonAuthenticatedRoute.addChildren({
     NonAuthenticatedSignUpLazyRoute,
@@ -125,8 +125,8 @@ export const routeTree = rootRoute.addChildren({
     "/_authenticated": {
       "filePath": "_authenticated.tsx",
       "children": [
-        "/_authenticated/management-unit-dashboard",
-        "/_authenticated/"
+        "/_authenticated/",
+        "/_authenticated/management-unit/$managementUnitId"
       ]
     },
     "/_non-authenticated": {
@@ -135,16 +135,16 @@ export const routeTree = rootRoute.addChildren({
         "/_non-authenticated/sign-up"
       ]
     },
-    "/_authenticated/management-unit-dashboard": {
-      "filePath": "_authenticated/management-unit-dashboard.tsx",
-      "parent": "/_authenticated"
-    },
     "/_non-authenticated/sign-up": {
       "filePath": "_non-authenticated/sign-up.lazy.tsx",
       "parent": "/_non-authenticated"
     },
     "/_authenticated/": {
       "filePath": "_authenticated/index.tsx",
+      "parent": "/_authenticated"
+    },
+    "/_authenticated/management-unit/$managementUnitId": {
+      "filePath": "_authenticated/management-unit.$managementUnitId.tsx",
       "parent": "/_authenticated"
     }
   }
