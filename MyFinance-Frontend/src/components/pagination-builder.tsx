@@ -16,12 +16,15 @@ import {
 
 type PaginationBuilderProps = {
   data: Paginated<unknown> | undefined
+  currentRoutePage: number
   onPageClick: (pageNumber: number) => void
+  isLoadingPage: boolean
+  isPageDisabled: boolean
   onNextClick: () => void
-  isLoadingNext?: boolean
-  isNextButtonDisabled?: boolean
+  isLoadingNext: boolean
+  isNextButtonDisabled: boolean
   onPreviousClick: () => void
-  isLoadingPrevious?: boolean
+  isLoadingPrevious: boolean
   isPreviousButtonDisabled?: boolean
 }
 
@@ -29,11 +32,14 @@ export function PaginationBuilder({
   data,
   isLoadingNext,
   isLoadingPrevious,
+  currentRoutePage,
+  isLoadingPage,
   onNextClick,
   onPageClick,
   onPreviousClick,
   isNextButtonDisabled,
   isPreviousButtonDisabled,
+  isPageDisabled,
 }: PaginationBuilderProps) {
   const paginationSetup = useMemo(() => {
     if (data === undefined) return []
@@ -77,28 +83,18 @@ export function PaginationBuilder({
                   )
                 }
 
-                if (page === 1) {
-                  return (
-                    <PaginationItem key={index}>
-                      <PaginationLink
-                        onClick={() => onPageClick(page)}
-                        isActive={
-                          data.pageNumber === undefined || data.pageNumber === 1
-                        }
-                      >
-                        {page}
-                      </PaginationLink>
-                    </PaginationItem>
-                  )
-                }
-
                 return (
                   <PaginationItem key={index}>
                     <PaginationLink
                       onClick={() => onPageClick(page)}
                       isActive={data.pageNumber === page}
+                      disabled={isPageDisabled}
                     >
-                      {page}
+                      {isLoadingPage && currentRoutePage === page ? (
+                        <Loader2 className="size-4 animate-spin text-muted-foreground" />
+                      ) : (
+                        page
+                      )}
                     </PaginationLink>
                   </PaginationItem>
                 )

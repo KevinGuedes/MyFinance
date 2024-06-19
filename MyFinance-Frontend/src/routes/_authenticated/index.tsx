@@ -32,7 +32,7 @@ function Home() {
   const navigate = Route.useNavigate()
   const [isSerchTermChaging, setIsSearchTermChanging] = useState(false)
   const [areaInUse, setAreaInUse] = useState<
-    'next' | 'previous' | 'search' | undefined
+    'next' | 'previous' | 'search' | 'page' | undefined
   >()
   const { pageNumber, search } = Route.useSearch()
   const [searchTerm, setSearchTerm] = useState(search)
@@ -94,7 +94,7 @@ function Home() {
   }
 
   function handleGoToPage(page: number) {
-    setAreaInUse(undefined)
+    setAreaInUse('page')
     console.log('page', page)
     navigate({
       search: (prev: SearchManagementUnitsSchema) => {
@@ -105,8 +105,10 @@ function Home() {
 
   const isLoadingNextPage = isFetching && areaInUse === 'next'
   const isLoadingPreviousPage = isFetching && areaInUse === 'previous'
+  const isLoadingPage = isFetching && areaInUse === 'page'
   const shouldShowSearchSpinner = isRefetching && areaInUse === 'search'
 
+  const isPageDisabled = isFetching || isSerchTermChaging
   const isNextButtonDisabled =
     !data?.hasNextPage || isLoadingNextPage || isFetching || isSerchTermChaging
   const isPreviousButtonDisabled =
@@ -176,6 +178,9 @@ function Home() {
         <PaginationBuilder
           data={data}
           onPageClick={handleGoToPage}
+          currentRoutePage={pageNumber || 1}
+          isLoadingPage={isLoadingPage}
+          isPageDisabled={isPageDisabled}
           onNextClick={handleGoToNextPage}
           isLoadingNext={isLoadingNextPage}
           isNextButtonDisabled={isNextButtonDisabled}
@@ -184,34 +189,6 @@ function Home() {
           isPreviousButtonDisabled={isPreviousButtonDisabled}
         />
       </footer>
-      {/* <footer className="item-center mt-auto flex items-center justify-center gap-2 justify-self-end">
-        <Button
-          onClick={handleBackToPreviousPage}
-          disabled={isPreviousButtonDisabled}
-          variant="outline"
-          className="w-28"
-        >
-          {isLoadingPreviousPage ? (
-            <Loader2 className="mr-2 size-4 animate-spin" />
-          ) : (
-            <ChevronLeft className="mr-2 size-4" />
-          )}
-          Previous
-        </Button>
-        <Button
-          onClick={handleGoToNextPage}
-          disabled={isNextButtonDisabled}
-          variant="outline"
-          className="w-28"
-        >
-          Next
-          {isLoadingNextPage ? (
-            <Loader2 className="ml-2 size-4 animate-spin" />
-          ) : (
-            <ChevronRight className="ml-2 size-4" />
-          )}
-        </Button>
-      </footer> */}
     </section>
   )
 }
