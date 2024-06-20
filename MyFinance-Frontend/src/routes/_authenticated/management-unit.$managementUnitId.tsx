@@ -22,7 +22,7 @@ function ManagementUnitDashboard() {
       <PageContent className="flex flex-col gap-4 pb-2 lg:flex-row">
         <div className="flex flex-col justify-between gap-4 lg:w-3/5">
           <SummaryCards />
-          <div className="hidden h-full sm:block">
+          <div className="h-full">
             <AnnualBalanceCard />
           </div>
         </div>

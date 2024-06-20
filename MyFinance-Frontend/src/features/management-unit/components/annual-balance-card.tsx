@@ -19,7 +19,7 @@ export function AnnualBalanceCard() {
 
   return (
     <Card className="mx-auto flex size-full flex-col">
-      <CardHeader className="grid gap-1 p-4 pb-0">
+      <CardHeader className="grid gap-0.5 p-4 pb-0">
         <div className="flex items-center justify-between">
           <CardTitle>Annual Balance Data</CardTitle>
           <Toggle variant="outline" onClick={toggleYAxis} className="shrink-0">
@@ -27,8 +27,8 @@ export function AnnualBalanceCard() {
           </Toggle>
         </div>
         <CardDescription>
-          Income, Outcome and Balance for the last 12 months. Hover the chart or
-          the legend for more details
+          Income, Outcome and Balance for the last 12 months. Hover the chart
+          for more details
         </CardDescription>
       </CardHeader>
       <CardContent className="flex grow flex-col px-4 pb-0 pt-2">

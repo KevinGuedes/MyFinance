@@ -19,7 +19,7 @@ export function BalanceDataTooltip({
   if (active && payload && payload.length) {
     return (
       <div className="rounded-lg border bg-background p-2 shadow-sm">
-        <div className="grid grid-cols-3 gap-2.5">
+        <div className="grid grid-cols-3 gap-3">
           <div className="flex flex-col">
             <p className="text-sm font-bold capitalize text-muted-foreground">
               Balance
@@ -29,15 +29,13 @@ export function BalanceDataTooltip({
             </p>
           </div>
           <div className="flex flex-col">
-            <p className="text-sm font-bold capitalize text-muted-foreground">
-              Income
-            </p>
+            <p className="text-sm font-bold capitalize text-primary">Income</p>
             <p className="font-bold text-primary">
               {toMoney(Number(payload[1].value))}
             </p>
           </div>
           <div className="flex flex-col">
-            <p className="text-sm font-bold capitalize text-muted-foreground">
+            <p className="text-sm font-bold capitalize text-destructive">
               Outcome
             </p>
             <p className="font-bold text-destructive">
