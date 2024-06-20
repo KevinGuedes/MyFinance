@@ -1,3 +1,4 @@
+import { PlusCircle } from 'lucide-react'
 import { useState } from 'react'
 
 import { Button } from '@/components/ui/button'
@@ -26,7 +27,10 @@ export function CreateCategoryDialog() {
   return (
     <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
       <DialogTrigger asChild>
-        <Button variant="outline">Create Category</Button>
+        <Button variant="outline" size="sm">
+          <PlusCircle className="mr-2 size-5" />
+          Create Category
+        </Button>
       </DialogTrigger>
       <DialogContent
         className="sm:max-w-md"

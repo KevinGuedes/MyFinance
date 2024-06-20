@@ -1,3 +1,4 @@
+import { PlusCircle } from 'lucide-react'
 import { useState } from 'react'
 
 import { Button } from '@/components/ui/button'
@@ -43,7 +44,10 @@ export function RegisterTransferDialog() {
   return (
     <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
       <DialogTrigger asChild>
-        <Button variant="outline">Register Transfer</Button>
+        <Button variant="outline" size="sm">
+          <PlusCircle className="mr-2 size-5" />
+          Register Transfer
+        </Button>
       </DialogTrigger>
       <DialogContent
         className="max-w-3xl"

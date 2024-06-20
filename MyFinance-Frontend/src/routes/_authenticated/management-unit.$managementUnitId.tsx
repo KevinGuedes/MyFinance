@@ -1,10 +1,12 @@
 import { createFileRoute } from '@tanstack/react-router'
 
 import { Page, PageContent, PageHeader } from '@/components/page'
-import { Card, CardContent } from '@/components/ui/card'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { CreateAccountTagDialog } from '@/features/account-tag/components/create-account-tag-dialog'
+import { CreateCategoryDialog } from '@/features/category/components/create-category-dialog'
 import { AnnualBalanceCard } from '@/features/management-unit/components/annual-balance-card'
 import { SummaryCards } from '@/features/management-unit/components/summary-cards'
+import { RegisterTransferDialog } from '@/features/transfer/components/register-transfer-dialog'
 
 export const Route = createFileRoute(
   '/_authenticated/management-unit/$managementUnitId',
@@ -26,21 +28,23 @@ function ManagementUnitDashboard() {
             <AnnualBalanceCard />
           </div>
         </div>
-        <div className="lg:w-2/5">
-          <Card className="h-full">
-            <CardContent className="p-4">
-              <Tabs defaultValue="transfers">
-                <TabsList>
-                  <TabsTrigger value="transfers">Transfers</TabsTrigger>
-                  <TabsTrigger value="account-tags">Account Tags</TabsTrigger>
-                  <TabsTrigger value="categories">Categories</TabsTrigger>
-                </TabsList>
-                <TabsContent value="transfers">Tab 1 content</TabsContent>
-                <TabsContent value="account-tags">Tab 2 content</TabsContent>
-                <TabsContent value="categories">Tab 3 content</TabsContent>
-              </Tabs>
-            </CardContent>
-          </Card>
+        <div className="flex grow flex-col rounded-lg border bg-background p-4 lg:w-2/5">
+          <Tabs defaultValue="transfers" className="flex grow flex-col border">
+            <TabsList className="self-start">
+              <TabsTrigger value="transfers">Transfers</TabsTrigger>
+              <TabsTrigger value="account-tags">Account Tags</TabsTrigger>
+              <TabsTrigger value="categories">Categories</TabsTrigger>
+            </TabsList>
+            <TabsContent value="transfers">
+              <RegisterTransferDialog />
+            </TabsContent>
+            <TabsContent value="account-tags">
+              <CreateAccountTagDialog />
+            </TabsContent>
+            <TabsContent value="categories">
+              <CreateCategoryDialog />
+            </TabsContent>
+          </Tabs>
         </div>
       </PageContent>
     </Page>
