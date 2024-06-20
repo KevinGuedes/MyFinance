@@ -17,7 +17,7 @@ export function NavBar() {
                 className: 'text-muted-foreground hover:text-primary ',
               }}
               activeProps={{
-                className: 'bg-muted/40 text-primary border',
+                className: 'bg-muted/40 text-primary',
               }}
             >
               <Home className="size-5" />
