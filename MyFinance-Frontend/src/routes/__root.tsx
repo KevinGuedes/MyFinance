@@ -16,7 +16,7 @@ export function Root() {
       <div className="flex min-h-screen flex-col pr-px">
         <Outlet />
       </div>
-      <ScrollBar />
+      <ScrollBar className="z-50" />
       <TanStackRouterDevtools initialIsOpen={false} />
     </ScrollArea>
   )
