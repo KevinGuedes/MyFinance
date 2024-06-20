@@ -18,8 +18,8 @@ export function AnnualBalanceCard() {
   }
 
   return (
-    <Card className="mx-auto size-full">
-      <CardHeader className="p-4 pb-0">
+    <Card className="mx-auto flex size-full flex-col">
+      <CardHeader className="grid gap-1 p-4 pb-0">
         <div className="flex items-center justify-between">
           <CardTitle>Annual Balance Data</CardTitle>
           <Toggle variant="outline" onClick={toggleYAxis} className="shrink-0">
@@ -31,8 +31,10 @@ export function AnnualBalanceCard() {
           the legend for more details
         </CardDescription>
       </CardHeader>
-      <CardContent className="px-4 pb-0 pt-2">
-        <AnnualBalanceChart hideYAxis={hideYAxis} />
+      <CardContent className="flex grow flex-col px-4 pb-0 pt-2">
+        <div className="h-[280px] grow">
+          <AnnualBalanceChart hideYAxis={hideYAxis} />
+        </div>
       </CardContent>
     </Card>
   )

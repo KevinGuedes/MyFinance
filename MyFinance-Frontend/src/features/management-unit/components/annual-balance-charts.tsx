@@ -82,101 +82,99 @@ export function AnnualBalanceChart({
   const outcomeLineColor = theme === 'dark' ? '	#7f1d1d' : '#ef4444'
 
   return (
-    <div className="h-[280px]">
-      <ResponsiveContainer width="100%" height="100%">
-        <ComposedChart
-          data={data}
-          margin={{
-            top: 20,
-            right: 20,
-            left: 20,
-            bottom: 20,
+    <ResponsiveContainer width="100%" height="100%">
+      <ComposedChart
+        data={data}
+        margin={{
+          top: 20,
+          right: 20,
+          left: 20,
+          bottom: 20,
+        }}
+      >
+        <ChartTooltip
+          content={(chartTooltipContent) => {
+            return (
+              <BalanceDataTooltip
+                active={chartTooltipContent.active}
+                payload={chartTooltipContent.payload}
+                label={chartTooltipContent.label}
+              />
+            )
           }}
-        >
-          <ChartTooltip
-            content={(chartTooltipContent) => {
-              return (
-                <BalanceDataTooltip
-                  active={chartTooltipContent.active}
-                  payload={chartTooltipContent.payload}
-                  label={chartTooltipContent.label}
-                />
-              )
+        />
+
+        <YAxis stroke={axesColor} hide={hideYAxis} type="number" />
+        <XAxis dataKey="month" stroke={axesColor} />
+
+        <Bar
+          animationDuration={2000}
+          dataKey="balance"
+          opacity={opacity.balance}
+          fill={balanceBarColor}
+          activeBar={{ stroke: 'white', strokeWidth: 2 }}
+        />
+
+        <Line
+          animationDuration={2000}
+          type="monotone"
+          dataKey="income"
+          legendType="plainline"
+          strokeWidth={3}
+          strokeOpacity={opacity.income}
+          fill={incomeLineColor}
+          stroke={incomeLineColor}
+          dot={{
+            style: {
+              opacity: opacity.income,
+            },
+          }}
+          activeDot={{
+            r: 8,
+            style: {
+              fill: incomeLineColor,
+            },
+          }}
+        />
+
+        <Line
+          animationDuration={2000}
+          type="monotone"
+          dataKey="outcome"
+          legendType="plainline"
+          strokeWidth={2}
+          strokeOpacity={opacity.outcome}
+          fill={outcomeLineColor}
+          stroke={outcomeLineColor}
+          dot={{
+            style: {
+              opacity: opacity.outcome,
+            },
+          }}
+          activeDot={{
+            r: 6,
+            style: { fill: outcomeLineColor },
+          }}
+          // label={opacity.income === 0.2 ? <LineChartLabel /> : undefined}
+        />
+
+        {showLegend && (
+          <Legend
+            verticalAlign="bottom"
+            iconSize={24}
+            onMouseLeave={handleMouseLeaveOnLegend}
+            onMouseEnter={(payload) =>
+              handleMouserEnterOnLegend(String(payload.dataKey))
+            }
+            wrapperStyle={{
+              paddingTop: 20,
             }}
+            formatter={(value) => (
+              <span className="font-bold capitalize">{value}</span>
+            )}
           />
-
-          <YAxis stroke={axesColor} hide={hideYAxis} type="number" />
-          <XAxis dataKey="month" stroke={axesColor} />
-
-          <Bar
-            animationDuration={2000}
-            dataKey="balance"
-            opacity={opacity.balance}
-            fill={balanceBarColor}
-            activeBar={{ stroke: 'white', strokeWidth: 2 }}
-          />
-
-          <Line
-            animationDuration={2000}
-            type="monotone"
-            dataKey="income"
-            legendType="plainline"
-            strokeWidth={3}
-            strokeOpacity={opacity.income}
-            fill={incomeLineColor}
-            stroke={incomeLineColor}
-            dot={{
-              style: {
-                opacity: opacity.income,
-              },
-            }}
-            activeDot={{
-              r: 8,
-              style: {
-                fill: incomeLineColor,
-              },
-            }}
-          />
-
-          <Line
-            animationDuration={2000}
-            type="monotone"
-            dataKey="outcome"
-            legendType="plainline"
-            strokeWidth={2}
-            strokeOpacity={opacity.outcome}
-            fill={outcomeLineColor}
-            stroke={outcomeLineColor}
-            dot={{
-              style: {
-                opacity: opacity.outcome,
-              },
-            }}
-            activeDot={{
-              r: 6,
-              style: { fill: outcomeLineColor },
-            }}
-            // label={opacity.income === 0.2 ? <LineChartLabel /> : undefined}
-          />
-
-          {showLegend && (
-            <Legend
-              verticalAlign="bottom"
-              iconSize={24}
-              onMouseLeave={handleMouseLeaveOnLegend}
-              onMouseEnter={(payload) =>
-                handleMouserEnterOnLegend(String(payload.dataKey))
-              }
-              wrapperStyle={{
-                paddingTop: 20,
-              }}
-              formatter={(value) => (
-                <span className="font-bold capitalize">{value}</span>
-              )}
-            />
-          )}
-        </ComposedChart>
-      </ResponsiveContainer>
-    </div>
+        )}
+      </ComposedChart>
+    </ResponsiveContainer>
   )
 }
