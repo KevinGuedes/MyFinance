@@ -38,7 +38,7 @@ export function ManagementUnitCard({
 
   return (
     <Card
-      className="border shadow-lg ring-offset-background transition-all  hover:cursor-pointer hover:ring-2 hover:ring-ring focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+      className="border shadow-lg outline-none ring-offset-background  transition-all hover:cursor-pointer hover:ring-2 hover:ring-ring hover:ring-offset-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
       tabIndex={0}
       onClick={() => handleManagementUnitSelection(managementUnit.id)}
       onKeyDown={(key) => {

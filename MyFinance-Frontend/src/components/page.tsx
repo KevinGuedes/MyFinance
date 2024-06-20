@@ -21,7 +21,7 @@ type PageProps = React.ComponentProps<'div'>
 
 export function Page({ children, className }: PageProps) {
   return (
-    <div className={cn('flex grow flex-col gap-4 pb-2', className)}>
+    <div className={cn('flex grow flex-col gap-4 pb-2 sm:px-4', className)}>
       {children}
     </div>
   )
@@ -30,7 +30,7 @@ export function Page({ children, className }: PageProps) {
 type PageContentProps = React.ComponentProps<'section'>
 export function PageContent({ children, className }: PageContentProps) {
   return (
-    <section className={cn('flex grow flex-col gap-4 px-4 sm:pr-5', className)}>
+    <section className={cn('flex grow flex-col gap-4 px-4 sm:px-0', className)}>
       {children}
     </section>
   )
@@ -38,13 +38,21 @@ export function PageContent({ children, className }: PageContentProps) {
 
 type PageFooterProps = React.ComponentProps<'footer'>
 export function PageFooter({ children, className }: PageFooterProps) {
-  return <footer className={cn('mt-auto', className)}>{children}</footer>
+  return (
+    <footer className={cn('mt-auto px-4 sm:px-0', className)}>
+      {children}
+    </footer>
+  )
 }
 
 type PageHeaderProps = {
   pageName: string
+  showBackButton?: boolean
 }
-export function PageHeader({ pageName }: PageHeaderProps) {
+export function PageHeader({
+  pageName,
+  showBackButton = false,
+}: PageHeaderProps) {
   const signOutMutation = useSignOut()
   const { user } = useUserStore()
 
@@ -53,7 +61,7 @@ export function PageHeader({ pageName }: PageHeaderProps) {
   }
 
   return (
-    <header className="sticky top-0 z-30 flex h-14 items-center justify-between gap-4 border-b bg-background px-4 sm:static sm:z-auto sm:h-auto sm:border-0 sm:bg-transparent sm:pt-2">
+    <header className="sticky top-0 z-30 flex h-14 items-center justify-between gap-4 border-b bg-background px-4 py-2 sm:static sm:z-auto sm:h-auto sm:border-b sm:bg-transparent">
       <Sheet>
         <SheetTrigger asChild>
           <Button size="icon" variant="outline" className="sm:hidden">
@@ -83,7 +91,7 @@ export function PageHeader({ pageName }: PageHeaderProps) {
           </div>
         </SheetContent>
       </Sheet>
-      <div className="flex grow items-end justify-end gap-8 sm:justify-between sm:border-b sm:pb-1.5">
+      <div className="flex grow items-end justify-end gap-8 sm:justify-between">
         <h1 className="hidden text-3xl sm:block">{pageName}</h1>
         {user && (
           <div className="flex items-center gap-2">
@@ -93,7 +101,7 @@ export function PageHeader({ pageName }: PageHeaderProps) {
                 <Button
                   variant="outline"
                   size="icon"
-                  className="group overflow-hidden rounded-full border-none"
+                  className="group overflow-hidden rounded-full sm:border-none"
                 >
                   <User2 className="size-5 transition-transform group-hover:scale-110" />
                 </Button>
