@@ -6,7 +6,7 @@ export const Route = createFileRoute('/_non-authenticated')({
 
 function DefaultLayout() {
   return (
-    <main className="flex h-full grow items-center justify-center p-6">
+    <main className="flex grow items-center justify-center p-6">
       <Outlet />
     </main>
   )

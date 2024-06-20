@@ -2,7 +2,6 @@ import { createFileRoute, Outlet } from '@tanstack/react-router'
 import { Loader2 } from 'lucide-react'
 import { useCallback, useEffect } from 'react'
 
-import { Header } from '@/components/header'
 import { NavBar } from '@/components/nav-bar'
 import { Button } from '@/components/ui/button'
 import { SearchManagementUnits } from '@/features/management-unit/components/search-management-units'
@@ -41,12 +40,9 @@ function AuthenticatedLayout() {
         <SearchManagementUnits />
         <NavBar />
         <div className="flex grow flex-col bg-background sm:gap-4 sm:pl-14 sm:pt-4">
-          <div className="flex grow flex-col bg-muted/40 sm:rounded-tl-2xl sm:border-l-2 sm:border-t-2 sm:p-6 sm:pb-2">
-            <Header />
-            <main className="flex grow flex-col p-4 sm:px-0 sm:pb-0">
-              <Outlet />
-            </main>
-          </div>
+          <main className="flex grow flex-col bg-muted/40 p-4 sm:rounded-tl-2xl sm:border-l-2 sm:border-t-2 sm:p-4 sm:pb-2 sm:pr-5">
+            <Outlet />
+          </main>
         </div>
       </div>
     )

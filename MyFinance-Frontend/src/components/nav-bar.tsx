@@ -21,10 +21,10 @@ export function NavBar() {
               }}
             >
               <Home className="size-5" />
-              <span className="sr-only">Home</span>
+              <span className="sr-only">Management Units</span>
             </Link>
           </TooltipTrigger>
-          <TooltipContent side="right">Home</TooltipContent>
+          <TooltipContent side="right">Management Units</TooltipContent>
         </Tooltip>
       </nav>
       <div className="flex grow items-end justify-center pb-2">
