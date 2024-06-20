@@ -25,8 +25,8 @@ export function NavBar() {
   }
 
   return (
-    <aside className="fixed inset-y-0 left-0 z-10 hidden w-14 flex-col sm:flex">
-      <div className="mt-6 flex items-end justify-center pb-2">
+    <aside className="fixed inset-y-0 left-0 z-10 mt-4 hidden w-14 flex-col items-center gap-4 pb-4 sm:flex">
+      <>
         {user && (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -56,8 +56,8 @@ export function NavBar() {
             </DropdownMenuContent>
           </DropdownMenu>
         )}
-      </div>
-      <nav className="flex flex-col items-center gap-4 px-2 sm:py-5">
+      </>
+      <nav>
         <Tooltip>
           <TooltipTrigger asChild>
             <Link
@@ -77,7 +77,7 @@ export function NavBar() {
           <TooltipContent side="right">Management Units</TooltipContent>
         </Tooltip>
       </nav>
-      <div className="flex grow items-end justify-center pb-2">
+      <div className="flex grow items-end">
         <ThemeSwitcher />
       </div>
     </aside>
