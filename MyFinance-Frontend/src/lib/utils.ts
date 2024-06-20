@@ -108,3 +108,13 @@ export function buildPaginationInfo(
 
   return { start, end, total: totalCount }
 }
+
+export function getInitials(name: string) {
+  const words = name.trim().toUpperCase().split(/\s+/)
+
+  if (words.length <= 2) {
+    return words.map((word) => word[0]).join('')
+  } else {
+    return words[0][0] + words[words.length - 1][0]
+  }
+}
