@@ -21,7 +21,7 @@ type PageProps = React.ComponentProps<'div'>
 
 export function Page({ children, className }: PageProps) {
   return (
-    <div className={cn('flex grow flex-col gap-4 pb-2 sm:px-4', className)}>
+    <div className={cn('flex grow flex-col gap-4 pb-4 sm:px-4', className)}>
       {children}
     </div>
   )
