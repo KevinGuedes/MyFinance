@@ -27,7 +27,7 @@ export const Route = createFileRoute('/_authenticated/')({
   },
 })
 
-const PAGE_SIZE = 6
+const PAGE_SIZE = 9
 
 function Home() {
   // const pageName = Route.useMatch().staticData.name
