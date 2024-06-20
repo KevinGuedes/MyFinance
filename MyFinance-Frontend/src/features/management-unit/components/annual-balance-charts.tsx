@@ -45,10 +45,12 @@ const data = months.map((month, index) => {
 
 type AnnualBalanceChartProps = {
   hideYAxis: boolean
+  showLegend?: boolean
 }
 
 export function AnnualBalanceChart({
   hideYAxis = true,
+  showLegend = false,
 }: AnnualBalanceChartProps) {
   const { theme } = useTheme()
   const [opacity, setOpacity] = useState({
@@ -80,7 +82,7 @@ export function AnnualBalanceChart({
   const outcomeLineColor = theme === 'dark' ? '	#7f1d1d' : '#ef4444'
 
   return (
-    <div className="h-[300px]">
+    <div className="h-[280px]">
       <ResponsiveContainer width="100%" height="100%">
         <ComposedChart
           data={data}
@@ -157,20 +159,22 @@ export function AnnualBalanceChart({
             // label={opacity.income === 0.2 ? <LineChartLabel /> : undefined}
           />
 
-          <Legend
-            verticalAlign="bottom"
-            iconSize={24}
-            onMouseLeave={handleMouseLeaveOnLegend}
-            onMouseEnter={(payload) =>
-              handleMouserEnterOnLegend(String(payload.dataKey))
-            }
-            wrapperStyle={{
-              paddingTop: 20,
-            }}
-            formatter={(value) => (
-              <span className="font-bold capitalize">{value}</span>
-            )}
-          />
+          {showLegend && (
+            <Legend
+              verticalAlign="bottom"
+              iconSize={24}
+              onMouseLeave={handleMouseLeaveOnLegend}
+              onMouseEnter={(payload) =>
+                handleMouserEnterOnLegend(String(payload.dataKey))
+              }
+              wrapperStyle={{
+                paddingTop: 20,
+              }}
+              formatter={(value) => (
+                <span className="font-bold capitalize">{value}</span>
+              )}
+            />
+          )}
         </ComposedChart>
       </ResponsiveContainer>
     </div>
