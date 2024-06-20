@@ -1,8 +1,10 @@
 import { Link } from '@tanstack/react-router'
 import { Home, Loader2, PanelLeft, User2 } from 'lucide-react'
+import React from 'react'
 
 import { useSignOut } from '@/features/user/api/use-sign-out'
 import { useUserStore } from '@/features/user/stores/user-store'
+import { cn } from '@/lib/utils'
 
 import { Button } from './ui/button'
 import {
@@ -15,11 +17,30 @@ import {
 } from './ui/dropdown-menu'
 import { Sheet, SheetContent, SheetTrigger } from './ui/sheet'
 
-type HeaderProps = {
-  pageName: string
+type PageProps = React.ComponentProps<'div'>
+
+export function Page({ children, className }: PageProps) {
+  return <div className={cn('flex grow flex-col', className)}>{children}</div>
 }
 
-export function Header({ pageName }: HeaderProps) {
+type PageContentProps = React.ComponentProps<'section'>
+export function PageContent({ children, className }: PageContentProps) {
+  return (
+    <section className={cn('flex grow flex-col gap-4', className)}>
+      {children}
+    </section>
+  )
+}
+
+type PageFooterProps = React.ComponentProps<'footer'>
+export function PageFooter({ children, className }: PageFooterProps) {
+  return <footer className={cn('mt-auto', className)}>{children}</footer>
+}
+
+type PageHeaderProps = {
+  pageName: string
+}
+export function PageHeader({ pageName }: PageHeaderProps) {
   const signOutMutation = useSignOut()
   const { user } = useUserStore()
 

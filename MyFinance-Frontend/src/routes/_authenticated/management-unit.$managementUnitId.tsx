@@ -1,6 +1,6 @@
 import { createFileRoute, useRouter } from '@tanstack/react-router'
 
-import { Header } from '@/components/header'
+import { Page, PageContent, PageFooter, PageHeader } from '@/components/page'
 import { Button } from '@/components/ui/button'
 import { SummaryCards } from '@/features/management-unit/components/summary-cards'
 
@@ -21,16 +21,18 @@ function ManagementUnitDashboard() {
   }
 
   return (
-    <div>
-      <Header pageName="Kariny Bordados" />
-      <section>
+    <Page>
+      <PageHeader pageName="Kariny Bordados" />
+      <PageContent>
         <header>
           <SummaryCards />
         </header>
+      </PageContent>
+      <PageFooter>
         <Button variant="outline" onClick={handleGoBack}>
           Go Back
         </Button>
-      </section>
-    </div>
+      </PageFooter>
+    </Page>
   )
 }

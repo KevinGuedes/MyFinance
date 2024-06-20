@@ -3,8 +3,7 @@ import { Loader2, Search } from 'lucide-react'
 import { useEffect, useMemo, useState } from 'react'
 import { z } from 'zod'
 
-import { Header } from '@/components/header'
-import { PageContent } from '@/components/page-content'
+import { Page, PageContent, PageFooter, PageHeader } from '@/components/page'
 import { PaginationBuilder } from '@/components/pagination-builder'
 import { Input } from '@/components/ui/input'
 import { useGetManagementUnits } from '@/features/management-unit/api/use-get-management-units'
@@ -128,8 +127,8 @@ function Home() {
     isSerchTermChaging
 
   return (
-    <>
-      <Header pageName="Management Units" />
+    <Page>
+      <PageHeader pageName="Management Units" />
       <PageContent>
         <header className="grid items-center gap-4 md:grid-cols-2 xl:grid-cols-3">
           <div className="relative">
@@ -182,22 +181,22 @@ function Home() {
             </>
           )}
         </>
-        <footer className="item-center mt-auto flex justify-center gap-2 justify-self-end">
-          <PaginationBuilder
-            data={data}
-            onPageClick={handleGoToPage}
-            currentRoutePage={pageNumber || 1}
-            isLoadingPage={isLoadingPage}
-            isPageDisabled={isPageDisabled}
-            onNextClick={handleGoToNextPage}
-            isLoadingNext={isLoadingNextPage}
-            isNextButtonDisabled={isNextButtonDisabled}
-            onPreviousClick={handleBackToPreviousPage}
-            isLoadingPrevious={isLoadingPreviousPage}
-            isPreviousButtonDisabled={isPreviousButtonDisabled}
-          />
-        </footer>
       </PageContent>
-    </>
+      <PageFooter>
+        <PaginationBuilder
+          data={data}
+          onPageClick={handleGoToPage}
+          currentRoutePage={pageNumber || 1}
+          isLoadingPage={isLoadingPage}
+          isPageDisabled={isPageDisabled}
+          onNextClick={handleGoToNextPage}
+          isLoadingNext={isLoadingNextPage}
+          isNextButtonDisabled={isNextButtonDisabled}
+          onPreviousClick={handleBackToPreviousPage}
+          isLoadingPrevious={isLoadingPreviousPage}
+          isPreviousButtonDisabled={isPreviousButtonDisabled}
+        />
+      </PageFooter>
+    </Page>
   )
 }

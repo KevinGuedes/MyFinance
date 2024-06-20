@@ -38,7 +38,7 @@ export function SummaryCard({
   variant,
 }: SummaryCardProps) {
   return (
-    <Card>
+    <Card className="border-2">
       <CardHeader className="p-4">
         <div className="flex justify-between gap-8">
           <div className="space-y-2">
