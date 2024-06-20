@@ -21,14 +21,16 @@ type PageProps = React.ComponentProps<'div'>
 
 export function Page({ children, className }: PageProps) {
   return (
-    <div className={cn('flex grow flex-col gap-4', className)}>{children}</div>
+    <div className={cn('flex grow flex-col gap-4 pb-2', className)}>
+      {children}
+    </div>
   )
 }
 
 type PageContentProps = React.ComponentProps<'section'>
 export function PageContent({ children, className }: PageContentProps) {
   return (
-    <section className={cn('flex grow flex-col gap-4', className)}>
+    <section className={cn('flex grow flex-col gap-4 px-4 sm:pr-5', className)}>
       {children}
     </section>
   )
@@ -51,7 +53,7 @@ export function PageHeader({ pageName }: PageHeaderProps) {
   }
 
   return (
-    <header className="sticky top-0 z-30 flex h-14 items-center justify-between gap-4 bg-background sm:static sm:z-auto sm:h-auto sm:border-0 sm:bg-transparent">
+    <header className="sticky top-0 z-30 flex h-14 items-center justify-between gap-4 bg-background px-4 sm:static sm:z-auto sm:h-auto sm:border-0 sm:bg-transparent sm:pt-2">
       <Sheet>
         <SheetTrigger asChild>
           <Button size="icon" variant="outline" className="sm:hidden">
