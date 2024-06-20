@@ -20,7 +20,9 @@ import { Sheet, SheetContent, SheetTrigger } from './ui/sheet'
 type PageProps = React.ComponentProps<'div'>
 
 export function Page({ children, className }: PageProps) {
-  return <div className={cn('flex grow flex-col', className)}>{children}</div>
+  return (
+    <div className={cn('flex grow flex-col gap-4', className)}>{children}</div>
+  )
 }
 
 type PageContentProps = React.ComponentProps<'section'>
@@ -49,7 +51,7 @@ export function PageHeader({ pageName }: PageHeaderProps) {
   }
 
   return (
-    <header className="sticky top-0 z-30 flex h-14 items-center justify-between gap-4 bg-background sm:static sm:z-auto sm:mb-4 sm:h-auto sm:border-0 sm:bg-transparent">
+    <header className="sticky top-0 z-30 flex h-14 items-center justify-between gap-4 bg-background sm:static sm:z-auto sm:h-auto sm:border-0 sm:bg-transparent">
       <Sheet>
         <SheetTrigger asChild>
           <Button size="icon" variant="outline" className="sm:hidden">
