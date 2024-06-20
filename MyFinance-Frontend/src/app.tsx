@@ -34,7 +34,7 @@ export function App() {
           <RouterProvider router={router} />
         </TooltipProvider>
       </ThemeProvider>
-      <ReactQueryDevtools initialIsOpen={false} />
+      {/* <ReactQueryDevtools initialIsOpen={false} /> */}
     </QueryClientProvider>
   )
 }

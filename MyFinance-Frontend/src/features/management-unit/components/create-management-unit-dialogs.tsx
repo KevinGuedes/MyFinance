@@ -10,11 +10,6 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog'
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from '@/components/ui/tooltip'
 
 import { useCreateManagementUnit } from '../api/use-create-management-unit'
 import {
@@ -40,21 +35,14 @@ export function CreateManagementUnitDialog() {
 
   return (
     <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-      <Tooltip>
-        <TooltipTrigger asChild>
-          <DialogTrigger asChild>
-            <Button variant="default" size="icon">
-              <PlusCircle className="size-5" />
-              <span className="sr-only">Create Management Unit</span>
-            </Button>
-          </DialogTrigger>
-        </TooltipTrigger>
-        <TooltipContent side="bottom">Create Management Unit</TooltipContent>
-      </Tooltip>
-      <DialogContent
-        className="sm:max-w-md"
-        onOpenAutoFocus={(e) => e.preventDefault()}
-      >
+      <DialogTrigger asChild>
+        <Button variant="default" className="w-full">
+          <PlusCircle className="mr-2 size-5" />
+          Create Management Unit
+          <span className="sr-only">Create Management Unit</span>
+        </Button>
+      </DialogTrigger>
+      <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle>Create Management Unit</DialogTitle>
           <DialogDescription>
