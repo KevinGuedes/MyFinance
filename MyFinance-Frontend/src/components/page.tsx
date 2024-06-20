@@ -49,10 +49,7 @@ type PageHeaderProps = {
   pageName: string
   showBackButton?: boolean
 }
-export function PageHeader({
-  pageName,
-  showBackButton = false,
-}: PageHeaderProps) {
+export function PageHeader({ pageName }: PageHeaderProps) {
   const signOutMutation = useSignOut()
   const { user } = useUserStore()
 
@@ -61,7 +58,7 @@ export function PageHeader({
   }
 
   return (
-    <header className="sticky top-0 z-30 flex h-14 items-center justify-between gap-4 border-b bg-background px-4 py-2 sm:static sm:z-auto sm:h-auto sm:border-b sm:bg-transparent">
+    <header className="sticky top-0 z-30 flex h-14 items-center justify-between gap-4 border-b bg-background px-4 py-2 sm:static sm:z-auto sm:h-auto sm:border-b sm:bg-transparent sm:px-0">
       <Sheet>
         <SheetTrigger asChild>
           <Button size="icon" variant="outline" className="sm:hidden">

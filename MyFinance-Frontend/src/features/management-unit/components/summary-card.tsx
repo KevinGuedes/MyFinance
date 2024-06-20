@@ -2,13 +2,7 @@ import { PiggyBank, TrendingDown, TrendingUp } from 'lucide-react'
 import CountUp from 'react-countup'
 import { tv, type VariantProps } from 'tailwind-variants'
 
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { cn, toMoney } from '@/lib/utils'
 
 const summaryCardVariants = tv({
@@ -31,15 +25,10 @@ interface SummaryCardProps extends VariantProps<typeof summaryCardVariants> {
   amount: number
 }
 
-export function SummaryCard({
-  title,
-  description,
-  amount,
-  variant,
-}: SummaryCardProps) {
+export function SummaryCard({ title, amount, variant }: SummaryCardProps) {
   return (
-    <Card className="border-2">
-      <CardHeader className="p-4">
+    <Card>
+      <CardHeader className="p-4 pb-1">
         <div className="flex justify-between gap-8">
           <div className="space-y-2">
             <CardTitle
@@ -47,25 +36,22 @@ export function SummaryCard({
             >
               {title}
             </CardTitle>
-            <CardDescription className="line-clamp-1">
-              {description}
-            </CardDescription>
           </div>
+          {variant === 'balance' && (
+            <PiggyBank className="inline-block size-8 rounded-md bg-muted-foreground/30 p-1 text-muted-foreground" />
+          )}
           {variant === 'income' && (
-            <TrendingUp className="inline-block size-10 rounded-md bg-primary/10 p-2 text-primary" />
+            <TrendingUp className="inline-block size-8 rounded-md bg-primary/10 p-1 text-primary" />
           )}
           {variant === 'outcome' && (
-            <TrendingDown className="inline-block size-10 rounded-md bg-destructive/25 p-2 text-destructive" />
-          )}
-          {variant === 'balance' && (
-            <PiggyBank className="inline-block size-10 rounded-md bg-muted-foreground/30 p-2 text-muted-foreground" />
+            <TrendingDown className="inline-block size-8 rounded-md bg-destructive/25 p-1 text-destructive" />
           )}
         </div>
       </CardHeader>
       <CardContent className="px-4 pb-4">
         <h2
           className={cn(
-            'line-clamp-1 break-all text-2xl font-bold',
+            'line-clamp-1 break-all text-xl font-bold',
             summaryCardVariants({ variant }),
           )}
         >
