@@ -40,7 +40,7 @@ function AuthenticatedLayout() {
         <SearchManagementUnits />
         <NavBar />
         <div className="flex grow flex-col bg-background sm:gap-4 sm:pl-14 sm:pt-4">
-          <main className="flex grow flex-col bg-muted/40 sm:rounded-tl-2xl sm:border-l-2 sm:border-t-2">
+          <main className="flex grow flex-col bg-muted/40 sm:rounded-tl-2xl sm:border-l sm:border-t">
             <Outlet />
           </main>
         </div>

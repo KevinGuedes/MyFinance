@@ -53,7 +53,7 @@ export function PageHeader({ pageName }: PageHeaderProps) {
   }
 
   return (
-    <header className="sticky top-0 z-30 flex h-14 items-center justify-between gap-4 bg-background px-4 sm:static sm:z-auto sm:h-auto sm:border-0 sm:bg-transparent sm:pt-2">
+    <header className="sticky top-0 z-30 flex h-14 items-center justify-between gap-4 border-b bg-background px-4 sm:static sm:z-auto sm:h-auto sm:border-0 sm:bg-transparent sm:pt-2">
       <Sheet>
         <SheetTrigger asChild>
           <Button size="icon" variant="outline" className="sm:hidden">
@@ -83,7 +83,7 @@ export function PageHeader({ pageName }: PageHeaderProps) {
           </div>
         </SheetContent>
       </Sheet>
-      <div className="flex grow items-end justify-end gap-8 sm:justify-between sm:border-b-2 sm:pb-2">
+      <div className="flex grow items-end justify-end gap-8 sm:justify-between sm:border-b sm:pb-1.5">
         <h1 className="hidden text-3xl sm:block">{pageName}</h1>
         {user && (
           <div className="flex items-center gap-2">

@@ -12,12 +12,12 @@ export const Route = createRootRouteWithContext<{
 
 export function Root() {
   return (
-    <ScrollArea className="h-dvh">
+    <ScrollArea className="h-dvh" type="scroll">
       <div className="flex min-h-screen flex-col pr-px">
         <Outlet />
       </div>
       <ScrollBar className="z-50" />
-      <TanStackRouterDevtools initialIsOpen={false} />
+      {/* <TanStackRouterDevtools initialIsOpen={false} /> */}
     </ScrollArea>
   )
 }
