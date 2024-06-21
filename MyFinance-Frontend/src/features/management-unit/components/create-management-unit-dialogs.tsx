@@ -36,7 +36,7 @@ export function CreateManagementUnitDialog() {
   return (
     <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
       <DialogTrigger asChild>
-        <Button variant="default" className="w-full">
+        <Button variant="outline" className="w-full">
           <PlusCircle className="mr-2 size-5" />
           Create Management Unit
           <span className="sr-only">Create Management Unit</span>

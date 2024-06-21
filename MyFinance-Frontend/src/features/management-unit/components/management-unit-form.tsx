@@ -1,5 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Loader2 } from 'lucide-react'
+import { Loader2, PlusCircle } from 'lucide-react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 
@@ -112,7 +112,10 @@ export function ManagementUnitForm({
                 Creating...
               </>
             ) : (
-              'Create Management Unit'
+              <>
+                <PlusCircle className="mr-2 size-4" />
+                Create Management Unit
+              </>
             )}
           </Button>
         </div>

@@ -13,7 +13,7 @@ import { CreateAccountTagDialog } from '@/features/account-tag/components/create
 import { CreateCategoryDialog } from '@/features/category/components/create-category-dialog'
 import { AnnualBalanceCard } from '@/features/management-unit/components/annual-balance-card'
 import { SummaryCards } from '@/features/management-unit/components/summary-cards'
-import { RegisterTransferDialog } from '@/features/transfer/components/register-transfer-dialog'
+import { TransfersTable } from '@/features/transfer/components/transfers-table/transfers-table'
 
 export const Route = createFileRoute(
   '/_authenticated/management-unit/$managementUnitId',
@@ -69,14 +69,17 @@ function ManagementUnitDashboard() {
           </div>
         </div>
         <div className="flex grow flex-col rounded-lg border bg-background p-4 lg:w-2/5">
-          <Tabs defaultValue="transfers" className="flex grow flex-col border">
+          <Tabs defaultValue="transfers" className="flex grow flex-col">
             <TabsList className="self-start bg-muted/40">
               <TabsTrigger value="transfers">Transfers</TabsTrigger>
               <TabsTrigger value="account-tags">Account Tags</TabsTrigger>
               <TabsTrigger value="categories">Categories</TabsTrigger>
             </TabsList>
-            <TabsContent value="transfers">
-              <RegisterTransferDialog />
+            <TabsContent
+              value="transfers"
+              className="flex grow flex-col justify-between gap-2"
+            >
+              <TransfersTable />
             </TabsContent>
             <TabsContent value="account-tags">
               <CreateAccountTagDialog />

@@ -13,7 +13,8 @@ export const Route = createRootRouteWithContext<{
 export function Root() {
   return (
     <ScrollArea className="h-dvh" type="scroll">
-      <div className="flex min-h-screen flex-col pr-px">
+      <div className="flex min-h-dvh flex-col pr-px">
+        {/* we min-h-screen before */}
         <Outlet />
       </div>
       <ScrollBar className="z-50" />
