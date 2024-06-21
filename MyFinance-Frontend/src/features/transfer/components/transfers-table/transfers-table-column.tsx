@@ -42,7 +42,23 @@ export const columns: ColumnDef<Transfer>[] = [
   },
   {
     accessorKey: 'accountTag',
-    header: 'Account Tag',
+    header: 'Tag',
+  },
+  {
+    accessorKey: 'settlementDate',
+    header: 'Date',
+    cell: ({ row }) => {
+      const payment = row.getValue('settlementDate') as Date
+      return (
+        <p>
+          {payment.toLocaleDateString('pt-BR', {
+            day: '2-digit',
+            month: '2-digit',
+            year: 'numeric',
+          })}
+        </p>
+      )
+    },
   },
   {
     id: 'actions',
@@ -52,9 +68,9 @@ export const columns: ColumnDef<Transfer>[] = [
       return (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="h-8 w-8 p-0">
+            <Button variant="ghost" size="icon" className="size-4">
               <span className="sr-only">Open menu</span>
-              <MoreHorizontal className="h-4 w-4" />
+              <MoreHorizontal className="size-4" />
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">

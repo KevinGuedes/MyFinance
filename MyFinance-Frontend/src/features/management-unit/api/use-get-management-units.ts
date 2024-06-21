@@ -15,6 +15,7 @@ export const useGetManagementUnits = (
     staleTime: searchTerm ? 3 * 60 * 1000 : Infinity,
     placeholderData: keepPreviousData,
     queryFn: async () => {
+      await new Promise((resolve) => setTimeout(resolve, 3000))
       const { data: getManagementUnitsResponse } = await managementUnitApi.get<
         Paginated<ManagementUnit>
       >('', {
