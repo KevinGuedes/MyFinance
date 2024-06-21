@@ -3,7 +3,6 @@ import { useState } from 'react'
 import {
   Card,
   CardContent,
-  CardDescription,
   CardHeader,
   CardTitle,
 } from '../../../components/ui/card'
@@ -21,18 +20,14 @@ export function AnnualBalanceCard() {
     <Card className="mx-auto flex size-full flex-col">
       <CardHeader className="grid gap-0.5 p-4 pb-0">
         <div className="flex items-center justify-between">
-          <CardTitle>Annual Balance Data</CardTitle>
+          <CardTitle className="font-normal">Annual Balance Data</CardTitle>
           <Toggle variant="outline" onClick={toggleYAxis} className="shrink-0">
             Toggle Y Axis
           </Toggle>
         </div>
-        <CardDescription>
-          Income, Outcome and Balance for the last 12 months. Hover the chart
-          for more details
-        </CardDescription>
       </CardHeader>
       <CardContent className="flex grow flex-col px-4 pb-0 pt-2">
-        <div className="h-[280px] grow">
+        <div className="h-64 min-h-64 grow">
           <AnnualBalanceChart hideYAxis={hideYAxis} />
         </div>
       </CardContent>

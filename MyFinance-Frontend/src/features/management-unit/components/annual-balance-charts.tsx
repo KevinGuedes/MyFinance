@@ -40,6 +40,7 @@ const data = months.map((month, index) => {
     income,
     outcome,
     balance,
+    date: `${month}/24`,
   }
 })
 
@@ -105,7 +106,13 @@ export function AnnualBalanceChart({
         />
 
         <YAxis stroke={axesColor} hide={hideYAxis} type="number" />
-        <XAxis dataKey="month" stroke={axesColor} />
+        <XAxis
+          dataKey="date"
+          stroke={axesColor}
+          angle={-25}
+          textAnchor="end"
+          tick={{ fontSize: 14, fontWeight: 600 }}
+        />
 
         <Bar
           animationDuration={2000}

@@ -2,7 +2,7 @@ import { Skeleton } from '@/components/ui/skeleton'
 
 export function ManagementUnitCardSkeleton() {
   return (
-    <div className="flex h-[10.75rem] flex-col gap-2 rounded-lg border-2 bg-background p-4">
+    <div className="flex h-[10.5rem] flex-col gap-2 rounded-lg border bg-background p-4">
       <Skeleton className="h-7" />
       <div className="flex flex-col gap-4">
         <Skeleton className="h-6" />
