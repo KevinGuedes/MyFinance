@@ -123,27 +123,31 @@ internal sealed class TransferRepository(MyFinanceDbContext myFinanceDbContext)
         return transfers;
     }
 
-    public async Task<IEnumerable<(int Month, decimal Income, decimal Outcome)>> GetDiscriminatedAnnualBalanceDataAsync(
+    public async Task<IEnumerable<(int Year, int Month, decimal Income, decimal Outcome)>> GetDiscriminatedBalanceDataAsync(
         Guid managementUnitId,
-        int year,
+        DateTime fromDate,
+        DateTime toDate,
         CancellationToken cancellationToken)
     {
         var result = await _myFinanceDbContext.Transfers
             .AsNoTracking()
-            .Where(
-                transfer => transfer.SettlementDate.Year == year &&
+            .Where(transfer => 
+                transfer.SettlementDate >= fromDate &&
+                transfer.SettlementDate <= toDate &&
                 transfer.ManagementUnitId == managementUnitId)
-            .GroupBy(transfer => transfer.SettlementDate.Month)
-            .Select(transferGroup => new Tuple<int, decimal, decimal>
+            .GroupBy(transfer => new { transfer.SettlementDate.Month, transfer.SettlementDate.Year })
+            .Select(transferGroup => new Tuple<int, int, decimal, decimal>
             (
-                transferGroup.Key,
+                transferGroup.Key.Year,
+                transferGroup.Key.Month,
                 transferGroup.Sum(transfer => transfer.Type == TransferType.Profit ? transfer.Value : 0),
                 transferGroup.Sum(transfer => transfer.Type == TransferType.Expense ? transfer.Value : 0)))
             .ToListAsync(cancellationToken);
 
         return result.Select(unnamedMonthlyBalanceData => (
-            Month: unnamedMonthlyBalanceData.Item1,
-            Income: unnamedMonthlyBalanceData.Item2,
-            Outcome: unnamedMonthlyBalanceData.Item3));
+            Year: unnamedMonthlyBalanceData.Item1,
+            Month: unnamedMonthlyBalanceData.Item2,
+            Income: unnamedMonthlyBalanceData.Item3,
+            Outcome: unnamedMonthlyBalanceData.Item4));
     }
 }

@@ -4,9 +4,10 @@ namespace MyFinance.Application.Abstractions.Persistence.Repositories;
 
 public interface ITransferRepository
 {
-    Task<IEnumerable<(int Month, decimal Income, decimal Outcome)>> GetDiscriminatedAnnualBalanceDataAsync(
+    Task<IEnumerable<(int Year, int Month, decimal Income, decimal Outcome)>> GetDiscriminatedBalanceDataAsync(
         Guid managementUnitId,
-        int year,
+        DateTime fromData,
+        DateTime toDate,
         CancellationToken cancellationToken);
     Task<(decimal Income, decimal Outcome)> GetBalanceDataFromPeriodAsync(
         Guid managementUnitId,
