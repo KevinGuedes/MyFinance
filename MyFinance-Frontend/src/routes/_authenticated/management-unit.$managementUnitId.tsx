@@ -1,8 +1,10 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { Pencil } from 'lucide-react'
+import { useState } from 'react'
 
 import { Page, PageContent, PageHeader } from '@/components/page'
 import { Button } from '@/components/ui/button'
+import { Skeleton } from '@/components/ui/skeleton'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import {
   Tooltip,
@@ -11,8 +13,13 @@ import {
 } from '@/components/ui/tooltip'
 import { CreateAccountTagDialog } from '@/features/account-tag/components/create-account-tag-dialog'
 import { CreateCategoryDialog } from '@/features/category/components/create-category-dialog'
-import { AnnualBalanceCard } from '@/features/management-unit/components/annual-balance-card'
+import { useGetManagementUnit } from '@/features/management-unit/api/use-get-management-unit'
+import { DiscriminatedBalanceCard } from '@/features/management-unit/components/discriminated-balance-card'
 import { SummaryCards } from '@/features/management-unit/components/summary-cards'
+import { SummaryCardsSkeleton } from '@/features/management-unit/components/summary-cards-skeleton'
+import { useGetDiscriminatedBalance } from '@/features/transfer/api/use-get-discriminated-balance'
+import { useGetTransfers } from '@/features/transfer/api/use-get-transfers'
+import { DiscriminatedBalanceCardSkeleton } from '@/features/transfer/components/discriminated-balance-card-skeleton'
 import { TransfersTable } from '@/features/transfer/components/transfers-table/transfers-table'
 
 export const Route = createFileRoute(
@@ -25,23 +32,45 @@ export const Route = createFileRoute(
 })
 
 function ManagementUnitDashboard() {
+  const managementUnitId = Route.useParams().managementUnitId
+  const [pastMonths, setPastMonths] = useState(12)
+
+  const transfersQuery = useGetTransfers(managementUnitId, 1, 20)
+  const managementUnitQuery = useGetManagementUnit(managementUnitId)
+  const discriminatedBalanceQuery = useGetDiscriminatedBalance(
+    managementUnitId,
+    pastMonths,
+  )
+
+  const isLoading =
+    managementUnitQuery.isLoading ||
+    discriminatedBalanceQuery.isLoading ||
+    transfersQuery.isLoading
+
   return (
     <Page>
-      <PageHeader pageName="Kariny Bordados">
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <Button
-              variant="outline"
-              size="icon"
-              className="rounded-full border-none"
-            >
-              <Pencil className="size-5" />
-            </Button>
-          </TooltipTrigger>
-          <TooltipContent side="bottom" align="end">
-            Edit Management Unit
-          </TooltipContent>
-        </Tooltip>
+      <PageHeader
+        pageName={managementUnitQuery.data?.name}
+        isLoadingInfo={isLoading}
+      >
+        {isLoading ? (
+          <Skeleton className="size-10 rounded-full" />
+        ) : (
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button
+                variant="outline"
+                size="icon"
+                className="rounded-full border-none"
+              >
+                <Pencil className="size-5" />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent side="bottom" align="end">
+              Edit Management Unit
+            </TooltipContent>
+          </Tooltip>
+        )}
       </PageHeader>
       <PageContent className="flex flex-col gap-4 lg:flex-row">
         <div className="flex items-center justify-between sm:hidden">
@@ -63,9 +92,33 @@ function ManagementUnitDashboard() {
           </Tooltip>
         </div>
         <div className="flex flex-col justify-between gap-4 lg:w-3/5">
-          <SummaryCards />
+          {isLoading ? (
+            <SummaryCardsSkeleton />
+          ) : (
+            <>
+              {managementUnitQuery.data && (
+                <SummaryCards
+                  balance={managementUnitQuery.data.balance}
+                  income={managementUnitQuery.data.income}
+                  outcome={managementUnitQuery.data.outcome}
+                />
+              )}
+            </>
+          )}
           <div className="h-full">
-            <AnnualBalanceCard />
+            {isLoading ? (
+              <DiscriminatedBalanceCardSkeleton />
+            ) : (
+              <>
+                {discriminatedBalanceQuery.data && (
+                  <DiscriminatedBalanceCard
+                    discriminatedBalanceData={
+                      discriminatedBalanceQuery.data.discriminatedBalanceData
+                    }
+                  />
+                )}
+              </>
+            )}
           </div>
         </div>
         <div className="flex grow flex-col rounded-lg border bg-background p-4 lg:w-2/5">

@@ -83,7 +83,7 @@ export function ManagementUnitForm({
               <FormControl>
                 <Textarea
                   {...field}
-                  className="min-h-[138px] resize-none"
+                  className="h-[138px] resize-none"
                   maxLength={300}
                 />
               </FormControl>

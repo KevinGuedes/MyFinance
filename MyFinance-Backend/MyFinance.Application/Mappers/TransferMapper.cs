@@ -13,8 +13,6 @@ public static class TransferMapper
 {
     public static class DTR
     {
-        private const int MONTHS_IN_ONE_YEAR = 12;
-
         public static Paginated<TransferGroupResponse> Map(
             (long TotalCount, IEnumerable<Transfer> Transfers) transfersData,
             int pageNumber,
@@ -71,15 +69,13 @@ public static class TransferMapper
             DateTime fromDate,
             DateTime toDate)
         {
-            var culture = CultureInfo.InvariantCulture;
-
             var existingMonthlyBalances = discriminatedBalanceData.Select(monthlyBalanceData => 
             {
                 var referenceDate = new DateTime(monthlyBalanceData.Year, monthlyBalanceData.Month, 1);
 
                 return new MonthlyBalanceDataResponse
                 {
-                    Reference = $"{referenceDate.ToString("MMM", culture)}/{monthlyBalanceData.Year}",
+                    Reference = referenceDate.ToString("MMM/yy", CultureInfo.InvariantCulture),
                     Year = monthlyBalanceData.Year,
                     Month = monthlyBalanceData.Month,
                     Income = monthlyBalanceData.Income,
@@ -95,7 +91,7 @@ public static class TransferMapper
             var loopDate = fromDate;
             while (loopDate <= toDate)
             {
-                var key = $"{loopDate.ToString("MMM", culture)}/{loopDate.Year}";
+                var key = loopDate.ToString("MMM/yy", CultureInfo.InvariantCulture);
 
                 if (filledMonthlyBalances.ContainsKey(key))
                     continue;
@@ -114,7 +110,7 @@ public static class TransferMapper
 
             return new()
             {
-                MonthlyBalanceData = filledMonthlyBalances.Values
+                DiscriminatedBalanceData = filledMonthlyBalances.Values
                     .OrderBy(monthlyBalance => monthlyBalance.Year)
                     .ThenBy(monthlyBalance => monthlyBalance.Month)
                     .ToList()

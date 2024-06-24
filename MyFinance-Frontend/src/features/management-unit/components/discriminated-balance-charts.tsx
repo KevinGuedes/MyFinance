@@ -10,49 +10,23 @@ import {
   YAxis,
 } from 'recharts'
 
+import { MonthlyBalanceData } from '@/features/transfer/models/monthly-balance-data'
+
 import { useTheme } from '../../../components/ui/theme-provider'
 import { BalanceDataTooltip } from './balance-data-tooltip'
 // import { LineChartLabel } from './line-chart-label'
 
-const months = [
-  'Jan',
-  'Feb',
-  'Mar',
-  'Apr',
-  'May',
-  'Jun',
-  'Jul',
-  'Aug',
-  'Sep',
-  'Oct',
-  'Nov',
-  'Dec',
-]
-
-const data = months.map((month, index) => {
-  const income = Math.floor(Math.random() * 10000)
-  const outcome = Math.floor(Math.random() * 10000)
-  const balance = income - outcome
-
-  return {
-    monthNumber: index + 1,
-    month,
-    income,
-    outcome,
-    balance,
-    date: `${month}/24`,
-  }
-})
-
-type AnnualBalanceChartProps = {
+type DiscriminatedBalanceChartProps = {
   hideYAxis: boolean
   showLegend?: boolean
+  discriminatedBalanceData: MonthlyBalanceData[]
 }
 
-export function AnnualBalanceChart({
+export function DiscriminatedBalanceChart({
   hideYAxis = true,
   showLegend = false,
-}: AnnualBalanceChartProps) {
+  discriminatedBalanceData,
+}: DiscriminatedBalanceChartProps) {
   const { theme } = useTheme()
   const [opacity, setOpacity] = useState({
     outcome: 1,
@@ -85,7 +59,7 @@ export function AnnualBalanceChart({
   return (
     <ResponsiveContainer width="100%" height="100%">
       <ComposedChart
-        data={data}
+        data={discriminatedBalanceData}
         margin={{
           top: 20,
           right: 20,
@@ -107,9 +81,9 @@ export function AnnualBalanceChart({
 
         <YAxis stroke={axesColor} hide={hideYAxis} type="number" />
         <XAxis
-          dataKey="date"
+          dataKey="reference"
           stroke={axesColor}
-          angle={-25}
+          angle={-30}
           textAnchor="end"
           tick={{ fontSize: 14, fontWeight: 600 }}
         />

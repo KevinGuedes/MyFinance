@@ -1,8 +1,10 @@
 ﻿using FluentResults;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using MyFinance.Application.Common.Errors;
 using MyFinance.Application.Mappers;
 using MyFinance.Application.UseCases.ManagementUnits.Commands.UnarchiveManagementUnit;
+using MyFinance.Application.UseCases.ManagementUnits.Queries.GetManagementUnit;
 using MyFinance.Application.UseCases.ManagementUnits.Queries.GetManagementUnits;
 using MyFinance.Application.UseCases.ManagementUnits.Queries.GetMonthlySummary;
 using MyFinance.Contracts.Common;
@@ -46,6 +48,16 @@ public class ManagementUnitController(IMediator mediator) : ApiController(mediat
         var query = new GetManagementUnitsQuery(pageNumber, pageSize, searchTerm);
         return ProcessResult(await _mediator.Send(query, cancellationToken));
     }
+
+    [HttpGet("{id:guid}")]
+    [SwaggerOperation(Summary = "Gets a Management Unit by it's Id")]
+    [SwaggerResponse(StatusCodes.Status200OK, "The requested Management Unit", typeof(ManagementUnitResponse))]
+    [SwaggerResponse(StatusCodes.Status404NotFound, "Management Unit not found", typeof(EntityNotFoundError))]
+    [SwaggerResponse(StatusCodes.Status400BadRequest, "Invalid query parameters", typeof(ValidationProblemResponse))]
+    public async Task<IActionResult> GetManagementUnitByIdAsync(
+       [FromRoute] [SwaggerParameter("The Management Unit Id", Required = true)] Guid id,
+       CancellationToken cancellationToken)
+        => ProcessResult(await _mediator.Send(new GetManagementUnitQuery(id), cancellationToken));
 
     [HttpGet("{id:guid}/MonthlySummary")]
     [SwaggerOperation(Summary = "Generates a monthly summary for a Management Unit")]

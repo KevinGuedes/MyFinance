@@ -11,6 +11,7 @@ import { routeTree } from './routeTree.gen'
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
+      retry: 3,
       staleTime: 1000 * 60 * 5,
     },
   },

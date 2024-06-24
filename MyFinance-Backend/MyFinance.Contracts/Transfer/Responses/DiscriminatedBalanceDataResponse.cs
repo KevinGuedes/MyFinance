@@ -2,5 +2,5 @@
 
 public sealed class DiscriminatedBalanceDataResponse
 {
-    public required IReadOnlyCollection<MonthlyBalanceDataResponse> MonthlyBalanceData { get; init; }
+    public required IReadOnlyCollection<MonthlyBalanceDataResponse> DiscriminatedBalanceData { get; init; }
 }

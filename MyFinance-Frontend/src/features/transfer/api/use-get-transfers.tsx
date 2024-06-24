@@ -1,31 +1,37 @@
 import { keepPreviousData, useQuery } from '@tanstack/react-query'
 
-import { ManagementUnit } from '@/features/management-unit/models/management-unit'
-
-import { managementUnitApi } from '../../common/api'
+import { transferApi } from '../../common/api'
 import { Paginated } from '../../common/paginated'
+import { Transfer } from '../models/transfer'
 
-export const useGetManagementUnits = (
+export const useGetTransfers = (
+  managementUnitId: string,
   pageNumber: number,
   pageSize: number,
   searchTerm?: string,
 ) => {
   const query = useQuery({
-    queryKey: ['management-units', { pageNumber, pageSize, searchTerm }],
+    queryKey: [
+      'transfers',
+      { pageNumber, pageSize, searchTerm, managementUnitId },
+    ],
     staleTime: searchTerm ? 3 * 60 * 1000 : Infinity,
     placeholderData: keepPreviousData,
     queryFn: async () => {
-      const { data: paginatedManagementUnits } = await managementUnitApi.get<
-        Paginated<ManagementUnit>
+      const { data: paginatedTransfers } = await transferApi.get<
+        Paginated<Transfer>
       >('', {
         params: {
           pageNumber,
           pageSize,
           searchTerm,
+          managementUnitId,
         },
       })
 
-      return paginatedManagementUnits
+      console.log(paginatedTransfers)
+
+      return paginatedTransfers
     },
   })
 

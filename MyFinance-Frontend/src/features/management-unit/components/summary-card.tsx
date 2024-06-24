@@ -29,7 +29,7 @@ export function SummaryCard({ title, amount, variant }: SummaryCardProps) {
   return (
     <Card>
       <CardHeader className="p-4 pb-1">
-        <div className="flex justify-between gap-8">
+        <div className="flex justify-between gap-2">
           <div className="space-y-2">
             <CardTitle
               className={cn('line-clamp-1', summaryCardVariants({ variant }))}
@@ -38,13 +38,13 @@ export function SummaryCard({ title, amount, variant }: SummaryCardProps) {
             </CardTitle>
           </div>
           {variant === 'balance' && (
-            <PiggyBank className="inline-block size-8 rounded-md bg-muted-foreground/30 p-1 text-muted-foreground" />
+            <PiggyBank className="inline-block size-8 shrink-0 rounded-md bg-muted-foreground/30 p-1 text-muted-foreground" />
           )}
           {variant === 'income' && (
-            <TrendingUp className="inline-block size-8 rounded-md bg-primary/10 p-1 text-primary" />
+            <TrendingUp className="inline-block size-8 shrink-0 rounded-md bg-primary/10 p-1 text-primary" />
           )}
           {variant === 'outcome' && (
-            <TrendingDown className="inline-block size-8 rounded-md bg-destructive/25 p-1 text-destructive" />
+            <TrendingDown className="inline-block size-8 shrink-0 rounded-md bg-destructive/25 p-1 text-destructive" />
           )}
         </div>
       </CardHeader>

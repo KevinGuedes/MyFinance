@@ -16,6 +16,7 @@ import {
   DropdownMenuTrigger,
 } from './ui/dropdown-menu'
 import { Sheet, SheetContent, SheetTrigger } from './ui/sheet'
+import { Skeleton } from './ui/skeleton'
 
 type PageProps = React.ComponentProps<'div'>
 
@@ -46,11 +47,16 @@ export function PageFooter({ children, className }: PageFooterProps) {
 }
 
 type PageHeaderProps = {
-  pageName: string
+  pageName: string | undefined
   showBackButton?: boolean
   children?: ReactNode
+  isLoadingInfo?: boolean
 }
-export function PageHeader({ pageName, children }: PageHeaderProps) {
+export function PageHeader({
+  pageName,
+  children,
+  isLoadingInfo = false,
+}: PageHeaderProps) {
   const signOutMutation = useSignOut()
   const { user, initials } = useUserStore()
 
@@ -61,7 +67,11 @@ export function PageHeader({ pageName, children }: PageHeaderProps) {
   return (
     <header className="sticky top-0 z-30 flex h-14 items-center justify-between gap-4 border-b bg-background px-4 py-2 sm:static sm:z-auto sm:h-auto sm:border-b sm:bg-transparent sm:px-0">
       <div className="flex items-end justify-end gap-8 sm:grow sm:justify-between">
-        <h1 className="hidden text-3xl sm:block">{pageName}</h1>
+        {isLoadingInfo ? (
+          <Skeleton className="h-9 w-1/2" />
+        ) : (
+          <h1 className="hidden text-3xl sm:block">{pageName}</h1>
+        )}
         <div className="sm:hidden">
           {user && (
             <DropdownMenu>
@@ -93,7 +103,7 @@ export function PageHeader({ pageName, children }: PageHeaderProps) {
             </DropdownMenu>
           )}
         </div>
-        <div className="hidden sm:block">{children}</div>
+        {children}
       </div>
       <Sheet>
         <SheetTrigger asChild>

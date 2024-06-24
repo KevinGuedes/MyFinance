@@ -1,5 +1,7 @@
 import { useState } from 'react'
 
+import { MonthlyBalanceData } from '@/features/transfer/models/monthly-balance-data'
+
 import {
   Card,
   CardContent,
@@ -7,9 +9,15 @@ import {
   CardTitle,
 } from '../../../components/ui/card'
 import { Toggle } from '../../../components/ui/toggle'
-import { AnnualBalanceChart } from './annual-balance-charts'
+import { DiscriminatedBalanceChart } from './discriminated-balance-charts'
 
-export function AnnualBalanceCard() {
+type DiscriminatedBalanceCardProps = {
+  discriminatedBalanceData: MonthlyBalanceData[]
+}
+
+export function DiscriminatedBalanceCard({
+  discriminatedBalanceData,
+}: DiscriminatedBalanceCardProps) {
   const [hideYAxis, setHideYAxis] = useState(true)
 
   function toggleYAxis() {
@@ -21,14 +29,22 @@ export function AnnualBalanceCard() {
       <CardHeader className="grid gap-0.5 p-4 pb-0">
         <div className="flex items-center justify-between">
           <CardTitle className="font-normal">Annual Balance Data</CardTitle>
-          <Toggle variant="outline" onClick={toggleYAxis} className="shrink-0">
+          <Toggle
+            variant="outline"
+            onClick={toggleYAxis}
+            size="sm"
+            className="shrink-0"
+          >
             Toggle Y Axis
           </Toggle>
         </div>
       </CardHeader>
       <CardContent className="flex grow flex-col px-4 pb-0 pt-2">
         <div className="h-64 min-h-64 grow">
-          <AnnualBalanceChart hideYAxis={hideYAxis} />
+          <DiscriminatedBalanceChart
+            hideYAxis={hideYAxis}
+            discriminatedBalanceData={discriminatedBalanceData}
+          />
         </div>
       </CardContent>
     </Card>

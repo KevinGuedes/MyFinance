@@ -31,13 +31,13 @@ export function useCreateManagementUnit() {
     CreateManagementUnitRequest
   >({
     mutationFn: async (createManagementUnitRequest) => {
-      const { data: createManagementUnitResponse } =
+      const { data: updatedManagementUnit } =
         await managementUnitApi.post<CreateManagementUnitResponse>(
           '',
           createManagementUnitRequest,
         )
 
-      return createManagementUnitResponse
+      return updatedManagementUnit
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['management-units'] })

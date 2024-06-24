@@ -77,8 +77,8 @@ public class TransferController(IMediator mediator) : ApiController(mediator)
     }
 
     [HttpGet("DiscriminatedBalance")]
-    [SwaggerOperation(Summary = "Gets the income, outcome and balance for each month within a given year")]
-    [SwaggerResponse(StatusCodes.Status200OK, "Annual balance data", typeof(DiscriminatedBalanceDataResponse))]
+    [SwaggerOperation(Summary = "Gets the income, outcome and balance for each of the past months")]
+    [SwaggerResponse(StatusCodes.Status200OK, "Balance data", typeof(DiscriminatedBalanceDataResponse))]
     [SwaggerResponse(StatusCodes.Status400BadRequest, "Invalid query parameters", typeof(ValidationProblemResponse))]
     public async Task<IActionResult> GetDiscriminatedAnnualBalanceAsync(
         [FromQuery][SwaggerParameter("Management Unit Id", Required = true)] 

@@ -86,7 +86,11 @@ export function AccountTagForm({
             <FormItem>
               <FormLabel>Description (Optional)</FormLabel>
               <FormControl>
-                <Textarea {...field} className="resize-none" maxLength={300} />
+                <Textarea
+                  {...field}
+                  className="h-[138px] resize-none"
+                  maxLength={300}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
