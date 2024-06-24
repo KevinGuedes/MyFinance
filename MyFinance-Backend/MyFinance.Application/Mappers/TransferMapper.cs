@@ -94,7 +94,10 @@ public static class TransferMapper
                 var key = loopDate.ToString("MMM/yy", CultureInfo.InvariantCulture);
 
                 if (filledMonthlyBalances.ContainsKey(key))
+                {
+                    loopDate = loopDate.AddMonths(1);
                     continue;
+                }
 
                 filledMonthlyBalances[key] = new MonthlyBalanceDataResponse
                 {
@@ -105,6 +108,7 @@ public static class TransferMapper
                     Outcome = 0.00000m,
                 };
 
+             
                 loopDate = loopDate.AddMonths(1);
             }
 
