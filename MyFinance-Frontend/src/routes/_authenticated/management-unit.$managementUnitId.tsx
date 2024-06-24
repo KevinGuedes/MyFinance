@@ -1,5 +1,5 @@
 import { createFileRoute } from '@tanstack/react-router'
-import { Pencil } from 'lucide-react'
+import { Loader2, Pencil } from 'lucide-react'
 import { useState } from 'react'
 
 import { Page, PageContent, PageHeader } from '@/components/page'
@@ -21,6 +21,7 @@ import { useGetDiscriminatedBalance } from '@/features/transfer/api/use-get-disc
 import { useGetTransfers } from '@/features/transfer/api/use-get-transfers'
 import { DiscriminatedBalanceCardSkeleton } from '@/features/transfer/components/discriminated-balance-card-skeleton'
 import { TransfersTable } from '@/features/transfer/components/transfers-table/transfers-table'
+import { TransfersTableSkeleton } from '@/features/transfer/components/transfers-table/transfers-table-skeleton'
 
 export const Route = createFileRoute(
   '/_authenticated/management-unit/$managementUnitId',
@@ -124,15 +125,21 @@ function ManagementUnitDashboard() {
         <div className="flex grow flex-col rounded-lg border bg-background p-4 lg:w-2/5">
           <Tabs defaultValue="transfers" className="flex grow flex-col">
             <TabsList className="self-start bg-muted/40">
-              <TabsTrigger value="transfers">Transfers</TabsTrigger>
-              <TabsTrigger value="account-tags">Account Tags</TabsTrigger>
-              <TabsTrigger value="categories">Categories</TabsTrigger>
+              <TabsTrigger value="transfers" disabled={isLoading}>
+                Transfers
+              </TabsTrigger>
+              <TabsTrigger value="account-tags" disabled={isLoading}>
+                Account Tags
+              </TabsTrigger>
+              <TabsTrigger value="categories" disabled={isLoading}>
+                Categories
+              </TabsTrigger>
             </TabsList>
             <TabsContent
               value="transfers"
               className="flex grow flex-col justify-between gap-2"
             >
-              <TransfersTable />
+              {isLoading ? <TransfersTableSkeleton /> : <TransfersTable />}
             </TabsContent>
             <TabsContent value="account-tags">
               <CreateAccountTagDialog />
