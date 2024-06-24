@@ -8,30 +8,38 @@ import { handleError } from '../../common/handle-error'
 import { handleValidationErrors } from '../../common/handle-validation-errors'
 import { ManagementUnit } from '../models/management-unit'
 
-type CreateManagementUnitRequest = Pick<ManagementUnit, 'name' | 'description'>
+type UpdateManagementUnitRequest = Pick<
+  ManagementUnit,
+  'id' | 'name' | 'description'
+>
 
-export function useCreateManagementUnit() {
+export function useUpdateManagementUnit() {
   const queryClient = useQueryClient()
   const { toast } = useToast()
 
   const mutation = useMutation<
     ManagementUnit,
     ApiError,
-    CreateManagementUnitRequest
+    UpdateManagementUnitRequest
   >({
-    mutationFn: async (createManagementUnitRequest) => {
-      const { data: createdManagementUnit } =
-        await managementUnitApi.post<ManagementUnit>(
+    mutationFn: async (updateManagementUnitRequest) => {
+      await new Promise((resolve) => setTimeout(resolve, 1000))
+      const { data: updatedManagementUnit } =
+        await managementUnitApi.put<ManagementUnit>(
           '',
-          createManagementUnitRequest,
+          updateManagementUnitRequest,
         )
 
-      return createdManagementUnit
+      return updatedManagementUnit
     },
-    onSuccess: () => {
+    onSuccess: (_, managemenUnit) => {
       queryClient.invalidateQueries({ queryKey: ['management-units'] })
+      queryClient.invalidateQueries({
+        queryKey: ['management-unit', { managementUnitId: managemenUnit.id }],
+      })
+
       toast({
-        title: 'Management Unit successfully created!',
+        title: 'Management Unit successfully updated!',
       })
     },
     onError: (error) => {
@@ -41,7 +49,7 @@ export function useCreateManagementUnit() {
         handleValidationErrors(validationErrors, (_, description) => {
           toast({
             variant: 'destructive',
-            title: 'Failed to create Management Unit',
+            title: 'Failed to update Management Unit',
             description,
           })
         })

@@ -100,9 +100,10 @@ export function AccountTagForm({
         <div className="flex grow flex-wrap-reverse content-start items-end gap-4 self-end">
           <Button
             type="button"
+            className="grow sm:grow-0"
             variant="outline"
             onClick={onCancel}
-            className="grow sm:grow-0"
+            disabled={form.formState.isSubmitting}
           >
             Cancel
           </Button>

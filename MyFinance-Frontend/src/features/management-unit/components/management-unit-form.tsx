@@ -1,5 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Loader2, PlusCircle } from 'lucide-react'
+import { Loader2, Pencil, PlusCircle } from 'lucide-react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 
@@ -33,12 +33,14 @@ type ManagementUnitFormProps = {
   defaultValues: ManagementUnitFormSchema
   onSubmit: (values: ManagementUnitFormSchema) => Promise<void>
   onCancel: () => void
+  mode: 'create' | 'update'
 }
 
 export function ManagementUnitForm({
   defaultValues,
   onSubmit,
   onCancel,
+  mode,
 }: ManagementUnitFormProps) {
   const form = useForm<ManagementUnitFormSchema>({
     resolver: zodResolver(managementUnitFormSchema),
@@ -48,6 +50,11 @@ export function ManagementUnitForm({
   async function handleSubmit(values: ManagementUnitFormSchema) {
     await onSubmit(values)
   }
+
+  const isActionButtonDisabled =
+    mode === 'create'
+      ? !form.formState.isValid || form.formState.isSubmitting
+      : !form.formState.isDirty || form.formState.isSubmitting
 
   return (
     <Form {...form}>
@@ -97,24 +104,45 @@ export function ManagementUnitForm({
             type="button"
             variant="outline"
             onClick={onCancel}
+            disabled={form.formState.isSubmitting}
             className="grow sm:grow-0"
           >
             Cancel
           </Button>
           <Button
             type="submit"
-            className="min-w-52 grow"
-            disabled={!form.formState.isValid || form.formState.isSubmitting}
+            className="min-w-56 grow"
+            disabled={isActionButtonDisabled}
           >
-            {form.formState.isSubmitting ? (
+            {mode === 'create' && (
               <>
-                <Loader2 className="mr-2 size-4 animate-spin" />
-                Creating...
+                {form.formState.isSubmitting ? (
+                  <>
+                    <Loader2 className="mr-2 size-4 animate-spin" />
+                    Creating...
+                  </>
+                ) : (
+                  <>
+                    <PlusCircle className="mr-2 size-4" />
+                    Create Management Unit
+                  </>
+                )}
               </>
-            ) : (
+            )}
+
+            {mode === 'update' && (
               <>
-                <PlusCircle className="mr-2 size-4" />
-                Create Management Unit
+                {form.formState.isSubmitting ? (
+                  <>
+                    <Loader2 className="mr-2 size-4 animate-spin" />
+                    Updating...
+                  </>
+                ) : (
+                  <>
+                    <Pencil className="mr-2 size-4" />
+                    Update Management Unit
+                  </>
+                )}
               </>
             )}
           </Button>

@@ -79,7 +79,24 @@ export function DiscriminatedBalanceChart({
           }}
         />
 
-        <YAxis stroke={axesColor} hide={hideYAxis} type="number" />
+        <YAxis
+          stroke={axesColor}
+          hide={hideYAxis}
+          type="number"
+          label={{
+            value: 'R$',
+            style: {
+              textAnchor: 'middle',
+              fill: axesColor,
+              fontSize: 14,
+              fontWeight: 600,
+            },
+            angle: -90,
+            position: 'left',
+            offset: -5,
+          }}
+          tick={{ fontSize: 14, fontWeight: 600 }}
+        />
         <XAxis
           dataKey="reference"
           stroke={axesColor}

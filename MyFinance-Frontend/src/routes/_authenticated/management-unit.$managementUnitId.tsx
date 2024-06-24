@@ -1,5 +1,5 @@
 import { createFileRoute } from '@tanstack/react-router'
-import { Loader2, Pencil } from 'lucide-react'
+import { Pencil } from 'lucide-react'
 import { useState } from 'react'
 
 import { Page, PageContent, PageHeader } from '@/components/page'
@@ -17,6 +17,7 @@ import { useGetManagementUnit } from '@/features/management-unit/api/use-get-man
 import { DiscriminatedBalanceCard } from '@/features/management-unit/components/discriminated-balance-card'
 import { SummaryCards } from '@/features/management-unit/components/summary-cards'
 import { SummaryCardsSkeleton } from '@/features/management-unit/components/summary-cards-skeleton'
+import { UpdateManagementUnitDialog } from '@/features/management-unit/components/update-management-unit-dialog'
 import { useGetDiscriminatedBalance } from '@/features/transfer/api/use-get-discriminated-balance'
 import { useGetTransfers } from '@/features/transfer/api/use-get-transfers'
 import { DiscriminatedBalanceCardSkeleton } from '@/features/transfer/components/discriminated-balance-card-skeleton'
@@ -55,22 +56,22 @@ function ManagementUnitDashboard() {
         isLoadingInfo={isLoading}
       >
         {isLoading ? (
-          <Skeleton className="size-10 rounded-full" />
+          <Skeleton className="size-9 rounded-full" />
         ) : (
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Button
-                variant="outline"
-                size="icon"
-                className="rounded-full border-none"
-              >
-                <Pencil className="size-5" />
-              </Button>
-            </TooltipTrigger>
-            <TooltipContent side="bottom" align="end">
-              Edit Management Unit
-            </TooltipContent>
-          </Tooltip>
+          <>
+            {managementUnitQuery.data && (
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <UpdateManagementUnitDialog
+                    managementUnit={managementUnitQuery.data}
+                  />
+                </TooltipTrigger>
+                <TooltipContent side="bottom" align="end">
+                  Edit Management Unit
+                </TooltipContent>
+              </Tooltip>
+            )}
+          </>
         )}
       </PageHeader>
       <PageContent className="flex flex-col gap-4 lg:flex-row">
@@ -107,12 +108,14 @@ function ManagementUnitDashboard() {
             </>
           )}
           <div className="h-full">
-            {isLoading ? (
+            {isLoading && !discriminatedBalanceQuery.isRefetching ? (
               <DiscriminatedBalanceCardSkeleton />
             ) : (
               <>
                 {discriminatedBalanceQuery.data && (
                   <DiscriminatedBalanceCard
+                    pastMonths={pastMonths}
+                    onSelectPastMonths={setPastMonths}
                     discriminatedBalanceData={
                       discriminatedBalanceQuery.data.discriminatedBalanceData
                     }

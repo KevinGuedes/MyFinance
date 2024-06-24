@@ -65,7 +65,11 @@ export const columns: ColumnDef<Transfer>[] = [
       return (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="ghost" size="icon" className="size-4">
+            <Button
+              variant="ghost"
+              size="icon"
+              className="size-6 rounded-full p-0.5"
+            >
               <span className="sr-only">Open menu</span>
               <MoreHorizontal className="size-4" />
             </Button>

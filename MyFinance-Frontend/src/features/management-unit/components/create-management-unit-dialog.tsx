@@ -50,6 +50,7 @@ export function CreateManagementUnitDialog() {
           </DialogDescription>
         </DialogHeader>
         <ManagementUnitForm
+          mode="create"
           onSubmit={onSubmit}
           onCancel={onCancel}
           defaultValues={{

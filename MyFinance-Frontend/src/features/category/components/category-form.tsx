@@ -76,8 +76,9 @@ export function CategoryForm({
           <Button
             type="button"
             variant="outline"
-            onClick={onCancel}
             className="grow sm:grow-0"
+            onClick={onCancel}
+            disabled={form.formState.isSubmitting}
           >
             Cancel
           </Button>
