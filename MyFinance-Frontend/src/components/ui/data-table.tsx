@@ -99,7 +99,6 @@ export function DataTable<TData, TValue>({
             </TableBody>
           </Table>
         </div>
-        <ScrollBar />
       </ScrollArea>
       <div className="flex justify-between gap-2">
         {children}
