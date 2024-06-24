@@ -26,7 +26,6 @@ export const useGetDiscriminatedBalance = (
           },
         )
 
-      console.log(discriminatedBalanceDataResponse)
       return discriminatedBalanceDataResponse
     },
   })

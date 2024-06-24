@@ -23,7 +23,7 @@ export function SummaryCards({ balance, income, outcome }: SummaryCardsProps) {
       />
       <SummaryCard
         variant="outcome"
-        amount={outcome}
+        amount={outcome * -1}
         title="Outcome"
         description="Amount transfered"
       />

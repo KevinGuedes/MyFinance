@@ -9,11 +9,9 @@ export const useGetManagementUnit = (managementUnitId: string) => {
     queryKey: ['management-unit', { managementUnitId }],
     staleTime: Infinity,
     queryFn: async () => {
-      await new Promise((resolve) => setTimeout(resolve, 3000))
       const { data: managemenUnit } =
         await managementUnitApi.get<ManagementUnit>(managementUnitId)
 
-      console.log(managemenUnit)
       return managemenUnit
     },
   })

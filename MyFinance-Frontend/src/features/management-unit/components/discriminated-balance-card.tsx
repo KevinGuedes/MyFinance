@@ -39,7 +39,7 @@ export function DiscriminatedBalanceCard({
           </Toggle>
         </div>
       </CardHeader>
-      <CardContent className="flex grow flex-col px-4 pb-0 pt-2">
+      <CardContent className="flex grow flex-col px-1 pb-1 pt-2">
         <div className="h-64 min-h-64 grow">
           <DiscriminatedBalanceChart
             hideYAxis={hideYAxis}
