@@ -23,7 +23,7 @@ export function BalanceDataTooltip({
     ).toLocaleDateString('en-US', { year: 'numeric', month: 'long' })
 
     return (
-      <div className="space-y-1.5 rounded-lg border bg-background p-2 shadow-sm">
+      <div className="space-y-1.5 rounded-lg border bg-background p-2 shadow-md">
         <p className="text-base font-bold capitalize">{formattedDate}</p>
         <div className="grid grid-cols-3 gap-3">
           <div className="flex flex-col">

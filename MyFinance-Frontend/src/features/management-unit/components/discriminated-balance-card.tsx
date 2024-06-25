@@ -65,7 +65,9 @@ export function DiscriminatedBalanceCard({
           <Separator orientation="vertical" className="h-9 w-px" />
           <Toggle
             variant="outline"
-            onClick={toggleYAxis}
+            aria-label="Toggle Y Axis"
+            pressed={!hideYAxis}
+            onPressedChange={toggleYAxis}
             size="sm"
             className="w-[6.25rem] shrink-0"
           >
