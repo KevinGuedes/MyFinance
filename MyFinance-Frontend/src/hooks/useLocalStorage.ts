@@ -1,12 +1,10 @@
 import type { Dispatch, SetStateAction } from 'react'
 import { useCallback, useEffect, useState } from 'react'
-import superjson from 'superjson'
 import { useEventCallback, useEventListener } from 'usehooks-ts'
 
 const LOCAL_STORAGE_MAIN_KEY = '@my-finance:v1.0.0:settings'
 
 declare global {
-  // eslint-disable-next-line @typescript-eslint/consistent-type-definitions
   interface WindowEventMap {
     'local-storage': CustomEvent
   }
@@ -28,12 +26,30 @@ export function useLocalStorage<T>(
   const { initializeWithValue } = options
 
   const serializer = useCallback<(value: T) => string>((value) => {
-    return superjson.stringify(value)
+    return JSON.stringify(value)
   }, [])
 
-  const deserializer = useCallback<(value: string) => T>((value) => {
-    return superjson.parse<T>(value)
-  }, [])
+  const deserializer = useCallback<(value: string) => T>(
+    (value) => {
+      if (value === 'undefined') {
+        return undefined as unknown as T
+      }
+
+      const defaultValue =
+        initialValue instanceof Function ? initialValue() : initialValue
+
+      let parsed: unknown
+      try {
+        parsed = JSON.parse(value)
+      } catch (error) {
+        console.error('Error parsing JSON:', error)
+        return defaultValue
+      }
+
+      return parsed as T
+    },
+    [initialValue],
+  )
 
   const readValue = useCallback((): T => {
     const initialValueToUse =

@@ -29,7 +29,7 @@ export function DiscriminatedBalanceCard({
   pastMonths,
   onSelectPastMonths,
 }: DiscriminatedBalanceCardProps) {
-  const [hideYAxis, setHideYAxis] = useLocalStorage<boolean>('showYAxis', true)
+  const [hideYAxis, setHideYAxis] = useLocalStorage<boolean>('hideYAxis', true)
 
   function toggleYAxis() {
     setHideYAxis((hideYAxis) => !hideYAxis)
@@ -67,9 +67,9 @@ export function DiscriminatedBalanceCard({
             variant="outline"
             onClick={toggleYAxis}
             size="sm"
-            className="shrink-0"
+            className="w-[6.25rem] shrink-0"
           >
-            Toggle Y Axis
+            {hideYAxis ? 'Show Y Axis' : 'Hide Y Axis'}
           </Toggle>
         </div>
       </CardHeader>
