@@ -32,11 +32,12 @@ export function useUpdateManagementUnit() {
 
       return updatedManagementUnit
     },
-    onSuccess: (_, managemenUnit) => {
+    onSuccess: (updatedManagementUnit) => {
       queryClient.invalidateQueries({ queryKey: ['management-units'] })
-      queryClient.invalidateQueries({
-        queryKey: ['management-unit', { managementUnitId: managemenUnit.id }],
-      })
+      queryClient.setQueryData(
+        ['management-unit', { managementUnitId: updatedManagementUnit.id }],
+        updatedManagementUnit,
+      )
 
       toast({
         title: 'Management Unit successfully updated!',
