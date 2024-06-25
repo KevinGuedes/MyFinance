@@ -1,6 +1,5 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { Pencil } from 'lucide-react'
-import { useState } from 'react'
 
 import { Page, PageContent, PageHeader } from '@/components/page'
 import { Button } from '@/components/ui/button'
@@ -23,6 +22,7 @@ import { useGetTransfers } from '@/features/transfer/api/use-get-transfers'
 import { DiscriminatedBalanceCardSkeleton } from '@/features/transfer/components/discriminated-balance-card-skeleton'
 import { TransfersTable } from '@/features/transfer/components/transfers-table/transfers-table'
 import { TransfersTableSkeleton } from '@/features/transfer/components/transfers-table/transfers-table-skeleton'
+import { useLocalStorage } from '@/hooks/useLocalStorage'
 
 export const Route = createFileRoute(
   '/_authenticated/management-unit/$managementUnitId',
@@ -35,7 +35,7 @@ export const Route = createFileRoute(
 
 function ManagementUnitDashboard() {
   const managementUnitId = Route.useParams().managementUnitId
-  const [pastMonths, setPastMonths] = useState(12)
+  const [pastMonths, setPastMonths] = useLocalStorage<number>('pastMonths', 12)
 
   const transfersQuery = useGetTransfers(managementUnitId, 1, 20)
   const managementUnitQuery = useGetManagementUnit(managementUnitId)

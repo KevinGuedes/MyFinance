@@ -1,5 +1,3 @@
-import { useState } from 'react'
-
 import {
   Select,
   SelectContent,
@@ -9,6 +7,7 @@ import {
 } from '@/components/ui/select'
 import { Separator } from '@/components/ui/separator'
 import { MonthlyBalanceData } from '@/features/transfer/models/monthly-balance-data'
+import { useLocalStorage } from '@/hooks/useLocalStorage'
 
 import {
   Card,
@@ -30,7 +29,7 @@ export function DiscriminatedBalanceCard({
   pastMonths,
   onSelectPastMonths,
 }: DiscriminatedBalanceCardProps) {
-  const [hideYAxis, setHideYAxis] = useState(true)
+  const [hideYAxis, setHideYAxis] = useLocalStorage<boolean>('showYAxis', true)
 
   function toggleYAxis() {
     setHideYAxis((hideYAxis) => !hideYAxis)

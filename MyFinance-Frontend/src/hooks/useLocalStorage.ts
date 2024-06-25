@@ -1,14 +1,16 @@
-import {
-  Dispatch,
-  SetStateAction,
-  useCallback,
-  useEffect,
-  useState,
-} from 'react'
+import type { Dispatch, SetStateAction } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import superjson from 'superjson'
 import { useEventCallback, useEventListener } from 'usehooks-ts'
 
 const LOCAL_STORAGE_MAIN_KEY = '@my-finance:v1.0.0:settings'
+
+declare global {
+  // eslint-disable-next-line @typescript-eslint/consistent-type-definitions
+  interface WindowEventMap {
+    'local-storage': CustomEvent
+  }
+}
 
 type UseLocalStorageOptions = {
   initializeWithValue?: boolean
@@ -20,7 +22,11 @@ export function useLocalStorage<T>(
   options: UseLocalStorageOptions = {
     initializeWithValue: true,
   },
-) {
+): [T, Dispatch<SetStateAction<T>>, () => void] {
+  const actualKey = `${LOCAL_STORAGE_MAIN_KEY}:${key}`
+
+  const { initializeWithValue } = options
+
   const serializer = useCallback<(value: T) => string>((value) => {
     return superjson.stringify(value)
   }, [])
@@ -34,16 +40,16 @@ export function useLocalStorage<T>(
       initialValue instanceof Function ? initialValue() : initialValue
 
     try {
-      const raw = window.localStorage.getItem(key)
+      const raw = window.localStorage.getItem(actualKey)
       return raw ? deserializer(raw) : initialValueToUse
     } catch (error) {
-      console.warn(`Error reading localStorage key "${key}": `, error)
+      console.warn(`Error reading localStorage key "${actualKey}":`, error)
       return initialValueToUse
     }
-  }, [initialValue, key, deserializer])
+  }, [initialValue, actualKey, deserializer])
 
   const [storedValue, setStoredValue] = useState(() => {
-    if (options.initializeWithValue) {
+    if (initializeWithValue) {
       return readValue()
     }
 
@@ -53,11 +59,13 @@ export function useLocalStorage<T>(
   const setValue: Dispatch<SetStateAction<T>> = useEventCallback((value) => {
     try {
       const newValue = value instanceof Function ? value(readValue()) : value
-      window.localStorage.setItem(key, serializer(newValue))
+      window.localStorage.setItem(actualKey, serializer(newValue))
       setStoredValue(newValue)
-      window.dispatchEvent(new StorageEvent('local-storage', { key }))
+      window.dispatchEvent(
+        new StorageEvent('local-storage', { key: actualKey }),
+      )
     } catch (error) {
-      console.warn(`Error setting localStorage key "${key}": `, error)
+      console.warn(`Error setting localStorage key "${actualKey}":`, error)
     }
   })
 
@@ -65,28 +73,30 @@ export function useLocalStorage<T>(
     const defaultValue =
       initialValue instanceof Function ? initialValue() : initialValue
 
-    window.localStorage.removeItem(key)
+    window.localStorage.removeItem(actualKey)
     setStoredValue(defaultValue)
-    window.dispatchEvent(new StorageEvent('local-storage', { key }))
+    window.dispatchEvent(new StorageEvent('local-storage', { key: actualKey }))
   })
 
   useEffect(() => {
     setStoredValue(readValue())
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [key])
+  }, [actualKey])
 
   const handleStorageChange = useCallback(
     (event: StorageEvent | CustomEvent) => {
-      if ((event as StorageEvent).key && (event as StorageEvent).key !== key) {
+      if (
+        (event as StorageEvent).key &&
+        (event as StorageEvent).key !== actualKey
+      ) {
         return
       }
       setStoredValue(readValue())
     },
-    [key, readValue],
+    [actualKey, readValue],
   )
 
   useEventListener('storage', handleStorageChange)
-
   useEventListener('local-storage', handleStorageChange)
 
   return [storedValue, setValue, removeValue]

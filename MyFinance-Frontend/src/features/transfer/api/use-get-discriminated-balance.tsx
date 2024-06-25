@@ -1,4 +1,4 @@
-import { useQuery } from '@tanstack/react-query'
+import { keepPreviousData, useQuery } from '@tanstack/react-query'
 
 import { transferApi } from '../../common/api'
 import { MonthlyBalanceData } from '../models/monthly-balance-data'
@@ -14,6 +14,7 @@ export const useGetDiscriminatedBalance = (
   const query = useQuery({
     queryKey: ['discriminated-balance', { managementUnitId, pastMonths }],
     staleTime: Infinity,
+    placeholderData: keepPreviousData,
     queryFn: async () => {
       const { data: discriminatedBalanceDataResponse } =
         await transferApi.get<DiscriminatedBalanceDataResponse>(
