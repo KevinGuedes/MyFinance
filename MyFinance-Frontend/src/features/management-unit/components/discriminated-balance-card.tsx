@@ -46,7 +46,7 @@ export function DiscriminatedBalanceCard({
         <CardTitle className="font-normal">Annual Balance Data</CardTitle>
         <div className="flex items-center gap-4 text-muted-foreground">
           <div className="flex items-center gap-1.5 text-sm">
-            Show last
+            Showing last
             <Select
               defaultValue={pastMonths.toString()}
               onValueChange={handlePastMonthsSelection}

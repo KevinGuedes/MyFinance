@@ -91,7 +91,6 @@ export function DiscriminatedBalanceChart({
               fontSize: 14,
               fontWeight: 600,
             },
-            angle: -90,
             position: 'left',
             offset: -5,
           }}

@@ -77,11 +77,11 @@ export const columns: ColumnDef<Transfer>[] = [
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
             <DropdownMenuItem>
-              <Pencil className="mr-2 size-5 rounded-full" />
+              <Pencil className="mr-2 size-4" />
               Edit
             </DropdownMenuItem>
             <DropdownMenuItem>
-              <Trash2 className="mr-2 size-5 rounded-full text-destructive" />
+              <Trash2 className="mr-2 size-4 text-destructive" />
               Delete
             </DropdownMenuItem>
           </DropdownMenuContent>

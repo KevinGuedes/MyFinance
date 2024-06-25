@@ -45,8 +45,8 @@ function ManagementUnitDashboard() {
   )
 
   const isLoading =
-    managementUnitQuery.isLoading ||
-    discriminatedBalanceQuery.isLoading ||
+    managementUnitQuery.isLoading &&
+    discriminatedBalanceQuery.isLoading &&
     transfersQuery.isLoading
 
   return (
@@ -108,7 +108,7 @@ function ManagementUnitDashboard() {
             </>
           )}
           <div className="h-full">
-            {isLoading && !discriminatedBalanceQuery.isRefetching ? (
+            {discriminatedBalanceQuery.isPending ? (
               <DiscriminatedBalanceCardSkeleton />
             ) : (
               <>
