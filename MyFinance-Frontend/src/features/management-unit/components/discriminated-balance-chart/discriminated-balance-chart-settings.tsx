@@ -35,6 +35,11 @@ export function DiscriminatedBalanceChartSettings() {
     setPastMonths,
   } = useDiscriminatedBalanceChartSettings()
 
+  function handleToggleShowLegend() {
+    if (showDataPointsWhenHovering) toggleShowDataPointsWhenHovering()
+    toggleShowLegend()
+  }
+
   return (
     <Dialog>
       <DialogTrigger asChild>
@@ -89,7 +94,7 @@ export function DiscriminatedBalanceChartSettings() {
             <Checkbox
               name="showLegend"
               checked={showLegend}
-              onCheckedChange={toggleShowLegend}
+              onCheckedChange={handleToggleShowLegend}
             />
           </fieldset>
           <fieldset className="flex items-center justify-between gap-4 py-3 pr-2">
