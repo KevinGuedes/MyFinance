@@ -54,7 +54,7 @@ export function PaginationBuilder({
   return (
     <div className="flex w-full flex-col-reverse flex-wrap content-center items-center justify-center gap-1 lg:flex-row lg:flex-nowrap">
       {paginationInfo && (
-        <p className="shrink-0 text-muted-foreground">
+        <p className="shrink-0 text-sm text-muted-foreground">
           Showing{' '}
           <strong>
             {paginationInfo.start} - {paginationInfo.end}

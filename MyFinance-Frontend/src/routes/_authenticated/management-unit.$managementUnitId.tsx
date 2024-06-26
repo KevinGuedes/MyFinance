@@ -13,16 +13,16 @@ import {
 import { CreateAccountTagDialog } from '@/features/account-tag/components/create-account-tag-dialog'
 import { CreateCategoryDialog } from '@/features/category/components/create-category-dialog'
 import { useGetManagementUnit } from '@/features/management-unit/api/use-get-management-unit'
-import { DiscriminatedBalanceCard } from '@/features/management-unit/components/discriminated-balance-card'
+import { DiscriminatedBalanceCard } from '@/features/management-unit/components/discriminated-balance-chart/discriminated-balance-card'
 import { SummaryCards } from '@/features/management-unit/components/summary-cards'
 import { SummaryCardsSkeleton } from '@/features/management-unit/components/summary-cards-skeleton'
 import { UpdateManagementUnitDialog } from '@/features/management-unit/components/update-management-unit-dialog'
+import { useDiscriminatedBalanceChartSettings } from '@/features/management-unit/store/discriminated-balance-chart-settings-store'
 import { useGetDiscriminatedBalance } from '@/features/transfer/api/use-get-discriminated-balance'
 import { useGetTransfers } from '@/features/transfer/api/use-get-transfers'
 import { DiscriminatedBalanceCardSkeleton } from '@/features/transfer/components/discriminated-balance-card-skeleton'
 import { TransfersTable } from '@/features/transfer/components/transfers-table/transfers-table'
 import { TransfersTableSkeleton } from '@/features/transfer/components/transfers-table/transfers-table-skeleton'
-import { useLocalStorage } from '@/hooks/useLocalStorage'
 
 export const Route = createFileRoute(
   '/_authenticated/management-unit/$managementUnitId',
@@ -34,14 +34,15 @@ export const Route = createFileRoute(
 })
 
 function ManagementUnitDashboard() {
+  const { pastMonths, includeCurrentMonth } =
+    useDiscriminatedBalanceChartSettings()
   const managementUnitId = Route.useParams().managementUnitId
-  const [pastMonths, setPastMonths] = useLocalStorage<number>('pastMonths', 12)
-
   const transfersQuery = useGetTransfers(managementUnitId, 1, 20)
   const managementUnitQuery = useGetManagementUnit(managementUnitId)
   const discriminatedBalanceQuery = useGetDiscriminatedBalance(
     managementUnitId,
     pastMonths,
+    includeCurrentMonth,
   )
 
   const isLoading =
@@ -114,8 +115,6 @@ function ManagementUnitDashboard() {
               <>
                 {discriminatedBalanceQuery.data && (
                   <DiscriminatedBalanceCard
-                    pastMonths={pastMonths}
-                    onSelectPastMonths={setPastMonths}
                     discriminatedBalanceData={
                       discriminatedBalanceQuery.data.discriminatedBalanceData
                     }

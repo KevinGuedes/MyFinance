@@ -83,11 +83,13 @@ public class TransferController(IMediator mediator) : ApiController(mediator)
     public async Task<IActionResult> GetDiscriminatedAnnualBalanceAsync(
         [FromQuery][SwaggerParameter("Management Unit Id", Required = true)] 
         Guid managementUnitId,
-        [FromQuery][SwaggerParameter("Past Months", Required = false)]
+        [FromQuery][SwaggerParameter("Past Months", Required = true)]
         int pastMonths,
+        [FromQuery][SwaggerParameter("Include Current Month", Required = true)]
+        bool includeCurrentMonth,
         CancellationToken cancellationToken)
     {
-        var query = new GetDiscriminatedBalanceDataQuery(managementUnitId, pastMonths);
+        var query = new GetDiscriminatedBalanceDataQuery(managementUnitId, pastMonths, includeCurrentMonth);
         return ProcessResult(await _mediator.Send(query, cancellationToken));
     }
 

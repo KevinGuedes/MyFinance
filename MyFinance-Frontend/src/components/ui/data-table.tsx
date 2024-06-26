@@ -17,7 +17,7 @@ import {
 } from '@/components/ui/table'
 
 import { Button } from './button'
-import { ScrollArea, ScrollBar } from './scroll-area'
+import { ScrollArea } from './scroll-area'
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
@@ -48,7 +48,7 @@ export function DataTable<TData, TValue>({
 
   return (
     <div className="flex grow flex-col justify-between gap-2">
-      <ScrollArea className="h-[365px]" type="always">
+      <ScrollArea className="h-[365px] grow" type="always">
         <div className="grow rounded-md pr-4">
           <Table>
             <TableHeader>

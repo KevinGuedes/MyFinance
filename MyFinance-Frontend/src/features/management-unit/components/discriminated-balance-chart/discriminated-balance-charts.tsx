@@ -12,22 +12,22 @@ import {
 
 import { MonthlyBalanceData } from '@/features/transfer/models/monthly-balance-data'
 
-import { useTheme } from '../../../components/ui/theme-provider'
+import { useTheme } from '../../../../components/ui/theme-provider'
+import { useDiscriminatedBalanceChartSettings } from '../../store/discriminated-balance-chart-settings-store'
 import { BalanceDataTooltip } from './balance-data-tooltip'
-// import { LineChartLabel } from './line-chart-label'
+import { LineChartLabel } from './line-chart-label'
 
 type DiscriminatedBalanceChartProps = {
-  hideYAxis: boolean
-  showLegend?: boolean
   discriminatedBalanceData: MonthlyBalanceData[]
 }
 
 export function DiscriminatedBalanceChart({
-  hideYAxis = true,
-  showLegend = false,
   discriminatedBalanceData,
 }: DiscriminatedBalanceChartProps) {
+  const { showYAxis, showLegend, showDataPointsWhenHovering } =
+    useDiscriminatedBalanceChartSettings()
   const { theme } = useTheme()
+  const [dateKeyHovered, setDateKeyHovered] = useState<string | null>(null)
   const [opacity, setOpacity] = useState({
     outcome: 1,
     income: 1,
@@ -35,6 +35,7 @@ export function DiscriminatedBalanceChart({
   })
 
   function handleMouserEnterOnLegend(dataSetBeingHovered: string) {
+    setDateKeyHovered(dataSetBeingHovered)
     setOpacity(() => ({
       outcome: 0.2,
       income: 0.2,
@@ -44,6 +45,7 @@ export function DiscriminatedBalanceChart({
   }
 
   function handleMouseLeaveOnLegend() {
+    setDateKeyHovered(null)
     setOpacity(() => ({
       outcome: 1,
       income: 1,
@@ -81,7 +83,7 @@ export function DiscriminatedBalanceChart({
 
         <YAxis
           stroke={axesColor}
-          hide={hideYAxis}
+          hide={!showYAxis}
           type="number"
           label={{
             value: 'R$',
@@ -110,6 +112,11 @@ export function DiscriminatedBalanceChart({
           opacity={opacity.balance}
           fill={balanceBarColor}
           activeBar={{ stroke: 'white', strokeWidth: 2 }}
+          label={
+            dateKeyHovered === 'balance' && showDataPointsWhenHovering ? (
+              <LineChartLabel variant="balance" />
+            ) : undefined
+          }
         />
 
         <Line
@@ -132,6 +139,11 @@ export function DiscriminatedBalanceChart({
               fill: incomeLineColor,
             },
           }}
+          label={
+            dateKeyHovered === 'income' && showDataPointsWhenHovering ? (
+              <LineChartLabel variant="income" />
+            ) : undefined
+          }
         />
 
         <Line
@@ -152,7 +164,11 @@ export function DiscriminatedBalanceChart({
             r: 6,
             style: { fill: outcomeLineColor },
           }}
-          // label={opacity.income === 0.2 ? <LineChartLabel /> : undefined}
+          label={
+            dateKeyHovered === 'outcome' && showDataPointsWhenHovering ? (
+              <LineChartLabel variant="outcome" />
+            ) : undefined
+          }
         />
 
         {showLegend && (

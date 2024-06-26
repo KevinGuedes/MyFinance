@@ -1,5 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Loader2, TrendingDown, TrendingUp } from 'lucide-react'
+import { Loader2, PlusCircle, TrendingDown, TrendingUp } from 'lucide-react'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
@@ -284,11 +284,14 @@ export function TransferForm({
           >
             {isRegisteringAndAddingMore ? (
               <>
-                <Loader2 className="mr-2 size-4 animate-spin" />
+                <Loader2 className="mr-2 size-5 animate-spin" />
                 Registering...
               </>
             ) : (
-              'Register and Add More'
+              <>
+                <PlusCircle className="mr-2 size-5" />
+                Register and Add More
+              </>
             )}
           </Button>
           <Button
@@ -298,11 +301,14 @@ export function TransferForm({
           >
             {isRegistering ? (
               <>
-                <Loader2 className="size-4 animate-spin" />
+                <Loader2 className="size-5 animate-spin" />
                 Registering...
               </>
             ) : (
-              'Register Transfer'
+              <>
+                <PlusCircle className="mr-2 size-5" />
+                Register Transfer
+              </>
             )}
           </Button>
         </div>

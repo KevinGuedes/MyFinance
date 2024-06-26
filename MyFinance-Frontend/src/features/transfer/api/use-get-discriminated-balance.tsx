@@ -10,9 +10,13 @@ type DiscriminatedBalanceDataResponse = {
 export const useGetDiscriminatedBalance = (
   managementUnitId: string,
   pastMonths: number,
+  includeCurrentMonth: boolean,
 ) => {
   const query = useQuery({
-    queryKey: ['discriminated-balance', { managementUnitId, pastMonths }],
+    queryKey: [
+      'discriminated-balance',
+      { managementUnitId, pastMonths, includeCurrentMonth },
+    ],
     staleTime: Infinity,
     placeholderData: keepPreviousData,
     queryFn: async () => {
@@ -23,6 +27,7 @@ export const useGetDiscriminatedBalance = (
             params: {
               managementUnitId,
               pastMonths,
+              includeCurrentMonth,
             },
           },
         )

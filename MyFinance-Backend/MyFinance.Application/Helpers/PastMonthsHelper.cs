@@ -2,20 +2,22 @@
 
 internal static class PastMonthsHelper
 {
-    public static (DateTime FirstDate, DateTime LastDate) GetDateRangeFromPastMonths(int pastMonths)
+    public static (DateTime FromDate, DateTime ToDate) GetDateRangeFromPastMonths(
+        int pastMonths, 
+        bool includeCurrentMont)
     {
         var today = DateTime.UtcNow;
 
         if (pastMonths < 1)
             throw new ArgumentException("Past Months must be at least 1");
 
-        var firstDate = today.AddMonths(-pastMonths);
-        firstDate = GetFirstDateOfMonth(firstDate.Year, firstDate.Month);
+        var fromDate = today.AddMonths(-pastMonths);
+        fromDate = GetFirstDateOfMonth(fromDate.Year, fromDate.Month);
 
-        var lastDate = today.AddMonths(-1);
-        lastDate = GetLastDateOfMonth(lastDate.Year, lastDate.Month);
+        var toDate = today.AddMonths(includeCurrentMont ? 0 : -1);
+        toDate = GetLastDateOfMonth(toDate.Year, toDate.Month);
 
-        return (firstDate, lastDate);
+        return (fromDate, toDate);
     }
 
     private static DateTime GetFirstDateOfMonth(int year, int month)
