@@ -61,16 +61,9 @@ function ManagementUnitDashboard() {
         ) : (
           <>
             {managementUnitQuery.data && (
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <UpdateManagementUnitDialog
-                    managementUnit={managementUnitQuery.data}
-                  />
-                </TooltipTrigger>
-                <TooltipContent side="bottom" align="end">
-                  Edit Management Unit
-                </TooltipContent>
-              </Tooltip>
+              <UpdateManagementUnitDialog
+                managementUnit={managementUnitQuery.data}
+              />
             )}
           </>
         )}
@@ -78,21 +71,11 @@ function ManagementUnitDashboard() {
       <PageContent className="flex flex-col gap-4 lg:flex-row">
         <div className="flex items-center justify-between sm:hidden">
           <h1 className="text-2xl">Kariny Bordados</h1>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Button
-                variant="outline"
-                size="icon"
-                className="rounded-full border-none"
-              >
-                <Pencil className="size-5" />
-                <span className="sr-only">Edit Management Unit</span>
-              </Button>
-            </TooltipTrigger>
-            <TooltipContent side="bottom" align="end">
-              Edit Management Unit
-            </TooltipContent>
-          </Tooltip>
+          {managementUnitQuery.data && (
+            <UpdateManagementUnitDialog
+              managementUnit={managementUnitQuery.data}
+            />
+          )}
         </div>
         <div className="flex flex-col justify-between gap-4 lg:w-3/5">
           {isLoading ? (

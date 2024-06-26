@@ -88,7 +88,7 @@ export function DiscriminatedBalanceChartSettings() {
               Show Legend
               <p className="mt-1 text-balance text-sm font-normal text-muted-foreground">
                 When one of the legend items is hovered, the regarding data set
-                will be highlighted while the other will be faded.
+                will be highlighted while the other will be faded
               </p>
             </Label>
             <Checkbox

@@ -10,6 +10,11 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog'
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from '@/components/ui/tooltip'
 
 import { useUpdateManagementUnit } from '../api/use-update-management-unit'
 import { ManagementUnit } from '../models/management-unit'
@@ -49,16 +54,24 @@ export function UpdateManagementUnitDialog({
 
   return (
     <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-      <DialogTrigger asChild>
-        <Button
-          variant="outline"
-          size="icon"
-          className="size-9 rounded-full border-none"
-        >
-          <Pencil className="size-5" />
-          <span className="sr-only">Update Management Unit</span>
-        </Button>
-      </DialogTrigger>
+      <Tooltip>
+        <DialogTrigger asChild>
+          <TooltipTrigger asChild>
+            <Button
+              variant="outline"
+              size="icon"
+              className="size-9 rounded-full border-none"
+            >
+              <Pencil className="size-5" />
+              <span className="sr-only">Update Management Unit</span>
+            </Button>
+          </TooltipTrigger>
+        </DialogTrigger>
+        <TooltipContent side="bottom" align="end">
+          Edit Management Unit
+        </TooltipContent>
+      </Tooltip>
+
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle>Update Management Unit</DialogTitle>

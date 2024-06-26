@@ -103,7 +103,7 @@ export function PageHeader({
             </DropdownMenu>
           )}
         </div>
-        {children}
+        <div className="hidden sm:block">{children}</div>
       </div>
       <Sheet>
         <SheetTrigger asChild>

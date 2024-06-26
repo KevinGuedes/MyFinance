@@ -99,7 +99,7 @@ export function TransferForm({
         onSubmit={form.handleSubmit(handleSubmit)}
         className="flex flex-col gap-8"
       >
-        <div className="flex flex-col gap-8 sm:flex-row">
+        <div className="flex flex-col gap-4 sm:flex-row sm:gap-8">
           <div className="flex basis-1/2 flex-col gap-4">
             <FormField
               control={form.control}
