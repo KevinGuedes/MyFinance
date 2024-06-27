@@ -82,13 +82,13 @@ internal sealed class TransferRepository(MyFinanceDbContext myFinanceDbContext)
             accountTagId);
 
         var totalCount = await transfers.LongCountAsync(cancellationToken);
-        var transfersPage = await transfers
+        var paginatedAndSortedTransfers = await transfers
             .OrderByDescending(transfer => transfer.SettlementDate)
             .Skip((pageNumber - 1) * pageSize)
             .Take(pageSize)
             .ToListAsync(cancellationToken);
 
-        return (TotalCount: totalCount, Transfers: transfers);
+        return (TotalCount: totalCount, Transfers: paginatedAndSortedTransfers);
     }
 
     private IQueryable<Transfer> GetByParams(

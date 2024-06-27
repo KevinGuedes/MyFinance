@@ -23,13 +23,13 @@ public class TransferController(IMediator mediator) : ApiController(mediator)
     public async Task<IActionResult> GetTransfersAsync(
         [FromQuery][SwaggerParameter("Management Unit Id", Required = true)]
         Guid managementUnitId,
-        [FromQuery][SwaggerParameter("Start date")]
+        [FromQuery][SwaggerParameter("Start date", Required = false)]
         DateOnly startDate,
-        [FromQuery][SwaggerParameter("End date")]
+        [FromQuery][SwaggerParameter("End date", Required = false)]
         DateOnly endDate,
-        [FromQuery][SwaggerParameter("Category Id")]
-        Guid categoryId,
-        [FromQuery][SwaggerParameter("Account Tag Id")]
+        [FromQuery][SwaggerParameter("Category Id", Required = false)]
+        Guid categoryId,    
+        [FromQuery][SwaggerParameter("Account Tag Id", Required = false)]
         Guid accountTagId,
         [FromQuery][SwaggerParameter("Page number", Required = true)]
         int pageNumber,

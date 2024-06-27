@@ -19,7 +19,7 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 
-import { useDiscriminatedBalanceChartSettings } from '../../store/discriminated-balance-chart-settings-store'
+import { useDiscriminatedBalanceChartSettings } from '../../../management-unit/store/discriminated-balance-chart-settings-store'
 
 export function DiscriminatedBalanceChartSettings() {
   const {

@@ -6,4 +6,5 @@ export interface Transfer {
   type: number
   accountTag: string
   category: string
+  description: string
 }

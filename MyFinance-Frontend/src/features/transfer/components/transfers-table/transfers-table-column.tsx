@@ -12,6 +12,7 @@ import {
 import { toMoney } from '@/lib/utils'
 
 import { Transfer } from '../../models/transfer'
+import { TransferType } from '../../models/transfer-type'
 
 export const columns: ColumnDef<Transfer>[] = [
   {
@@ -21,7 +22,7 @@ export const columns: ColumnDef<Transfer>[] = [
       const value = row.getValue<number>('value')
       const formattedValue = toMoney(value, true)
 
-      if (value > 0)
+      if (value === TransferType.Income)
         return (
           <div className="min-w-20 text-left font-medium text-primary">
             {formattedValue}

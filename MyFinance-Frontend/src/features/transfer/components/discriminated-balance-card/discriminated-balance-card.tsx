@@ -7,8 +7,8 @@ import {
 } from '@/components/ui/card'
 import { MonthlyBalanceData } from '@/features/transfer/models/monthly-balance-data'
 
+import { DiscriminatedBalanceChart } from './discriminated-balance-chart'
 import { DiscriminatedBalanceChartSettings } from './discriminated-balance-chart-settings'
-import { DiscriminatedBalanceChart } from './discriminated-balance-charts'
 
 type DiscriminatedBalanceCardProps = {
   discriminatedBalanceData: MonthlyBalanceData[]

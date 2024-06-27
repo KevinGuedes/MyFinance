@@ -13,7 +13,7 @@ import {
 import { MonthlyBalanceData } from '@/features/transfer/models/monthly-balance-data'
 
 import { useTheme } from '../../../../components/ui/theme-provider'
-import { useDiscriminatedBalanceChartSettings } from '../../store/discriminated-balance-chart-settings-store'
+import { useDiscriminatedBalanceChartSettings } from '../../../management-unit/store/discriminated-balance-chart-settings-store'
 import { BalanceDataTooltip } from './balance-data-tooltip'
 import { LineChartLabel } from './line-chart-label'
 

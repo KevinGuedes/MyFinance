@@ -1,4 +1,5 @@
 import { DataTable } from '@/components/ui/data-table'
+import { Paginated } from '@/features/common/paginated'
 
 import { Transfer } from '../../models/transfer'
 import { RegisterTransferDialog } from '../register-transfer-dialog'
@@ -187,18 +188,13 @@ const transfers: Transfer[] = [
   },
 ]
 
-export function TransfersTable() {
-  const data = transfers.map((transfer) => {
-    const formattedValue =
-      transfer.type === 1 ? transfer.value : -1 * transfer.value
-    return {
-      ...transfer,
-      value: formattedValue,
-    } as Transfer
-  })
+type transferTableProps = {
+  paginatedTransfers: Paginated<Transfer>
+}
 
+export function TransfersTable({ paginatedTransfers }: transferTableProps) {
   return (
-    <DataTable columns={columns} data={data}>
+    <DataTable columns={columns} data={transfers}>
       <RegisterTransferDialog />
     </DataTable>
   )

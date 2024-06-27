@@ -1,28 +1,21 @@
 import { createFileRoute } from '@tanstack/react-router'
-import { Pencil } from 'lucide-react'
 
 import { Page, PageContent, PageHeader } from '@/components/page'
-import { Button } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from '@/components/ui/tooltip'
 import { CreateAccountTagDialog } from '@/features/account-tag/components/create-account-tag-dialog'
 import { CreateCategoryDialog } from '@/features/category/components/create-category-dialog'
 import { useGetManagementUnit } from '@/features/management-unit/api/use-get-management-unit'
-import { DiscriminatedBalanceCard } from '@/features/management-unit/components/discriminated-balance-chart/discriminated-balance-card'
 import { SummaryCards } from '@/features/management-unit/components/summary-cards'
 import { SummaryCardsSkeleton } from '@/features/management-unit/components/summary-cards-skeleton'
 import { UpdateManagementUnitDialog } from '@/features/management-unit/components/update-management-unit-dialog'
 import { useDiscriminatedBalanceChartSettings } from '@/features/management-unit/store/discriminated-balance-chart-settings-store'
 import { useGetDiscriminatedBalance } from '@/features/transfer/api/use-get-discriminated-balance'
-import { useGetTransfers } from '@/features/transfer/api/use-get-transfers'
-import { DiscriminatedBalanceCardSkeleton } from '@/features/transfer/components/discriminated-balance-card-skeleton'
-import { TransfersTable } from '@/features/transfer/components/transfers-table/transfers-table'
-import { TransfersTableSkeleton } from '@/features/transfer/components/transfers-table/transfers-table-skeleton'
+import { useGetTransferGroups } from '@/features/transfer/api/use-get-transfer-groups'
+import { DiscriminatedBalanceCard } from '@/features/transfer/components/discriminated-balance-card/discriminated-balance-card'
+import { DiscriminatedBalanceCardSkeleton } from '@/features/transfer/components/discriminated-balance-card/discriminated-balance-card-skeleton'
+import { TransferGroupsList } from '@/features/transfer/components/transfer-groups-list/transfer-groups-list'
+import { TransferGroupsListSkeleton } from '@/features/transfer/components/transfer-groups-list/transfer-groups-list-skeleton'
 
 export const Route = createFileRoute(
   '/_authenticated/management-unit/$managementUnitId',
@@ -37,7 +30,7 @@ function ManagementUnitDashboard() {
   const { pastMonths, includeCurrentMonth } =
     useDiscriminatedBalanceChartSettings()
   const managementUnitId = Route.useParams().managementUnitId
-  const transfersQuery = useGetTransfers(managementUnitId, 1, 20)
+  const transferGroupsQuery = useGetTransferGroups(managementUnitId, 1, 50)
   const managementUnitQuery = useGetManagementUnit(managementUnitId)
   const discriminatedBalanceQuery = useGetDiscriminatedBalance(
     managementUnitId,
@@ -48,7 +41,7 @@ function ManagementUnitDashboard() {
   const isLoading =
     managementUnitQuery.isLoading &&
     discriminatedBalanceQuery.isLoading &&
-    transfersQuery.isLoading
+    transferGroupsQuery.isLoading
 
   return (
     <Page>
@@ -108,7 +101,7 @@ function ManagementUnitDashboard() {
           </div>
         </div>
         <div className="flex grow flex-col rounded-lg border bg-background p-4 lg:w-2/5">
-          <Tabs defaultValue="transfers" className="flex grow flex-col">
+          <Tabs defaultValue="transfers" className="flex grow flex-col gap-2">
             <TabsList className="self-start bg-muted/40">
               <TabsTrigger value="transfers" disabled={isLoading}>
                 Transfers
@@ -124,7 +117,17 @@ function ManagementUnitDashboard() {
               value="transfers"
               className="flex grow flex-col justify-between gap-2"
             >
-              {isLoading ? <TransfersTableSkeleton /> : <TransfersTable />}
+              {transferGroupsQuery.isLoading ? (
+                <TransferGroupsListSkeleton />
+              ) : (
+                <>
+                  {transferGroupsQuery.data && (
+                    <TransferGroupsList
+                      tranferGroups={transferGroupsQuery.data.items}
+                    />
+                  )}
+                </>
+              )}
             </TabsContent>
             <TabsContent value="account-tags">
               <CreateAccountTagDialog />
