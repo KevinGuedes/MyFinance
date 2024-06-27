@@ -50,7 +50,9 @@ export function getKeyByEnumValue<T>(
   enumType: { [key: string]: T },
   value: T,
 ): string {
-  return Object.keys(enumType).find((key) => enumType[key] === value) || ''
+  const key = Object.keys(enumType).find((key) => enumType[key] === value)
+  if (key === undefined) throw new Error('Invalid enum value')
+  return key
 }
 
 export function buildPagination(
