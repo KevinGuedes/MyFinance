@@ -8,7 +8,6 @@ export function DiscriminatedBalanceCardSkeleton() {
         <Skeleton className="size-10 rounded-full" />
       </div>
       <Skeleton className="h-5 w-2/3" />
-
       <Skeleton className="h-64 min-h-64 grow" />
     </div>
   )

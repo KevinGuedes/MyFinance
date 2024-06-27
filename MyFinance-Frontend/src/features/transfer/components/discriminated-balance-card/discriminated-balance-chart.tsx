@@ -24,8 +24,14 @@ type DiscriminatedBalanceChartProps = {
 export function DiscriminatedBalanceChart({
   discriminatedBalanceData,
 }: DiscriminatedBalanceChartProps) {
-  const { showYAxis, showLegend, showDataPointsWhenHovering } =
-    useDiscriminatedBalanceChartSettings()
+  const {
+    showYAxis,
+    showLegend,
+    showDataPointsWhenHovering,
+    showBalance,
+    showIncome,
+    showOutcome,
+  } = useDiscriminatedBalanceChartSettings()
   const { theme } = useTheme()
   const [dateKeyHovered, setDateKeyHovered] = useState<string | null>(null)
   const [opacity, setOpacity] = useState({
@@ -106,70 +112,76 @@ export function DiscriminatedBalanceChart({
           tick={{ fontSize: 14, fontWeight: 600 }}
         />
 
-        <Bar
-          animationDuration={2000}
-          dataKey="balance"
-          opacity={opacity.balance}
-          fill={balanceBarColor}
-          activeBar={{ stroke: 'white', strokeWidth: 2 }}
-          label={
-            dateKeyHovered === 'balance' && showDataPointsWhenHovering ? (
-              <LineChartLabel variant="balance" />
-            ) : undefined
-          }
-        />
+        {showBalance && (
+          <Bar
+            animationDuration={2000}
+            dataKey="balance"
+            opacity={opacity.balance}
+            fill={balanceBarColor}
+            activeBar={{ stroke: 'white', strokeWidth: 2 }}
+            label={
+              dateKeyHovered === 'balance' && showDataPointsWhenHovering ? (
+                <LineChartLabel variant="balance" />
+              ) : undefined
+            }
+          />
+        )}
 
-        <Line
-          animationDuration={2000}
-          type="monotone"
-          dataKey="income"
-          legendType="plainline"
-          strokeWidth={3}
-          strokeOpacity={opacity.income}
-          fill={incomeLineColor}
-          stroke={incomeLineColor}
-          dot={{
-            style: {
-              opacity: opacity.income,
-            },
-          }}
-          activeDot={{
-            r: 8,
-            style: {
-              fill: incomeLineColor,
-            },
-          }}
-          label={
-            dateKeyHovered === 'income' && showDataPointsWhenHovering ? (
-              <LineChartLabel variant="income" />
-            ) : undefined
-          }
-        />
+        {showIncome && (
+          <Line
+            animationDuration={2000}
+            type="monotone"
+            dataKey="income"
+            legendType="plainline"
+            strokeWidth={3}
+            strokeOpacity={opacity.income}
+            fill={incomeLineColor}
+            stroke={incomeLineColor}
+            dot={{
+              style: {
+                opacity: opacity.income,
+              },
+            }}
+            activeDot={{
+              r: 8,
+              style: {
+                fill: incomeLineColor,
+              },
+            }}
+            label={
+              dateKeyHovered === 'income' && showDataPointsWhenHovering ? (
+                <LineChartLabel variant="income" />
+              ) : undefined
+            }
+          />
+        )}
 
-        <Line
-          animationDuration={2000}
-          type="monotone"
-          dataKey="outcome"
-          legendType="plainline"
-          strokeWidth={2}
-          strokeOpacity={opacity.outcome}
-          fill={outcomeLineColor}
-          stroke={outcomeLineColor}
-          dot={{
-            style: {
-              opacity: opacity.outcome,
-            },
-          }}
-          activeDot={{
-            r: 6,
-            style: { fill: outcomeLineColor },
-          }}
-          label={
-            dateKeyHovered === 'outcome' && showDataPointsWhenHovering ? (
-              <LineChartLabel variant="outcome" />
-            ) : undefined
-          }
-        />
+        {showOutcome && (
+          <Line
+            animationDuration={2000}
+            type="monotone"
+            dataKey="outcome"
+            legendType="plainline"
+            strokeWidth={2}
+            strokeOpacity={opacity.outcome}
+            fill={outcomeLineColor}
+            stroke={outcomeLineColor}
+            dot={{
+              style: {
+                opacity: opacity.outcome,
+              },
+            }}
+            activeDot={{
+              r: 6,
+              style: { fill: outcomeLineColor },
+            }}
+            label={
+              dateKeyHovered === 'outcome' && showDataPointsWhenHovering ? (
+                <LineChartLabel variant="outcome" />
+              ) : undefined
+            }
+          />
+        )}
 
         {showLegend && (
           <Legend
