@@ -32,10 +32,7 @@ export function CreateAccountTagDialog() {
           Create Account Tag
         </Button>
       </DialogTrigger>
-      <DialogContent
-        className="sm:max-w-md"
-        onOpenAutoFocus={(e) => e.preventDefault()}
-      >
+      <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle>Create Account Tag</DialogTitle>
           <DialogDescription>

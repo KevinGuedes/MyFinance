@@ -2,7 +2,7 @@ import type { Dispatch, SetStateAction } from 'react'
 import { useCallback, useEffect, useState } from 'react'
 import { useEventCallback, useEventListener } from 'usehooks-ts'
 
-const LOCAL_STORAGE_MAIN_KEY = '@my-finance:v1.0.0:settings'
+const LOCAL_STORAGE_MAIN_KEY = '@my-finance:v1.0.0:'
 
 declare global {
   interface WindowEventMap {
@@ -21,7 +21,7 @@ export function useLocalStorage<T>(
     initializeWithValue: true,
   },
 ): [T, Dispatch<SetStateAction<T>>, () => void] {
-  const actualKey = `${LOCAL_STORAGE_MAIN_KEY}:${key}`
+  const actualKey = LOCAL_STORAGE_MAIN_KEY + key
 
   const { initializeWithValue } = options
 

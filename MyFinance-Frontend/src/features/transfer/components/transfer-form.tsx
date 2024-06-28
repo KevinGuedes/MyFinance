@@ -4,11 +4,8 @@ import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 
-import { TransferType } from '@/features/transfer/models/transfer-type'
-import { getEnumKeys, isValidEnumKey } from '@/lib/utils'
-
-import { Button } from '../../../components/ui/button'
-import { DatePicker } from '../../../components/ui/date-picker'
+import { Button } from '@/components/ui/button'
+import { DatePicker } from '@/components/ui/date-picker'
 import {
   Form,
   FormControl,
@@ -17,18 +14,20 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from '../../../components/ui/form'
-import { Input } from '../../../components/ui/input'
-import { MoneyInput } from '../../../components/ui/money-input'
-import { RadioGroup, RadioGroupItem } from '../../../components/ui/radio-group'
+} from '@/components/ui/form'
+import { Input } from '@/components/ui/input'
+import { MoneyInput } from '@/components/ui/money-input'
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '../../../components/ui/select'
-import { Textarea } from '../../../components/ui/textarea'
+} from '@/components/ui/select'
+import { Textarea } from '@/components/ui/textarea'
+import { TransferType } from '@/features/transfer/models/transfer-type'
+import { getEnumKeys, isValidEnumKey } from '@/lib/utils'
 
 const transferFormSchema = z.object({
   value: z

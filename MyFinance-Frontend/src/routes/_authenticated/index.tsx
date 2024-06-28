@@ -10,7 +10,7 @@ import { useGetManagementUnits } from '@/features/management-unit/api/use-get-ma
 import { CreateManagementUnitDialog } from '@/features/management-unit/components/create-management-unit-dialog'
 import { ManagementUnitCard } from '@/features/management-unit/components/management-unit-card'
 import { ManagementUnitCardSkeleton } from '@/features/management-unit/components/management-unit-card-skeleton'
-import useDebouncedValue from '@/hooks/useDebouncedValue'
+import useDebouncedValue from '@/hooks/use-debounced-value'
 
 const searchManagementUnitsSchema = z.object({
   pageNumber: z.number().optional(),

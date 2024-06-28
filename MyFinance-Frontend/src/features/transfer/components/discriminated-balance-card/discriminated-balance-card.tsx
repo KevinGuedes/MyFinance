@@ -8,7 +8,7 @@ import {
 import { MonthlyBalanceData } from '@/features/transfer/models/monthly-balance-data'
 
 import { DiscriminatedBalanceChart } from './discriminated-balance-chart'
-import { DiscriminatedBalanceChartSettings } from './discriminated-balance-chart-settings'
+import { DiscriminatedBalanceChartSettingsDialog } from './discriminated-balance-chart-settings-dialog'
 
 type DiscriminatedBalanceCardProps = {
   discriminatedBalanceData: MonthlyBalanceData[]
@@ -23,7 +23,7 @@ export function DiscriminatedBalanceCard({
         <CardTitle className="font-normal">
           Discrimintaded Balance Chart
         </CardTitle>
-        <DiscriminatedBalanceChartSettings />
+        <DiscriminatedBalanceChartSettingsDialog />
       </CardHeader>
       <CardContent className="flex grow flex-col px-1 pb-1">
         <CardDescription className="px-4">

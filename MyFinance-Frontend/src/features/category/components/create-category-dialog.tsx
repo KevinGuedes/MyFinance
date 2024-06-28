@@ -32,10 +32,7 @@ export function CreateCategoryDialog() {
           Create Category
         </Button>
       </DialogTrigger>
-      <DialogContent
-        className="sm:max-w-md"
-        onOpenAutoFocus={(e) => e.preventDefault()}
-      >
+      <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle>Create Category</DialogTitle>
           <DialogDescription>
