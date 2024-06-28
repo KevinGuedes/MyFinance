@@ -77,7 +77,7 @@ export function DiscriminatedBalanceChartSettingsForm({
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
-        className="flex flex-col gap-8"
+        className="flex grow flex-col gap-8"
       >
         <div className="flex flex-col gap-6 sm:flex-row sm:gap-8">
           <div className="flex flex-col gap-8 sm:w-1/2">
@@ -242,11 +242,20 @@ export function DiscriminatedBalanceChartSettingsForm({
             />
           </div>
         </div>
-        <div className="flex flex-wrap-reverse content-start justify-end gap-4">
-          <Button type="button" variant="outline" onClick={onCancel}>
+        <div className="flex grow flex-wrap-reverse content-start items-end gap-4 self-end">
+          <Button
+            type="button"
+            variant="outline"
+            className="grow"
+            onClick={onCancel}
+          >
             Cancel
           </Button>
-          <Button type="submit">
+          <Button
+            type="submit"
+            className="grow"
+            disabled={!form.formState.isValid || !form.formState.isDirty}
+          >
             <Settings2 className="mr-2 size-4" />
             Save and Apply
           </Button>

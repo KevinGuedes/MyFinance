@@ -49,10 +49,7 @@ export function RegisterTransferDialog() {
           Register Transfer
         </Button>
       </DialogTrigger>
-      <DialogContent
-        className="max-w-3xl"
-        onOpenAutoFocus={(e) => e.preventDefault()}
-      >
+      <DialogContent className="max-w-3xl">
         <DialogHeader>
           <DialogTitle>Register Transfer</DialogTitle>
           <DialogDescription>
