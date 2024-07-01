@@ -29,7 +29,6 @@ internal sealed class ManagementUnitRepository(MyFinanceDbContext myFinanceDbCon
             return await _myFinanceDbContext.ManagementUnits
                 .AsNoTracking()
                 .OrderBy(mu => mu.Name)
-                .ThenBy(mu => mu.CreatedOnUtc)
                 .Skip((pageNumber - 1) * pageSize)
                 .Take(pageSize)
                 .ToListAsync(cancellationToken);
@@ -39,7 +38,6 @@ internal sealed class ManagementUnitRepository(MyFinanceDbContext myFinanceDbCon
             .AsNoTracking()
             .Where(mu => mu.Name.Contains(searchTerm))
             .OrderBy(mu => mu.Name)
-            .ThenBy(mu => mu.CreatedOnUtc)
             .Skip((pageNumber - 1) * pageSize)
             .Take(pageSize)
             .ToListAsync(cancellationToken);
