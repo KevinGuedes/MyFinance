@@ -36,7 +36,7 @@ public static class CategoryMapper
     public static class RTC
     {
         public static CreateCategoryCommand Map(CreateCategoryRequest request)
-            => new(request.Name);
+            => new(request.ManagementUnitId, request.Name);
 
         public static UpdateCategoryCommand Map(UpdateCategoryRequest request)
             => new(request.Id, request.Name);

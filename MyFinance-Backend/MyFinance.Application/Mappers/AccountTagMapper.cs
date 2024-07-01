@@ -37,7 +37,7 @@ public static class AccountTagMapper
     public static class RTC
     {
         public static CreateAccountTagCommand Map(CreateAccountTagRequest request)
-            => new(request.Tag, request.Description);
+            => new(request.ManagementUnitId, request.Tag, request.Description);
 
         public static UpdateAccountTagCommand Map(UpdateAccountTagRequest request)
             => new(request.Id, request.Tag, request.Description);

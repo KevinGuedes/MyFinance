@@ -33,6 +33,8 @@ public sealed class ManagementUnit : Entity, IUserOwnedEntity, IArchivableEntity
     public string? ReasonToArchive { get; private set; }
     public DateTime? ArchivedOnUtc { get; private set; }
     public List<Transfer> Transfers { get; private set; } = [];
+    public List<AccountTag> AccountTags { get; private set; } = [];
+    public List<Category> Categories { get; private set; } = [];
 
     public void Update(string name, string? description)
     {

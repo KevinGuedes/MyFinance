@@ -33,55 +33,6 @@ namespace MyFinance.Infrastructure.Persistence.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "AccountTags",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Tag = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(300)", maxLength: 300, nullable: true),
-                    IsArchived = table.Column<bool>(type: "bit", nullable: false),
-                    ReasonToArchive = table.Column<string>(type: "nvarchar(300)", maxLength: 300, nullable: true),
-                    ArchivedOnUtc = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    CreatedOnUtc = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    UpdatedOnUtc = table.Column<DateTime>(type: "datetime2", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_AccountTags", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_AccountTags_Users_UserId",
-                        column: x => x.UserId,
-                        principalTable: "Users",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Categories",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    IsArchived = table.Column<bool>(type: "bit", nullable: false),
-                    ReasonToArchive = table.Column<string>(type: "nvarchar(300)", maxLength: 300, nullable: true),
-                    ArchivedOnUtc = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    CreatedOnUtc = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    UpdatedOnUtc = table.Column<DateTime>(type: "datetime2", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Categories", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Categories_Users_UserId",
-                        column: x => x.UserId,
-                        principalTable: "Users",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "ManagementUnits",
                 columns: table => new
                 {
@@ -102,6 +53,67 @@ namespace MyFinance.Infrastructure.Persistence.Migrations
                     table.PrimaryKey("PK_ManagementUnits", x => x.Id);
                     table.ForeignKey(
                         name: "FK_ManagementUnits_Users_UserId",
+                        column: x => x.UserId,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "AccountTags",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Tag = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(300)", maxLength: 300, nullable: true),
+                    IsArchived = table.Column<bool>(type: "bit", nullable: false),
+                    ReasonToArchive = table.Column<string>(type: "nvarchar(300)", maxLength: 300, nullable: true),
+                    ArchivedOnUtc = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    ManagementUnitId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    CreatedOnUtc = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UpdatedOnUtc = table.Column<DateTime>(type: "datetime2", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AccountTags", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_AccountTags_ManagementUnits_ManagementUnitId",
+                        column: x => x.ManagementUnitId,
+                        principalTable: "ManagementUnits",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_AccountTags_Users_UserId",
+                        column: x => x.UserId,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Categories",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    IsArchived = table.Column<bool>(type: "bit", nullable: false),
+                    ReasonToArchive = table.Column<string>(type: "nvarchar(300)", maxLength: 300, nullable: true),
+                    ArchivedOnUtc = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    ManagementUnitId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    CreatedOnUtc = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UpdatedOnUtc = table.Column<DateTime>(type: "datetime2", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Categories", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Categories_ManagementUnits_ManagementUnitId",
+                        column: x => x.ManagementUnitId,
+                        principalTable: "ManagementUnits",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Categories_Users_UserId",
                         column: x => x.UserId,
                         principalTable: "Users",
                         principalColumn: "Id",
@@ -152,6 +164,11 @@ namespace MyFinance.Infrastructure.Persistence.Migrations
                 });
 
             migrationBuilder.CreateIndex(
+                name: "IX_AccountTags_ManagementUnitId",
+                table: "AccountTags",
+                column: "ManagementUnitId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_AccountTags_Tag_UserId",
                 table: "AccountTags",
                 columns: new[] { "Tag", "UserId" },
@@ -161,6 +178,11 @@ namespace MyFinance.Infrastructure.Persistence.Migrations
                 name: "IX_AccountTags_UserId",
                 table: "AccountTags",
                 column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Categories_ManagementUnitId",
+                table: "Categories",
+                column: "ManagementUnitId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Categories_Name_UserId",

@@ -9,7 +9,7 @@ public sealed class AccountTag : Entity, IUserOwnedEntity, IArchivableEntity
     {
     }
 
-    public AccountTag(string tag, string? description, Guid userId)
+    public AccountTag(ManagementUnit managementUnit, string tag, string? description, Guid userId)
     {
         UserId = userId;
         Tag = tag;
@@ -18,6 +18,8 @@ public sealed class AccountTag : Entity, IUserOwnedEntity, IArchivableEntity
         ReasonToArchive = null;
         ArchivedOnUtc = null;
         Transfers = [];
+        ManagementUnit = managementUnit;
+        ManagementUnitId = managementUnit.Id;
     }
 
     public Guid UserId { get; init; }
@@ -27,6 +29,8 @@ public sealed class AccountTag : Entity, IUserOwnedEntity, IArchivableEntity
     public string? ReasonToArchive { get; private set; }
     public DateTime? ArchivedOnUtc { get; private set; }
     public List<Transfer> Transfers { get; private set; } = [];
+    public Guid ManagementUnitId { get; private set; }
+    public ManagementUnit ManagementUnit { get; private set; } = null!;
 
     public void Update(string tag, string? description)
     {

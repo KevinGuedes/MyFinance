@@ -8,16 +8,23 @@ namespace MyFinance.Infrastructure.Persistence.Repositories;
 internal class CategoryRepository(MyFinanceDbContext myFinanceDbContext)
     : EntityRepository<Category>(myFinanceDbContext), ICategoryRepository
 {
+    public Task<long> GetTotalCountAsync(Guid managementUnitId, CancellationToken cancellationToken)
+        => _myFinanceDbContext.AccountTags
+            .Where(category => category.ManagementUnitId == managementUnitId)
+            .LongCountAsync(cancellationToken);
+
     public async Task<IEnumerable<Category>> GetPaginatedAsync(
+         Guid managementUnitId,
          int pageNumber,
          int pageSize,
          CancellationToken cancellationToken)
          => await _myFinanceDbContext.Categories
-             .AsNoTracking()
-             .OrderBy(category => category.Name)
-             .Skip((pageNumber - 1) * pageSize)
-             .Take(pageSize)
-             .ToListAsync(cancellationToken);
+            .AsNoTracking()
+            .Where(category => category.ManagementUnitId == managementUnitId)
+            .OrderBy(category => category.Name)
+            .Skip((pageNumber - 1) * pageSize)
+            .Take(pageSize)
+            .ToListAsync(cancellationToken);
 
     public Task<bool> ExistsByNameAsync(
         string name,

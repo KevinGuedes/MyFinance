@@ -4,8 +4,9 @@ namespace MyFinance.Application.Abstractions.Persistence.Repositories;
 
 public interface ICategoryRepository
 {
-    Task<long> GetTotalCountAsync(CancellationToken cancellationToken);
+    Task<long> GetTotalCountAsync(Guid managementUnitId, CancellationToken cancellationToken);
     Task<IEnumerable<Category>> GetPaginatedAsync(
+        Guid managementUnitId,
         int pageNumber,
         int pageSize,
         CancellationToken cancellationToken);

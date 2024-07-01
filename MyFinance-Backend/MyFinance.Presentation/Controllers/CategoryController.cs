@@ -30,12 +30,17 @@ public class CategoryController(IMediator mediator) : ApiController(mediator)
         typeof(Paginated<CategoryResponse>))]
     [SwaggerResponse(StatusCodes.Status400BadRequest, "Invalid query parameters", typeof(ValidationProblemResponse))]
     public async Task<IActionResult> GetCategoriesAsync(
+        [FromQuery] [SwaggerParameter("Management Unit Id", Required = true)]
+        Guid managementUnitId,
         [FromQuery] [SwaggerParameter("Page number", Required = true)]
         int pageNumber,
         [FromQuery] [SwaggerParameter("Units per page", Required = true)]
         int pageSize,
         CancellationToken cancellationToken)
-        => ProcessResult(await _mediator.Send(new GetCategoriesQuery(pageNumber, pageSize), cancellationToken));
+    {
+        var query = new GetCategoriesQuery(managementUnitId, pageNumber, pageSize);
+        return ProcessResult(await _mediator.Send(query, cancellationToken));
+    }
 
     [HttpPut]
     [SwaggerOperation(Summary = "Updates an existing Category")]

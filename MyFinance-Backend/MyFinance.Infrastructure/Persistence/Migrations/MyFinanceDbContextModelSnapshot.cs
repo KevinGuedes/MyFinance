@@ -41,6 +41,9 @@ namespace MyFinance.Infrastructure.Persistence.Migrations
                     b.Property<bool>("IsArchived")
                         .HasColumnType("bit");
 
+                    b.Property<Guid>("ManagementUnitId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<string>("ReasonToArchive")
                         .HasMaxLength(300)
                         .HasColumnType("nvarchar(300)");
@@ -57,6 +60,8 @@ namespace MyFinance.Infrastructure.Persistence.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ManagementUnitId");
 
                     b.HasIndex("UserId");
 
@@ -81,6 +86,9 @@ namespace MyFinance.Infrastructure.Persistence.Migrations
                     b.Property<bool>("IsArchived")
                         .HasColumnType("bit");
 
+                    b.Property<Guid>("ManagementUnitId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(50)
@@ -97,6 +105,8 @@ namespace MyFinance.Infrastructure.Persistence.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ManagementUnitId");
 
                     b.HasIndex("UserId");
 
@@ -264,20 +274,36 @@ namespace MyFinance.Infrastructure.Persistence.Migrations
 
             modelBuilder.Entity("MyFinance.Domain.Entities.AccountTag", b =>
                 {
+                    b.HasOne("MyFinance.Domain.Entities.ManagementUnit", "ManagementUnit")
+                        .WithMany("AccountTags")
+                        .HasForeignKey("ManagementUnitId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
                     b.HasOne("MyFinance.Domain.Entities.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("ManagementUnit");
                 });
 
             modelBuilder.Entity("MyFinance.Domain.Entities.Category", b =>
                 {
+                    b.HasOne("MyFinance.Domain.Entities.ManagementUnit", "ManagementUnit")
+                        .WithMany("Categories")
+                        .HasForeignKey("ManagementUnitId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
                     b.HasOne("MyFinance.Domain.Entities.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("ManagementUnit");
                 });
 
             modelBuilder.Entity("MyFinance.Domain.Entities.ManagementUnit", b =>
@@ -334,6 +360,10 @@ namespace MyFinance.Infrastructure.Persistence.Migrations
 
             modelBuilder.Entity("MyFinance.Domain.Entities.ManagementUnit", b =>
                 {
+                    b.Navigation("AccountTags");
+
+                    b.Navigation("Categories");
+
                     b.Navigation("Transfers");
                 });
 #pragma warning restore 612, 618

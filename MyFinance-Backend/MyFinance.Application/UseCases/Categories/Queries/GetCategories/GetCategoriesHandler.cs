@@ -15,9 +15,12 @@ internal sealed class GetCategoriesHandler(ICategoryRepository categoryRepositor
     public async Task<Result<Paginated<CategoryResponse>>> Handle(GetCategoriesQuery query,
         CancellationToken cancellationToken)
     {
-        var totalCount = await _categoryRepository.GetTotalCountAsync(cancellationToken);
+        var totalCount = await _categoryRepository.GetTotalCountAsync(
+            query.ManagementUnitId,
+            cancellationToken);
 
         var categories = await _categoryRepository.GetPaginatedAsync(
+            query.ManagementUnitId,
             query.PageNumber,
             query.PageSize,
             cancellationToken);

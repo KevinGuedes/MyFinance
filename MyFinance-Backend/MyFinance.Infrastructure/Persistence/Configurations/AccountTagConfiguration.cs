@@ -23,5 +23,11 @@ internal sealed class AccountTagConfiguration : EntityConfiguration<AccountTag>
             .WithMany()
             .HasForeignKey(at => at.UserId)
             .OnDelete(DeleteBehavior.Cascade);
+
+        builder
+           .HasOne(at => at.ManagementUnit)
+           .WithMany(mu => mu.AccountTags)
+           .HasForeignKey(at => at.ManagementUnitId)
+           .OnDelete(DeleteBehavior.NoAction);
     }
 }
