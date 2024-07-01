@@ -1,3 +1,5 @@
+import { Clipboard } from 'lucide-react'
+
 import { ScrollArea } from '@/components/ui/scroll-area'
 
 import { TransferGroup } from '../../models/transfer-group'
@@ -25,10 +27,11 @@ export function TransferGroupsList({ tranferGroups }: TransferGroupList) {
           </div>
         </ScrollArea>
       ) : (
-        <div className="flex grow items-center justify-center rounded-lg border">
+        <div className="flex min-h-[355px] grow flex-col items-center justify-center gap-2 rounded-lg border px-4">
           <p className="text-center text-sm text-muted-foreground">
-            You don&apos;t have any transfers registered on the current month
+            You don&apos;t have transfers registered on the current month
           </p>
+          <Clipboard className="ml-4 size-6 text-muted-foreground" />
         </div>
       )}
       <RegisterTransferDialog />
