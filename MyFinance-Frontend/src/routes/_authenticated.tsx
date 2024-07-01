@@ -58,8 +58,8 @@ function AuthenticatedLayout() {
     // see if router has something to handle this with error comp and before load
     return (
       <main className="flex grow items-center justify-center">
-        <div className="flex flex-col items-center gap-6" role="status">
-          <div className="flex flex-col items-center">
+        <div className="flex flex-col items-center gap-4" role="status">
+          <div className="flex flex-col items-center px-4 text-center">
             <p className="text-muted-foreground">
               Uh oh! My Finance seems to be offline now, please try again later.
             </p>
