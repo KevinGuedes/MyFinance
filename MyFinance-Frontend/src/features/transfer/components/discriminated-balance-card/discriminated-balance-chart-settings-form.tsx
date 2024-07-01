@@ -73,6 +73,8 @@ export function DiscriminatedBalanceChartSettingsForm({
     },
   })
 
+  const isShowLegendEnabled = form.watch('showLegend')
+
   return (
     <Form {...form}>
       <form
@@ -223,6 +225,7 @@ export function DiscriminatedBalanceChartSettingsForm({
                     <FormLabel>Show Data Points when hovering Legend</FormLabel>
                     <FormControl className="shrink-0">
                       <Switch
+                        disabled={!isShowLegendEnabled}
                         checked={field.value}
                         onCheckedChange={field.onChange}
                       />
@@ -233,7 +236,7 @@ export function DiscriminatedBalanceChartSettingsForm({
                     When hovering the legend, the Y value (R$) of each data
                     point of the selected data set will be shown.{' '}
                     <strong>
-                      Available only if &apos;Show Legend&apos; is checked
+                      Available only if &apos;Show Legend&apos; is enabled
                     </strong>
                   </FormDescription>
                   <FormMessage />
