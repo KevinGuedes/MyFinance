@@ -24,8 +24,6 @@ public static class CategoryMapper
                {
                    Id = category.Id,
                    Name = category.Name,
-                   IsArchived = category.IsArchived,
-                   ReasonToArchive = category.ReasonToArchive,
                };
 
         public static IReadOnlyCollection<CategoryResponse> Map(IEnumerable<Category> categories)

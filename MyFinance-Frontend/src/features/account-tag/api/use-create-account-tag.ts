@@ -2,44 +2,37 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 
 import { useToast } from '@/components/ui/toast/use-toast'
 
-import { managementUnitApi } from '../../common/api'
+import { accountTagApi } from '../../common/api'
 import { ApiError } from '../../common/api-error'
 import { handleError } from '../../common/handle-error'
 import { handleValidationErrors } from '../../common/handle-validation-errors'
-import { ManagementUnit } from '../models/management-unit'
+import { AccountTag } from '../models/account-tag'
 
-type UpdateManagementUnitRequest = Pick<
-  ManagementUnit,
-  'id' | 'name' | 'description'
->
+type useCreateAccountTagRequest = Pick<AccountTag, 'tag' | 'description'> & {
+  managementUnitId: string
+}
 
-export function useUpdateManagementUnit() {
+export function useCreateAccountTag() {
   const queryClient = useQueryClient()
   const { toast } = useToast()
 
   const mutation = useMutation<
-    ManagementUnit,
+    AccountTag,
     ApiError,
-    UpdateManagementUnitRequest
+    useCreateAccountTagRequest
   >({
-    mutationFn: async (updateManagementUnitRequest) => {
-      const { data: updatedManagementUnit } =
-        await managementUnitApi.put<ManagementUnit>(
-          '',
-          updateManagementUnitRequest,
-        )
-
-      return updatedManagementUnit
-    },
-    onSuccess: (updatedManagementUnit) => {
-      queryClient.invalidateQueries({ queryKey: ['management-units'] })
-      queryClient.setQueryData(
-        ['management-unit', { managementUnitId: updatedManagementUnit.id }],
-        updatedManagementUnit,
+    mutationFn: async (createAccountTagRequest) => {
+      const { data: createdAccountTag } = await accountTagApi.post<AccountTag>(
+        '',
+        createAccountTagRequest,
       )
 
+      return createdAccountTag
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['account-tags'] })
       toast({
-        title: 'Management Unit successfully updated!',
+        title: 'Account Tag successfully created!',
       })
     },
     onError: (error) => {
@@ -49,7 +42,7 @@ export function useUpdateManagementUnit() {
         handleValidationErrors(validationErrors, (_, description) => {
           toast({
             variant: 'destructive',
-            title: 'Failed to update Management Unit',
+            title: 'Failed to create Account Tag',
             description,
           })
         })
