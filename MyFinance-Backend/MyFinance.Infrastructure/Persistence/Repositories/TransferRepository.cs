@@ -131,23 +131,27 @@ internal sealed class TransferRepository(MyFinanceDbContext myFinanceDbContext)
     {
         var result = await _myFinanceDbContext.Transfers
             .AsNoTracking()
-            .Where(transfer => 
+            .Where(transfer =>
                 transfer.SettlementDate >= fromDate &&
                 transfer.SettlementDate <= toDate &&
                 transfer.ManagementUnitId == managementUnitId)
-            .GroupBy(transfer => new { transfer.SettlementDate.Month, transfer.SettlementDate.Year })
-            .Select(transferGroup => new Tuple<int, int, decimal, decimal>
-            (
+            .GroupBy(transfer => new { 
+                transfer.SettlementDate.Month, 
+                transfer.SettlementDate.Year 
+            })
+            .Select(transferGroup => new 
+            {
                 transferGroup.Key.Year,
                 transferGroup.Key.Month,
-                transferGroup.Sum(transfer => transfer.Type == TransferType.Profit ? transfer.Value : 0),
-                transferGroup.Sum(transfer => transfer.Type == TransferType.Expense ? transfer.Value : 0)))
+                Income = transferGroup.Sum(transfer => transfer.Type == TransferType.Profit ? transfer.Value : 0),
+                Outcome = transferGroup.Sum(transfer => transfer.Type == TransferType.Expense ? transfer.Value : 0)
+            })
             .ToListAsync(cancellationToken);
 
-        return result.Select(unnamedMonthlyBalanceData => (
-            Year: unnamedMonthlyBalanceData.Item1,
-            Month: unnamedMonthlyBalanceData.Item2,
-            Income: unnamedMonthlyBalanceData.Item3,
-            Outcome: unnamedMonthlyBalanceData.Item4));
+        return result.Select(monthlyBalanceData => (
+            monthlyBalanceData.Year,
+            monthlyBalanceData.Month,
+            monthlyBalanceData.Income,
+            monthlyBalanceData.Outcome));
     }
 }
