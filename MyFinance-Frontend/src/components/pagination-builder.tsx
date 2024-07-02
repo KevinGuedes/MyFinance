@@ -52,7 +52,7 @@ export function PaginationBuilder({
   }, [data])
 
   return (
-    <div className="flex w-full flex-col-reverse flex-wrap content-center items-center justify-center gap-1 lg:flex-row lg:flex-nowrap">
+    <div className="flex w-full flex-col-reverse flex-wrap content-center items-center justify-center gap-1 lg:flex-row lg:flex-nowrap lg:items-end">
       {paginationInfo && (
         <p className="shrink-0 text-sm text-muted-foreground">
           Showing{' '}
