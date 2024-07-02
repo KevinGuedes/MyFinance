@@ -1,4 +1,5 @@
 import { createFileRoute } from '@tanstack/react-router'
+import { ClipboardList, Shapes, Tag } from 'lucide-react'
 
 import { Page, PageContent, PageHeader } from '@/components/page'
 import { Skeleton } from '@/components/ui/skeleton'
@@ -104,12 +105,15 @@ function ManagementUnitDashboard() {
           <Tabs defaultValue="transfers" className="flex grow flex-col gap-2">
             <TabsList className="self-start bg-muted/40">
               <TabsTrigger value="transfers" disabled={isLoading}>
+                <ClipboardList className="mr-1 size-4" />
                 Transfers
               </TabsTrigger>
               <TabsTrigger value="account-tags" disabled={isLoading}>
+                <Tag className="mr-1 size-4" />
                 Account Tags
               </TabsTrigger>
               <TabsTrigger value="categories" disabled={isLoading}>
+                <Shapes className="mr-1 size-4" />
                 Categories
               </TabsTrigger>
             </TabsList>
