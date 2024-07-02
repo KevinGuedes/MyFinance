@@ -17,7 +17,7 @@ export function SignIn() {
       <CardHeader>
         <CardTitle className="text-2xl">Sign In</CardTitle>
         <CardDescription>
-          Enter your email below to login to your account
+          Enter your credentials below to sign in to your account
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
