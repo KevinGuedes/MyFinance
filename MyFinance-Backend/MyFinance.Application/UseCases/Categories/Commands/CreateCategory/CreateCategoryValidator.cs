@@ -21,6 +21,6 @@ public sealed class CreateCategoryValidator : AbstractValidator<CreateCategoryCo
             {
                 var exists = await _categoryRepository.ExistsByNameAsync(name, cancellationToken);
                 return !exists;
-            }).WithMessage("The name '{PropertyName}' has already been taken");
+            }).WithMessage("The name '{PropertyValue}' has already been taken");
     }
 }
