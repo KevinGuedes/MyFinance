@@ -17,6 +17,7 @@ import { DiscriminatedBalanceCard } from '@/features/transfer/components/discrim
 import { DiscriminatedBalanceCardSkeleton } from '@/features/transfer/components/discriminated-balance-card/discriminated-balance-card-skeleton'
 import { TransferGroupsList } from '@/features/transfer/components/transfer-groups-list/transfer-groups-list'
 import { TransferGroupsListSkeleton } from '@/features/transfer/components/transfer-groups-list/transfer-groups-list-skeleton'
+import { Test } from '@/test'
 
 export const Route = createFileRoute(
   '/_authenticated/management-unit/$managementUnitId',
@@ -124,13 +125,7 @@ function ManagementUnitDashboard() {
               {transferGroupsQuery.isLoading ? (
                 <TransferGroupsListSkeleton />
               ) : (
-                <>
-                  {transferGroupsQuery.data && (
-                    <TransferGroupsList
-                      tranferGroups={transferGroupsQuery.data.items}
-                    />
-                  )}
-                </>
+                <>{transferGroupsQuery.data && <Test />}</>
               )}
             </TabsContent>
             <TabsContent value="account-tags">
