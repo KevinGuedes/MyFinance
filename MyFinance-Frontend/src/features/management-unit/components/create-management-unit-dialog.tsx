@@ -19,10 +19,10 @@ import {
 
 export function CreateManagementUnitDialog() {
   const [isDialogOpen, setIsDialogOpen] = useState(false)
-  const mutation = useCreateManagementUnit()
+  const createManagementUnitMutation = useCreateManagementUnit()
 
   async function onSubmit(values: ManagementUnitFormSchema) {
-    await mutation.mutateAsync(values, {
+    await createManagementUnitMutation.mutateAsync(values, {
       onSuccess: () => {
         setIsDialogOpen(false)
       },
