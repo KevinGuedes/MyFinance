@@ -4,6 +4,7 @@ import { ClipboardList, Shapes, Tag } from 'lucide-react'
 import { Page, PageContent, PageHeader } from '@/components/page'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { AccountTagsTable } from '@/features/account-tag/components/account-tags-table'
 import { CreateAccountTagDialog } from '@/features/account-tag/components/create-account-tag-dialog'
 import { CreateCategoryDialog } from '@/features/category/components/create-category-dialog'
 import { useGetManagementUnit } from '@/features/management-unit/api/use-get-management-unit'
@@ -17,7 +18,6 @@ import { DiscriminatedBalanceCard } from '@/features/transfer/components/discrim
 import { DiscriminatedBalanceCardSkeleton } from '@/features/transfer/components/discriminated-balance-card/discriminated-balance-card-skeleton'
 import { TransferGroupsList } from '@/features/transfer/components/transfer-groups-list/transfer-groups-list'
 import { TransferGroupsListSkeleton } from '@/features/transfer/components/transfer-groups-list/transfer-groups-list-skeleton'
-import { Test } from '@/test'
 
 export const Route = createFileRoute(
   '/_authenticated/management-unit/$managementUnitId',
@@ -120,19 +120,31 @@ function ManagementUnitDashboard() {
             </TabsList>
             <TabsContent
               value="transfers"
-              className="flex grow flex-col justify-between gap-2"
+              className="flex grow flex-col justify-between gap-2 data-[state=inactive]:hidden"
             >
               {transferGroupsQuery.isLoading ? (
                 <TransferGroupsListSkeleton />
               ) : (
-                <>{transferGroupsQuery.data && <Test />}</>
+                <>
+                  {transferGroupsQuery.data && (
+                    <TransferGroupsList
+                      tranferGroups={transferGroupsQuery.data.items}
+                    />
+                  )}
+                </>
               )}
             </TabsContent>
-            <TabsContent value="account-tags">
-              <CreateAccountTagDialog />
+            <TabsContent
+              value="account-tags"
+              className="flex grow flex-col justify-between gap-4 data-[state=inactive]:hidden"
+            >
+              <AccountTagsTable managementUnitId={managementUnitId} />
+              <CreateAccountTagDialog managementUnitId={managementUnitId} />
             </TabsContent>
-            <TabsContent value="categories">
-              <CreateCategoryDialog />
+            <TabsContent value="categories" className="mt-4">
+              <div className="flex flex-col justify-between gap-4">
+                <CreateCategoryDialog managementUnitId={managementUnitId} />
+              </div>
             </TabsContent>
           </Tabs>
         </div>
