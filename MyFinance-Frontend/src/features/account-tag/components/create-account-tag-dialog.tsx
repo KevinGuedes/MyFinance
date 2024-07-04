@@ -11,13 +11,28 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog'
 
+import { useCreateAccountTag } from '../api/use-create-account-tag'
 import { AccountTagForm, AccountTagFormSchema } from './account-tag-form'
 
-export function CreateAccountTagDialog() {
+type CreateAccountTagDialogProps = {
+  managementUnitId: string
+}
+
+export function CreateAccountTagDialog({
+  managementUnitId,
+}: CreateAccountTagDialogProps) {
+  const createAccountTagMutation = useCreateAccountTag()
   const [isDialogOpen, setIsDialogOpen] = useState(false)
 
   async function onSubmit(values: AccountTagFormSchema) {
-    console.log(values)
+    await createAccountTagMutation.mutateAsync(
+      { ...values, managementUnitId },
+      {
+        onSuccess: () => {
+          setIsDialogOpen(false)
+        },
+      },
+    )
   }
 
   function onCancel() {

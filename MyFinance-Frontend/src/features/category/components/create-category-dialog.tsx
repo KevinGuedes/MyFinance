@@ -11,13 +11,28 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog'
 
+import { useCreateCategory } from '../api/use-create-category'
 import { CategoryForm, CategoryFormSchema } from './category-form'
 
-export function CreateCategoryDialog() {
+type CreateCategoryDialogProps = {
+  managementUnitId: string
+}
+
+export function CreateCategoryDialog({
+  managementUnitId,
+}: CreateCategoryDialogProps) {
+  const createCategoryMutation = useCreateCategory()
   const [isDialogOpen, setIsDialogOpen] = useState(false)
 
   async function onSubmit(values: CategoryFormSchema) {
-    console.log(values)
+    await createCategoryMutation.mutateAsync(
+      { ...values, managementUnitId },
+      {
+        onSuccess: () => {
+          setIsDialogOpen(false)
+        },
+      },
+    )
   }
 
   function onCancel() {
