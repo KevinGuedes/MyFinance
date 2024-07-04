@@ -109,7 +109,7 @@ export function AccountTagForm({
           </Button>
           <Button
             type="submit"
-            className="min-w-40 grow"
+            className="min-w-48 grow"
             disabled={!form.formState.isValid || form.formState.isSubmitting}
           >
             {form.formState.isSubmitting ? (
