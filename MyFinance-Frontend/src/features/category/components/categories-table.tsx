@@ -80,7 +80,7 @@ export function CategoriesTable({ managementUnitId }: CategoriesTableProps) {
   const parentRef = useRef<HTMLDivElement>(null)
 
   const { data, isFetchingNextPage, isFetching, fetchNextPage, isPending } =
-    useGetCategories(managementUnitId, 20)
+    useGetCategories(managementUnitId, 50)
 
   const flatData = useMemo(
     () => data?.pages?.flatMap((page) => page.items) ?? [],
@@ -98,12 +98,11 @@ export function CategoriesTable({ managementUnitId }: CategoriesTableProps) {
   })
 
   const { rows } = table.getRowModel()
-
   const rowVirtualizer = useVirtualizer({
     count: rows.length,
     estimateSize: useCallback(() => 45, []),
     getScrollElement: () => parentRef.current,
-    overscan: 3,
+    overscan: 5,
     measureElement:
       typeof window !== 'undefined' &&
       navigator.userAgent.indexOf('Firefox') === -1
@@ -115,7 +114,7 @@ export function CategoriesTable({ managementUnitId }: CategoriesTableProps) {
     (containerRefElement?: HTMLDivElement | null) => {
       if (containerRefElement) {
         const { scrollHeight, scrollTop, clientHeight } = containerRefElement
-        if (scrollHeight - scrollTop - clientHeight < 10 && !isFetching) {
+        if (scrollHeight - scrollTop - clientHeight < 50 && !isFetching) {
           fetchNextPage()
         }
       }

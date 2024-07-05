@@ -106,12 +106,11 @@ export function AccountTagsTable({ managementUnitId }: AccountTagsTableProps) {
   })
 
   const { rows } = table.getRowModel()
-
   const rowVirtualizer = useVirtualizer({
     count: rows.length,
     estimateSize: useCallback(() => 45, []),
     getScrollElement: () => parentRef.current,
-    overscan: 3,
+    overscan: 5,
     measureElement:
       typeof window !== 'undefined' &&
       navigator.userAgent.indexOf('Firefox') === -1
@@ -123,7 +122,8 @@ export function AccountTagsTable({ managementUnitId }: AccountTagsTableProps) {
     (containerRefElement?: HTMLDivElement | null) => {
       if (containerRefElement) {
         const { scrollHeight, scrollTop, clientHeight } = containerRefElement
-        if (scrollHeight - scrollTop - clientHeight < 10 && !isFetching) {
+        console.log({ scrollHeight, scrollTop, clientHeight })
+        if (scrollHeight - scrollTop - clientHeight < 50 && !isFetching) {
           fetchNextPage()
         }
       }
@@ -171,7 +171,7 @@ export function AccountTagsTable({ managementUnitId }: AccountTagsTableProps) {
         <TableBody
           className="relative grid"
           style={{
-            height: `${rowVirtualizer.getTotalSize()}px`,
+            height: rowVirtualizer.getTotalSize(),
           }}
         >
           {rows?.length > 0 ? (

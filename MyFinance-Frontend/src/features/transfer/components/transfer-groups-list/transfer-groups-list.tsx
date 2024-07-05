@@ -16,7 +16,7 @@ export function TransferGroupsList({ tranferGroups }: TransferGroupList) {
   return (
     <div className="flex grow flex-col justify-between gap-4">
       {hasTransferGroups ? (
-        <ScrollArea className="h-[365px] grow" type="always">
+        <ScrollArea className="h-[350px] grow" type="always">
           <div className="grow space-y-4 pr-3">
             {tranferGroups.map((transferGroup) => (
               <TransferGroupSection
@@ -27,7 +27,7 @@ export function TransferGroupsList({ tranferGroups }: TransferGroupList) {
           </div>
         </ScrollArea>
       ) : (
-        <div className="flex min-h-[355px] grow flex-col items-center justify-center gap-2 px-4">
+        <div className="flex min-h-[350px] grow flex-col items-center justify-center gap-2 px-4">
           <p className="text-center text-sm text-muted-foreground">
             You don&apos;t have transfers registered on the current month
           </p>
