@@ -145,7 +145,7 @@ export function CategoriesTable({ managementUnitId }: CategoriesTableProps) {
                 return (
                   <TableHead
                     key={header.id}
-                    className="flex p-4"
+                    className="flex items-center p-4"
                     style={{
                       width: header.getSize() !== 0 ? header.getSize() : '100%',
                     }}

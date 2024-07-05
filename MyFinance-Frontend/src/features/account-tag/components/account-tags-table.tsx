@@ -135,6 +135,18 @@ export function AccountTagsTable({ managementUnitId }: AccountTagsTableProps) {
     fetchMoreOnBottomReached(parentRef.current)
   }, [fetchMoreOnBottomReached])
 
+  if (isPending) {
+    return (
+      <div
+        className="flex grow flex-col items-center justify-center gap-2"
+        role="status"
+      >
+        <Loader2 className="size-12 animate-spin text-muted-foreground" />
+        <p className="text-muted-foreground">Loading Account Tags...</p>
+      </div>
+    )
+  }
+
   return rows.length > 0 ? (
     <ScrollArea
       type="always"
@@ -151,7 +163,7 @@ export function AccountTagsTable({ managementUnitId }: AccountTagsTableProps) {
                 return (
                   <TableHead
                     key={header.id}
-                    className="flex p-4"
+                    className="flex items-center p-4"
                     style={{
                       width: header.getSize() !== 0 ? header.getSize() : '100%',
                     }}
