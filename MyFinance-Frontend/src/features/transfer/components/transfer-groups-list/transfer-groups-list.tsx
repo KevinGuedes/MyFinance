@@ -1,4 +1,5 @@
-import { Clipboard } from 'lucide-react'
+import { format } from 'date-fns'
+import { ClipboardList } from 'lucide-react'
 
 import { ScrollArea } from '@/components/ui/scroll-area'
 
@@ -29,9 +30,10 @@ export function TransferGroupsList({ tranferGroups }: TransferGroupList) {
       ) : (
         <div className="flex min-h-[350px] grow flex-col items-center justify-center gap-2 px-4">
           <p className="text-center text-sm text-muted-foreground">
-            You don&apos;t have transfers registered on the current month
+            You don&apos;t have Transfers registered on{' '}
+            {format(new Date(), 'MMMM, yyyy')}.
           </p>
-          <Clipboard className="ml-4 size-6 text-muted-foreground" />
+          <ClipboardList className="size-10 text-muted-foreground" />
         </div>
       )}
       <RegisterTransferDialog />

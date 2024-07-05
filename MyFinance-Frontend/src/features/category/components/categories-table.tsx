@@ -6,7 +6,7 @@ import {
   useReactTable,
 } from '@tanstack/react-table'
 import { useVirtualizer } from '@tanstack/react-virtual'
-import { Loader2, MoreHorizontal } from 'lucide-react'
+import { Clipboard, Loader2, MoreHorizontal, Shapes } from 'lucide-react'
 import { useCallback, useEffect, useMemo, useRef } from 'react'
 
 import { Button } from '@/components/ui/button'
@@ -126,7 +126,7 @@ export function CategoriesTable({ managementUnitId }: CategoriesTableProps) {
     fetchMoreOnBottomReached(parentRef.current)
   }, [fetchMoreOnBottomReached])
 
-  return (
+  return rows.length > 0 ? (
     <ScrollArea
       type="always"
       ref={parentRef}
@@ -134,7 +134,6 @@ export function CategoriesTable({ managementUnitId }: CategoriesTableProps) {
       onScroll={(e) => fetchMoreOnBottomReached(e.target as HTMLDivElement)}
     >
       <ScrollBar />
-
       <Table>
         <TableHeader className="sticky top-0 z-10 grid bg-background">
           {table.getHeaderGroups().map((headerGroup) => (
@@ -169,55 +168,54 @@ export function CategoriesTable({ managementUnitId }: CategoriesTableProps) {
             height: `${rowVirtualizer.getTotalSize()}px`,
           }}
         >
-          {rows?.length > 0 ? (
-            <>
-              {rowVirtualizer.getVirtualItems().map((virtualRow) => {
-                const row = rows[virtualRow.index] as Row<Category>
-                return (
-                  <TableRow
-                    key={row.id}
-                    data-index={virtualRow.index}
-                    className="absolute flex w-full items-center"
-                    ref={(node) => rowVirtualizer.measureElement(node)}
-                    style={{
-                      transform: `translateY(${virtualRow.start}px)`,
-                    }}
-                  >
-                    {row.getVisibleCells().map((cell) => {
-                      return (
-                        <TableCell
-                          key={cell.id}
-                          className="flex px-4 py-1.5"
-                          style={{
-                            width:
-                              cell.column.getSize() !== 0
-                                ? `${cell.column.getSize()}px`
-                                : '100%',
-                          }}
-                        >
-                          {flexRender(
-                            cell.column.columnDef.cell,
-                            cell.getContext(),
-                          )}
-                        </TableCell>
-                      )
-                    })}
-                  </TableRow>
-                )
-              })}
-            </>
-          ) : (
-            <TableRow>
-              <TableCell
-                colSpan={columns.length}
-                className="absolute flex w-full grow justify-center border text-center text-sm text-muted-foreground"
+          {rowVirtualizer.getVirtualItems().map((virtualRow) => {
+            const row = rows[virtualRow.index] as Row<Category>
+            return (
+              <TableRow
+                key={row.id}
+                data-index={virtualRow.index}
+                className="absolute flex w-full items-center"
+                ref={(node) => rowVirtualizer.measureElement(node)}
+                style={{
+                  transform: `translateY(${virtualRow.start}px)`,
+                }}
               >
-                No results.
-              </TableCell>
-            </TableRow>
-          )}
+                {row.getVisibleCells().map((cell) => {
+                  return (
+                    <TableCell
+                      key={cell.id}
+                      className="flex px-4 py-1.5"
+                      style={{
+                        width:
+                          cell.column.getSize() !== 0
+                            ? `${cell.column.getSize()}px`
+                            : '100%',
+                      }}
+                    >
+                      {flexRender(
+                        cell.column.columnDef.cell,
+                        cell.getContext(),
+                      )}
+                    </TableCell>
+                  )
+                })}
+              </TableRow>
+            )
+          })}
         </TableBody>
       </Table>
     </ScrollArea>
+  ) : (
+    <div className="flex min-h-[350px] grow flex-col items-center justify-center gap-2 px-4">
+      <p className="text-center text-sm text-muted-foreground">
+        You don&apos;t have <strong className="font-medium">Categories</strong>{' '}
+        registered yet.
+        <br />
+        <strong className="font-medium">
+          Click on the button below to create a Category!
+        </strong>
+      </p>
+      <Shapes className="size-10 text-muted-foreground" />
+    </div>
   )
 }

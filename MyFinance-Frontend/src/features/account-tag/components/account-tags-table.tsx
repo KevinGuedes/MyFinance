@@ -6,7 +6,7 @@ import {
   useReactTable,
 } from '@tanstack/react-table'
 import { useVirtualizer } from '@tanstack/react-virtual'
-import { Loader2, MoreHorizontal } from 'lucide-react'
+import { Loader2, MoreHorizontal, Tag } from 'lucide-react'
 import { useCallback, useEffect, useMemo, useRef } from 'react'
 
 import { Button } from '@/components/ui/button'
@@ -88,7 +88,7 @@ export function AccountTagsTable({ managementUnitId }: AccountTagsTableProps) {
   const parentRef = useRef<HTMLDivElement>(null)
 
   const { data, isFetchingNextPage, isFetching, fetchNextPage, isPending } =
-    useGetAccountTags(managementUnitId, 20)
+    useGetAccountTags(managementUnitId, 50)
 
   const flatData = useMemo(
     () => data?.pages?.flatMap((page) => page.items) ?? [],
@@ -135,7 +135,7 @@ export function AccountTagsTable({ managementUnitId }: AccountTagsTableProps) {
     fetchMoreOnBottomReached(parentRef.current)
   }, [fetchMoreOnBottomReached])
 
-  return (
+  return rows.length > 0 ? (
     <ScrollArea
       type="always"
       ref={parentRef}
@@ -224,5 +224,17 @@ export function AccountTagsTable({ managementUnitId }: AccountTagsTableProps) {
         </TableBody>
       </Table>
     </ScrollArea>
+  ) : (
+    <div className="flex min-h-[350px] grow flex-col items-center justify-center gap-2 px-4">
+      <p className="text-center text-sm text-muted-foreground">
+        You don&apos;t have{' '}
+        <strong className="font-medium">Account Tags</strong> registered yet.
+        <br />
+        <strong className="font-medium">
+          Click on the button below to create an Account Tag!
+        </strong>
+      </p>
+      <Tag className="size-10 text-muted-foreground" />
+    </div>
   )
 }
