@@ -28,27 +28,19 @@ import {
   TableRow,
 } from '@/components/ui/table'
 
-import { useGetAccountTags } from '../api/use-get-account-tags'
-import { AccountTag } from '../models/account-tag'
+import { useGetCategories } from '../api/use-get-categories'
+import { Category } from '../models/category'
 
-export const columns: ColumnDef<AccountTag>[] = [
+export const columns: ColumnDef<Category>[] = [
   {
-    accessorKey: 'tag',
-    header: 'Tag',
-    size: 100,
+    accessorKey: 'name',
+    header: 'Name',
     cell: ({ row }) => {
-      const tag = row.getValue<string>('tag')
-      return <p className="text-left font-medium">{tag}</p>
+      const name = row.getValue<string>('name')
+      return <p className="text-left font-medium">{name}</p>
     },
   },
-  {
-    accessorKey: 'description',
-    header: 'Description',
-    cell: ({ row }) => {
-      const description = row.getValue<string>('description')
-      return <p className="line-clamp-1">{description}</p>
-    },
-  },
+
   {
     id: 'actions',
     size: 80,
@@ -80,15 +72,15 @@ export const columns: ColumnDef<AccountTag>[] = [
   },
 ]
 
-type AccountTagsTableProps = {
+type CategoriesTableProps = {
   managementUnitId: string
 }
 
-export function AccountTagsTable({ managementUnitId }: AccountTagsTableProps) {
+export function CategoriesTable({ managementUnitId }: CategoriesTableProps) {
   const parentRef = useRef<HTMLDivElement>(null)
 
   const { data, isFetchingNextPage, isFetching, fetchNextPage, isPending } =
-    useGetAccountTags(managementUnitId, 20)
+    useGetCategories(managementUnitId, 20)
 
   const flatData = useMemo(
     () => data?.pages?.flatMap((page) => page.items) ?? [],
@@ -139,14 +131,18 @@ export function AccountTagsTable({ managementUnitId }: AccountTagsTableProps) {
     <ScrollArea
       type="always"
       ref={parentRef}
-      className="relative h-[350px] grow pr-4"
+      className="h-[350px] grow pr-4"
       onScroll={(e) => fetchMoreOnBottomReached(e.target as HTMLDivElement)}
     >
       <ScrollBar />
+
       <Table>
         <TableHeader className="sticky top-0 z-10 grid bg-background">
           {table.getHeaderGroups().map((headerGroup) => (
-            <TableRow key={headerGroup.id} className="flex w-full">
+            <TableRow
+              key={headerGroup.id}
+              className="flex w-full bg-background"
+            >
               {headerGroup.headers.map((header) => {
                 return (
                   <TableHead
@@ -177,7 +173,7 @@ export function AccountTagsTable({ managementUnitId }: AccountTagsTableProps) {
           {rows?.length > 0 ? (
             <>
               {rowVirtualizer.getVirtualItems().map((virtualRow) => {
-                const row = rows[virtualRow.index] as Row<AccountTag>
+                const row = rows[virtualRow.index] as Row<Category>
                 return (
                   <TableRow
                     key={row.id}

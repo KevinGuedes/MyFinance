@@ -17,7 +17,7 @@ import { Input } from '../../../components/ui/input'
 import { Textarea } from '../../../components/ui/textarea'
 
 const accountTagFormSchema = z.object({
-  tag: z.string().min(2, { message: 'Tag is required' }).max(10, {
+  tag: z.string().min(2, { message: 'Tag is required' }).max(5, {
     message: 'Tag must be less than 100 characters',
   }),
   description: z.string().max(300, {
@@ -64,7 +64,7 @@ export function AccountTagForm({
                   {...field}
                   autoComplete="off"
                   minLength={2}
-                  maxLength={10}
+                  maxLength={5}
                   onChange={(e) => {
                     field.onChange(e.target.value.toUpperCase())
                   }}
@@ -72,7 +72,7 @@ export function AccountTagForm({
               </FormControl>
               <FormDescription>
                 The tag is an unique identifier for an account and must be
-                between 2 and 10 characters.
+                between 2 and 5 characters.
               </FormDescription>
               <FormMessage />
             </FormItem>

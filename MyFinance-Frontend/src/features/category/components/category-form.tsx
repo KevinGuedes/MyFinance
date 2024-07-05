@@ -84,7 +84,7 @@ export function CategoryForm({
           </Button>
           <Button
             type="submit"
-            className="min-w-36 grow"
+            className="min-w-40 grow"
             disabled={!form.formState.isValid || form.formState.isSubmitting}
           >
             {form.formState.isSubmitting ? (

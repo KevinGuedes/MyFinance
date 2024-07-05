@@ -6,6 +6,7 @@ import { Skeleton } from '@/components/ui/skeleton'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { AccountTagsTable } from '@/features/account-tag/components/account-tags-table'
 import { CreateAccountTagDialog } from '@/features/account-tag/components/create-account-tag-dialog'
+import { CategoriesTable } from '@/features/category/components/categories-table'
 import { CreateCategoryDialog } from '@/features/category/components/create-category-dialog'
 import { useGetManagementUnit } from '@/features/management-unit/api/use-get-management-unit'
 import { SummaryCards } from '@/features/management-unit/components/summary-cards'
@@ -141,10 +142,12 @@ function ManagementUnitDashboard() {
               <AccountTagsTable managementUnitId={managementUnitId} />
               <CreateAccountTagDialog managementUnitId={managementUnitId} />
             </TabsContent>
-            <TabsContent value="categories" className="mt-4">
-              <div className="flex flex-col justify-between gap-4">
-                <CreateCategoryDialog managementUnitId={managementUnitId} />
-              </div>
+            <TabsContent
+              value="categories"
+              className="flex grow flex-col justify-between gap-4 data-[state=inactive]:hidden"
+            >
+              <CategoriesTable managementUnitId={managementUnitId} />
+              <CreateCategoryDialog managementUnitId={managementUnitId} />
             </TabsContent>
           </Tabs>
         </div>

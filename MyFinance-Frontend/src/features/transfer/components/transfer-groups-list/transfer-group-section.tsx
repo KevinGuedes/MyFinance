@@ -14,7 +14,7 @@ export function TransferGroupSection({ transferGroup }: TransferGroupProps) {
   const formattedGroupDate = format(transferGroup.date, 'EEEE dd, MMMM yyyy')
   // console.log(transferGroup.date, formattedGroupDate)
   return (
-    <article className="space-y-1 rounded-lg border p-4">
+    <article className="space-y-1 p-4">
       <div className="sticky top-0 bg-background">
         <h3 className=" mb-2 rounded-lg bg-muted/40 px-4 py-1 text-base font-medium">
           {formattedGroupDate}

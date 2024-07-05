@@ -1,27 +1,38 @@
-import { keepPreviousData, useQuery } from '@tanstack/react-query'
+import { keepPreviousData, useInfiniteQuery } from '@tanstack/react-query'
 
 import { categoryApi } from '../../common/api'
 import { Paginated } from '../../common/paginated'
 import { Category } from '../models/category'
 
-export const useGetCategories = (pageNumber: number, pageSize: number) => {
-  const query = useQuery({
-    queryKey: ['categories', { pageNumber, pageSize }],
+export const useGetCategories = (
+  managementUnitId: string,
+  pageSize: number,
+) => {
+  const infiniteQuery = useInfiniteQuery<Paginated<Category>>({
+    queryKey: ['categories', { pageSize, managementUnitId }],
     staleTime: Infinity,
-    placeholderData: keepPreviousData,
-    queryFn: async () => {
+    retry: 3,
+    queryFn: async ({ pageParam }) => {
       const { data: paginatedCategories } = await categoryApi.get<
         Paginated<Category>
       >('', {
         params: {
-          pageNumber,
+          pageNumber: pageParam,
           pageSize,
+          managementUnitId,
         },
       })
 
       return paginatedCategories
     },
+    initialPageParam: 1,
+    getNextPageParam: (previousFetchedPage) =>
+      previousFetchedPage.hasNextPage
+        ? previousFetchedPage.pageNumber + 1
+        : undefined,
+    refetchOnWindowFocus: false,
+    placeholderData: keepPreviousData,
   })
 
-  return query
+  return infiniteQuery
 }

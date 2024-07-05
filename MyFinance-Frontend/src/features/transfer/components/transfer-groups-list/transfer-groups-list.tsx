@@ -27,7 +27,7 @@ export function TransferGroupsList({ tranferGroups }: TransferGroupList) {
           </div>
         </ScrollArea>
       ) : (
-        <div className="flex min-h-[355px] grow flex-col items-center justify-center gap-2 rounded-lg border px-4">
+        <div className="flex min-h-[355px] grow flex-col items-center justify-center gap-2 px-4">
           <p className="text-center text-sm text-muted-foreground">
             You don&apos;t have transfers registered on the current month
           </p>
