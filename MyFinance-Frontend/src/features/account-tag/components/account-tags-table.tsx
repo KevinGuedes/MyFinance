@@ -6,9 +6,18 @@ import {
   useReactTable,
 } from '@tanstack/react-table'
 import { useVirtualizer } from '@tanstack/react-virtual'
-import { Loader2 } from 'lucide-react'
+import { Loader2, MoreHorizontal } from 'lucide-react'
 import { useCallback, useEffect, useMemo, useRef } from 'react'
 
+import { Button } from '@/components/ui/button'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu'
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area'
 import {
   Table,
@@ -26,10 +35,50 @@ export const columns: ColumnDef<AccountTag>[] = [
   {
     accessorKey: 'tag',
     header: 'Tag',
+    cell: ({ row }) => {
+      const tag = row.getValue<string>('tag')
+      return <p className="text-right font-medium">{tag}</p>
+    },
   },
   {
     accessorKey: 'description',
     header: 'Description',
+    cell: ({ row }) => {
+      const description = row.getValue<string>('description')
+      return (
+        <p className="line-clamp-1 w-fit text-ellipsis text-left">
+          {description}
+        </p>
+      )
+    },
+  },
+  {
+    id: 'actions',
+    cell: ({ row }) => {
+      const payment = row.original
+
+      return (
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="ghost" className="size-8 p-0">
+              <span className="sr-only">Open menu</span>
+              <MoreHorizontal className="size-4" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            <DropdownMenuLabel>Actions</DropdownMenuLabel>
+            <DropdownMenuItem
+              onClick={() => navigator.clipboard.writeText(payment.id)}
+            >
+              Copy payment ID
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem>View customer</DropdownMenuItem>
+            <DropdownMenuItem>View payment details</DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      )
+    },
   },
 ]
 
@@ -88,21 +137,21 @@ export function AccountTagsTable({ managementUnitId }: AccountTagsTableProps) {
     <ScrollArea
       type="always"
       ref={parentRef}
-      className="relative h-[350px] w-full grow overflow-auto pr-3"
+      className="relative h-[350px] grow pr-4"
       onScroll={(e) => fetchMoreOnBottomReached(e.target as HTMLDivElement)}
     >
-      <ScrollBar className="z-20" />
+      <ScrollBar />
       <div
         className="w-full"
         style={{ height: `${rowVirtualizer.getTotalSize()}px` }}
       >
-        <Table className="grid w-full">
+        <Table className="w-full">
           <TableHeader className="sticky top-0 z-10 grid bg-background">
             {table.getHeaderGroups().map((headerGroup) => (
-              <TableRow key={headerGroup.id} className="flex">
+              <TableRow key={headerGroup.id}>
                 {headerGroup.headers.map((header) => {
                   return (
-                    <TableHead key={header.id} className="flex w-fit py-4">
+                    <TableHead key={header.id}>
                       {header.isPlaceholder
                         ? null
                         : flexRender(
@@ -116,7 +165,7 @@ export function AccountTagsTable({ managementUnitId }: AccountTagsTableProps) {
             ))}
           </TableHeader>
           <TableBody
-            className="relative grid"
+            className="relative"
             style={{
               height: `${rowVirtualizer.getTotalSize()}px`,
             }}
@@ -129,7 +178,7 @@ export function AccountTagsTable({ managementUnitId }: AccountTagsTableProps) {
                     <TableRow
                       key={row.id}
                       data-index={virtualRow.index}
-                      className="absolute flex w-full text-sm"
+                      className="absolute flex w-full items-center"
                       ref={(node) => rowVirtualizer.measureElement(node)}
                       style={{
                         transform: `translateY(${virtualRow.start}px)`,
@@ -137,7 +186,7 @@ export function AccountTagsTable({ managementUnitId }: AccountTagsTableProps) {
                     >
                       {row.getVisibleCells().map((cell) => {
                         return (
-                          <TableCell key={cell.id} className="w-fit py-2.5">
+                          <TableCell key={cell.id} className="py-2.5">
                             {flexRender(
                               cell.column.columnDef.cell,
                               cell.getContext(),
