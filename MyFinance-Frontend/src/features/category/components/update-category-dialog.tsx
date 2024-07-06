@@ -1,4 +1,4 @@
-import { PlusCircle } from 'lucide-react'
+import { Pencil } from 'lucide-react'
 import { useState } from 'react'
 
 import { Button } from '@/components/ui/button'
@@ -11,22 +11,21 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog'
 
-import { useCreateAccountTag } from '../api/use-create-account-tag'
-import { AccountTagForm, AccountTagFormSchema } from './account-tag-form'
+import { useUpdateCategory } from '../api/use-update-category'
+import { Category } from '../models/category'
+import { CategoryForm, CategoryFormSchema } from './category-form'
 
-type CreateAccountTagDialogProps = {
-  managementUnitId: string
+type UpdateCategoryDialogProps = {
+  category: Category
 }
 
-export function CreateAccountTagDialog({
-  managementUnitId,
-}: CreateAccountTagDialogProps) {
-  const createAccountTagMutation = useCreateAccountTag()
+export function UpdateCategoryDialog({ category }: UpdateCategoryDialogProps) {
+  const updateCategoryMutation = useUpdateCategory()
   const [isDialogOpen, setIsDialogOpen] = useState(false)
 
-  async function onSubmit(values: AccountTagFormSchema) {
-    await createAccountTagMutation.mutateAsync(
-      { ...values, managementUnitId },
+  async function onSubmit(values: CategoryFormSchema) {
+    await updateCategoryMutation.mutateAsync(
+      { ...values, id: category.id },
       {
         onSuccess: () => {
           setIsDialogOpen(false)
@@ -43,24 +42,23 @@ export function CreateAccountTagDialog({
     <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
       <DialogTrigger asChild>
         <Button variant="outline" size="sm">
-          <PlusCircle className="mr-2 size-5" />
-          Create Account Tag
+          <Pencil className="mr-2 size-5" />
+          Edit Category
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle>Create Account Tag</DialogTitle>
+          <DialogTitle>Update Category</DialogTitle>
           <DialogDescription>
-            Fill in the form below to create a new Account Tag.
+            Fill in the form below to update the Category.
           </DialogDescription>
         </DialogHeader>
-        <AccountTagForm
-          mode="create"
+        <CategoryForm
+          mode="update"
           onSubmit={onSubmit}
           onCancel={onCancel}
           defaultValues={{
-            tag: '',
-            description: '',
+            name: category.name,
           }}
         />
       </DialogContent>

@@ -51,7 +51,7 @@ export function ManagementUnitForm({
     await onSubmit(values)
   }
 
-  const isActionButtonDisabled =
+  const isSubmitButtonDisabled =
     mode === 'create'
       ? !form.formState.isValid || form.formState.isSubmitting
       : !form.formState.isDirty || form.formState.isSubmitting
@@ -112,7 +112,7 @@ export function ManagementUnitForm({
           <Button
             type="submit"
             className="min-w-56 grow"
-            disabled={isActionButtonDisabled}
+            disabled={isSubmitButtonDisabled}
           >
             {mode === 'create' && (
               <>

@@ -37,7 +37,7 @@ export function AccountTagsTable({ managementUnitId }: AccountTagsTableProps) {
     fetchNextPage,
     isPending,
     hasNextPage,
-  } = useGetAccountTags(managementUnitId, 5)
+  } = useGetAccountTags(managementUnitId, 50)
 
   const accountTags = useMemo(
     () => data?.pages?.flatMap((page) => page.items) ?? [],
@@ -72,7 +72,7 @@ export function AccountTagsTable({ managementUnitId }: AccountTagsTableProps) {
       if (containerRefElement) {
         const { scrollHeight, scrollTop, clientHeight } = containerRefElement
         console.log({ scrollHeight, scrollTop, clientHeight })
-        if (scrollHeight - scrollTop - clientHeight < 50 && !isFetching) {
+        if (scrollHeight - scrollTop - clientHeight < 150 && !isFetching) {
           fetchNextPage()
         }
       }

@@ -1,5 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Loader2, PlusCircle } from 'lucide-react'
+import { Loader2, Pencil, PlusCircle } from 'lucide-react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 
@@ -27,12 +27,14 @@ type CategoryFormProps = {
   defaultValues: CategoryFormSchema
   onSubmit: (values: CategoryFormSchema) => Promise<void>
   onCancel: () => void
+  mode: 'create' | 'update'
 }
 
 export function CategoryForm({
   defaultValues,
   onSubmit,
   onCancel,
+  mode,
 }: CategoryFormProps) {
   const form = useForm<CategoryFormSchema>({
     resolver: zodResolver(categoryFormSchema),
@@ -42,6 +44,11 @@ export function CategoryForm({
   async function handleSubmit(values: CategoryFormSchema) {
     await onSubmit(values)
   }
+
+  const isSubmitButtonDisabled =
+    mode === 'create'
+      ? !form.formState.isValid || form.formState.isSubmitting
+      : !form.formState.isDirty || form.formState.isSubmitting
 
   return (
     <Form {...form}>
@@ -82,20 +89,41 @@ export function CategoryForm({
           >
             Cancel
           </Button>
+
           <Button
             type="submit"
             className="min-w-40 grow"
-            disabled={!form.formState.isValid || form.formState.isSubmitting}
+            disabled={isSubmitButtonDisabled}
           >
-            {form.formState.isSubmitting ? (
+            {mode === 'create' && (
               <>
-                <Loader2 className="mr-2 size-4 animate-spin" />
-                Creating...
+                {form.formState.isSubmitting ? (
+                  <>
+                    <Loader2 className="mr-2 size-4 animate-spin" />
+                    Creating...
+                  </>
+                ) : (
+                  <>
+                    <PlusCircle className="mr-2 size-4" />
+                    Create Category
+                  </>
+                )}
               </>
-            ) : (
+            )}
+
+            {mode === 'update' && (
               <>
-                <PlusCircle className="mr-2 size-4" />
-                Create Category
+                {form.formState.isSubmitting ? (
+                  <>
+                    <Loader2 className="mr-2 size-4 animate-spin" />
+                    Updating...
+                  </>
+                ) : (
+                  <>
+                    <Pencil className="mr-2 size-4" />
+                    Update Category
+                  </>
+                )}
               </>
             )}
           </Button>

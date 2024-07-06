@@ -1,5 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Loader2, PlusCircle } from 'lucide-react'
+import { Loader2, Pencil, PlusCircle } from 'lucide-react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 
@@ -31,12 +31,14 @@ type AccountTagFormProps = {
   defaultValues: AccountTagFormSchema
   onSubmit: (values: AccountTagFormSchema) => Promise<void>
   onCancel: () => void
+  mode: 'create' | 'update'
 }
 
 export function AccountTagForm({
   defaultValues,
   onSubmit,
   onCancel,
+  mode,
 }: AccountTagFormProps) {
   const form = useForm<AccountTagFormSchema>({
     resolver: zodResolver(accountTagFormSchema),
@@ -46,6 +48,11 @@ export function AccountTagForm({
   async function handleSubmit(values: AccountTagFormSchema) {
     await onSubmit(values)
   }
+
+  const isSubmitButtonDisabled =
+    mode === 'create'
+      ? !form.formState.isValid || form.formState.isSubmitting
+      : !form.formState.isDirty || form.formState.isSubmitting
 
   return (
     <Form {...form}>
@@ -109,18 +116,38 @@ export function AccountTagForm({
           </Button>
           <Button
             type="submit"
-            className="min-w-48 grow"
-            disabled={!form.formState.isValid || form.formState.isSubmitting}
+            className="min-w-40 grow"
+            disabled={isSubmitButtonDisabled}
           >
-            {form.formState.isSubmitting ? (
+            {mode === 'create' && (
               <>
-                <Loader2 className="mr-2 size-4 animate-spin" />
-                Creating...
+                {form.formState.isSubmitting ? (
+                  <>
+                    <Loader2 className="mr-2 size-4 animate-spin" />
+                    Creating...
+                  </>
+                ) : (
+                  <>
+                    <PlusCircle className="mr-2 size-4" />
+                    Create Account Tag
+                  </>
+                )}
               </>
-            ) : (
+            )}
+
+            {mode === 'update' && (
               <>
-                <PlusCircle className="mr-2 size-4" />
-                Create Account Tag
+                {form.formState.isSubmitting ? (
+                  <>
+                    <Loader2 className="mr-2 size-4 animate-spin" />
+                    Updating...
+                  </>
+                ) : (
+                  <>
+                    <Pencil className="mr-2 size-4" />
+                    Update Account Tag
+                  </>
+                )}
               </>
             )}
           </Button>

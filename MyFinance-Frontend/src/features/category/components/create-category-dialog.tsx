@@ -55,6 +55,7 @@ export function CreateCategoryDialog({
           </DialogDescription>
         </DialogHeader>
         <CategoryForm
+          mode="create"
           onSubmit={onSubmit}
           onCancel={onCancel}
           defaultValues={{

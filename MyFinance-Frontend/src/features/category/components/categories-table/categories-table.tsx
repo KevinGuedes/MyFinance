@@ -71,7 +71,7 @@ export function CategoriesTable({ managementUnitId }: CategoriesTableProps) {
     (containerRefElement?: HTMLDivElement | null) => {
       if (containerRefElement) {
         const { scrollHeight, scrollTop, clientHeight } = containerRefElement
-        if (scrollHeight - scrollTop - clientHeight < 50 && !isFetching) {
+        if (scrollHeight - scrollTop - clientHeight < 150 && !isFetching) {
           fetchNextPage()
         }
       }

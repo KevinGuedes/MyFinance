@@ -1,4 +1,4 @@
-import { PlusCircle } from 'lucide-react'
+import { Pencil } from 'lucide-react'
 import { useState } from 'react'
 
 import { Button } from '@/components/ui/button'
@@ -11,22 +11,23 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog'
 
-import { useCreateAccountTag } from '../api/use-create-account-tag'
+import { useUpdateAccountTag } from '../api/use-update-account-tag'
+import { AccountTag } from '../models/account-tag'
 import { AccountTagForm, AccountTagFormSchema } from './account-tag-form'
 
-type CreateAccountTagDialogProps = {
-  managementUnitId: string
+type UpdateAccountTagDialogProps = {
+  accountTag: AccountTag
 }
 
-export function CreateAccountTagDialog({
-  managementUnitId,
-}: CreateAccountTagDialogProps) {
-  const createAccountTagMutation = useCreateAccountTag()
+export function UpdateAccountTagDialog({
+  accountTag,
+}: UpdateAccountTagDialogProps) {
+  const updateAccountTagMutation = useUpdateAccountTag()
   const [isDialogOpen, setIsDialogOpen] = useState(false)
 
   async function onSubmit(values: AccountTagFormSchema) {
-    await createAccountTagMutation.mutateAsync(
-      { ...values, managementUnitId },
+    await updateAccountTagMutation.mutateAsync(
+      { ...values, id: accountTag.id },
       {
         onSuccess: () => {
           setIsDialogOpen(false)
@@ -43,24 +44,24 @@ export function CreateAccountTagDialog({
     <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
       <DialogTrigger asChild>
         <Button variant="outline" size="sm">
-          <PlusCircle className="mr-2 size-5" />
-          Create Account Tag
+          <Pencil className="mr-2 size-5" />
+          Edit Account Tag
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle>Create Account Tag</DialogTitle>
+          <DialogTitle>Update Account Tag</DialogTitle>
           <DialogDescription>
-            Fill in the form below to create a new Account Tag.
+            Fill in the form below to update the Account Tag.
           </DialogDescription>
         </DialogHeader>
         <AccountTagForm
-          mode="create"
+          mode="update"
           onSubmit={onSubmit}
           onCancel={onCancel}
           defaultValues={{
-            tag: '',
-            description: '',
+            tag: accountTag.tag,
+            description: accountTag.description,
           }}
         />
       </DialogContent>
