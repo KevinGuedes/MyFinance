@@ -30,10 +30,16 @@ type CategoriesTableProps = {
 export function CategoriesTable({ managementUnitId }: CategoriesTableProps) {
   const parentRef = useRef<HTMLDivElement>(null)
 
-  const { data, isFetchingNextPage, isFetching, fetchNextPage, isPending } =
-    useGetCategories(managementUnitId, 50)
+  const {
+    data,
+    isFetching,
+    fetchNextPage,
+    isPending,
+    isFetchingNextPage,
+    hasNextPage,
+  } = useGetCategories(managementUnitId, 50)
 
-  const flatData = useMemo(
+  const categories = useMemo(
     () => data?.pages?.flatMap((page) => page.items) ?? [],
     [data],
   )
@@ -43,7 +49,7 @@ export function CategoriesTable({ managementUnitId }: CategoriesTableProps) {
       minSize: 0,
       size: 0,
     },
-    data: flatData,
+    data: categories,
     columns: categoriesTableColumns,
     getCoreRowModel: getCoreRowModel(),
   })
@@ -159,10 +165,15 @@ export function CategoriesTable({ managementUnitId }: CategoriesTableProps) {
           })}
         </TableBody>
       </Table>
-      {isFetchingNextPage && (
-        <div className="flex h-12 items-center justify-center gap-4 border-t p-4 text-muted-foreground">
+      {hasNextPage && isFetchingNextPage && (
+        <div
+          className="flex h-12 items-center justify-center gap-4 border-t p-4 text-muted-foreground"
+          role="status"
+        >
           <Loader2 className="size-6 animate-spin" />
-          <p className="text-sm">Loading more Categories...</p>
+          <p className="text-sm">
+            Loading more <strong className="font-medium">Categories</strong>...
+          </p>
         </div>
       )}
     </ScrollArea>

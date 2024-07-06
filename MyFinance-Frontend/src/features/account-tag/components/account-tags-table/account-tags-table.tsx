@@ -30,10 +30,16 @@ type AccountTagsTableProps = {
 export function AccountTagsTable({ managementUnitId }: AccountTagsTableProps) {
   const parentRef = useRef<HTMLDivElement>(null)
 
-  const { data, isFetchingNextPage, isFetching, fetchNextPage, isPending } =
-    useGetAccountTags(managementUnitId, 30)
+  const {
+    data,
+    isFetchingNextPage,
+    isFetching,
+    fetchNextPage,
+    isPending,
+    hasNextPage,
+  } = useGetAccountTags(managementUnitId, 5)
 
-  const flatData = useMemo(
+  const accountTags = useMemo(
     () => data?.pages?.flatMap((page) => page.items) ?? [],
     [data],
   )
@@ -43,7 +49,7 @@ export function AccountTagsTable({ managementUnitId }: AccountTagsTableProps) {
       minSize: 0,
       size: 0,
     },
-    data: flatData,
+    data: accountTags,
     columns: accountTagsTableColumns,
     getCoreRowModel: getCoreRowModel(),
   })
@@ -82,7 +88,7 @@ export function AccountTagsTable({ managementUnitId }: AccountTagsTableProps) {
     return <AccountTagsTableSkeleton />
   }
 
-  return rows.length === 0 ? (
+  return rows.length > 0 ? (
     <ScrollArea
       type="always"
       ref={parentRef}
@@ -121,59 +127,52 @@ export function AccountTagsTable({ managementUnitId }: AccountTagsTableProps) {
             height: rowVirtualizer.getTotalSize(),
           }}
         >
-          {rows?.length > 0 ? (
-            <>
-              {rowVirtualizer.getVirtualItems().map((virtualRow) => {
-                const row = rows[virtualRow.index] as Row<AccountTag>
-                return (
-                  <TableRow
-                    key={row.id}
-                    data-index={virtualRow.index}
-                    className="absolute flex w-full items-center"
-                    ref={(node) => rowVirtualizer.measureElement(node)}
-                    style={{
-                      transform: `translateY(${virtualRow.start}px)`,
-                    }}
-                  >
-                    {row.getVisibleCells().map((cell) => {
-                      return (
-                        <TableCell
-                          key={cell.id}
-                          className="flex px-4 py-1.5"
-                          style={{
-                            width:
-                              cell.column.getSize() !== 0
-                                ? `${cell.column.getSize()}px`
-                                : '100%',
-                          }}
-                        >
-                          {flexRender(
-                            cell.column.columnDef.cell,
-                            cell.getContext(),
-                          )}
-                        </TableCell>
-                      )
-                    })}
-                  </TableRow>
-                )
-              })}
-            </>
-          ) : (
-            <TableRow>
-              <TableCell
-                colSpan={accountTagsTableColumns.length}
-                className="absolute flex w-full grow justify-center border text-center text-sm text-muted-foreground"
+          {rowVirtualizer.getVirtualItems().map((virtualRow) => {
+            const row = rows[virtualRow.index] as Row<AccountTag>
+            return (
+              <TableRow
+                key={row.id}
+                data-index={virtualRow.index}
+                className="absolute flex w-full items-center"
+                ref={(node) => rowVirtualizer.measureElement(node)}
+                style={{
+                  transform: `translateY(${virtualRow.start}px)`,
+                }}
               >
-                No results.
-              </TableCell>
-            </TableRow>
-          )}
+                {row.getVisibleCells().map((cell) => {
+                  return (
+                    <TableCell
+                      key={cell.id}
+                      className="flex px-4 py-1.5"
+                      style={{
+                        width:
+                          cell.column.getSize() !== 0
+                            ? `${cell.column.getSize()}px`
+                            : '100%',
+                      }}
+                    >
+                      {flexRender(
+                        cell.column.columnDef.cell,
+                        cell.getContext(),
+                      )}
+                    </TableCell>
+                  )
+                })}
+              </TableRow>
+            )
+          })}
         </TableBody>
       </Table>
-      {isFetchingNextPage && (
-        <div className="flex h-12 items-center justify-center gap-4 border-t p-4 text-muted-foreground">
+      {hasNextPage && isFetchingNextPage && (
+        <div
+          className="flex h-12 items-center justify-center gap-4 border-t p-4 text-muted-foreground"
+          role="status"
+        >
           <Loader2 className="size-6 animate-spin" />
-          <p className="text-sm">Loading more Account Tags...</p>
+          <p className="text-sm">
+            Loading more <strong className="font-medium">Account Tags</strong>
+            ...
+          </p>
         </div>
       )}
     </ScrollArea>

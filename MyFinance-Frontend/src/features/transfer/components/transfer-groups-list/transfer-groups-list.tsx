@@ -30,7 +30,8 @@ export function TransferGroupsList({ tranferGroups }: TransferGroupList) {
       ) : (
         <div className="flex min-h-[350px] grow flex-col items-center justify-center gap-2 px-4">
           <p className="text-center text-sm text-muted-foreground">
-            You don&apos;t have Transfers registered on{' '}
+            You don&apos;t have{' '}
+            <strong className="font-medium">Transfers</strong> registered on{' '}
             {format(new Date(), 'MMMM, yyyy')}.
           </p>
           <ClipboardList className="size-10 text-muted-foreground" />

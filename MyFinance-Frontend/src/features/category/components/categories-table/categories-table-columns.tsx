@@ -27,7 +27,7 @@ export const categoriesTableColumns: ColumnDef<Category>[] = [
     id: 'actions',
     size: 80,
     cell: ({ row }) => {
-      const payment = row.original
+      const category = row.original
 
       return (
         <DropdownMenu>
@@ -40,12 +40,12 @@ export const categoriesTableColumns: ColumnDef<Category>[] = [
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
             <DropdownMenuItem
-              onClick={() => navigator.clipboard.writeText(payment.id)}
+              onClick={() => navigator.clipboard.writeText(category.id)}
             >
               Copy payment ID
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>View customer</DropdownMenuItem>
+            <DropdownMenuItem>{category.name}</DropdownMenuItem>
             <DropdownMenuItem>View payment details</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

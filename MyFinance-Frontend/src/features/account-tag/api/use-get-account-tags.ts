@@ -13,7 +13,7 @@ export const useGetAccountTags = (
     staleTime: Infinity,
     retry: 3,
     queryFn: async ({ pageParam }) => {
-      await new Promise((resolve) => setTimeout(resolve, 3000))
+      await new Promise((resolve) => setTimeout(resolve, 1000))
       const { data: paginatedAccountTags } = await accountTagApi.get<
         Paginated<AccountTag>
       >('', {

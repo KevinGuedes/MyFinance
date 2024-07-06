@@ -14,6 +14,7 @@ export const useGetTransferGroups = (
     staleTime: Infinity,
     placeholderData: keepPreviousData,
     queryFn: async () => {
+      await new Promise((resolve) => setTimeout(resolve, 3000))
       const { data: paginatedTransferGroups } = await transferApi.get<
         Paginated<TransferGroup>
       >('', {
@@ -23,8 +24,6 @@ export const useGetTransferGroups = (
           managementUnitId,
         },
       })
-
-      console.log(paginatedTransferGroups)
 
       const formattedTransferGroups = paginatedTransferGroups.items.map(
         (group) => {
