@@ -1,23 +1,13 @@
 import {
-  ColumnDef,
   flexRender,
   getCoreRowModel,
   Row,
   useReactTable,
 } from '@tanstack/react-table'
 import { useVirtualizer } from '@tanstack/react-virtual'
-import { Loader2, MoreHorizontal, Tag } from 'lucide-react'
+import { Loader2, Tag } from 'lucide-react'
 import { useCallback, useEffect, useMemo, useRef } from 'react'
 
-import { Button } from '@/components/ui/button'
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu'
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area'
 import {
   Table,
@@ -28,57 +18,10 @@ import {
   TableRow,
 } from '@/components/ui/table'
 
-import { useGetAccountTags } from '../api/use-get-account-tags'
-import { AccountTag } from '../models/account-tag'
-
-export const columns: ColumnDef<AccountTag>[] = [
-  {
-    accessorKey: 'tag',
-    header: 'Tag',
-    size: 100,
-    cell: ({ row }) => {
-      const tag = row.getValue<string>('tag')
-      return <p className="text-left font-medium">{tag}</p>
-    },
-  },
-  {
-    accessorKey: 'description',
-    header: 'Description',
-    cell: ({ row }) => {
-      const description = row.getValue<string>('description')
-      return <p className="line-clamp-1">{description}</p>
-    },
-  },
-  {
-    id: 'actions',
-    size: 80,
-    cell: ({ row }) => {
-      const payment = row.original
-
-      return (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="ml-auto size-8 p-0">
-              <span className="sr-only">Open menu</span>
-              <MoreHorizontal className="size-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem
-              onClick={() => navigator.clipboard.writeText(payment.id)}
-            >
-              Copy payment ID
-            </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>View customer</DropdownMenuItem>
-            <DropdownMenuItem>View payment details</DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      )
-    },
-  },
-]
+import { useGetAccountTags } from '../../api/use-get-account-tags'
+import { AccountTag } from '../../models/account-tag'
+import { accountTagsTableColumns } from './account-tags-table-columns'
+import { AccountTagsTableSkeleton } from './account-tags-table-skeleton'
 
 type AccountTagsTableProps = {
   managementUnitId: string
@@ -88,7 +31,7 @@ export function AccountTagsTable({ managementUnitId }: AccountTagsTableProps) {
   const parentRef = useRef<HTMLDivElement>(null)
 
   const { data, isFetchingNextPage, isFetching, fetchNextPage, isPending } =
-    useGetAccountTags(managementUnitId, 50)
+    useGetAccountTags(managementUnitId, 30)
 
   const flatData = useMemo(
     () => data?.pages?.flatMap((page) => page.items) ?? [],
@@ -101,7 +44,7 @@ export function AccountTagsTable({ managementUnitId }: AccountTagsTableProps) {
       size: 0,
     },
     data: flatData,
-    columns,
+    columns: accountTagsTableColumns,
     getCoreRowModel: getCoreRowModel(),
   })
 
@@ -136,18 +79,10 @@ export function AccountTagsTable({ managementUnitId }: AccountTagsTableProps) {
   }, [fetchMoreOnBottomReached])
 
   if (isPending) {
-    return (
-      <div
-        className="flex grow flex-col items-center justify-center gap-2"
-        role="status"
-      >
-        <Loader2 className="size-12 animate-spin text-muted-foreground" />
-        <p className="text-muted-foreground">Loading Account Tags...</p>
-      </div>
-    )
+    return <AccountTagsTableSkeleton />
   }
 
-  return rows.length > 0 ? (
+  return rows.length === 0 ? (
     <ScrollArea
       type="always"
       ref={parentRef}
@@ -226,7 +161,7 @@ export function AccountTagsTable({ managementUnitId }: AccountTagsTableProps) {
           ) : (
             <TableRow>
               <TableCell
-                colSpan={columns.length}
+                colSpan={accountTagsTableColumns.length}
                 className="absolute flex w-full grow justify-center border text-center text-sm text-muted-foreground"
               >
                 No results.
@@ -235,9 +170,15 @@ export function AccountTagsTable({ managementUnitId }: AccountTagsTableProps) {
           )}
         </TableBody>
       </Table>
+      {isFetchingNextPage && (
+        <div className="flex h-12 items-center justify-center gap-4 border-t p-4 text-muted-foreground">
+          <Loader2 className="size-6 animate-spin" />
+          <p className="text-sm">Loading more Account Tags...</p>
+        </div>
+      )}
     </ScrollArea>
   ) : (
-    <div className="flex min-h-[350px] grow flex-col items-center justify-center gap-2 px-4">
+    <div className="flex min-h-[350px] grow flex-col items-center justify-center gap-4 px-4">
       <p className="text-center text-sm text-muted-foreground">
         You don&apos;t have{' '}
         <strong className="font-medium">Account Tags</strong> registered yet.

@@ -1,23 +1,13 @@
 import {
-  ColumnDef,
   flexRender,
   getCoreRowModel,
   Row,
   useReactTable,
 } from '@tanstack/react-table'
 import { useVirtualizer } from '@tanstack/react-virtual'
-import { Clipboard, Loader2, MoreHorizontal, Shapes } from 'lucide-react'
+import { Loader2, Shapes } from 'lucide-react'
 import { useCallback, useEffect, useMemo, useRef } from 'react'
 
-import { Button } from '@/components/ui/button'
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu'
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area'
 import {
   Table,
@@ -28,49 +18,10 @@ import {
   TableRow,
 } from '@/components/ui/table'
 
-import { useGetCategories } from '../api/use-get-categories'
-import { Category } from '../models/category'
-
-export const columns: ColumnDef<Category>[] = [
-  {
-    accessorKey: 'name',
-    header: 'Name',
-    cell: ({ row }) => {
-      const name = row.getValue<string>('name')
-      return <p className="text-left font-medium">{name}</p>
-    },
-  },
-
-  {
-    id: 'actions',
-    size: 80,
-    cell: ({ row }) => {
-      const payment = row.original
-
-      return (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="ml-auto size-8 p-0">
-              <span className="sr-only">Open menu</span>
-              <MoreHorizontal className="size-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem
-              onClick={() => navigator.clipboard.writeText(payment.id)}
-            >
-              Copy payment ID
-            </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>View customer</DropdownMenuItem>
-            <DropdownMenuItem>View payment details</DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      )
-    },
-  },
-]
+import { useGetCategories } from '../../api/use-get-categories'
+import { Category } from '../../models/category'
+import { categoriesTableColumns } from './categories-table-columns'
+import { CategoriesTableSkeleton } from './categories-table-skeleton'
 
 type CategoriesTableProps = {
   managementUnitId: string
@@ -93,7 +44,7 @@ export function CategoriesTable({ managementUnitId }: CategoriesTableProps) {
       size: 0,
     },
     data: flatData,
-    columns,
+    columns: categoriesTableColumns,
     getCoreRowModel: getCoreRowModel(),
   })
 
@@ -126,6 +77,10 @@ export function CategoriesTable({ managementUnitId }: CategoriesTableProps) {
     fetchMoreOnBottomReached(parentRef.current)
   }, [fetchMoreOnBottomReached])
 
+  if (isPending) {
+    return <CategoriesTableSkeleton />
+  }
+
   return rows.length > 0 ? (
     <ScrollArea
       type="always"
@@ -147,7 +102,7 @@ export function CategoriesTable({ managementUnitId }: CategoriesTableProps) {
                     key={header.id}
                     className="flex items-center p-4"
                     style={{
-                      width: header.getSize() !== 0 ? header.getSize() : '100%',
+                      width: header.getSize() !== 0 ? header.getSize() : '··',
                     }}
                   >
                     {header.isPlaceholder
@@ -204,9 +159,15 @@ export function CategoriesTable({ managementUnitId }: CategoriesTableProps) {
           })}
         </TableBody>
       </Table>
+      {isFetchingNextPage && (
+        <div className="flex h-12 items-center justify-center gap-4 border-t p-4 text-muted-foreground">
+          <Loader2 className="size-6 animate-spin" />
+          <p className="text-sm">Loading more Categories...</p>
+        </div>
+      )}
     </ScrollArea>
   ) : (
-    <div className="flex min-h-[350px] grow flex-col items-center justify-center gap-2 px-4">
+    <div className="flex min-h-[350px] grow flex-col items-center justify-center gap-4 px-4">
       <p className="text-center text-sm text-muted-foreground">
         You don&apos;t have <strong className="font-medium">Categories</strong>{' '}
         registered yet.

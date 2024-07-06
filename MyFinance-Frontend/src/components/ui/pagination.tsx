@@ -103,7 +103,7 @@ const PaginationNext = ({
     aria-label="Go to next page"
     size="default"
     disabled={disabled}
-    className={cn('min-w-[6.25rem] gap-2', className)}
+    className={cn('gap-2', className)}
     isPageOnlyLink={false}
     {...props}
   >

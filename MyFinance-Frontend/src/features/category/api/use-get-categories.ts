@@ -13,6 +13,7 @@ export const useGetCategories = (
     staleTime: Infinity,
     retry: 3,
     queryFn: async ({ pageParam }) => {
+      await new Promise((resolve) => setTimeout(resolve, 2000))
       const { data: paginatedCategories } = await categoryApi.get<
         Paginated<Category>
       >('', {
