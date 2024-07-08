@@ -92,7 +92,7 @@ export function CategoryForm({
 
           <Button
             type="submit"
-            className="min-w-40 grow"
+            className="min-w-[10.5rem] grow"
             disabled={isSubmitButtonDisabled}
           >
             {mode === 'create' && (

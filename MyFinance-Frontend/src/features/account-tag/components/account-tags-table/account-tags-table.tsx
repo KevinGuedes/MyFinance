@@ -71,7 +71,7 @@ export function AccountTagsTable({ managementUnitId }: AccountTagsTableProps) {
     (containerRefElement?: HTMLDivElement | null) => {
       if (containerRefElement) {
         const { scrollHeight, scrollTop, clientHeight } = containerRefElement
-        console.log({ scrollHeight, scrollTop, clientHeight })
+
         if (scrollHeight - scrollTop - clientHeight < 150 && !isFetching) {
           fetchNextPage()
         }
