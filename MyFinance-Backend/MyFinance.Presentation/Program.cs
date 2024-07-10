@@ -14,15 +14,18 @@ var app = builder.Build();
 {
     app.UseExceptionHandler();
 
-    app
-        .UseSwagger()
-        .UseSwaggerUI(options =>
-        {
-            options.SwaggerEndpoint("/swagger/v1/swagger.json", "MyFinance API");
-            options.DocumentTitle = "MyFinance API";
-            options.ConfigObject.TryItOutEnabled = true;
-            options.ConfigObject.DisplayRequestDuration = true;
-        });
+    if (!app.Environment.IsProduction())
+    {
+        app
+            .UseSwagger()
+            .UseSwaggerUI(options =>
+            {
+                options.SwaggerEndpoint("/swagger/v1/swagger.json", "MyFinance API");
+                options.DocumentTitle = "MyFinance API";
+                options.ConfigObject.TryItOutEnabled = true;
+                options.ConfigObject.DisplayRequestDuration = true;
+            });
+    }
 
     app.UseHttpsRedirection();
     app.UseAuthentication();
