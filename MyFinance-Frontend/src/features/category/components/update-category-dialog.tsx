@@ -1,7 +1,6 @@
 import { Pencil } from 'lucide-react'
 import { useState } from 'react'
 
-import { Button } from '@/components/ui/button'
 import {
   Dialog,
   DialogContent,
@@ -10,6 +9,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog'
+import { DropdownMenuItem } from '@/components/ui/dropdown-menu'
 
 import { useUpdateCategory } from '../api/use-update-category'
 import { Category } from '../models/category'
@@ -17,9 +17,15 @@ import { CategoryForm, CategoryFormSchema } from './category-form'
 
 type UpdateCategoryDialogProps = {
   category: Category
+  onSelect?: (event?: Event) => void
+  onOpenChange?: (isOpen: boolean) => void
 }
 
-export function UpdateCategoryDialog({ category }: UpdateCategoryDialogProps) {
+export function UpdateCategoryDialog({
+  category,
+  onSelect,
+  onOpenChange,
+}: UpdateCategoryDialogProps) {
   const updateCategoryMutation = useUpdateCategory()
   const [isDialogOpen, setIsDialogOpen] = useState(false)
 
@@ -29,6 +35,7 @@ export function UpdateCategoryDialog({ category }: UpdateCategoryDialogProps) {
       {
         onSuccess: () => {
           setIsDialogOpen(false)
+          onOpenChange?.(true)
         },
       },
     )
@@ -36,17 +43,28 @@ export function UpdateCategoryDialog({ category }: UpdateCategoryDialogProps) {
 
   function onCancel() {
     setIsDialogOpen(false)
+    onOpenChange?.(false)
+  }
+
+  function handleOnOpenChange(isDialogOpen: boolean) {
+    setIsDialogOpen(isDialogOpen)
+    onOpenChange?.(isDialogOpen)
   }
 
   return (
-    <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+    <Dialog open={isDialogOpen} onOpenChange={handleOnOpenChange}>
       <DialogTrigger asChild>
-        <Button variant="outline" size="sm">
+        <DropdownMenuItem
+          onSelect={(event) => {
+            event.preventDefault()
+            onSelect && onSelect()
+          }}
+        >
           <Pencil className="mr-2 size-5" />
           Edit Category
-        </Button>
+        </DropdownMenuItem>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-md">
+      <DialogContent className="sm:max-w-lg">
         <DialogHeader>
           <DialogTitle>Update Category</DialogTitle>
           <DialogDescription>
