@@ -8,12 +8,19 @@ namespace MyFinance.Infrastructure.Persistence.Repositories;
 internal sealed class AccountTagRepository(MyFinanceDbContext myFinanceDbContext)
     : EntityRepository<AccountTag>(myFinanceDbContext), IAccountTagRepository
 {
+    public Task<long> GetTotalCountAsync(Guid managementUnitId, CancellationToken cancellationToken)
+        => _myFinanceDbContext.AccountTags
+            .Where(at => at.ManagementUnitId == managementUnitId)
+            .LongCountAsync(cancellationToken);
+
     public async Task<IEnumerable<AccountTag>> GetPaginatedAsync(
+        Guid managementUnitId,
         int pageNumber,
         int pageSize,
         CancellationToken cancellationToken)
         => await _myFinanceDbContext.AccountTags
             .AsNoTracking()
+            .Where(at => at.ManagementUnitId == managementUnitId)
             .OrderBy(at => at.Tag)
             .Skip((pageNumber - 1) * pageSize)
             .Take(pageSize)

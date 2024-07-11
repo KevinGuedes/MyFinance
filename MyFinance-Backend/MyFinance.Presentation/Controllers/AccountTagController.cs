@@ -31,12 +31,17 @@ public class AccountTagController(IMediator mediator) : ApiController(mediator)
         typeof(Paginated<AccountTagResponse>))]
     [SwaggerResponse(StatusCodes.Status400BadRequest, "Invalid query parameters", typeof(ValidationProblemResponse))]
     public async Task<IActionResult> GetAccountTagsAsync(
+        [FromQuery] [SwaggerParameter("Management Unit Id", Required = true)]
+        Guid managementUnitId,
         [FromQuery] [SwaggerParameter("Page number", Required = true)]
         int pageNumber,
         [FromQuery] [SwaggerParameter("Units per page", Required = true)]
         int pageSize,
         CancellationToken cancellationToken)
-        => ProcessResult(await _mediator.Send(new GetAccountTagsQuery(pageNumber, pageSize), cancellationToken));
+    {
+        var query = new GetAccountTagsQuery(managementUnitId, pageNumber, pageSize);
+        return ProcessResult(await _mediator.Send(query, cancellationToken));
+    }
 
     [HttpPut]
     [SwaggerOperation(Summary = "Updates an existing Account Tag")]

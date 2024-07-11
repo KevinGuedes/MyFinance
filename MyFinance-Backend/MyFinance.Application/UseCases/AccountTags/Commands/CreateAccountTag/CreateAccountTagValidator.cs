@@ -19,11 +19,11 @@ public sealed class CreateAccountTagValidator : AbstractValidator<CreateAccountT
             .Cascade(CascadeMode.Stop)
             .NotNull().WithMessage("{PropertyName} must not be null")
             .NotEmpty().WithMessage("{PropertyName} must not be empty")
-            .Length(2, 10).WithMessage("{PropertyName} must have between 2 and 10 characters")
+            .Length(2, 5).WithMessage("{PropertyName} must have between 2 and 5 characters")
             .MustAsync(async (tag, cancellationToken) =>
             {
                 var exists = await _accountTagRepository.ExistsByTagAsync(tag, cancellationToken);
                 return !exists;
-            }).WithMessage("This {PropertyName} has already been taken");
+            }).WithMessage("The name '{PropertyValue}' has already been taken");
     }
 }

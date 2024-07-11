@@ -24,6 +24,6 @@ public sealed class CreateManagementUnitValidator : AbstractValidator<CreateMana
             {
                 var exists = await _managementUnitRepository.ExistsByNameAsync(managementUnitName, cancellationToken);
                 return !exists;
-            }).WithMessage("This {PropertyName} has already been taken");
+            }).WithMessage("The name '{PropertyValue}' has already been taken");
     }
 }

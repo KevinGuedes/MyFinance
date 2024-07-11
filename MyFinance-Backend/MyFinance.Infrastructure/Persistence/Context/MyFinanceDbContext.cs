@@ -2,6 +2,7 @@
 using MyFinance.Application.Abstractions.Services;
 using MyFinance.Domain.Abstractions;
 using MyFinance.Domain.Entities;
+using MyFinance.Infrastructure.Persistence.Converters;
 using System.Reflection;
 
 namespace MyFinance.Infrastructure.Persistence.Context;
@@ -23,6 +24,13 @@ internal sealed class MyFinanceDbContext(
         modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
         ApplyGlobalFiltersForUserOwnedEntities(modelBuilder);
         base.OnModelCreating(modelBuilder);
+    }
+
+    protected override void ConfigureConventions(ModelConfigurationBuilder configurationBuilder)
+    {
+        base.ConfigureConventions(configurationBuilder);
+        configurationBuilder.Properties<DateTime>().HaveConversion<DateTimeValueConverter>();
+        configurationBuilder.Properties<DateTime?>().HaveConversion<NullableDateTimeValueConverter>();
     }
 
     private void ApplyGlobalFiltersForUserOwnedEntities(ModelBuilder modelBuilder)

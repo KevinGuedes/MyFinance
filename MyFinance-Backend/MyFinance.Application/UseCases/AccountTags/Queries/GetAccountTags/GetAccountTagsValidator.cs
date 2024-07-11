@@ -7,6 +7,7 @@ public sealed class GetAccountTagsValidator : AbstractValidator<GetAccountTagsQu
 {
     public GetAccountTagsValidator()
     {
+        RuleFor(query => query.ManagementUnitId).MustBeAValidGuid();
         RuleFor(query => query.PageNumber).MustBeAValidPageNumber();
         RuleFor(query => query.PageSize).MustBeLessThan100();
     }

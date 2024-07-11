@@ -8,6 +8,4 @@ public sealed class ManagementUnitResponse
     public required decimal Outcome { get; init; }
     public required decimal Balance { get; init; }
     public required string? Description { get; init; }
-    public required bool IsArchived { get; init; }
-    public required string? ReasonToArchive { get; init; }
 }

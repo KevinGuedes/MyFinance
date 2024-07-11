@@ -19,10 +19,9 @@ internal sealed class SignOutFromAllDevicesHandler(
         var user = await _userRepository.GetByIdAsync(command.CurrentUserId, cancellationToken);
 
         if (user is null)
-            return Result.Fail(new InternalServerError());
+            return Result.Fail(new InternalServerError("Unable to identify user"));
 
         await _signInManager.SignOutAsync();
-
         user.UpdateSecurityStamp();
         _userRepository.Update(user);
 

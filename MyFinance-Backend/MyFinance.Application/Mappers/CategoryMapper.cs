@@ -24,8 +24,6 @@ public static class CategoryMapper
                {
                    Id = category.Id,
                    Name = category.Name,
-                   IsArchived = category.IsArchived,
-                   ReasonToArchive = category.ReasonToArchive,
                };
 
         public static IReadOnlyCollection<CategoryResponse> Map(IEnumerable<Category> categories)
@@ -36,7 +34,7 @@ public static class CategoryMapper
     public static class RTC
     {
         public static CreateCategoryCommand Map(CreateCategoryRequest request)
-            => new(request.Name);
+            => new(request.ManagementUnitId, request.Name);
 
         public static UpdateCategoryCommand Map(UpdateCategoryRequest request)
             => new(request.Id, request.Name);

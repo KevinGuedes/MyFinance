@@ -3,6 +3,7 @@ using MyFinance.Application.Abstractions.Persistence.Repositories;
 using MyFinance.Application.Abstractions.RequestHandling.Commands;
 using MyFinance.Application.Abstractions.Services;
 using MyFinance.Application.Common.Errors;
+using MyFinance.Application.Mappers;
 using MyFinance.Contracts.User.Responses;
 
 namespace MyFinance.Application.UseCases.Users.Commands.MagicSignIn;
@@ -12,14 +13,14 @@ internal sealed class MagicSignInHandler(
     ISignInManager signInManager,
     IPasswordManager passwordManager,
     IUserRepository userRepository)
-    : ICommandHandler<MagicSignInCommand, SignInResponse>
+    : ICommandHandler<MagicSignInCommand, UserResponse>
 {
     private readonly ITokenProvider _tokenProvider = tokenProvider;
     private readonly ISignInManager _signInManager = signInManager;
     private readonly IPasswordManager _passwordManager = passwordManager;
     private readonly IUserRepository _userRepository = userRepository;
 
-    public async Task<Result<SignInResponse>> Handle(MagicSignInCommand command, CancellationToken cancellationToken)
+    public async Task<Result<UserResponse>> Handle(MagicSignInCommand command, CancellationToken cancellationToken)
     {
         var isValidToken = _tokenProvider.TryGetUserIdFromUrlSafeMagicSignInToken(
             command.UrlSafeMagicSignInToken,
@@ -40,7 +41,10 @@ internal sealed class MagicSignInHandler(
         }
 
         await _signInManager.SignInAsync(user);
-        return Result.Ok(new SignInResponse(_passwordManager.ShouldUpdatePassword(user)));
+
+        var signInResponse = UserMapper.DTR.Map(user, _passwordManager.ShouldUpdatePassword(user));
+       
+        return Result.Ok(signInResponse);
     }
 
     private static Result HandleInvalidMagicSignInToken()

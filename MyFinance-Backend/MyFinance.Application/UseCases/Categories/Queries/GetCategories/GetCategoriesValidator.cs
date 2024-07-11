@@ -7,6 +7,7 @@ public sealed class GetCategoriesValidator : AbstractValidator<GetCategoriesQuer
 {
     public GetCategoriesValidator()
     {
+        RuleFor(query => query.ManagementUnitId).MustBeAValidGuid();
         RuleFor(query => query.PageNumber).MustBeAValidPageNumber();
         RuleFor(query => query.PageSize).MustBeLessThan100();
     }

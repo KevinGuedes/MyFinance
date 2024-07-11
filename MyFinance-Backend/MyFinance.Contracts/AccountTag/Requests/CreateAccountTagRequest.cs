@@ -1,5 +1,5 @@
 ﻿namespace MyFinance.Contracts.AccountTag.Requests;
 
-public sealed record CreateAccountTagRequest(string Tag, string? Description)
+public sealed record CreateAccountTagRequest(Guid ManagementUnitId, string Tag, string? Description)
 {
 }

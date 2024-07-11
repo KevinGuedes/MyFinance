@@ -4,7 +4,10 @@ using MyFinance.Contracts.ManagementUnit.Responses;
 
 namespace MyFinance.Application.UseCases.ManagementUnits.Queries.GetManagementUnits;
 
-public sealed record GetManagementUnitsQuery(int PageNumber, int PageSize) 
+public sealed record GetManagementUnitsQuery(
+    int PageNumber, 
+    int PageSize,
+    string? SearchTerm) 
     : IQuery<Paginated<ManagementUnitResponse>>
 {
 }

@@ -5,6 +5,7 @@ using MyFinance.Application.Common.Errors;
 using MyFinance.Application.Mappers;
 using MyFinance.Application.UseCases.Users.Commands.SignOut;
 using MyFinance.Application.UseCases.Users.Commands.SignOutFromAllDevices;
+using MyFinance.Application.UseCases.Users.Queries;
 using MyFinance.Contracts.Common;
 using MyFinance.Contracts.User.Requests;
 using MyFinance.Contracts.User.Responses;
@@ -28,7 +29,9 @@ public class UserController(IMediator mediator) : ApiController(mediator)
 
     [AllowAnonymous]
     [HttpPost("ConfirmRegistration")]
-    [SwaggerOperation(Summary = "Confirms the User's registration")]
+    [SwaggerOperation(
+        Summary = "Confirms the User's registration",
+        Description = "Step required to activate user's account")]
     [SwaggerResponse(StatusCodes.Status204NoContent, "User successfully confirmed")]
     [SwaggerResponse(StatusCodes.Status400BadRequest, "Invalid payload", typeof(ValidationProblemResponse))]
     public async Task<IActionResult> ConfirmRegistrationAsync(
@@ -39,7 +42,9 @@ public class UserController(IMediator mediator) : ApiController(mediator)
 
     [AllowAnonymous]
     [HttpPost("ResendConfirmRegistrationEmail")]
-    [SwaggerOperation(Summary = "Resends the User's confirm registration email")]
+    [SwaggerOperation(
+        Summary = "Resends the User's confirm registration email",
+        Description = "If the email provided is from an existing user, the confirm registration email will be sent")]
     [SwaggerResponse(StatusCodes.Status204NoContent, "Confirm registration email successfully sent")]
     [SwaggerResponse(StatusCodes.Status400BadRequest, "Invalid payload", typeof(ValidationProblemResponse))]
     public async Task<IActionResult> ResendConfirmRegistrationEmailAsync(
@@ -50,8 +55,11 @@ public class UserController(IMediator mediator) : ApiController(mediator)
 
     [AllowAnonymous]
     [HttpPost("SignIn")]
-    [SwaggerOperation(Summary = "Signs in an existing User")]
-    [SwaggerResponse(StatusCodes.Status200OK, "User successfully signed in", typeof(SignInResponse))]
+    [SwaggerOperation(
+        Summary = "Signs in an existing User", 
+        Description = "Password sign in for users who have already confirmed their email",
+        Tags = ["User"])]
+    [SwaggerResponse(StatusCodes.Status200OK, "User successfully signed in", typeof(UserResponse))]
     [SwaggerResponse(StatusCodes.Status401Unauthorized, "Invalid credentials", typeof(ProblemResponse))]
     [SwaggerResponse(StatusCodes.Status429TooManyRequests, "Too many failed sign in attempts", typeof(TooManyFailedSignInAttemptsResponse))]
     public async Task<IActionResult> SignInAsync(
@@ -74,7 +82,9 @@ public class UserController(IMediator mediator) : ApiController(mediator)
 
     [AllowAnonymous]
     [HttpPost("SendMagicSignInEmail")]
-    [SwaggerOperation(Summary = "Sends an email to the user with a link for magic sign in")]
+    [SwaggerOperation(
+        Summary = "Sends an email to the user with a link for magic sign in",
+        Description = "If the email provided is from an existing user, the magic sign in email will be sent")]
     [SwaggerResponse(StatusCodes.Status204NoContent, "Email successfully sent to user's email")]
     [SwaggerResponse(StatusCodes.Status400BadRequest, "Invalid payload", typeof(ValidationProblemResponse))]
     public async Task<IActionResult> SendMagicSignInEmailAsync(
@@ -85,8 +95,10 @@ public class UserController(IMediator mediator) : ApiController(mediator)
 
     [AllowAnonymous]
     [HttpPost("MagicSignIn")]
-    [SwaggerOperation(Summary = "Magically signs in an existing User")]
-    [SwaggerResponse(StatusCodes.Status200OK, "User successfully signed in", typeof(SignInResponse))]
+    [SwaggerOperation(
+        Summary = "Magically signs in an existing User",
+        Description = "Uses the magic sign in token to sign in the user")]
+    [SwaggerResponse(StatusCodes.Status200OK, "User successfully signed in", typeof(UserResponse))]
     [SwaggerResponse(StatusCodes.Status400BadRequest, "Invalid payload", typeof(ValidationProblemResponse))]
     [SwaggerResponse(StatusCodes.Status401Unauthorized, "Invalid token", typeof(ProblemResponse))]
     public async Task<IActionResult> MagicSignInAsync(
@@ -117,6 +129,13 @@ public class UserController(IMediator mediator) : ApiController(mediator)
         ResetPasswordRequest request,
         CancellationToken cancellationToken)
         => ProcessResult(await _mediator.Send(UserMapper.RTC.Map(request), cancellationToken));
+    
+    [HttpGet("Info")]
+    [SwaggerOperation(Summary = "Gets the current user basic information")]
+    [SwaggerResponse(StatusCodes.Status200OK, "User's basic information", typeof(UserResponse))]
+    [SwaggerResponse(StatusCodes.Status401Unauthorized, "User not signed in", typeof(ProblemResponse))]
+    public async Task<IActionResult> GetUserInfoAsync(CancellationToken cancellationToken)
+      => ProcessResult(await _mediator.Send(new GetUserInfoQuery(), cancellationToken));
 
     [HttpPatch("UpdatePassword")]
     [SwaggerOperation(Summary = "Updates the User's password")]

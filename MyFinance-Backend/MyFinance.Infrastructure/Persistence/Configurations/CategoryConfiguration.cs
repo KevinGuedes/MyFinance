@@ -24,5 +24,11 @@ internal class CategoryConfiguration : EntityConfiguration<Category>
             .WithMany()
             .HasForeignKey(category => category.UserId)
             .OnDelete(DeleteBehavior.Cascade);
+
+        builder
+            .HasOne(category => category.ManagementUnit)
+            .WithMany(mu => mu.Categories)
+            .HasForeignKey(category => category.ManagementUnitId)
+            .OnDelete(DeleteBehavior.NoAction);
     }
 }

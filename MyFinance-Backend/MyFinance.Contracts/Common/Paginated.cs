@@ -1,6 +1,10 @@
 ﻿namespace MyFinance.Contracts.Common;
 
-public sealed class Paginated<T>(IReadOnlyCollection<T> items, int pageNumber, int pageSize, long totalCount)
+public sealed class Paginated<T>(
+    IReadOnlyCollection<T> items, 
+    int pageNumber, 
+    int pageSize, 
+    long totalCount)
 {
     public int PageNumber { get; init; } = pageNumber;
     public int PageSize { get; init; } = pageSize;
