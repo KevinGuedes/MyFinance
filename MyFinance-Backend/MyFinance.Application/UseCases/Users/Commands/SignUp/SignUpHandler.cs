@@ -23,6 +23,10 @@ internal sealed class SignUpHandler(
     {
         var passwordHash = _passwordManager.HashPassword(command.PlainTextPassword);
         var user = new User(command.Name, command.Email, passwordHash);
+
+        //REMOVE THIS WHEN WE HAVE AN EMAIL SERVICE OR BETTER APP SETTINGS TO HANDLE THIS
+        user.VerifyEmail();
+
         await _userRepository.InsertAsync(user, cancellationToken);
 
         var urlSafeConfirmRegistrationToken
