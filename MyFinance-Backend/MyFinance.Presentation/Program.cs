@@ -1,3 +1,4 @@
+using Microsoft.Extensions.Options;
 using MyFinance.Application.IoC;
 using MyFinance.Infrastructure.IoC;
 using MyFinance.Presentation.IoC;
@@ -8,6 +9,9 @@ var builder = WebApplication.CreateBuilder(args);
         .AddInfrastructure(builder.Configuration)
         .AddApplication()
         .AddPresentation();
+
+    builder.Services.Configure<Nested>(builder.Configuration.GetSection(nameof(Nested)));
+
 }
 
 var cs = builder.Configuration.GetConnectionString("Test");
@@ -40,10 +44,20 @@ var app = builder.Build();
     app.UseAuthorization();
     app.MapControllers().RequireAuthorization();
 
-    app.MapGet("/cs", () =>
+    app.MapGet("/cs", (IOptions<Nested> nested) =>
     {
-        return cs;
+        return new 
+        { 
+            CS = cs,
+            Settings = app.Configuration.GetValue<string>("Value1"),
+            Nested = nested.Value.Value2
+        };
     });
 
     app.Run();
+}
+
+public class Nested
+{
+    public string Value2 { get; set; } = string.Empty;
 }
