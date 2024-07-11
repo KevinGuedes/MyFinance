@@ -11,6 +11,8 @@ var builder = WebApplication.CreateBuilder(args);
         .AddPresentation();
 }
 
+var cs = builder.Configuration.GetConnectionString("Test");
+
 var app = builder.Build();
 {
     app.UseExceptionHandler();
@@ -38,6 +40,11 @@ var app = builder.Build();
     app.UseAuthentication();
     app.UseAuthorization();
     app.MapControllers().RequireAuthorization();
+
+    app.MapGet("/cs", () =>
+    {
+        return cs;
+    });
 
     app.Run();
 }
