@@ -4,7 +4,7 @@ import { useUserStore } from '@/features/user/stores/user-store'
 
 function createApi(resourcePath: string) {
   const api = axios.create({
-    baseURL: 'https://localhost:7286/' + resourcePath,
+    baseURL: 'https://myfinance-api.shop/' + resourcePath,
     withCredentials: true,
   })
 
