@@ -10,7 +10,7 @@ internal sealed class PasswordOptions : IValidatableOptions
 
     [Required]
     [Range(14, int.MaxValue)]
-    public int WorkFactor { get; set; } = 16;
+    public int WorkFactor { get; set; } = 14;
 
     [Required]
     [Range(6, 18)]
