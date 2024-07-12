@@ -7,7 +7,7 @@ on:
   push:
     branches:
       - main
-     paths:
+    paths:
       - MyFinance-Backend/**
       - MyFinance-Backend/**
       - .github/workflows/main_myfinance-api.yml
