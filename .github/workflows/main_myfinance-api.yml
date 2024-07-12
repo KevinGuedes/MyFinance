@@ -9,6 +9,9 @@ on:
       - main
   workflow_dispatch:
 
+env:
+  ConnectionStrings__MyFinanceDb: ${{ secrets.AZURE_SQL_CONNECTION_STRING }}
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -21,10 +24,33 @@ jobs:
         with:
           dotnet-version: '8.x'
           include-prerelease: true
+      
+      - name: Azure Login
+        uses: azure/login@v2
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+      
+      - name: Get Current IP Address
+        id: ip
+        uses: haythem/public-ip@v1.2
+
+       name: Add IP address to SQL Server
+        run: az sql server firewall-rule create --resource-group my-finance --server myfinance-sql-server-sta --name ghactions --start-ip-address ${{ steps.ip.outputs.ipv4 }} --end-ip-address ${{ steps.ip.outputs.ipv4 }}
+
+      - name: Install EF Tools
+        run: dotnet tool install --global dotnet-ef
+        working-directory: MyFinance-Backend
 
       - name: Build with dotnet
         run: dotnet build --configuration Release
         working-directory: MyFinance-Backend
+
+      - name: Update Database
+        run: dotnet ef database update -p MyFinance.Infrastructure -s MyFinance.Presentation
+        working-directory: MyFinance-Backend
+
+      name: Remove IP address to SQL Server
+        run: az sql server firewall-rule delete --resource-group my-finance --server myfinance-sql-server-sta --name ghactions
 
       - name: dotnet publish
         run: dotnet publish -c Release -o ${{env.DOTNET_ROOT}}/myapp
