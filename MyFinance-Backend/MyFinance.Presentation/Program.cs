@@ -23,7 +23,10 @@ var app = builder.Build();
         options
             .AllowAnyHeader()
             .AllowAnyMethod()
-            .WithOrigins("https://localhost:5173", "https://localhost:4173")
+            .WithOrigins(
+                "https://localhost:5173", 
+                "https://localhost:4173", 
+                "https://victorious-water-059f4d50f.5.azurestaticapps.net/")
             .AllowCredentials());
 
     if (!app.Environment.IsProduction())
