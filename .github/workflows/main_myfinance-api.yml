@@ -1,12 +1,16 @@
 # Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
 # More GitHub Actions for Azure: https://github.com/Azure/actions
 
-name: Build and deploy ASP.Net Core app to Azure Web App - myfinance-api
+name: My Finance API (Build & Deploy)
 
 on:
   push:
     branches:
       - main
+     paths:
+      - MyFinance-Backend/**
+      - MyFinance-Backend/**
+      - .github/workflows/main_myfinance-api.yml
   workflow_dispatch:
 
 # env:
@@ -24,15 +28,14 @@ jobs:
         with:
           dotnet-version: '8.x'
           include-prerelease: true
-      
+      # - name: Get Current IP Address
+      #   id: ip
+      #   uses: haythem/public-ip@v1.2
+
       # - name: Azure Login
       #   uses: azure/login@v2
       #   with:
       #     creds: ${{ secrets.AZURE_CREDENTIALS }}
-      
-      # - name: Get Current IP Address
-      #   id: ip
-      #   uses: haythem/public-ip@v1.2
 
       # - name: Add IP address to SQL Server
       #   run: az sql server firewall-rule create --resource-group my-finance --server myfinance-sql-server-sta --name ghactions --start-ip-address ${{ steps.ip.outputs.ipv4 }} --end-ip-address ${{ steps.ip.outputs.ipv4 }}
@@ -46,10 +49,11 @@ jobs:
         working-directory: MyFinance-Backend
 
       # - name: Update Database
-      #   run: dotnet ef database update -p MyFinance.Infrastructure -s MyFinance.Presentation
+      #   run: dotnet ef database update -p MyFinance.Infrastructure -s MyFinance.Presentation --no-build
       #   working-directory: MyFinance-Backend
 
       # - name: Remove IP address to SQL Server
+      #   if: always()
       #   run: az sql server firewall-rule delete --resource-group my-finance --server myfinance-sql-server-sta --name ghactions
 
       - name: dotnet publish
