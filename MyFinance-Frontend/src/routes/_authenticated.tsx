@@ -65,7 +65,7 @@ function AuthenticatedLayout() {
             </p>
             <p className="text-muted-foreground">
               Sorry for the inconvenience.
-              {import.meta.env.TEST_ENV_VITE}
+              {import.meta.env.VITE_TEST_ENV_VITE}
             </p>
           </div>
           <Button variant="default" onClick={handleRetry}>

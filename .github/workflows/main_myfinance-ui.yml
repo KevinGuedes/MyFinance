@@ -39,7 +39,7 @@ jobs:
           app_build_command: "npm run build-staging"
           ###### End of Repository/Build Configurations ######
         env: 
-          TEST_ENV_VITE: ${{ secrets.TEST_ENV_VITE }}
+          VITE_TEST_ENV_VITE: ${{ secrets.TEST_ENV_VITE }}
 
   close_pull_request_job:
     if: github.event_name == 'pull_request' && github.event.action == 'closed'

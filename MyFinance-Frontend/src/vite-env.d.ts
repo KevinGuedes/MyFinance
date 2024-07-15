@@ -2,7 +2,7 @@
 
 interface ImportMetaEnv {
     readonly VITE_TEST: string
-    readonly TEST_ENV_VITE: string
+    readonly VITE_TEST_ENV_VITE: string
   }
   
   interface ImportMeta {
