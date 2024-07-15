@@ -17,7 +17,7 @@ internal sealed class GetDiscriminatedBalanceDataHandler(ITransferRepository tra
         CancellationToken cancellationToken)
     {
         var (fromDate, toDate) = PastMonthsHelper.GetDateRangeFromPastMonths(
-            query.PastMonths, 
+            query.PastMonths,
             query.IncludeCurrentMonth);
 
         var discriminatedBalanceData = await _transferRepository

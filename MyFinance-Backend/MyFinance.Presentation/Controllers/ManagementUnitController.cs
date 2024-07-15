@@ -55,7 +55,7 @@ public class ManagementUnitController(IMediator mediator) : ApiController(mediat
     [SwaggerResponse(StatusCodes.Status404NotFound, "Management Unit not found", typeof(EntityNotFoundError))]
     [SwaggerResponse(StatusCodes.Status400BadRequest, "Invalid query parameters", typeof(ValidationProblemResponse))]
     public async Task<IActionResult> GetManagementUnitByIdAsync(
-       [FromRoute] [SwaggerParameter("The Management Unit Id", Required = true)] Guid id,
+       [FromRoute][SwaggerParameter("The Management Unit Id", Required = true)] Guid id,
        CancellationToken cancellationToken)
         => ProcessResult(await _mediator.Send(new GetManagementUnitQuery(id), cancellationToken));
 

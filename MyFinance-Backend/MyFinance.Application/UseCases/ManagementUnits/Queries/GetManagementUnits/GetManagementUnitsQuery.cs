@@ -5,9 +5,9 @@ using MyFinance.Contracts.ManagementUnit.Responses;
 namespace MyFinance.Application.UseCases.ManagementUnits.Queries.GetManagementUnits;
 
 public sealed record GetManagementUnitsQuery(
-    int PageNumber, 
+    int PageNumber,
     int PageSize,
-    string? SearchTerm) 
+    string? SearchTerm)
     : IQuery<Paginated<ManagementUnitResponse>>
 {
 }

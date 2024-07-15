@@ -56,7 +56,7 @@ public class UserController(IMediator mediator) : ApiController(mediator)
     [AllowAnonymous]
     [HttpPost("SignIn")]
     [SwaggerOperation(
-        Summary = "Signs in an existing User", 
+        Summary = "Signs in an existing User",
         Description = "Password sign in for users who have already confirmed their email",
         Tags = ["User"])]
     [SwaggerResponse(StatusCodes.Status200OK, "User successfully signed in", typeof(UserResponse))]
@@ -129,7 +129,7 @@ public class UserController(IMediator mediator) : ApiController(mediator)
         ResetPasswordRequest request,
         CancellationToken cancellationToken)
         => ProcessResult(await _mediator.Send(UserMapper.RTC.Map(request), cancellationToken));
-    
+
     [HttpGet("Info")]
     [SwaggerOperation(Summary = "Gets the current user basic information")]
     [SwaggerResponse(StatusCodes.Status200OK, "User's basic information", typeof(UserResponse))]

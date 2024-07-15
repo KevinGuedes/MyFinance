@@ -18,14 +18,14 @@ public static class ApplicationDependencyInjection
     }
 
     public static IServiceCollection AddValidators(
-        this IServiceCollection services, 
+        this IServiceCollection services,
         Assembly applicationLayerAssembly)
         => services
             .AddFluentValidationClientsideAdapters()
             .AddValidatorsFromAssembly(applicationLayerAssembly);
 
     private static IServiceCollection AddMediatR(
-        this IServiceCollection services, 
+        this IServiceCollection services,
         Assembly applicationLayerAssembly)
         => services
             .AddMediatR(cfg =>

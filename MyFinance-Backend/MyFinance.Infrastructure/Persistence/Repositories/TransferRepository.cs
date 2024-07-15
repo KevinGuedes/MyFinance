@@ -135,12 +135,12 @@ internal sealed class TransferRepository(MyFinanceDbContext myFinanceDbContext)
                 transfer.SettlementDate >= fromDate &&
                 transfer.SettlementDate <= toDate &&
                 transfer.ManagementUnitId == managementUnitId)
-            .GroupBy(transfer => new 
-            { 
-                transfer.SettlementDate.Month, 
-                transfer.SettlementDate.Year 
+            .GroupBy(transfer => new
+            {
+                transfer.SettlementDate.Month,
+                transfer.SettlementDate.Year
             })
-            .Select(transferGroup => new 
+            .Select(transferGroup => new
             {
                 transferGroup.Key.Year,
                 transferGroup.Key.Month,

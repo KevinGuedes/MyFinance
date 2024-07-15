@@ -3,7 +3,6 @@ using MyFinance.Application.Abstractions.Persistence.Repositories;
 using MyFinance.Application.Abstractions.RequestHandling.Queries;
 using MyFinance.Application.Common.Errors;
 using MyFinance.Application.Mappers;
-using MyFinance.Contracts.Common;
 using MyFinance.Contracts.ManagementUnit.Responses;
 
 namespace MyFinance.Application.UseCases.ManagementUnits.Queries.GetManagementUnit;

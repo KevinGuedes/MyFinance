@@ -16,7 +16,7 @@ internal sealed class GetAccountTagsHandler(IAccountTagRepository accountTagRepo
         CancellationToken cancellationToken)
     {
         var totalCount = await _accountTagRepository.GetTotalCountAsync(
-            query.ManagementUnitId, 
+            query.ManagementUnitId,
             cancellationToken);
 
         var accountTags = await _accountTagRepository.GetPaginatedAsync(

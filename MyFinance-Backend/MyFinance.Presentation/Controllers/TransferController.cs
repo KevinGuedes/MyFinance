@@ -28,7 +28,7 @@ public class TransferController(IMediator mediator) : ApiController(mediator)
         [FromQuery][SwaggerParameter("End date", Required = false)]
         DateOnly endDate,
         [FromQuery][SwaggerParameter("Category Id", Required = false)]
-        Guid categoryId,    
+        Guid categoryId,
         [FromQuery][SwaggerParameter("Account Tag Id", Required = false)]
         Guid accountTagId,
         [FromQuery][SwaggerParameter("Page number", Required = true)]
@@ -81,7 +81,7 @@ public class TransferController(IMediator mediator) : ApiController(mediator)
     [SwaggerResponse(StatusCodes.Status200OK, "Balance data", typeof(DiscriminatedBalanceDataResponse))]
     [SwaggerResponse(StatusCodes.Status400BadRequest, "Invalid query parameters", typeof(ValidationProblemResponse))]
     public async Task<IActionResult> GetDiscriminatedAnnualBalanceAsync(
-        [FromQuery][SwaggerParameter("Management Unit Id", Required = true)] 
+        [FromQuery][SwaggerParameter("Management Unit Id", Required = true)]
         Guid managementUnitId,
         [FromQuery][SwaggerParameter("Past Months", Required = true)]
         int pastMonths,

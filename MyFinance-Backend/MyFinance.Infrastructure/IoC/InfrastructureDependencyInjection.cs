@@ -22,7 +22,9 @@ namespace MyFinance.Infrastructure.IoC;
 
 public static class InfrastructureDependencyInjection
 {
-    public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
+    public static IServiceCollection AddInfrastructure(
+        this IServiceCollection services,
+        IConfiguration configuration)
     {
         services
             .AddDataProtection();
@@ -32,7 +34,7 @@ public static class InfrastructureDependencyInjection
             .AddAuth()
             .AddPersistence(configuration)
             .AddHelthCheckForExternalServices()
-            .AddInfrastructureServices();
+            .AddInfrastructureServices(configuration);
     }
 
     private static IServiceCollection AddAuth(this IServiceCollection services)
@@ -49,7 +51,7 @@ public static class InfrastructureDependencyInjection
     {
         services.AddDbContext<MyFinanceDbContext>(
             options => options
-                .UseSqlServer(configuration.GetConnectionString("MyFinanceDb"),
+                .UseSqlServer(configuration.GetConnectionString("Database"),
                     sqlServerOptions => sqlServerOptions
                         .UseQuerySplittingBehavior(QuerySplittingBehavior.SingleQuery)
                         .MigrationsAssembly(Assembly.GetExecutingAssembly().FullName)));
@@ -73,15 +75,16 @@ public static class InfrastructureDependencyInjection
         return services;
     }
 
-    private static IServiceCollection AddInfrastructureServices(this IServiceCollection services)
+    private static IServiceCollection AddInfrastructureServices(
+        this IServiceCollection services,
+        IConfiguration configuration)
     {
         services
-            .AddOptionsWithValidationOnStart<TokenOptions>()
-            .AddOptionsWithValidationOnStart<LockoutOptions>()
-            .AddOptionsWithValidationOnStart<PasswordOptions>(passwordOptions =>
-            {
-                passwordOptions.IsHashingAlgorithmUpToDate = true;
-            });
+            .AddOptionsWithValidationOnStart<LockoutOptions>();
+
+        services
+            .BindOptionsWithValidationOnStart<TokenOptions>(configuration)
+            .BindOptionsWithValidationOnStart<PasswordOptions>(configuration);
 
         return services
             .AddScoped<ISummaryService, SummaryService>()
@@ -105,6 +108,20 @@ public static class InfrastructureDependencyInjection
 
         if (configureOptions is not null)
             optionsBuilder.Configure(configureOptions);
+
+        return services;
+    }
+
+    private static IServiceCollection BindOptionsWithValidationOnStart<TOptions>(
+        this IServiceCollection services,
+        IConfiguration configuration)
+        where TOptions : class, IValidatableOptions
+    {
+        services
+            .AddOptions<TOptions>()
+            .Bind(configuration.GetSection(typeof(TOptions).Name))
+            .ValidateOnStart()
+            .ValidateDataAnnotations();
 
         return services;
     }

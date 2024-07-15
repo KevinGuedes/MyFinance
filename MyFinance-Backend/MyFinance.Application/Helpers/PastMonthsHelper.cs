@@ -3,7 +3,7 @@
 internal static class PastMonthsHelper
 {
     public static (DateTime FromDate, DateTime ToDate) GetDateRangeFromPastMonths(
-        int pastMonths, 
+        int pastMonths,
         bool includeCurrentMont)
     {
         var today = DateTime.UtcNow;

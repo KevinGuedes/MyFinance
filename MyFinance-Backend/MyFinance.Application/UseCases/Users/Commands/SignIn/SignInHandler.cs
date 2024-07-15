@@ -47,7 +47,7 @@ internal sealed class SignInHandler(
             await _signInManager.SignInAsync(user);
 
             var signInResponse = UserMapper.DTR.Map(user, _passwordManager.ShouldUpdatePassword(user));
-            
+
             return Result.Ok(signInResponse);
         }
 

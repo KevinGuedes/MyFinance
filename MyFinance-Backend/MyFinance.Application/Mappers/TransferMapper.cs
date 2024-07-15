@@ -69,7 +69,7 @@ public static class TransferMapper
             DateTime fromDate,
             DateTime toDate)
         {
-            var existingMonthlyBalances = discriminatedBalanceData.Select(monthlyBalanceData => 
+            var existingMonthlyBalances = discriminatedBalanceData.Select(monthlyBalanceData =>
             {
                 var referenceDate = new DateTime(monthlyBalanceData.Year, monthlyBalanceData.Month, 1);
 
@@ -108,7 +108,7 @@ public static class TransferMapper
                     Outcome = 0.00000m,
                 };
 
-             
+
                 loopDate = loopDate.AddMonths(1);
             }
 

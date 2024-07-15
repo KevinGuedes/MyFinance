@@ -16,7 +16,7 @@ internal sealed class SignInManager(IHttpContextAccessor httpContextAccessor)
     public async Task SignInAsync(User user)
     {
         ArgumentNullException.ThrowIfNull(
-            _httpContextAccessor.HttpContext, 
+            _httpContextAccessor.HttpContext,
             nameof(_httpContextAccessor.HttpContext));
 
         var claims = new List<Claim>
