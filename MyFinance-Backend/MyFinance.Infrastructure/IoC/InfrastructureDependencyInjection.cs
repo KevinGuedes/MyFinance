@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Azure;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using MyFinance.Application.Abstractions.Persistence.Repositories;
@@ -14,6 +15,7 @@ using MyFinance.Infrastructure.Services.EmailSender;
 using MyFinance.Infrastructure.Services.LockoutManager;
 using MyFinance.Infrastructure.Services.PasswordManager;
 using MyFinance.Infrastructure.Services.SignInManager;
+using MyFinance.Infrastructure.Services.Storage;
 using MyFinance.Infrastructure.Services.Summary;
 using MyFinance.Infrastructure.Services.TokenProvider;
 using System.Reflection;
@@ -84,9 +86,16 @@ public static class InfrastructureDependencyInjection
 
         services
             .BindOptionsWithValidationOnStart<TokenOptions>(configuration)
-            .BindOptionsWithValidationOnStart<PasswordOptions>(configuration);
+            .BindOptionsWithValidationOnStart<PasswordOptions>(configuration)
+            .BindOptionsWithValidationOnStart<StorageOptions>(configuration);
+
+        services.AddAzureClients(clientBuilder =>
+        {
+            clientBuilder.AddBlobServiceClient(configuration.GetConnectionString("Storage"));
+        });
 
         return services
+            .AddScoped<IStorage, Storage>()
             .AddScoped<ISummaryService, SummaryService>()
             .AddScoped<ITokenProvider, TokenProvider>()
             .AddScoped<IPasswordManager, PasswordManager>()
