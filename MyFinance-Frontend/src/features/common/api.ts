@@ -4,7 +4,7 @@ import { useUserStore } from '@/features/user/stores/user-store'
 
 function createApi(resourcePath: string) {
   const api = axios.create({
-    baseURL: 'https://myfinance-api.shop/' + resourcePath,
+    baseURL: import.meta.env.VITE_TEST_ENV_VITE + resourcePath,
     withCredentials: true,
   })
 
