@@ -1,5 +1,4 @@
 import { createFileRoute, Outlet } from '@tanstack/react-router'
-import axios from 'axios'
 import { Loader2 } from 'lucide-react'
 import { useCallback, useEffect } from 'react'
 
@@ -65,7 +64,7 @@ function AuthenticatedLayout() {
               Uh oh! My Finance seems to be offline now, please try again later.
             </p>
             <p className="text-muted-foreground">
-              Sorry for the inconvenience.
+              Sorry for the inconvenience!
             </p>
           </div>
           <Button variant="default" onClick={handleRetry}>
