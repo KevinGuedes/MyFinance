@@ -13,12 +13,6 @@ var builder = WebApplication.CreateBuilder(args);
 var app = builder.Build();
 {
     app.UseExceptionHandler();
-    app.UseCors(options =>
-        options
-            .AllowAnyHeader()
-            .AllowAnyMethod()
-            .WithOrigins(app.Configuration.GetSection("FrontendUrl").Get<string>()!)
-            .AllowCredentials());
 
     if (!app.Environment.IsProduction())
     {

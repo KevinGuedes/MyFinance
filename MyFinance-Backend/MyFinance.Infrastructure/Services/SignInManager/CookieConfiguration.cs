@@ -27,10 +27,10 @@ internal sealed class CookieConfiguration(
     {
         options.Cookie.Name = "MF-Access-Token";
         options.Cookie.HttpOnly = true;
-        options.Cookie.SameSite = SameSiteMode.None;
+        options.Cookie.SameSite = SameSiteMode.Strict;
         options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
         options.Cookie.IsEssential = true;
-        options.SlidingExpiration = false;
+        options.SlidingExpiration = true;
         options.ExpireTimeSpan = TimeSpan.FromMinutes(20);
 
         options.Events.OnRedirectToLogin = async context =>
