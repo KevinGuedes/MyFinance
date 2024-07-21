@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
 
-namespace MyFinance.Application.Common.CustomValidationRules;
+namespace MyFinance.Application.Common.CustomValidators;
 
 public static class PasswordValidator
 {

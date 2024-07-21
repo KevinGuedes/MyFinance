@@ -1,7 +1,6 @@
 ﻿using MyFinance.Application.UseCases.AccountTags.Commands.ArchiveAccountTag;
 using MyFinance.Application.UseCases.AccountTags.Commands.CreateAccountTag;
 using MyFinance.Application.UseCases.AccountTags.Commands.UpdateAccountTag;
-using MyFinance.Contracts.AccountTag;
 using MyFinance.Contracts.AccountTag.Requests;
 using MyFinance.Contracts.AccountTag.Responses;
 using MyFinance.Contracts.Common;
