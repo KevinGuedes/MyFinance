@@ -4,7 +4,7 @@
         <TargetFramework>net8.0</TargetFramework>
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
-		<SpaRoot>..\MyFinance.UI</SpaRoot>
+		<SpaRoot>..\MyFinance.Client</SpaRoot>
 		<SpaProxyLaunchCommand>npm run dev</SpaProxyLaunchCommand>
 		<SpaProxyServerUrl>https://localhost:5173</SpaProxyServerUrl>
     </PropertyGroup>
@@ -24,11 +24,11 @@
     <ItemGroup>
         <ProjectReference Include="..\MyFinance.Application\MyFinance.Application.csproj" />
         <ProjectReference Include="..\MyFinance.Infrastructure\MyFinance.Infrastructure.csproj" />
-        <ProjectReference Include="..\MyFinance.UI\MyFinance.UI.esproj" />
+        <ProjectReference Include="..\MyFinance.Client\MyFinance.Client.esproj" />
     </ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\MyFinance.UI\MyFinance.UI.esproj">
+		<ProjectReference Include="..\MyFinance.Client\MyFinance.UI.esproj">
 			<ReferenceOutputAssembly>false</ReferenceOutputAssembly>
 		</ProjectReference>
 	</ItemGroup>
