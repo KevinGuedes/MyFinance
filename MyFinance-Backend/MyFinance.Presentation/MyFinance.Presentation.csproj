@@ -28,7 +28,7 @@
     </ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\MyFinance.Client\MyFinance.UI.esproj">
+		<ProjectReference Include="..\MyFinance.Client\MyFinance.Client.esproj">
 			<ReferenceOutputAssembly>false</ReferenceOutputAssembly>
 		</ProjectReference>
 	</ItemGroup>
