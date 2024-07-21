@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
 using MyFinance.Application.Abstractions.Persistence.Repositories;
-using MyFinance.Application.Common.CustomValidationRules;
+using MyFinance.Application.Common.CustomValidators;
 
 namespace MyFinance.Application.UseCases.Users.Commands.SignUp;
 
