@@ -12,6 +12,8 @@ var builder = WebApplication.CreateBuilder(args);
 
 var app = builder.Build();
 {
+    app.UseDefaultFiles();
+    app.UseStaticFiles();
     app.UseExceptionHandler();
 
     if (!app.Environment.IsProduction())
@@ -20,6 +22,7 @@ var app = builder.Build();
             .UseSwagger()
             .UseSwaggerUI(options =>
             {
+                options.SwaggerEndpoint("/swagger/v1/swagger.json", "MyFinance API");
                 options.DocumentTitle = "MyFinance API";
                 options.ConfigObject.TryItOutEnabled = true;
                 options.ConfigObject.DisplayRequestDuration = true;
@@ -30,5 +33,6 @@ var app = builder.Build();
     app.UseAuthentication();
     app.UseAuthorization();
     app.MapControllers().RequireAuthorization();
+    app.MapFallbackToFile("/index.html");
     app.Run();
 }
