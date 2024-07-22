@@ -13,6 +13,7 @@ function createApi(resourcePath: string) {
     (error: AxiosError) => {
       if (error.response?.status === HttpStatusCode.Unauthorized) {
         useUserStore.getState().clearUserInfo()
+        return
       }
 
       return Promise.reject(error)
