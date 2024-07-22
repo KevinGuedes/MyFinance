@@ -10,6 +10,7 @@ namespace MyFinance.Presentation.Controllers;
 
 [ApiController]
 [Route("[controller]")]
+[Produces("application/problem+json")]
 [SwaggerResponse(StatusCodes.Status500InternalServerError, "Backend went rogue", typeof(ProblemResponse))]
 public abstract class ApiController(IMediator mediator) : ControllerBase
 {
