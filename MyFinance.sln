@@ -17,6 +17,13 @@ Project("{54A90642-561A-4BB1-A94E-469ADEE60C69}") = "MyFinance.UI", "MyFinance.U
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MyFinance.Presentation", "MyFinance.Presentation\MyFinance.Presentation.csproj", "{1FE86601-5D4E-48E9-AF00-1C1E670A056A}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{845FE6ED-9520-4865-8D67-15822AEBA08A}"
+	ProjectSection(SolutionItems) = preProject
+		.gitignore = .gitignore
+		.github\workflows\main_myfinance-api.yml = .github\workflows\main_myfinance-api.yml
+		README.md = README.md
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
