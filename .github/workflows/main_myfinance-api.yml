@@ -52,7 +52,7 @@ jobs:
       #   run: az sql server firewall-rule delete --resource-group my-finance --server myfinance-sql-server-sta --name ghactions
 
       - name: dotnet publish
-        run: dotnet publish -c Release --property:OutputPath=${{env.DOTNET_ROOT}}/myapp
+        run: dotnet publish -c Release --property:PublishDir=${{env.DOTNET_ROOT}}/myapp
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v3
