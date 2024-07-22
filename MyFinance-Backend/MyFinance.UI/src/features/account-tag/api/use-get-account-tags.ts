@@ -30,8 +30,9 @@ export const useGetAccountTags = (
       previousFetchedPage.hasNextPage
         ? previousFetchedPage.pageNumber + 1
         : undefined,
-    refetchOnWindowFocus: false,
     placeholderData: keepPreviousData,
+    refetchOnWindowFocus: false,
+    refetchOnMount: false
   })
 
   return infiniteQuery

@@ -30,9 +30,9 @@ export const useGetCategories = (
       previousFetchedPage.hasNextPage
         ? previousFetchedPage.pageNumber + 1
         : undefined,
-    refetchOnWindowFocus: false,
     placeholderData: keepPreviousData,
-    refetchOnMount: false,
+    refetchOnWindowFocus: false,
+    refetchOnMount: false
   })
 
   return infiniteQuery

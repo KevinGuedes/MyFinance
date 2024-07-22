@@ -8,12 +8,15 @@ export const useGetManagementUnit = (managementUnitId: string) => {
   const query = useQuery({
     queryKey: ['management-unit', { managementUnitId }],
     staleTime: Infinity,
+    retry: 3,
     queryFn: async () => {
       const { data: managemenUnit } =
         await managementUnitApi.get<ManagementUnit>(managementUnitId)
 
       return managemenUnit
     },
+    refetchOnWindowFocus: false,
+    refetchOnMount: false
   })
 
   return query

@@ -18,6 +18,7 @@ export const useGetDiscriminatedBalance = (
       { managementUnitId, pastMonths, includeCurrentMonth },
     ],
     staleTime: Infinity,
+    retry: 3,
     placeholderData: keepPreviousData,
     queryFn: async () => {
       const { data: discriminatedBalanceDataResponse } =
@@ -34,6 +35,8 @@ export const useGetDiscriminatedBalance = (
 
       return discriminatedBalanceDataResponse
     },
+    refetchOnWindowFocus: false,
+    refetchOnMount: false
   })
 
   return query

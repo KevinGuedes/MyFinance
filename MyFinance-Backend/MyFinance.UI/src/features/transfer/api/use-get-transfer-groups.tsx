@@ -13,6 +13,7 @@ export const useGetTransferGroups = (
     queryKey: ['transfers', { pageNumber, pageSize, managementUnitId }],
     staleTime: Infinity,
     placeholderData: keepPreviousData,
+    retry: 3,
     queryFn: async () => {
       await new Promise((resolve) => setTimeout(resolve, 3000))
       const { data: paginatedTransferGroups } = await transferApi.get<
@@ -46,6 +47,8 @@ export const useGetTransferGroups = (
 
       return { ...paginatedTransferGroups, items: formattedTransferGroups }
     },
+    refetchOnWindowFocus: false,
+    refetchOnMount: false
   })
 
   return query

@@ -8,14 +8,7 @@ import { ThemeProvider } from '@/components/ui/theme-provider'
 import { Toaster } from './components/ui/toast/toaster'
 import { routeTree } from './routeTree.gen'
 
-const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      retry: 3,
-      staleTime: 1000 * 60 * 5,
-    },
-  },
-})
+const queryClient = new QueryClient()
 
 export const router = createRouter({
   routeTree,
