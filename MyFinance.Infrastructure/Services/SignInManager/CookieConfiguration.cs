@@ -26,9 +26,9 @@ internal sealed class CookieConfiguration(
     public void Configure(CookieAuthenticationOptions options)
     {
         options.Cookie.Name = "MF-Access-Token";
-        options.Cookie.HttpOnly = true;
         options.Cookie.SameSite = SameSiteMode.Strict;
         options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+        options.Cookie.HttpOnly = true;
         options.Cookie.IsEssential = true;
         options.SlidingExpiration = true;
         options.ExpireTimeSpan = TimeSpan.FromMinutes(20);
