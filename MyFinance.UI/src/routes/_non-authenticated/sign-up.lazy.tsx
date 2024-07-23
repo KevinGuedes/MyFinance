@@ -16,7 +16,7 @@ export const Route = createLazyFileRoute('/_non-authenticated/sign-up')({
 
 function SignUp() {
   return (
-    <Card className="mx-auto w-full max-w-sm">
+    <Card className="w-full sm:mx-auto sm:max-w-sm">
       <CardHeader>
         <CardTitle className="text-2xl">Sign Up</CardTitle>
         <CardDescription>

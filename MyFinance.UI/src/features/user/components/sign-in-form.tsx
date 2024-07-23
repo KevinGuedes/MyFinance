@@ -43,46 +43,49 @@ export function SignInForm() {
   }
 
   return (
-    <div className="space-y-4">
-      <Form {...form}>
-        <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4">
-          <FormField
-            control={form.control}
-            name="email"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Email</FormLabel>
-                <FormControl>
-                  <Input type="email" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+    <Form {...form}>
+      <form
+        onSubmit={form.handleSubmit(handleSubmit)}
+        className="flex grow flex-col space-y-4"
+      >
+        <FormField
+          control={form.control}
+          name="email"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Email</FormLabel>
+              <FormControl>
+                <Input type="email" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
 
-          <FormField
-            control={form.control}
-            name="plainTextPassword"
-            render={({ field }) => (
-              <FormItem>
-                <div className="flex items-center">
-                  <FormLabel htmlFor="password">Password</FormLabel>
-                  <Button
-                    variant="link"
-                    asChild
-                    className="ml-auto inline-block h-auto p-0 text-sm"
-                  >
-                    <Link to="/">Forgot your password?</Link>
-                  </Button>
-                </div>
-                <FormControl>
-                  <PasswordInput {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+        <FormField
+          control={form.control}
+          name="plainTextPassword"
+          render={({ field }) => (
+            <FormItem>
+              <div className="flex items-center">
+                <FormLabel htmlFor="password">Password</FormLabel>
+                <Button
+                  variant="link"
+                  asChild
+                  className="ml-auto inline-block h-auto p-0 text-sm"
+                >
+                  <Link to="/">Forgot your password?</Link>
+                </Button>
+              </div>
+              <FormControl>
+                <PasswordInput {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
 
+        <div className="flex grow items-end">
           <Button
             type="submit"
             className="w-full"
@@ -100,8 +103,8 @@ export function SignInForm() {
               </>
             )}
           </Button>
-        </form>
-      </Form>
-    </div>
+        </div>
+      </form>
+    </Form>
   )
 }
