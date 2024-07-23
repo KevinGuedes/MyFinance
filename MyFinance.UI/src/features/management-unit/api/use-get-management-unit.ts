@@ -16,7 +16,7 @@ export const useGetManagementUnit = (managementUnitId: string) => {
       return managemenUnit
     },
     refetchOnWindowFocus: false,
-    refetchOnMount: false
+    refetchOnMount: false,
   })
 
   return query
