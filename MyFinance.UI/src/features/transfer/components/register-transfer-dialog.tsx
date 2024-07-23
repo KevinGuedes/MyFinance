@@ -14,9 +14,11 @@ import {
 import { TransferType } from '@/features/transfer/models/transfer-type'
 import { getEnumValueByKey } from '@/lib/utils'
 
+import { useRegisterTransfer } from '../api/use-register-transfer'
 import { TransferForm, TransferFormSchema } from './transfer-form'
 
 export function RegisterTransferDialog() {
+  const registerTransferMutation = useRegisterTransfer()
   const [isDialogOpen, setIsDialogOpen] = useState(false)
   const { managementUnitId } = useParams({ strict: false })
 
@@ -24,7 +26,11 @@ export function RegisterTransferDialog() {
     values: TransferFormSchema,
     shouldCloseDialog: boolean = true,
   ) {
-    console.log(formatValues(values))
+    await registerTransferMutation.mutateAsync({
+      ...formatValues(values),
+      managementUnitId: managementUnitId!,
+    })
+
     setIsDialogOpen(!shouldCloseDialog)
   }
 

@@ -36,7 +36,7 @@ const transferFormSchema = z.object({
     .number({ message: 'Value is required' })
     .positive({ message: 'Value is required' }),
   relatedTo: z.string().min(1, { message: 'Related to is required' }),
-  description: z.string().optional(),
+  description: z.string().min(1, { message: 'Description is required' }),
   settlementDate: z
     .date()
     .optional()
@@ -44,10 +44,7 @@ const transferFormSchema = z.object({
       message: 'Settlement Date is required',
     }),
   categoryId: z.string().min(1, { message: 'Category  is required' }),
-  accountTagId: z
-    .string()
-    .min(1, { message: 'Account Tag is required' })
-    .optional(),
+  accountTagId: z.string().min(1, { message: 'Account Tag is required' }),
   type: z
     .enum(getEnumKeys(TransferType), {
       message: 'Transfer type is required',

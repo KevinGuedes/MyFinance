@@ -12,17 +12,19 @@ type TransferGroupProps = {
 
 export function TransferGroupSection({ transferGroup }: TransferGroupProps) {
   const formattedGroupDate = format(transferGroup.date, 'EEEE dd, MMMM yyyy')
-  // console.log(transferGroup.date, formattedGroupDate)
+
   return (
-    <article className="space-y-1 p-4">
+    <article className="space-y-1 pr-2">
       <div className="sticky top-0 bg-background">
-        <h3 className=" mb-2 rounded-lg bg-muted/40 px-4 py-1 text-base font-medium">
+        <h3 className="mb-2 rounded-lg bg-muted/40 px-4 py-2 font-medium">
           {formattedGroupDate}
         </h3>
       </div>
-      <header className="space-y-1 border-b pb-1.5">
-        <h4 className="text-base text-muted-foreground">Daily Balance</h4>
-        <div className="flex items-center justify-between">
+      <header className="space-y-1.5 pb-2">
+        <h4 className="px-1 text-base font-medium text-muted-foreground">
+          Daily Balance
+        </h4>
+        <div className="flex items-center justify-between px-1">
           <div className="space-y-1">
             <div className="flex gap-2">
               <PiggyBank className="inline-block size-6 shrink-0 rounded-md bg-muted-foreground/30 p-1 text-muted-foreground" />
@@ -52,8 +54,8 @@ export function TransferGroupSection({ transferGroup }: TransferGroupProps) {
           </div>
         </div>
       </header>
-      <section>
-        <ul className="list-none gap-6 divide-y-[1px]">
+      <section className="px-1">
+        <ul className="list-none gap-6 divide-y-[1px] first:border-t last:border-b">
           {transferGroup.transfers.map((transfer) => (
             <TransferItem key={transfer.id} transfer={transfer} />
           ))}

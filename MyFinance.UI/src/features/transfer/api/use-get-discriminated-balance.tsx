@@ -36,7 +36,7 @@ export const useGetDiscriminatedBalance = (
       return discriminatedBalanceDataResponse
     },
     refetchOnWindowFocus: false,
-    refetchOnMount: false
+    refetchOnMount: false,
   })
 
   return query

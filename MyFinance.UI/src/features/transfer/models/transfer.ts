@@ -2,7 +2,7 @@ export interface Transfer {
   id: string
   relatedTo: string
   value: number
-  settlementDate: Date
+  settlementDate: string
   type: number
   accountTag: string
   category: string
