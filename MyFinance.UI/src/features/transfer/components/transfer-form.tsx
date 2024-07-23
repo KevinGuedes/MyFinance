@@ -1,6 +1,6 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Loader2, PlusCircle, TrendingDown, TrendingUp } from 'lucide-react'
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 
@@ -26,6 +26,8 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { Textarea } from '@/components/ui/textarea'
+import { useGetAccountTags } from '@/features/account-tag/api/use-get-account-tags'
+import { useGetCategories } from '@/features/category/api/use-get-categories'
 import { TransferType } from '@/features/transfer/models/transfer-type'
 import { getEnumKeys, isValidEnumKey } from '@/lib/utils'
 
@@ -36,7 +38,7 @@ const transferFormSchema = z.object({
   relatedTo: z.string().min(1, { message: 'Related to is required' }),
   description: z.string().optional(),
   settlementDate: z
-    .date({ required_error: 'Settlement Date is required' })
+    .date()
     .optional()
     .refine((settlementDate) => settlementDate !== undefined, {
       message: 'Settlement Date is required',
@@ -58,6 +60,7 @@ const transferFormSchema = z.object({
 export type TransferFormSchema = z.infer<typeof transferFormSchema>
 
 type TransferFormProps = {
+  managementUnitId: string
   defaultValues?: TransferFormSchema
   onSubmit: (
     values: TransferFormSchema,
@@ -67,10 +70,16 @@ type TransferFormProps = {
 }
 
 export function TransferForm({
+  managementUnitId,
   defaultValues,
   onSubmit,
   onCancel,
 }: TransferFormProps) {
+  const { data: categoriesData, isFetching: isFetchingCategories } =
+    useGetCategories(managementUnitId, 50)
+  const { data: accountTagsData, isFetching: isFetchingAccountTags } =
+    useGetAccountTags(managementUnitId, 50)
+
   const [isRegistering, setIsRegistering] = useState(false)
   const [isRegisteringAndAddingMore, setIsRegisteringAndAddingMore] =
     useState(false)
@@ -91,6 +100,16 @@ export function TransferForm({
     form.reset()
     setIsRegisteringAndAddingMore(false)
   }
+
+  const categories = useMemo(
+    () => categoriesData?.pages?.flatMap((page) => page.items) ?? [],
+    [categoriesData],
+  )
+
+  const accountTags = useMemo(
+    () => accountTagsData?.pages?.flatMap((page) => page.items) ?? [],
+    [accountTagsData],
+  )
 
   return (
     <Form {...form}>
@@ -201,17 +220,28 @@ export function TransferForm({
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Account Tag</FormLabel>
-                  <Select onValueChange={field.onChange} value={field.value}>
+                  <Select
+                    onValueChange={field.onChange}
+                    value={field.value}
+                    disabled={isFetchingAccountTags}
+                  >
                     <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Choose an Account Tag" />
+                      <SelectTrigger className="disabled:cursor-progress">
+                        <SelectValue
+                          placeholder={
+                            isFetchingAccountTags
+                              ? 'Loading Account Tags...'
+                              : 'Select an Account Tags'
+                          }
+                        />
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      <SelectItem value="guidId1">NU</SelectItem>
-                      <SelectItem value="guidId2">BB</SelectItem>
-                      <SelectItem value="guidId3">BRAD</SelectItem>
-                      <SelectItem value="guidId4">Not Planned</SelectItem>
+                      {accountTags.map((accountTag) => (
+                        <SelectItem key={accountTag.id} value={accountTag.id}>
+                          {accountTag.tag}
+                        </SelectItem>
+                      ))}
                     </SelectContent>
                   </Select>
                   <FormDescription>
@@ -229,17 +259,28 @@ export function TransferForm({
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Category</FormLabel>
-                  <Select onValueChange={field.onChange} value={field.value}>
+                  <Select
+                    onValueChange={field.onChange}
+                    value={field.value}
+                    disabled={isFetchingCategories}
+                  >
                     <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Choose a Category" />
+                      <SelectTrigger className="disabled:cursor-progress">
+                        <SelectValue
+                          placeholder={
+                            isFetchingCategories
+                              ? 'Loading Categories...'
+                              : 'Select an Category'
+                          }
+                        />
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      <SelectItem value="guidId1">Health</SelectItem>
-                      <SelectItem value="guidId2">Groceries</SelectItem>
-                      <SelectItem value="guidId3">Emergency</SelectItem>
-                      <SelectItem value="guidId4">Not Planned</SelectItem>
+                      {categories.map((category) => (
+                        <SelectItem key={category.id} value={category.id}>
+                          {category.name}
+                        </SelectItem>
+                      ))}
                     </SelectContent>
                   </Select>
                 </FormItem>

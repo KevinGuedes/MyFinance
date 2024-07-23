@@ -32,7 +32,7 @@ export const useGetCategories = (
         : undefined,
     placeholderData: keepPreviousData,
     refetchOnWindowFocus: false,
-    refetchOnMount: false
+    refetchOnMount: false,
   })
 
   return infiniteQuery

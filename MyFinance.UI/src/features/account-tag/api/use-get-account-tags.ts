@@ -32,7 +32,7 @@ export const useGetAccountTags = (
         : undefined,
     placeholderData: keepPreviousData,
     refetchOnWindowFocus: false,
-    refetchOnMount: false
+    refetchOnMount: false,
   })
 
   return infiniteQuery

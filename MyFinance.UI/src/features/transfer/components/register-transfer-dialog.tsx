@@ -1,3 +1,4 @@
+import { useParams } from '@tanstack/react-router'
 import { PlusCircle } from 'lucide-react'
 import { useState } from 'react'
 
@@ -17,6 +18,7 @@ import { TransferForm, TransferFormSchema } from './transfer-form'
 
 export function RegisterTransferDialog() {
   const [isDialogOpen, setIsDialogOpen] = useState(false)
+  const { managementUnitId } = useParams({ strict: false })
 
   async function onSubmit(
     values: TransferFormSchema,
@@ -59,11 +61,12 @@ export function RegisterTransferDialog() {
         <TransferForm
           onSubmit={onSubmit}
           onCancel={onCancel}
+          managementUnitId={managementUnitId!}
           defaultValues={{
             value: 0,
             relatedTo: '',
             description: '',
-            settlementDate: undefined,
+            settlementDate: new Date(),
             categoryId: '',
             accountTagId: '',
             type: '',
