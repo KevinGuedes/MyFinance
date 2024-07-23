@@ -35,7 +35,7 @@ export function UpdateCategoryDialog({
       {
         onSuccess: () => {
           setIsDialogOpen(false)
-          onOpenChange?.(true)
+          onOpenChange?.(false)
         },
       },
     )

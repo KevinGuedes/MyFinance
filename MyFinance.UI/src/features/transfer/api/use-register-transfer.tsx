@@ -34,9 +34,15 @@ export function useRegisterTransfer() {
       queryClient.invalidateQueries({
         queryKey: ['transfers', { managementUnitId }],
       })
+
       queryClient.invalidateQueries({
         queryKey: ['discriminated-balance', { managementUnitId }],
       })
+
+      queryClient.invalidateQueries({
+        queryKey: ['management-unit', { managementUnitId }],
+      })
+
       toast({
         title: 'Transfer successfully created!',
       })

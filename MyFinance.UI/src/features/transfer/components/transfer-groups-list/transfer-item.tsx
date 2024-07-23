@@ -11,7 +11,7 @@ export function TransferItem({
   transfer: { relatedTo, id, description, value, type },
 }: TransferItemProps) {
   return (
-    <li key={id} className="flex items-start justify-between gap-2 py-1.5">
+    <li key={id} className="flex items-start justify-between gap-2 py-2">
       <div className="flex flex-col">
         <p className="line-clamp-1 font-medium">{relatedTo}</p>
         <p className="line-clamp-1 text-sm text-muted-foreground">

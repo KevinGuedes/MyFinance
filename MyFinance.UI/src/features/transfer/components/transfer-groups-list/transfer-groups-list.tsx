@@ -17,8 +17,8 @@ export function TransferGroupsList({ tranferGroups }: TransferGroupList) {
   return (
     <div className="flex grow flex-col justify-between gap-4">
       {hasTransferGroups ? (
-        <ScrollArea className="h-[350px] grow" type="always">
-          <div className="grow space-y-6 pr-2">
+        <ScrollArea className="h-[600px] grow sm:h-[350px]" type="always">
+          <div className="grow space-y-4 pr-2">
             {tranferGroups.map((transferGroup) => (
               <TransferGroupSection
                 key={transferGroup.date.toString()}
