@@ -30,11 +30,18 @@ export const Route = createFileRoute(
 })
 
 function ManagementUnitDashboard() {
+  const today = new Date()
+  const managementUnitId = Route.useParams().managementUnitId
+  const managementUnitQuery = useGetManagementUnit(managementUnitId)
   const { pastMonths, includeCurrentMonth } =
     useDiscriminatedBalanceChartSettings()
-  const managementUnitId = Route.useParams().managementUnitId
-  const transferGroupsQuery = useGetTransferGroups(managementUnitId, 1, 50)
-  const managementUnitQuery = useGetManagementUnit(managementUnitId)
+  const transferGroupsQuery = useGetTransferGroups(
+    today.getMonth() + 1,
+    today.getFullYear(),
+    managementUnitId,
+    1,
+    50,
+  )
   const discriminatedBalanceQuery = useGetDiscriminatedBalance(
     managementUnitId,
     pastMonths,

@@ -14,7 +14,7 @@ export const useGetManagementUnits = (
     queryKey: ['management-units', { pageNumber, pageSize, searchTerm }],
     staleTime: searchTerm ? 3 * 60 * 1000 : Infinity,
     placeholderData: keepPreviousData,
-    retry: 3,
+    retry: 2,
     queryFn: async () => {
       const { data: paginatedManagementUnits } = await managementUnitApi.get<
         Paginated<ManagementUnit>

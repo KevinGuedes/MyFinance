@@ -5,20 +5,27 @@ import { Paginated } from '../../common/paginated'
 import { TransferGroup } from '../models/transfer-group'
 
 export const useGetTransferGroups = (
+  month: number,
+  year: number,
   managementUnitId: string,
   pageNumber: number,
   pageSize: number,
 ) => {
   const query = useQuery({
-    queryKey: ['transfers', { pageNumber, pageSize, managementUnitId }],
+    queryKey: [
+      'transfers',
+      { pageNumber, pageSize, managementUnitId, month, year },
+    ],
     staleTime: Infinity,
     placeholderData: keepPreviousData,
-    retry: 3,
+    retry: 2,
     queryFn: async () => {
       const { data: paginatedTransferGroups } = await transferApi.get<
         Paginated<TransferGroup>
       >('', {
         params: {
+          month,
+          year,
           pageNumber,
           pageSize,
           managementUnitId,

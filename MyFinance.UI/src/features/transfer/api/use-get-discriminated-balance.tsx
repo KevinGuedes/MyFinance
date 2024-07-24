@@ -18,7 +18,7 @@ export const useGetDiscriminatedBalance = (
       { managementUnitId, pastMonths, includeCurrentMonth },
     ],
     staleTime: Infinity,
-    retry: 3,
+    retry: 2,
     placeholderData: keepPreviousData,
     queryFn: async () => {
       const { data: discriminatedBalanceDataResponse } =

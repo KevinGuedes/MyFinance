@@ -11,7 +11,7 @@ export const useGetCategories = (
   const infiniteQuery = useInfiniteQuery<Paginated<Category>>({
     queryKey: ['categories', { pageSize, managementUnitId }],
     staleTime: Infinity,
-    retry: 3,
+    retry: 2,
     queryFn: async ({ pageParam }) => {
       const { data: paginatedCategories } = await categoryApi.get<
         Paginated<Category>

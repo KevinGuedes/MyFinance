@@ -11,7 +11,7 @@ export const useGetAccountTags = (
   const infiniteQuery = useInfiniteQuery<Paginated<AccountTag>>({
     queryKey: ['account-tags', { pageSize, managementUnitId }],
     staleTime: Infinity,
-    retry: 3,
+    retry: 2,
     queryFn: async ({ pageParam }) => {
       const { data: paginatedAccountTags } = await accountTagApi.get<
         Paginated<AccountTag>
