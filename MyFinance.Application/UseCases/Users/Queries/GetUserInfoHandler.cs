@@ -1,5 +1,5 @@
 ﻿using FluentResults;
-using MyFinance.Application.Abstractions.Persistence.Repositories;
+using MyFinance.Application.Abstractions.Persistence;
 using MyFinance.Application.Abstractions.RequestHandling.Queries;
 using MyFinance.Application.Abstractions.Services;
 using MyFinance.Application.Common.Errors;
@@ -9,16 +9,17 @@ using MyFinance.Contracts.User.Responses;
 namespace MyFinance.Application.UseCases.Users.Queries;
 
 internal sealed class GetUserInfoHandler(
-    IUserRepository userRepository,
+    IMyFinanceDbContext myFinanceDbContext,
     IPasswordManager passwordManager)
     : IQueryHandler<GetUserInfoQuery, UserResponse>
 {
-    private readonly IUserRepository _userRepository = userRepository;
+    private readonly IMyFinanceDbContext _myFinanceDbContext = myFinanceDbContext;
     private readonly IPasswordManager _passwordManager = passwordManager;
 
     public async Task<Result<UserResponse>> Handle(GetUserInfoQuery request, CancellationToken cancellationToken)
     {
-        var user = await _userRepository.GetByIdAsync(request.CurrentUserId, cancellationToken);
+        var user = await _myFinanceDbContext.Users
+            .FindAsync([request.CurrentUserId], cancellationToken);
 
         if (user is null)
             return Result.Fail(new InternalServerError("Unable to identify user"));

@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Mvc;
 using MyFinance.Application.Mappers;
 using MyFinance.Application.UseCases.AccountTags.Commands.UnarchiveAccountTag;
 using MyFinance.Application.UseCases.AccountTags.Queries.GetAccountTags;
-using MyFinance.Contracts.AccountTag;
 using MyFinance.Contracts.AccountTag.Requests;
 using MyFinance.Contracts.AccountTag.Responses;
 using MyFinance.Contracts.Common;

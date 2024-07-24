@@ -1,5 +1,5 @@
 ﻿using FluentResults;
-using MyFinance.Application.Abstractions.Persistence.Repositories;
+using MyFinance.Application.Abstractions.Persistence;
 using MyFinance.Application.Abstractions.RequestHandling.Commands;
 using MyFinance.Application.Abstractions.Services;
 using MyFinance.Application.Common.Errors;
@@ -8,11 +8,11 @@ namespace MyFinance.Application.UseCases.Users.Commands.ConfirmRegistration;
 
 internal sealed class ConfirmRegistrationHandler(
     ITokenProvider tokenProvider,
-    IUserRepository userRepository)
+    IMyFinanceDbContext myFinanceDbContext)
     : ICommandHandler<ConfirmRegistrationCommand>
 {
     private readonly ITokenProvider _tokenProvider = tokenProvider;
-    private readonly IUserRepository _userRepository = userRepository;
+    private readonly IMyFinanceDbContext _myFinanceDbContext = myFinanceDbContext;
 
     public async Task<Result> Handle(ConfirmRegistrationCommand command, CancellationToken cancellationToken)
     {
@@ -23,7 +23,7 @@ internal sealed class ConfirmRegistrationHandler(
         if (!isValidToken)
             return HandleInvalidConfirmRegistrationToken();
 
-        var user = await _userRepository.GetByIdAsync(userId, cancellationToken);
+        var user = await _myFinanceDbContext.Users.FindAsync([userId], cancellationToken);
 
         if (user is null)
             return HandleInvalidConfirmRegistrationToken();
@@ -32,7 +32,7 @@ internal sealed class ConfirmRegistrationHandler(
             return Result.Ok();
 
         user.VerifyEmail();
-        _userRepository.Update(user);
+        _myFinanceDbContext.Users.Update(user);
 
         return Result.Ok();
     }

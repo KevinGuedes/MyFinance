@@ -1,5 +1,5 @@
 ﻿using FluentResults;
-using MyFinance.Application.Abstractions.Persistence.Repositories;
+using MyFinance.Application.Abstractions.Persistence;
 using MyFinance.Application.Abstractions.RequestHandling.Commands;
 using MyFinance.Application.Abstractions.Services;
 using MyFinance.Application.Common.Errors;
@@ -9,12 +9,12 @@ namespace MyFinance.Application.UseCases.Users.Commands.ResetPassword;
 public sealed class ResetPasswordHandler(
     ITokenProvider tokenProvider,
     IPasswordManager passwordManager,
-    IUserRepository userRepository)
+    IMyFinanceDbContext myFinanceDbContext)
     : ICommandHandler<ResetPasswordCommand>
 {
     private readonly ITokenProvider _tokenProvider = tokenProvider;
     private readonly IPasswordManager _passwordManager = passwordManager;
-    private readonly IUserRepository _userRepository = userRepository;
+    private readonly IMyFinanceDbContext _myFinanceDbContext = myFinanceDbContext;
 
     public async Task<Result> Handle(ResetPasswordCommand command, CancellationToken cancellationToken)
     {
@@ -25,7 +25,7 @@ public sealed class ResetPasswordHandler(
         if (!isValidToken)
             return HandleInvalidResetPasswordToken();
 
-        var user = await _userRepository.GetByIdAsync(userId, cancellationToken);
+        var user = await _myFinanceDbContext.Users.FindAsync([userId], cancellationToken);
 
         if (user is null)
             return HandleInvalidResetPasswordToken();
@@ -33,7 +33,7 @@ public sealed class ResetPasswordHandler(
         var newPasswordHash = _passwordManager.HashPassword(command.PlainTextNewPassword);
 
         user.UpdatePasswordHash(newPasswordHash);
-        _userRepository.Update(user);
+        _myFinanceDbContext.Users.Update(user);
 
         return Result.Ok();
     }

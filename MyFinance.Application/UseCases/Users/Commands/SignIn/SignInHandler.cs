@@ -1,6 +1,7 @@
 ﻿using FluentResults;
 using Humanizer;
-using MyFinance.Application.Abstractions.Persistence.Repositories;
+using Microsoft.EntityFrameworkCore;
+using MyFinance.Application.Abstractions.Persistence;
 using MyFinance.Application.Abstractions.RequestHandling.Commands;
 using MyFinance.Application.Abstractions.Services;
 using MyFinance.Application.Common.Errors;
@@ -14,17 +15,18 @@ internal sealed class SignInHandler(
     IPasswordManager passwordManager,
     ILockoutManager lockoutManager,
     IEmailSender emailSender,
-    IUserRepository userRepository) : ICommandHandler<SignInCommand, UserResponse>
+    IMyFinanceDbContext myFinanceDbContext) : ICommandHandler<SignInCommand, UserResponse>
 {
     private readonly ISignInManager _signInManager = signInManager;
     private readonly IPasswordManager _passwordManager = passwordManager;
     private readonly ILockoutManager _lockoutManager = lockoutManager;
     private readonly IEmailSender _emailSender = emailSender;
-    private readonly IUserRepository _userRepository = userRepository;
+    private readonly IMyFinanceDbContext _myFinanceDbContext = myFinanceDbContext;
 
     public async Task<Result<UserResponse>> Handle(SignInCommand command, CancellationToken cancellationToken)
     {
-        var user = await _userRepository.GetByEmailAsync(command.Email, cancellationToken);
+        var user = await _myFinanceDbContext.Users
+            .FirstOrDefaultAsync(user => user.Email == command.Email, cancellationToken);
 
         if (user is null)
             return HandleInvalidCredentials();
@@ -41,7 +43,7 @@ internal sealed class SignInHandler(
             if (user.FailedSignInAttempts != 0)
             {
                 user.ResetLockout();
-                _userRepository.Update(user);
+                _myFinanceDbContext.Users.Update(user);
             }
 
             await _signInManager.SignInAsync(user);
@@ -65,7 +67,7 @@ internal sealed class SignInHandler(
                 cancellationToken);
 
             user.SetLockoutEnd(lockoutEndOnUtc);
-            _userRepository.Update(user);
+            _myFinanceDbContext.Users.Update(user);
 
             return HandleLockout(lockoutEndOnUtc);
         }
@@ -74,12 +76,12 @@ internal sealed class SignInHandler(
         {
             var nextLockoutDuration = _lockoutManager.GetNextLockoutDurationFor(user.FailedSignInAttempts);
 
-            _userRepository.Update(user);
+            _myFinanceDbContext.Users.Update(user);
 
             return HandleNextLockout(nextLockoutDuration);
         }
 
-        _userRepository.Update(user);
+        _myFinanceDbContext.Users.Update(user);
 
         return HandleInvalidCredentials();
     }

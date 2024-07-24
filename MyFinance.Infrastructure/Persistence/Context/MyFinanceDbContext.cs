@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using MyFinance.Application.Abstractions.Persistence;
 using MyFinance.Application.Abstractions.Services;
 using MyFinance.Domain.Abstractions;
 using MyFinance.Domain.Entities;
@@ -7,9 +8,9 @@ using System.Reflection;
 
 namespace MyFinance.Infrastructure.Persistence.Context;
 
-internal sealed class MyFinanceDbContext(
+public sealed class MyFinanceDbContext(
     DbContextOptions<MyFinanceDbContext> options,
-    ICurrentUserProvider currentUserProvider) : DbContext(options)
+    ICurrentUserProvider currentUserProvider) : DbContext(options), IMyFinanceDbContext
 {
     private readonly ICurrentUserProvider _currentUserProvider = currentUserProvider;
 

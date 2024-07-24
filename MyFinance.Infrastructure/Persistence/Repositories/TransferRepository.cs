@@ -111,7 +111,7 @@ internal sealed class TransferRepository(MyFinanceDbContext myFinanceDbContext)
                 transferGroups.Income,
                 transferGroups.Outcome
             ));
-        
+
         return (TotalCount: totalCount, TransferGroups: transferGroups);
     }
 

@@ -1,5 +1,5 @@
 ﻿using FluentResults;
-using MyFinance.Application.Abstractions.Persistence.Repositories;
+using MyFinance.Application.Abstractions.Persistence;
 using MyFinance.Application.Abstractions.RequestHandling.Commands;
 using MyFinance.Application.Abstractions.Services;
 using MyFinance.Domain.Entities;
@@ -8,14 +8,14 @@ namespace MyFinance.Application.UseCases.Users.Commands.SignUp;
 
 internal sealed class SignUpHandler(
     ITokenProvider tokenProvider,
-    IUserRepository userRepository,
     IPasswordManager passwordManager,
-    IEmailSender emailSender)
+    IEmailSender emailSender,
+    IMyFinanceDbContext myFinanceDbContext)
     : ICommandHandler<SignUpCommand>
 {
     private readonly ITokenProvider _tokenProvider = tokenProvider;
     private readonly IPasswordManager _passwordManager = passwordManager;
-    private readonly IUserRepository _userRepository = userRepository;
+    private readonly IMyFinanceDbContext _myFinanceDbContext = myFinanceDbContext;
     private readonly IEmailSender _emailSender = emailSender;
 
     public async Task<Result> Handle(SignUpCommand command, CancellationToken cancellationToken)
@@ -26,7 +26,7 @@ internal sealed class SignUpHandler(
         //REMOVE THIS WHEN WE HAVE AN EMAIL SERVICE OR BETTER APP SETTINGS TO HANDLE THIS
         user.VerifyEmail();
 
-        await _userRepository.InsertAsync(user, cancellationToken);
+        await _myFinanceDbContext.Users.AddAsync(user, cancellationToken);
 
         var urlSafeConfirmRegistrationToken
             = _tokenProvider.CreateUrlSafeConfirmRegistrationToken(user.Id);

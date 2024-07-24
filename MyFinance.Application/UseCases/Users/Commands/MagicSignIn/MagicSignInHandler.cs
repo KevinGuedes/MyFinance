@@ -1,5 +1,5 @@
 ﻿using FluentResults;
-using MyFinance.Application.Abstractions.Persistence.Repositories;
+using MyFinance.Application.Abstractions.Persistence;
 using MyFinance.Application.Abstractions.RequestHandling.Commands;
 using MyFinance.Application.Abstractions.Services;
 using MyFinance.Application.Common.Errors;
@@ -12,13 +12,13 @@ internal sealed class MagicSignInHandler(
     ITokenProvider tokenProvider,
     ISignInManager signInManager,
     IPasswordManager passwordManager,
-    IUserRepository userRepository)
+    IMyFinanceDbContext myFinanceDbContext)
     : ICommandHandler<MagicSignInCommand, UserResponse>
 {
     private readonly ITokenProvider _tokenProvider = tokenProvider;
     private readonly ISignInManager _signInManager = signInManager;
     private readonly IPasswordManager _passwordManager = passwordManager;
-    private readonly IUserRepository _userRepository = userRepository;
+    private readonly IMyFinanceDbContext _myFinanceDbContext = myFinanceDbContext;
 
     public async Task<Result<UserResponse>> Handle(MagicSignInCommand command, CancellationToken cancellationToken)
     {
@@ -29,7 +29,7 @@ internal sealed class MagicSignInHandler(
         if (!isValidToken)
             return HandleInvalidMagicSignInToken();
 
-        var user = await _userRepository.GetByIdAsync(userId, cancellationToken);
+        var user = await _myFinanceDbContext.Users.FindAsync([userId], cancellationToken);
 
         if (user is null)
             return HandleInvalidMagicSignInToken();
@@ -37,7 +37,7 @@ internal sealed class MagicSignInHandler(
         if (user.FailedSignInAttempts != 0)
         {
             user.ResetLockout();
-            _userRepository.Update(user);
+            _myFinanceDbContext.Users.Update(user);
         }
 
         await _signInManager.SignInAsync(user);

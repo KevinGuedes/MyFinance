@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
-using MyFinance.Application.Abstractions.Persistence.Repositories;
+using MyFinance.Application.Abstractions.Persistence;
 using MyFinance.Application.Abstractions.Services;
 using MyFinance.Contracts.Common;
 using MyFinance.Infrastructure.Extensions;
@@ -101,8 +101,8 @@ internal sealed class CookieConfiguration(
         if (currentUserProvider.TryGetCurrentUserId(claimsPrincipal, out var userId) &&
             currentUserProvider.TryGetCurrentUserSecurityStamp(claimsPrincipal, out var securityStamp))
         {
-            var userRepository = scope.ServiceProvider.GetRequiredService<IUserRepository>();
-            var user = await userRepository.GetByIdAsync(userId, default);
+            var myFinanceDbContext = scope.ServiceProvider.GetRequiredService<IMyFinanceDbContext>();
+            var user = await myFinanceDbContext.Users.FindAsync([userId]);
             return user is not null && user.SecurityStamp == securityStamp;
         }
 
