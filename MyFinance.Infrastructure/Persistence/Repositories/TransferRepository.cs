@@ -28,8 +28,8 @@ internal sealed class TransferRepository(MyFinanceDbContext myFinanceDbContext)
 
     public async Task<(decimal Income, decimal Outcome)> GetBalanceDataFromPeriodAsync(
         Guid managementUnitId,
-        DateOnly? startDate,
-        DateOnly? endDate,
+        DateTime? startDate,
+        DateTime? endDate,
         Guid? categoryId,
         Guid? accountTagId,
         CancellationToken cancellationToken)
@@ -74,8 +74,8 @@ internal sealed class TransferRepository(MyFinanceDbContext myFinanceDbContext)
         int pageSize,
         CancellationToken cancellationToken)
     {
-        var startDate = DateOnly.FromDateTime(MonthHelper.GetFirstDateOfMonthInUTC(month, year));
-        var endDate = DateOnly.FromDateTime(MonthHelper.GetLastDateOfMonthInUTC(month, year));
+        var startDate = MonthHelper.GetFirstDateOfMonthInUTC(month, year);
+        var endDate = MonthHelper.GetLastDateOfMonthInUTC(month, year);
 
         var transfers = GetByParams(
             managementUnitId,
@@ -97,7 +97,10 @@ internal sealed class TransferRepository(MyFinanceDbContext myFinanceDbContext)
             .Select(transferGroup => new
             {
                 Date = new DateOnly(year, month, transferGroup.Key),
-                Transfers = transferGroup.ToList(),
+                Transfers = transferGroup
+                    .OrderByDescending(transfer => transfer.SettlementDate)
+                    .ThenBy(transfer => transfer.RelatedTo)
+                    .ToList(),
                 Income = transferGroup.Sum(transfer => transfer.Type == TransferType.Profit ? transfer.Value : 0),
                 Outcome = transferGroup.Sum(transfer => transfer.Type == TransferType.Expense ? transfer.Value : 0)
             })
@@ -114,8 +117,8 @@ internal sealed class TransferRepository(MyFinanceDbContext myFinanceDbContext)
 
     private IQueryable<Transfer> GetByParams(
         Guid managementUnitId,
-        DateOnly? startDate,
-        DateOnly? endDate,
+        DateTime? startDate,
+        DateTime? endDate,
         Guid? categoryId,
         Guid? accountTagId)
     {
@@ -125,13 +128,13 @@ internal sealed class TransferRepository(MyFinanceDbContext myFinanceDbContext)
 
         if (startDate.HasValue && startDate.Value != default)
         {
-            var fromDateTimeInStartOfDay = new DateTime(startDate.Value, new TimeOnly());
+            var fromDateTimeInStartOfDay = startDate.Value;
             transfers = transfers.Where(transfer => transfer.SettlementDate >= fromDateTimeInStartOfDay);
         }
 
         if (endDate.HasValue && endDate.Value != default)
         {
-            var toDateTimeInEndOfDay = new DateTime(endDate.Value, new TimeOnly()).AddDays(1).AddTicks(-1);
+            var toDateTimeInEndOfDay = endDate.Value.AddDays(1).AddTicks(-1);
             transfers = transfers.Where(transfer => transfer.SettlementDate <= toDateTimeInEndOfDay);
         }
 
@@ -155,8 +158,8 @@ internal sealed class TransferRepository(MyFinanceDbContext myFinanceDbContext)
 
         var groupedTransfers = await GetByParams(
             managementUnitId,
-            DateOnly.FromDateTime(startDate),
-            DateOnly.FromDateTime(endDate),
+            startDate,
+            endDate,
             null,
             null)
         .GroupBy(transfer => new

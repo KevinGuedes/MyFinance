@@ -51,9 +51,9 @@ public class TransferController(IMediator mediator) : ApiController(mediator)
         [FromQuery][SwaggerParameter("Management Unit Id", Required = true)]
         Guid managementUnitId,
         [FromQuery][SwaggerParameter("Start date")]
-        DateOnly startDate,
+        DateTime startDate,
         [FromQuery][SwaggerParameter("End date")]
-        DateOnly endDate,
+        DateTime endDate,
         [FromQuery][SwaggerParameter("Category Id")]
         Guid categoryId,
         [FromQuery][SwaggerParameter("Account Tag Id")]

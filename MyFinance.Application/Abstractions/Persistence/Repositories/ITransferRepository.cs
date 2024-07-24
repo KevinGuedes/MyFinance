@@ -11,8 +11,8 @@ public interface ITransferRepository
         CancellationToken cancellationToken);
     Task<(decimal Income, decimal Outcome)> GetBalanceDataFromPeriodAsync(
         Guid managementUnitId,
-        DateOnly? startDate,
-        DateOnly? endDate,
+        DateTime? startDate,
+        DateTime? endDate,
         Guid? categoryId,
         Guid? accountTagId,
         CancellationToken cancellationToken);

@@ -5,8 +5,8 @@ namespace MyFinance.Application.UseCases.Transfers.Queries.GetBalanceDataFromPer
 
 public sealed record GetBalanceDataFromPeriodQuery(
     Guid ManagementUnitId,
-    DateOnly? StartDate,
-    DateOnly? EndDate,
+    DateTime? StartDate,
+    DateTime? EndDate,
     Guid? CategoryId,
     Guid? AccountTagId) : IQuery<PeriodBalanceDataResponse>
 {
