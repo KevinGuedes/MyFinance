@@ -17,16 +17,6 @@ namespace MyFinance.Application.Mappers;
 
 public static class UserMapper
 {
-    public static class DTR
-    {
-        public static UserInfoResponse Map(User user, bool shouldUpdatePassword)
-            => new()
-            {
-                Name = user.Name,
-                ShouldUpdatePassword = shouldUpdatePassword
-            };
-    }
-
     public static class RTC
     {
         public static SignUpCommand Map(SignUpRequest request)

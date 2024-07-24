@@ -46,9 +46,11 @@ internal sealed class MagicSignInHandler(
             user.CreatedOnUtc, 
             user.LastPasswordUpdateOnUtc);
 
-        var signInResponse = UserMapper.DTR.Map(user, shouldUpdatePassword);
-
-        return Result.Ok(signInResponse);
+        return Result.Ok(new UserInfoResponse 
+        { 
+            Name = user.Name,
+            ShouldUpdatePassword = shouldUpdatePassword,
+        });
     }
 
     private static Result HandleInvalidMagicSignInToken()

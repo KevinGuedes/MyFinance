@@ -51,9 +51,11 @@ internal sealed class SignInHandler(
                 user.CreatedOnUtc, 
                 user.LastPasswordUpdateOnUtc);
 
-            var signInResponse = UserMapper.DTR.Map(user, shouldUpdatePassword);
-
-            return Result.Ok(signInResponse);
+            return Result.Ok(new UserInfoResponse
+            {
+                Name = user.Name,
+                ShouldUpdatePassword = shouldUpdatePassword,
+            });
         }
 
         user.IncrementFailedSignInAttempts();
