@@ -15,7 +15,7 @@ internal sealed class SignInHandler(
     IPasswordManager passwordManager,
     ILockoutManager lockoutManager,
     IEmailSender emailSender,
-    IMyFinanceDbContext myFinanceDbContext) : ICommandHandler<SignInCommand, UserResponse>
+    IMyFinanceDbContext myFinanceDbContext) : ICommandHandler<SignInCommand, UserInfoResponse>
 {
     private readonly ISignInManager _signInManager = signInManager;
     private readonly IPasswordManager _passwordManager = passwordManager;
@@ -23,7 +23,7 @@ internal sealed class SignInHandler(
     private readonly IEmailSender _emailSender = emailSender;
     private readonly IMyFinanceDbContext _myFinanceDbContext = myFinanceDbContext;
 
-    public async Task<Result<UserResponse>> Handle(SignInCommand command, CancellationToken cancellationToken)
+    public async Task<Result<UserInfoResponse>> Handle(SignInCommand command, CancellationToken cancellationToken)
     {
         var user = await _myFinanceDbContext.Users
             .FirstOrDefaultAsync(user => user.Email == command.Email, cancellationToken);
@@ -47,8 +47,11 @@ internal sealed class SignInHandler(
             }
 
             await _signInManager.SignInAsync(user);
+            var shouldUpdatePassword = _passwordManager.ShouldUpdatePassword(
+                user.CreatedOnUtc, 
+                user.LastPasswordUpdateOnUtc);
 
-            var signInResponse = UserMapper.DTR.Map(user, _passwordManager.ShouldUpdatePassword(user));
+            var signInResponse = UserMapper.DTR.Map(user, shouldUpdatePassword);
 
             return Result.Ok(signInResponse);
         }

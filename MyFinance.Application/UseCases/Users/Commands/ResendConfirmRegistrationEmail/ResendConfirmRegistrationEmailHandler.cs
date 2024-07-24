@@ -19,7 +19,9 @@ internal sealed class ResendConfirmRegistrationEmailHandler(
     public async Task<Result> Handle(ResendConfirmRegistrationEmailCommand command, CancellationToken cancellationToken)
     {
         var user = await _myFinanceDbContext.Users
-            .FirstOrDefaultAsync(user => user.Email == command.Email, cancellationToken);
+            .Where(user => user.Email == command.Email)
+            .Select(user => new { user.Id, user.Email })
+            .FirstOrDefaultAsync(cancellationToken);
 
         if (user is null)
             return Result.Ok();

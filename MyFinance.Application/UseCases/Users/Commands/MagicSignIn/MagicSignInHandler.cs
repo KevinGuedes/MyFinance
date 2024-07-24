@@ -13,14 +13,14 @@ internal sealed class MagicSignInHandler(
     ISignInManager signInManager,
     IPasswordManager passwordManager,
     IMyFinanceDbContext myFinanceDbContext)
-    : ICommandHandler<MagicSignInCommand, UserResponse>
+    : ICommandHandler<MagicSignInCommand, UserInfoResponse>
 {
     private readonly ITokenProvider _tokenProvider = tokenProvider;
     private readonly ISignInManager _signInManager = signInManager;
     private readonly IPasswordManager _passwordManager = passwordManager;
     private readonly IMyFinanceDbContext _myFinanceDbContext = myFinanceDbContext;
 
-    public async Task<Result<UserResponse>> Handle(MagicSignInCommand command, CancellationToken cancellationToken)
+    public async Task<Result<UserInfoResponse>> Handle(MagicSignInCommand command, CancellationToken cancellationToken)
     {
         var isValidToken = _tokenProvider.TryGetUserIdFromUrlSafeMagicSignInToken(
             command.UrlSafeMagicSignInToken,
@@ -42,7 +42,11 @@ internal sealed class MagicSignInHandler(
 
         await _signInManager.SignInAsync(user);
 
-        var signInResponse = UserMapper.DTR.Map(user, _passwordManager.ShouldUpdatePassword(user));
+        var shouldUpdatePassword = _passwordManager.ShouldUpdatePassword(
+            user.CreatedOnUtc, 
+            user.LastPasswordUpdateOnUtc);
+
+        var signInResponse = UserMapper.DTR.Map(user, shouldUpdatePassword);
 
         return Result.Ok(signInResponse);
     }

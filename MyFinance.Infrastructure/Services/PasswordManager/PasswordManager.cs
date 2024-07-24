@@ -10,10 +10,10 @@ internal sealed class PasswordManager(IOptions<PasswordOptions> passwordOptions)
 {
     private readonly PasswordOptions _passwordOptions = passwordOptions.Value;
 
-    public bool ShouldUpdatePassword(User user)
-        => user.LastPasswordUpdateOnUtc is null ?
-            ShouldUpdatePassword(user.CreatedOnUtc) :
-            ShouldUpdatePassword(user.LastPasswordUpdateOnUtc.Value);
+    public bool ShouldUpdatePassword(DateTime createdOnUtc, DateTime? lastPasswordUpdateOnUtc)
+        => lastPasswordUpdateOnUtc is null ?
+            ShouldUpdatePassword(createdOnUtc) :
+            ShouldUpdatePassword(lastPasswordUpdateOnUtc.Value);
 
     private bool ShouldUpdatePassword(DateTime lastPasswordUpdateOnUtc)
     {

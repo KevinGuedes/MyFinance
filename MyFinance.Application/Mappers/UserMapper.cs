@@ -19,7 +19,7 @@ public static class UserMapper
 {
     public static class DTR
     {
-        public static UserResponse Map(User user, bool shouldUpdatePassword)
+        public static UserInfoResponse Map(User user, bool shouldUpdatePassword)
             => new()
             {
                 Name = user.Name,
