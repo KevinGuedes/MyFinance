@@ -5,7 +5,6 @@ using MyFinance.Application.Abstractions.Persistence;
 using MyFinance.Application.Abstractions.RequestHandling.Commands;
 using MyFinance.Application.Abstractions.Services;
 using MyFinance.Application.Common.Errors;
-using MyFinance.Application.Mappers;
 using MyFinance.Contracts.User.Responses;
 
 namespace MyFinance.Application.UseCases.Users.Commands.SignIn;
@@ -48,7 +47,7 @@ internal sealed class SignInHandler(
 
             await _signInManager.SignInAsync(user);
             var shouldUpdatePassword = _passwordManager.ShouldUpdatePassword(
-                user.CreatedOnUtc, 
+                user.CreatedOnUtc,
                 user.LastPasswordUpdateOnUtc);
 
             return Result.Ok(new UserInfoResponse

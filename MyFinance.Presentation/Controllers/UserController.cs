@@ -5,7 +5,6 @@ using MyFinance.Application.Common.Errors;
 using MyFinance.Application.Mappers;
 using MyFinance.Application.UseCases.Users.Commands.SignOut;
 using MyFinance.Application.UseCases.Users.Commands.SignOutFromAllDevices;
-using MyFinance.Application.UseCases.Users.Queries;
 using MyFinance.Application.UseCases.Users.Queries.GetUserInfo;
 using MyFinance.Contracts.Common;
 using MyFinance.Contracts.User.Requests;

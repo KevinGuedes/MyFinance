@@ -3,7 +3,6 @@ using MyFinance.Application.Abstractions.Persistence;
 using MyFinance.Application.Abstractions.RequestHandling.Commands;
 using MyFinance.Application.Abstractions.Services;
 using MyFinance.Application.Common.Errors;
-using MyFinance.Application.Mappers;
 using MyFinance.Contracts.User.Responses;
 
 namespace MyFinance.Application.UseCases.Users.Commands.MagicSignIn;
@@ -43,11 +42,11 @@ internal sealed class MagicSignInHandler(
         await _signInManager.SignInAsync(user);
 
         var shouldUpdatePassword = _passwordManager.ShouldUpdatePassword(
-            user.CreatedOnUtc, 
+            user.CreatedOnUtc,
             user.LastPasswordUpdateOnUtc);
 
-        return Result.Ok(new UserInfoResponse 
-        { 
+        return Result.Ok(new UserInfoResponse
+        {
             Name = user.Name,
             ShouldUpdatePassword = shouldUpdatePassword,
         });

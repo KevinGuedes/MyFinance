@@ -4,9 +4,7 @@ using MyFinance.Application.Abstractions.Persistence;
 using MyFinance.Application.Abstractions.RequestHandling.Queries;
 using MyFinance.Application.Abstractions.Services;
 using MyFinance.Application.Common.Errors;
-using MyFinance.Application.Mappers;
 using MyFinance.Contracts.User.Responses;
-using MyFinance.Domain.Entities;
 
 namespace MyFinance.Application.UseCases.Users.Queries.GetUserInfo;
 
@@ -37,7 +35,7 @@ internal sealed class GetUserInfoHandler(
             user.CreatedOnUtc,
             user.LastPasswordUpdateOnUtc);
 
-        return new UserInfoResponse 
+        return new UserInfoResponse
         {
             Name = user.Name,
             ShouldUpdatePassword = shouldUpdatePassword,

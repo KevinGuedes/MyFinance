@@ -1,7 +1,6 @@
 ﻿using F23.StringSimilarity;
 using Microsoft.Extensions.Options;
 using MyFinance.Application.Abstractions.Services;
-using MyFinance.Domain.Entities;
 using BC = BCrypt.Net.BCrypt;
 
 namespace MyFinance.Infrastructure.Services.PasswordManager;

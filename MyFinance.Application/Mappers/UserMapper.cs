@@ -11,7 +11,6 @@ using MyFinance.Application.UseCases.Users.Commands.SignUp;
 using MyFinance.Application.UseCases.Users.Commands.UpdatePassword;
 using MyFinance.Contracts.User.Requests;
 using MyFinance.Contracts.User.Responses;
-using MyFinance.Domain.Entities;
 
 namespace MyFinance.Application.Mappers;
 
