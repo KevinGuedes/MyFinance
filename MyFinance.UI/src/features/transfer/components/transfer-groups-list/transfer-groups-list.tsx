@@ -17,7 +17,7 @@ export function TransferGroupsList({ tranferGroups }: TransferGroupList) {
   return (
     <div className="flex grow flex-col justify-between gap-4">
       {hasTransferGroups ? (
-        <ScrollArea className="h-[600px] grow sm:h-[350px]" type="always">
+        <ScrollArea className="h-[65vh] grow lg:h-[350px]" type="always">
           <div className="grow space-y-4 pr-2">
             {tranferGroups.map((transferGroup) => (
               <TransferGroupSection
@@ -28,7 +28,7 @@ export function TransferGroupsList({ tranferGroups }: TransferGroupList) {
           </div>
         </ScrollArea>
       ) : (
-        <div className="flex min-h-[350px] grow flex-col items-center justify-center gap-2 px-4">
+        <div className="flex h-[65vh] grow flex-col items-center justify-center gap-2 px-4 lg:min-h-[350px]">
           <p className="text-center text-sm text-muted-foreground">
             You don&apos;t have{' '}
             <strong className="font-medium">Transfers</strong> registered on{' '}

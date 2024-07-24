@@ -28,33 +28,31 @@ export function TransferGroupSection({ transferGroup }: TransferGroupProps) {
           <div className="space-y-1">
             <div className="flex gap-2">
               <PiggyBank className="inline-block size-7 shrink-0 rounded-md bg-muted-foreground/30 p-1 text-muted-foreground" />
-              <p className="hidden text-sm font-bold text-muted-foreground sm:block">
-                Income
+              <p className="hidden font-bold text-muted-foreground sm:block">
+                Balance
               </p>
             </div>
-            <p className="text-start text-sm font-bold text-muted-foreground">
+            <p className="text-start font-bold text-muted-foreground">
               {toMoney(transferGroup.balance, true)}
             </p>
           </div>
           <div className="space-y-1">
             <div className="flex gap-2">
               <TrendingUp className="inline-block size-7 shrink-0 rounded-md bg-primary/10 p-1 text-primary" />
-              <p className="hidden text-sm font-bold text-primary sm:block">
-                Income
-              </p>
+              <p className="hidden font-bold text-primary sm:block">Income</p>
             </div>
-            <p className="text-start text-sm font-bold text-primary">
+            <p className="text-start font-bold text-primary">
               {toMoney(transferGroup.income, true)}
             </p>
           </div>
           <div className="space-y-1">
             <div className="flex gap-2">
               <TrendingDown className="inline-block size-7 shrink-0 rounded-md bg-destructive/25 p-1 text-destructive" />
-              <p className="hidden text-sm font-bold text-destructive sm:block">
+              <p className="hidden font-bold text-destructive sm:block">
                 Outcome
               </p>
             </div>
-            <p className="text-sm font-bold text-destructive sm:text-end">
+            <p className="font-bold text-destructive sm:text-end">
               {toMoney(transferGroup.outcome * -1, true)}
             </p>
           </div>

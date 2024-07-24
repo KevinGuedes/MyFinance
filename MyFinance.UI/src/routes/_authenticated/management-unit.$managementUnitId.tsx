@@ -66,11 +66,13 @@ function ManagementUnitDashboard() {
       </PageHeader>
       <PageContent className="flex flex-col gap-4 lg:flex-row">
         <div className="flex items-center justify-between sm:hidden">
-          <h1 className="text-2xl">Kariny Bordados</h1>
           {managementUnitQuery.data && (
-            <UpdateManagementUnitDialog
-              managementUnit={managementUnitQuery.data}
-            />
+            <>
+              <h1 className="text-2xl">{managementUnitQuery.data.name}</h1>
+              <UpdateManagementUnitDialog
+                managementUnit={managementUnitQuery.data}
+              />
+            </>
           )}
         </div>
         <div className="flex flex-col justify-between gap-4 lg:w-3/5">
@@ -108,15 +110,15 @@ function ManagementUnitDashboard() {
             <TabsList className="self-start bg-muted/40">
               <TabsTrigger value="transfers" disabled={isLoading}>
                 <ClipboardList className="mr-1 size-4" />
-                Transfers
+                <span className="hidden sm:block">Transfers</span>
               </TabsTrigger>
               <TabsTrigger value="account-tags" disabled={isLoading}>
                 <Tag className="mr-1 size-4" />
-                Account Tags
+                <span className="hidden sm:block">Account Tags</span>
               </TabsTrigger>
               <TabsTrigger value="categories" disabled={isLoading}>
                 <Shapes className="mr-1 size-4" />
-                Categories
+                <span className="hidden sm:block">Categories</span>
               </TabsTrigger>
             </TabsList>
             <TabsContent

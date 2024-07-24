@@ -30,7 +30,7 @@ export function DiscriminatedBalanceCard({
           Hover the chart for more details about the balance, income and outcome
           of each month
         </CardDescription>
-        <div className="h-64 min-h-64 grow pt-2">
+        <div className="h-[50vh] grow pt-2 lg:h-64 lg:min-h-64">
           <DiscriminatedBalanceChart
             discriminatedBalanceData={discriminatedBalanceData}
           />
