@@ -2,14 +2,12 @@
 using MyFinance.Contracts.Common;
 using MyFinance.Contracts.Transfer.Responses;
 
-namespace MyFinance.Application.UseCases.Transfers.Queries.GetTransfers;
+namespace MyFinance.Application.UseCases.Transfers.Queries.GetTransferGroups;
 
-public sealed record GetTransfersQuery(
+public sealed record GetTransferGroupsQuery(
+    int Month,
+    int Year,
     Guid ManagementUnitId,
-    DateOnly? StartDate,
-    DateOnly? EndDate,
-    Guid? CategoryId,
-    Guid? AccountTagId,
     int PageNumber,
     int PageSize) : IQuery<Paginated<TransferGroupResponse>>
 {

@@ -6,8 +6,8 @@ public interface ITransferRepository
 {
     Task<IEnumerable<(int Year, int Month, decimal Income, decimal Outcome)>> GetDiscriminatedBalanceDataAsync(
         Guid managementUnitId,
-        DateTime fromData,
-        DateTime toDate,
+        int pastMonths,
+        bool includeCurrentMonth,
         CancellationToken cancellationToken);
     Task<(decimal Income, decimal Outcome)> GetBalanceDataFromPeriodAsync(
         Guid managementUnitId,
@@ -16,12 +16,10 @@ public interface ITransferRepository
         Guid? categoryId,
         Guid? accountTagId,
         CancellationToken cancellationToken);
-    Task<(long TotalCount, IEnumerable<Transfer> Transfers)> GetTransfersByParamsAsync(
+    Task<(long TotalCount, IEnumerable<(DateOnly Date, IEnumerable<Transfer> Transfers, decimal Income, decimal Outcome)> TransferGroups)> GetTransferGroupsAsync(
+        int month,
+        int year,
         Guid managementUnitId,
-        DateOnly? startDate,
-        DateOnly? endDate,
-        Guid? categoryId,
-        Guid? accountTagId,
         int pageNumber,
         int pageSize,
         CancellationToken cancellationToken);

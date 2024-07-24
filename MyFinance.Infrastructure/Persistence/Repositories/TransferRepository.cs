@@ -2,6 +2,7 @@
 using MyFinance.Application.Abstractions.Persistence.Repositories;
 using MyFinance.Domain.Entities;
 using MyFinance.Domain.Enums;
+using MyFinance.Infrastructure.Helpers;
 using MyFinance.Infrastructure.Persistence.Context;
 
 namespace MyFinance.Infrastructure.Persistence.Repositories;
@@ -64,31 +65,51 @@ internal sealed class TransferRepository(MyFinanceDbContext myFinanceDbContext)
         return (Income: income, Outcome: outcome);
     }
 
-    public async Task<(long TotalCount, IEnumerable<Transfer> Transfers)> GetTransfersByParamsAsync(
+
+    public async Task<(long TotalCount, IEnumerable<(DateOnly Date, IEnumerable<Transfer> Transfers, decimal Income, decimal Outcome)> TransferGroups)> GetTransferGroupsAsync(
+        int month,
+        int year,
         Guid managementUnitId,
-        DateOnly? startDate,
-        DateOnly? endDate,
-        Guid? categoryId,
-        Guid? accountTagId,
         int pageNumber,
         int pageSize,
         CancellationToken cancellationToken)
     {
+        var startDate = DateOnly.FromDateTime(MonthHelper.GetFirstDateOfMonthInUTC(month, year));
+        var endDate = DateOnly.FromDateTime(MonthHelper.GetLastDateOfMonthInUTC(month, year));
+
         var transfers = GetByParams(
             managementUnitId,
             startDate,
             endDate,
-            categoryId,
-            accountTagId);
+            null,
+            null);
 
         var totalCount = await transfers.LongCountAsync(cancellationToken);
-        var paginatedAndSortedTransfers = await transfers
+
+        var transferGroups = (await transfers
+            .Include(transfer => transfer.Category)
+            .Include(transfer => transfer.AccountTag)
             .OrderByDescending(transfer => transfer.SettlementDate)
+            .ThenBy(transfer => transfer.RelatedTo)
             .Skip((pageNumber - 1) * pageSize)
             .Take(pageSize)
-            .ToListAsync(cancellationToken);
-
-        return (TotalCount: totalCount, Transfers: paginatedAndSortedTransfers);
+            .GroupBy(transfer => transfer.SettlementDate.Day)
+            .Select(transferGroup => new
+            {
+                Date = new DateOnly(year, month, transferGroup.Key),
+                Transfers = transferGroup.ToList(),
+                Income = transferGroup.Sum(transfer => transfer.Type == TransferType.Profit ? transfer.Value : 0),
+                Outcome = transferGroup.Sum(transfer => transfer.Type == TransferType.Expense ? transfer.Value : 0)
+            })
+            .ToListAsync(cancellationToken))
+            .Select(transferGroups => (
+                transferGroups.Date,
+                Transfers: transferGroups.Transfers.AsEnumerable(),
+                transferGroups.Income,
+                transferGroups.Outcome
+            ));
+        
+        return (TotalCount: totalCount, TransferGroups: transferGroups);
     }
 
     private IQueryable<Transfer> GetByParams(
@@ -125,34 +146,52 @@ internal sealed class TransferRepository(MyFinanceDbContext myFinanceDbContext)
 
     public async Task<IEnumerable<(int Year, int Month, decimal Income, decimal Outcome)>> GetDiscriminatedBalanceDataAsync(
         Guid managementUnitId,
-        DateTime fromDate,
-        DateTime toDate,
+        int pastMonths,
+        bool includeCurrentMonth,
         CancellationToken cancellationToken)
     {
-        var result = await _myFinanceDbContext.Transfers
-            .AsNoTracking()
-            .Where(transfer =>
-                transfer.SettlementDate >= fromDate &&
-                transfer.SettlementDate <= toDate &&
-                transfer.ManagementUnitId == managementUnitId)
-            .GroupBy(transfer => new
-            {
-                transfer.SettlementDate.Month,
-                transfer.SettlementDate.Year
-            })
-            .Select(transferGroup => new
-            {
-                transferGroup.Key.Year,
-                transferGroup.Key.Month,
-                Income = transferGroup.Sum(transfer => transfer.Type == TransferType.Profit ? transfer.Value : 0),
-                Outcome = transferGroup.Sum(transfer => transfer.Type == TransferType.Expense ? transfer.Value : 0)
-            })
-            .ToListAsync(cancellationToken);
+        var (startDate, endDate) = MonthHelper.GetDateRangeInUTCFromPastMonths(pastMonths, includeCurrentMonth);
+        var monthsInRange = MonthHelper.GetMonthsInRange(startDate, endDate);
 
-        return result.Select(monthlyBalanceData => (
-            monthlyBalanceData.Year,
-            monthlyBalanceData.Month,
-            monthlyBalanceData.Income,
-            monthlyBalanceData.Outcome));
+        var groupedTransfers = await GetByParams(
+            managementUnitId,
+            DateOnly.FromDateTime(startDate),
+            DateOnly.FromDateTime(endDate),
+            null,
+            null)
+        .GroupBy(transfer => new
+        {
+            transfer.SettlementDate.Month,
+            transfer.SettlementDate.Year
+        })
+        .OrderBy(transferGroup => transferGroup.Key.Year)
+        .ThenBy(transferGroup => transferGroup.Key.Month)
+        .Select(transferGroup => new
+        {
+            transferGroup.Key.Year,
+            transferGroup.Key.Month,
+            Income = transferGroup.Sum(transfer => transfer.Type == TransferType.Profit ? transfer.Value : 0),
+            Outcome = transferGroup.Sum(transfer => transfer.Type == TransferType.Expense ? transfer.Value : 0)
+        })
+        .ToListAsync(cancellationToken);
+
+        return monthsInRange
+            .GroupJoin(
+                groupedTransfers,
+                month => new { month.Year, month.Month },
+                transfer => new { transfer.Year, transfer.Month },
+                (month, transfers) => new
+                {
+                    month.Year,
+                    month.Month,
+                    Income = transfers.Sum(transfer => transfer.Income),
+                    Outcome = transfers.Sum(transfer => transfer.Outcome)
+                })
+            .Select(monthlyBalanceData => (
+                monthlyBalanceData.Year,
+                monthlyBalanceData.Month,
+                monthlyBalanceData.Income,
+                monthlyBalanceData.Outcome
+            ));
     }
 }

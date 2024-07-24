@@ -4,7 +4,7 @@ using MyFinance.Application.Mappers;
 using MyFinance.Application.UseCases.Transfers.Commands.DeleteTransfer;
 using MyFinance.Application.UseCases.Transfers.Queries.GetBalanceDataFromPeriod;
 using MyFinance.Application.UseCases.Transfers.Queries.GetDiscriminatedBalanceData;
-using MyFinance.Application.UseCases.Transfers.Queries.GetTransfers;
+using MyFinance.Application.UseCases.Transfers.Queries.GetTransferGroups;
 using MyFinance.Contracts.Common;
 using MyFinance.Contracts.Transfer.Requests;
 using MyFinance.Contracts.Transfer.Responses;
@@ -20,29 +20,23 @@ public class TransferController(IMediator mediator) : ApiController(mediator)
     [SwaggerOperation(Summary = "Lists the Transfers retrived according to query parameters. Transfers are grouped by date")]
     [SwaggerResponse(StatusCodes.Status200OK, "List of Transfers", typeof(Paginated<TransferGroupResponse>))]
     [SwaggerResponse(StatusCodes.Status400BadRequest, "Invalid query parameters", typeof(ValidationProblemResponse))]
-    public async Task<IActionResult> GetTransfersAsync(
+    public async Task<IActionResult> GetTransferGroupsAsync(
+        [FromQuery][SwaggerParameter("Month represented in a one-indexed basis")]
+        int month,
+        [FromQuery][SwaggerParameter("Year")]
+        int year,
         [FromQuery][SwaggerParameter("Management Unit Id", Required = true)]
         Guid managementUnitId,
-        [FromQuery][SwaggerParameter("Start date", Required = false)]
-        DateOnly startDate,
-        [FromQuery][SwaggerParameter("End date", Required = false)]
-        DateOnly endDate,
-        [FromQuery][SwaggerParameter("Category Id", Required = false)]
-        Guid categoryId,
-        [FromQuery][SwaggerParameter("Account Tag Id", Required = false)]
-        Guid accountTagId,
         [FromQuery][SwaggerParameter("Page number", Required = true)]
         int pageNumber,
         [FromQuery][SwaggerParameter("Units per page", Required = true)]
         int pageSize,
         CancellationToken cancellationToken)
     {
-        var query = new GetTransfersQuery(
+        var query = new GetTransferGroupsQuery(
+            month,
+            year,
             managementUnitId,
-            startDate,
-            endDate,
-            categoryId,
-            accountTagId,
             pageNumber,
             pageSize);
 

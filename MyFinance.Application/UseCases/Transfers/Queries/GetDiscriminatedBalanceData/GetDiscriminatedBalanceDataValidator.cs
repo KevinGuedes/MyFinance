@@ -10,7 +10,7 @@ public sealed class GetDiscriminatedBalanceDataValidator : AbstractValidator<Get
         RuleFor(query => query.ManagementUnitId).MustBeAValidGuid();
 
         RuleFor(query => query.PastMonths)
-            .GreaterThan(1).WithMessage("{PropertyName} must be greater than 1")
-            .LessThanOrEqualTo(12).WithMessage("{PropertyName} must be less than or equal to 12");
+            .InclusiveBetween(1, 12)
+            .WithMessage("{PropertyName} must be between 1 and 12");
     }
 }

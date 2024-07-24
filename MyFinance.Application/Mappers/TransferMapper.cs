@@ -6,6 +6,7 @@ using MyFinance.Contracts.Transfer.Responses;
 using MyFinance.Domain.Entities;
 using MyFinance.Domain.Enums;
 using System.Globalization;
+using System.Security.Cryptography.Xml;
 
 namespace MyFinance.Application.Mappers;
 
@@ -14,40 +15,32 @@ public static class TransferMapper
     public static class DTR
     {
         public static Paginated<TransferGroupResponse> Map(
-            (long TotalCount, IEnumerable<Transfer> Transfers) transfersData,
+            (long TotalCount, IEnumerable<(DateOnly Date, IEnumerable<Transfer> Transfers, decimal Income, decimal Outcome)> TransferGroups) transfersGroupsData,
             int pageNumber,
             int pageSize)
         {
-            var tranferGroups = transfersData.Transfers.GroupBy(
-                transfer => transfer.SettlementDate.Date,
-                transfer => transfer,
-                (settlementDate, transfers) =>
+            var (totalCount, transferGroups) = transfersGroupsData;
+
+            var transferGroupsMapped = transferGroups
+                .Select(transferGroup =>
                 {
-                    var income = 0m;
-                    var outcome = 0m;
-
-                    foreach (var transfer in transfers)
-                    {
-                        if (transfer.Type == TransferType.Profit)
-                            income += transfer.Value;
-                        else
-                            outcome += transfer.Value;
-                    }
-
+                    var (date, transfers, income, outcome) = transferGroup;
                     return new TransferGroupResponse
                     {
-                        Date = DateOnly.FromDateTime(settlementDate),
-                        Transfers = Map(transfers),
+                        Date = date,
                         Income = income,
-                        Outcome = outcome
+                        Outcome = outcome,
+                        Transfers = Map(transfers)
                     };
-                });
+                })
+                .ToList()
+                .AsReadOnly();
 
             return new(
-                tranferGroups.ToList().AsReadOnly(),
+                transferGroupsMapped,
                 pageNumber,
                 pageSize,
-                transfersData.TotalCount);
+                totalCount);
         }
 
         public static TransferResponse Map(Transfer transfer)
@@ -65,60 +58,24 @@ public static class TransferMapper
             => transfers.Select(Map).ToList().AsReadOnly();
 
         public static DiscriminatedBalanceDataResponse Map(
-            IEnumerable<(int Year, int Month, decimal Income, decimal Outcome)> discriminatedBalanceData,
-            DateTime fromDate,
-            DateTime toDate)
+            IEnumerable<(int Year, int Month, decimal Income, decimal Outcome)> discriminatedBalanceData)
         {
-            var existingMonthlyBalances = discriminatedBalanceData.Select(monthlyBalanceData =>
-            {
-                var referenceDate = new DateTime(monthlyBalanceData.Year, monthlyBalanceData.Month, 1);
-
-                return new MonthlyBalanceDataResponse
-                {
-                    Reference = referenceDate.ToString("MMM/yy", CultureInfo.InvariantCulture),
-                    Year = monthlyBalanceData.Year,
-                    Month = monthlyBalanceData.Month,
-                    Income = monthlyBalanceData.Income,
-                    Outcome = monthlyBalanceData.Outcome,
-                };
-            });
-
-            var filledMonthlyBalances = new Dictionary<string, MonthlyBalanceDataResponse>();
-
-            foreach (var monthlyBalance in existingMonthlyBalances)
-                filledMonthlyBalances[monthlyBalance.Reference] = monthlyBalance;
-
-            var loopDate = fromDate;
-            while (loopDate <= toDate)
-            {
-                var key = loopDate.ToString("MMM/yy", CultureInfo.InvariantCulture);
-
-                if (filledMonthlyBalances.ContainsKey(key))
-                {
-                    loopDate = loopDate.AddMonths(1);
-                    continue;
-                }
-
-                filledMonthlyBalances[key] = new MonthlyBalanceDataResponse
-                {
-                    Reference = key,
-                    Year = loopDate.Year,
-                    Month = loopDate.Month,
-                    Income = 0.0000m,
-                    Outcome = 0.00000m,
-                };
-
-
-                loopDate = loopDate.AddMonths(1);
-            }
-
             return new()
             {
-                DiscriminatedBalanceData = filledMonthlyBalances.Values
-                    .OrderBy(monthlyBalance => monthlyBalance.Year)
-                    .ThenBy(monthlyBalance => monthlyBalance.Month)
-                    .ToList()
-                    .AsReadOnly()
+                DiscriminatedBalanceData = discriminatedBalanceData.Select(monthlyBalanceData =>
+                {
+                    var referenceDate = new DateTime(monthlyBalanceData.Year, monthlyBalanceData.Month, 1);
+                    return new MonthlyBalanceDataResponse
+                    {
+                        Income = monthlyBalanceData.Income,
+                        Outcome = monthlyBalanceData.Outcome,
+                        Month = monthlyBalanceData.Month,
+                        Year = monthlyBalanceData.Year,
+                        Reference = referenceDate.ToString("MMM/yy", CultureInfo.InvariantCulture)
+                    };
+                })
+                .ToList()
+                .AsReadOnly()
             };
         }
 
