@@ -4,9 +4,7 @@ using MyFinance.Contracts.Common;
 using MyFinance.Contracts.Transfer.Requests;
 using MyFinance.Contracts.Transfer.Responses;
 using MyFinance.Domain.Entities;
-using MyFinance.Domain.Enums;
 using System.Globalization;
-using System.Security.Cryptography.Xml;
 
 namespace MyFinance.Application.Mappers;
 
@@ -51,7 +49,9 @@ public static class TransferMapper
                 Description = transfer.Description,
                 SettlementDate = transfer.SettlementDate,
                 Type = transfer.Type,
-                Value = transfer.Value
+                Value = transfer.Value,
+                Tag = transfer.AccountTag?.Tag,
+                CategoryName = transfer.Category?.Name
             };
 
         public static IReadOnlyCollection<TransferResponse> Map(IEnumerable<Transfer> transfers)
