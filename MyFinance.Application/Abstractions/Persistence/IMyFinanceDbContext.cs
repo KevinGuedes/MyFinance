@@ -1,13 +1,16 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
 using MyFinance.Domain.Entities;
 
 namespace MyFinance.Application.Abstractions.Persistence;
 
 public interface IMyFinanceDbContext
 {
-    DbSet<ManagementUnit> ManagementUnits { get; set; }
-    DbSet<Transfer> Transfers { get; set; }
-    DbSet<AccountTag> AccountTags { get; set; }
-    DbSet<Category> Categories { get; set; }
-    DbSet<User> Users { get; set; }
+    DbSet<ManagementUnit> ManagementUnits { get; }
+    DbSet<Transfer> Transfers { get; }
+    DbSet<AccountTag> AccountTags { get; }
+    DbSet<Category> Categories { get; }
+    DbSet<User> Users { get; }
+    DatabaseFacade Database { get; }
+    Task<int> SaveChangesAsync(CancellationToken cancellationToken);
 }

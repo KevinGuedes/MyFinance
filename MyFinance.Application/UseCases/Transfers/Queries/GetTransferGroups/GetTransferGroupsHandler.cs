@@ -29,8 +29,8 @@ internal sealed class GetTransferGroupsHandler(IMyFinanceDbContext myFinanceDbCo
         var totalCount = await transfers.LongCountAsync(cancellationToken);
 
         var transferGroups = await transfers
-            .Include(transfer => transfer.Category.Name)
-            .Include(transfer => transfer.AccountTag.Tag)
+            .Include(transfer => transfer.Category)
+            .Include(transfer => transfer.AccountTag)
             .OrderByDescending(transfer => transfer.SettlementDate)
             .ThenBy(transfer => transfer.RelatedTo)
             .Skip((query.PageNumber - 1) * query.PageSize)
