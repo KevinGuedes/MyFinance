@@ -1,15 +1,16 @@
 ﻿using FluentValidation;
-using MyFinance.Application.Abstractions.Persistence.Repositories;
+using Microsoft.EntityFrameworkCore;
+using MyFinance.Application.Abstractions.Persistence;
 
 namespace MyFinance.Application.UseCases.ManagementUnits.Commands.CreateManagementUnit;
 
 public sealed class CreateManagementUnitValidator : AbstractValidator<CreateManagementUnitCommand>
 {
-    private readonly IManagementUnitRepository _managementUnitRepository;
+    private readonly IMyFinanceDbContext _myFinanceDbContext;
 
-    public CreateManagementUnitValidator(IManagementUnitRepository managementUnitRepository)
+    public CreateManagementUnitValidator(IMyFinanceDbContext myFinanceDbContext)
     {
-        _managementUnitRepository = managementUnitRepository;
+        _myFinanceDbContext = myFinanceDbContext;
         ClassLevelCascadeMode = CascadeMode.Stop;
 
         RuleFor(command => command.Description)
@@ -22,7 +23,9 @@ public sealed class CreateManagementUnitValidator : AbstractValidator<CreateMana
             .MaximumLength(100).WithMessage("{PropertyName} must have a maximum of 100 characters")
             .MustAsync(async (managementUnitName, cancellationToken) =>
             {
-                var exists = await _managementUnitRepository.ExistsByNameAsync(managementUnitName, cancellationToken);
+                var exists = await _myFinanceDbContext.ManagementUnits
+                    .AnyAsync(mu => mu.Name == managementUnitName, cancellationToken);
+
                 return !exists;
             }).WithMessage("The name '{PropertyValue}' has already been taken");
     }

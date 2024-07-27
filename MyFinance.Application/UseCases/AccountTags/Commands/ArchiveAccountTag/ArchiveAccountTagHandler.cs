@@ -1,18 +1,18 @@
 ﻿using FluentResults;
-using MyFinance.Application.Abstractions.Persistence.Repositories;
+using MyFinance.Application.Abstractions.Persistence;
 using MyFinance.Application.Abstractions.RequestHandling.Commands;
 using MyFinance.Application.Common.Errors;
 
 namespace MyFinance.Application.UseCases.AccountTags.Commands.ArchiveAccountTag;
 
-internal sealed class ArchiveAccountTagHandler(IAccountTagRepository accountTagRepository)
+internal sealed class ArchiveAccountTagHandler(IMyFinanceDbContext myFinanceDbContext)
     : ICommandHandler<ArchiveAccountTagCommand>
 {
-    private readonly IAccountTagRepository _accountTagRepository = accountTagRepository;
+    private readonly IMyFinanceDbContext _myFinanceDbContext = myFinanceDbContext;
 
     public async Task<Result> Handle(ArchiveAccountTagCommand command, CancellationToken cancellationToken)
     {
-        var accountTag = await _accountTagRepository.GetByIdAsync(command.Id, cancellationToken);
+        var accountTag = await _myFinanceDbContext.AccountTags.FindAsync([command.Id], cancellationToken);
 
         if (accountTag is null)
         {
@@ -21,7 +21,7 @@ internal sealed class ArchiveAccountTagHandler(IAccountTagRepository accountTagR
         }
 
         accountTag.Archive(command.ReasonToArchive);
-        _accountTagRepository.Update(accountTag);
+        _myFinanceDbContext.AccountTags.Update(accountTag);
 
         return Result.Ok();
     }

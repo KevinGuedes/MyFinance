@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using MyFinance.Application.Abstractions.Persistence.UnitOfWork;
+using MyFinance.Application.Abstractions.Persistence;
 using MyFinance.Infrastructure.Persistence.Context;
 using System.Data;
 

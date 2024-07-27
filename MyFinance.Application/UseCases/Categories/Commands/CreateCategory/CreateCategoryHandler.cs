@@ -1,5 +1,5 @@
 ﻿using FluentResults;
-using MyFinance.Application.Abstractions.Persistence.Repositories;
+using MyFinance.Application.Abstractions.Persistence;
 using MyFinance.Application.Abstractions.RequestHandling.Commands;
 using MyFinance.Application.Common.Errors;
 using MyFinance.Application.Mappers;
@@ -8,17 +8,16 @@ using MyFinance.Domain.Entities;
 
 namespace MyFinance.Application.UseCases.Categories.Commands.CreateCategory;
 
-internal sealed class CreateCategoryHandler(
-    ICategoryRepository categoryRepository,
-    IManagementUnitRepository managementUnitRepository)
+internal sealed class CreateCategoryHandler(IMyFinanceDbContext myFinanceDbContext)
     : ICommandHandler<CreateCategoryCommand, CategoryResponse>
 {
-    private readonly ICategoryRepository _categoryRepository = categoryRepository;
-    private readonly IManagementUnitRepository _managementUnitRepository = managementUnitRepository;
+    private readonly IMyFinanceDbContext _myFinanceDbContext = myFinanceDbContext;
 
     public async Task<Result<CategoryResponse>> Handle(CreateCategoryCommand command, CancellationToken cancellationToken)
     {
-        var managementUnit = await _managementUnitRepository.GetByIdAsync(command.ManagementUnitId, cancellationToken);
+        var managementUnit = await _myFinanceDbContext.ManagementUnits
+            .FindAsync([command.ManagementUnitId], cancellationToken);
+
         if (managementUnit is null)
         {
             var errorMessage = $"Management Unit with Id {command.ManagementUnitId} not found";
@@ -27,8 +26,12 @@ internal sealed class CreateCategoryHandler(
         }
 
         var category = new Category(managementUnit, command.Name, command.CurrentUserId);
-        await _categoryRepository.InsertAsync(category, cancellationToken);
+        await _myFinanceDbContext.Categories.AddAsync(category, cancellationToken);
 
-        return Result.Ok(CategoryMapper.DTR.Map(category));
+        return Result.Ok(new CategoryResponse
+        {
+            Id = category.Id,
+            Name = category.Name,
+        });
     }
 }

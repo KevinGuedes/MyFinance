@@ -1,16 +1,17 @@
 ﻿using FluentValidation;
-using MyFinance.Application.Abstractions.Persistence.Repositories;
+using Microsoft.EntityFrameworkCore;
+using MyFinance.Application.Abstractions.Persistence;
 using MyFinance.Application.Common.CustomValidators;
 
 namespace MyFinance.Application.UseCases.Categories.Commands.UpdateCategory;
 
 public sealed class UpdateCategoryValidator : AbstractValidator<UpdateCategoryCommand>
 {
-    private readonly ICategoryRepository _categoryRepository;
+    private readonly IMyFinanceDbContext _myFinanceDbContext;
 
-    public UpdateCategoryValidator(ICategoryRepository categoryRepository)
+    public UpdateCategoryValidator(IMyFinanceDbContext myFinanceDbContext)
     {
-        _categoryRepository = categoryRepository;
+        _myFinanceDbContext = myFinanceDbContext;
         ClassLevelCascadeMode = CascadeMode.Stop;
 
         RuleFor(command => command.Id).MustBeAValidGuid();
@@ -20,13 +21,17 @@ public sealed class UpdateCategoryValidator : AbstractValidator<UpdateCategoryCo
             .NotNull().WithMessage("{PropertyName} must not be null")
             .NotEmpty().WithMessage("{PropertyName} must not be empty")
             .Length(3, 50).WithMessage("{PropertyName} must have between 3 and 50 characters")
-            .MustAsync(async (command, name, cancellationToken) =>
+            .MustAsync(async (command, categoryName, cancellationToken) =>
             {
-                var existingCategory = await _categoryRepository.GetByNameAsync(name, cancellationToken);
-                if (existingCategory is null)
+                var existingCategoryId = await _myFinanceDbContext.Categories
+                   .Where(mu => mu.Name == categoryName)
+                   .Select(mu => mu.Id)
+                   .FirstOrDefaultAsync(cancellationToken);
+
+                if (existingCategoryId == default)
                     return true;
 
-                var isValid = existingCategory.Id == command.Id;
+                var isValid = existingCategoryId == command.Id;
                 return isValid;
             }).WithMessage("This {PropertyName} has already been taken");
     }

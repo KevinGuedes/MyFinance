@@ -10,27 +10,6 @@ namespace MyFinance.Application.Mappers;
 
 public static class CategoryMapper
 {
-    public static class DTR
-    {
-        public static Paginated<CategoryResponse> Map(
-            IEnumerable<Category> categories,
-            int pageNumber,
-            int pageSize,
-            long totalCount)
-            => new(Map(categories), pageNumber, pageSize, totalCount);
-
-        public static CategoryResponse Map(Category category)
-               => new()
-               {
-                   Id = category.Id,
-                   Name = category.Name,
-               };
-
-        public static IReadOnlyCollection<CategoryResponse> Map(IEnumerable<Category> categories)
-            => categories.Select(Map).ToList().AsReadOnly();
-    }
-
-
     public static class RTC
     {
         public static CreateCategoryCommand Map(CreateCategoryRequest request)

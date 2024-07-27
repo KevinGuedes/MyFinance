@@ -19,6 +19,7 @@ internal sealed class SendMagicSignInEmailHandler(
     public async Task<Result> Handle(SendMagicSignInEmailCommand command, CancellationToken cancellationToken)
     {
         var user = await _myFinanceDbContext.Users
+            .AsNoTracking()
             .Where(user => user.Email == command.Email)
             .Select(user => new { user.Id, user.Email, user.IsEmailVerified })
             .FirstOrDefaultAsync(cancellationToken);

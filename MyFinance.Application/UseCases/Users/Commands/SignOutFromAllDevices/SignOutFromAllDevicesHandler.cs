@@ -16,7 +16,6 @@ internal sealed class SignOutFromAllDevicesHandler(
 
     public async Task<Result> Handle(SignOutFromAllDevicesCommand command, CancellationToken cancellationToken)
     {
-
         var user = await _myFinanceDbContext.Users.FindAsync([command.CurrentUserId], cancellationToken);
 
         if (user is null)

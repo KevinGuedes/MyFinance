@@ -1,21 +1,23 @@
 ﻿using FluentResults;
-using MyFinance.Application.Abstractions.Persistence.Repositories;
+using MyFinance.Application.Abstractions.Persistence;
 using MyFinance.Application.Abstractions.RequestHandling.Commands;
 using MyFinance.Application.Common.Errors;
 using MyFinance.Application.Mappers;
 using MyFinance.Contracts.AccountTag.Responses;
+using MyFinance.Contracts.Category.Responses;
+using MyFinance.Domain.Entities;
 
 namespace MyFinance.Application.UseCases.AccountTags.Commands.UpdateAccountTag;
 
-internal sealed class UpdateAccountTagHandler(IAccountTagRepository accountTagRepository)
+internal sealed class UpdateAccountTagHandler(IMyFinanceDbContext myFinanceDbContext)
     : ICommandHandler<UpdateAccountTagCommand, AccountTagResponse>
 {
-    private readonly IAccountTagRepository _accountTagRepository = accountTagRepository;
+    private readonly IMyFinanceDbContext _myFinanceDbContext = myFinanceDbContext;
 
     public async Task<Result<AccountTagResponse>> Handle(UpdateAccountTagCommand command,
         CancellationToken cancellationToken)
     {
-        var accountTag = await _accountTagRepository.GetByIdAsync(command.Id, cancellationToken);
+        var accountTag = await _myFinanceDbContext.AccountTags.FindAsync([command.Id], cancellationToken);
 
         if (accountTag is null)
         {
@@ -24,8 +26,13 @@ internal sealed class UpdateAccountTagHandler(IAccountTagRepository accountTagRe
         }
 
         accountTag.Update(command.Tag, command.Description);
-        _accountTagRepository.Update(accountTag);
+        _myFinanceDbContext.AccountTags.Update(accountTag);
 
-        return Result.Ok(AccountTagMapper.DTR.Map(accountTag));
+        return Result.Ok(new AccountTagResponse
+        {
+            Id = accountTag.Id,
+            Tag = accountTag.Tag,
+            Description = accountTag.Description,
+        });
     }
 }

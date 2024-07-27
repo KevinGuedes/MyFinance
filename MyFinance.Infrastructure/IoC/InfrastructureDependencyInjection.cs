@@ -3,12 +3,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using MyFinance.Application.Abstractions.Persistence;
-using MyFinance.Application.Abstractions.Persistence.Repositories;
-using MyFinance.Application.Abstractions.Persistence.UnitOfWork;
 using MyFinance.Application.Abstractions.Services;
 using MyFinance.Infrastructure.Abstractions;
 using MyFinance.Infrastructure.Persistence.Context;
-using MyFinance.Infrastructure.Persistence.Repositories;
 using MyFinance.Infrastructure.Persistence.UnitOfWork;
 using MyFinance.Infrastructure.Services.CurrentUserProvider;
 using MyFinance.Infrastructure.Services.EmailSender;
@@ -57,14 +54,9 @@ public static class InfrastructureDependencyInjection
                         .UseQuerySplittingBehavior(QuerySplittingBehavior.SingleQuery)
                         .MigrationsAssembly(Assembly.GetExecutingAssembly().FullName)));
 
-        services.AddScoped<IMyFinanceDbContext, MyFinanceDbContext>();
-        services.AddScoped<IUnitOfWork, UnitOfWork>();
-
         return services
-            .AddScoped<IManagementUnitRepository, ManagementUnitRepository>()
-            .AddScoped<ITransferRepository, TransferRepository>()
-            .AddScoped<IAccountTagRepository, AccountTagRepository>()
-            .AddScoped<ICategoryRepository, CategoryRepository>();
+             .AddScoped<IMyFinanceDbContext, MyFinanceDbContext>()
+             .AddScoped<IUnitOfWork, UnitOfWork>();
     }
 
     private static IServiceCollection AddHelthCheckForExternalServices(this IServiceCollection services)

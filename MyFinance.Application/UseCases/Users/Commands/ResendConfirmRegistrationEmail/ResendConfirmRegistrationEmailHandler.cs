@@ -19,6 +19,7 @@ internal sealed class ResendConfirmRegistrationEmailHandler(
     public async Task<Result> Handle(ResendConfirmRegistrationEmailCommand command, CancellationToken cancellationToken)
     {
         var user = await _myFinanceDbContext.Users
+            .AsNoTracking()
             .Where(user => user.Email == command.Email)
             .Select(user => new { user.Id, user.Email })
             .FirstOrDefaultAsync(cancellationToken);
@@ -26,8 +27,7 @@ internal sealed class ResendConfirmRegistrationEmailHandler(
         if (user is null)
             return Result.Ok();
 
-        var urlSafeConfirmRegistrationToken
-            = _tokenProvider.CreateUrlSafeConfirmRegistrationToken(user.Id);
+        var urlSafeConfirmRegistrationToken = _tokenProvider.CreateUrlSafeConfirmRegistrationToken(user.Id);
 
         await _emailSender.SendConfirmRegistrationEmailAsync(
             user.Email,

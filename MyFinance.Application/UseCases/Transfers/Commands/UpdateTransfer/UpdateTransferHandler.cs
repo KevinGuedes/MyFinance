@@ -1,5 +1,6 @@
 ﻿using FluentResults;
-using MyFinance.Application.Abstractions.Persistence.Repositories;
+using Microsoft.EntityFrameworkCore;
+using MyFinance.Application.Abstractions.Persistence;
 using MyFinance.Application.Abstractions.RequestHandling.Commands;
 using MyFinance.Application.Common.Errors;
 using MyFinance.Application.Mappers;
@@ -7,21 +8,17 @@ using MyFinance.Contracts.Transfer.Responses;
 
 namespace MyFinance.Application.UseCases.Transfers.Commands.UpdateTransfer;
 
-internal sealed class UpdateTransferHandler(
-    ITransferRepository transferRepository,
-    IManagementUnitRepository managementUnitRepository,
-    IAccountTagRepository accountTagRepository,
-    ICategoryRepository categoryRepository) : ICommandHandler<UpdateTransferCommand, TransferResponse>
+internal sealed class UpdateTransferHandler(IMyFinanceDbContext myFinanceDbContext)
+    : ICommandHandler<UpdateTransferCommand, TransferResponse>
 {
-    private readonly ITransferRepository _transferRepository = transferRepository;
-    private readonly IManagementUnitRepository _managementUnitRepository = managementUnitRepository;
-    private readonly IAccountTagRepository _accountTagRepository = accountTagRepository;
-    private readonly ICategoryRepository _categoryRepository = categoryRepository;
+    private readonly IMyFinanceDbContext _myFinanceDbContext = myFinanceDbContext;
 
     public async Task<Result<TransferResponse>> Handle(UpdateTransferCommand command,
         CancellationToken cancellationToken)
     {
-        var transfer = await _transferRepository.GetWithManagementUnitByIdAsync(command.Id, cancellationToken);
+        var transfer = await _myFinanceDbContext.Transfers
+            .Include(transfer => transfer.ManagementUnit)
+            .FirstOrDefaultAsync(transfer => transfer.Id == command.Id, cancellationToken);
 
         if (transfer is null)
         {
@@ -36,7 +33,7 @@ internal sealed class UpdateTransferHandler(
         var hasAccountTagChanged = transfer.AccountTagId != command.AccountTagId;
         if (hasAccountTagChanged)
         {
-            var accountTag = await _accountTagRepository.GetByIdAsync(command.AccountTagId, cancellationToken);
+            var accountTag = await _myFinanceDbContext.AccountTags.FindAsync([command.AccountTagId], cancellationToken);
 
             if (accountTag is null)
             {
@@ -51,7 +48,7 @@ internal sealed class UpdateTransferHandler(
         var hasCategoryChanged = transfer.CategoryId != command.CategoryId;
         if (hasCategoryChanged)
         {
-            var category = await _categoryRepository.GetByIdAsync(command.CategoryId, cancellationToken);
+            var category = await _myFinanceDbContext.Categories.FindAsync([command.CategoryId], cancellationToken);
 
             if (category is null)
             {
@@ -63,7 +60,6 @@ internal sealed class UpdateTransferHandler(
             transfer.UpdateCategory(category);
         }
 
-
         transfer.Update(
             command.Value,
             command.RelatedTo,
@@ -73,9 +69,19 @@ internal sealed class UpdateTransferHandler(
 
         managementUnit.RegisterTransferValue(transfer.Value, transfer.Type);
 
-        _transferRepository.Update(transfer);
-        _managementUnitRepository.Update(managementUnit);
+        _myFinanceDbContext.Transfers.Update(transfer);
+        _myFinanceDbContext.ManagementUnits.Update(managementUnit);
 
-        return Result.Ok(TransferMapper.DTR.Map(transfer));
+        return Result.Ok(new TransferResponse()
+        {
+            Id = transfer.Id,
+            RelatedTo = transfer.RelatedTo,
+            Description = transfer.Description,
+            SettlementDate = transfer.SettlementDate,
+            Type = transfer.Type,
+            Value = transfer.Value,
+            Tag = transfer.AccountTag?.Tag!,
+            CategoryName = transfer.Category?.Name!
+        });
     }
 }

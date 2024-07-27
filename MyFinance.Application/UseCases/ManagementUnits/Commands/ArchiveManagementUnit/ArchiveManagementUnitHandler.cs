@@ -1,20 +1,19 @@
 ﻿using FluentResults;
-using MyFinance.Application.Abstractions.Persistence.Repositories;
+using MyFinance.Application.Abstractions.Persistence;
 using MyFinance.Application.Abstractions.RequestHandling.Commands;
 using MyFinance.Application.Common.Errors;
 
 namespace MyFinance.Application.UseCases.ManagementUnits.Commands.ArchiveManagementUnit;
 
-internal sealed class ArchiveManagementUnitHandler(
-    IManagementUnitRepository managementUnitRepository)
+internal sealed class ArchiveManagementUnitHandler(IMyFinanceDbContext myFinanceDbContext)
     : ICommandHandler<ArchiveManagementUnitCommand>
 {
-    private readonly IManagementUnitRepository _managementUnitRepository = managementUnitRepository;
+    private readonly IMyFinanceDbContext _myFinanceDbContext = myFinanceDbContext;
 
     public async Task<Result> Handle(ArchiveManagementUnitCommand command, CancellationToken cancellationToken)
     {
-        var managementUnit =
-            await _managementUnitRepository.GetByIdAsync(command.Id, cancellationToken);
+        var managementUnit = await _myFinanceDbContext.ManagementUnits
+            .FindAsync([command.Id], cancellationToken);
 
         if (managementUnit is null)
         {
@@ -23,7 +22,7 @@ internal sealed class ArchiveManagementUnitHandler(
         }
 
         managementUnit.Archive(command.ReasonToArchive);
-        _managementUnitRepository.Update(managementUnit);
+        _myFinanceDbContext.ManagementUnits.Update(managementUnit);
 
         return Result.Ok();
     }
