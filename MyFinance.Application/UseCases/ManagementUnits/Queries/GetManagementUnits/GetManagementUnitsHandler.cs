@@ -20,7 +20,6 @@ internal sealed class GetManagementUnitsHandler(IMyFinanceDbContext myFinanceDbC
             var totalCount = await _myFinanceDbContext.ManagementUnits
                 .LongCountAsync(cancellationToken);
 
-            //select in the end?
             var managementUnits = await _myFinanceDbContext.ManagementUnits
                 .AsNoTracking()
                 .OrderBy(mu => mu.Name)
@@ -53,6 +52,10 @@ internal sealed class GetManagementUnitsHandler(IMyFinanceDbContext myFinanceDbC
 
             var managementUnits = await _myFinanceDbContext.ManagementUnits
                 .AsNoTracking()
+                .Where(mu => mu.Name.Contains(query.SearchTerm))
+                .OrderBy(mu => mu.Name)
+                .Skip((query.PageNumber - 1) * query.PageSize)
+                .Take(query.PageSize)
                 .Select(mu => new ManagementUnitResponse
                 {
                     Id = mu.Id,
@@ -62,10 +65,6 @@ internal sealed class GetManagementUnitsHandler(IMyFinanceDbContext myFinanceDbC
                     Outcome = mu.Outcome,
                     Balance = mu.Balance
                 })
-                .Where(mu => mu.Name.Contains(query.SearchTerm))
-                .OrderBy(mu => mu.Name)
-                .Skip((query.PageNumber - 1) * query.PageSize)
-                .Take(query.PageSize)
                 .ToListAsync(cancellationToken);
 
             return Result.Ok(new Paginated<ManagementUnitResponse>

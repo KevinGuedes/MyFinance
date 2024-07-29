@@ -1,5 +1,5 @@
 import { ColumnDef } from '@tanstack/react-table'
-import { MoreHorizontal } from 'lucide-react'
+import { MoreVertical } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
 import {
@@ -42,7 +42,7 @@ export const accountTagsTableColumns: ColumnDef<AccountTag>[] = [
           <DropdownMenuTrigger asChild>
             <Button variant="ghost" className="ml-auto size-8 p-0">
               <span className="sr-only">Open menu</span>
-              <MoreHorizontal className="size-4" />
+              <MoreVertical className="size-4" />
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
