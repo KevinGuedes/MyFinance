@@ -37,7 +37,7 @@ export function TransferItem({
           <p className="line-clamp-1 text-sm text-muted-foreground">
             {description}
           </p>
-          <div className="flex shrink-0 gap-1 pr-8">
+          <div className="mr-8 flex shrink-0 gap-1">
             <p className="rounded-md border px-1 py-px text-sm text-muted-foreground">
               {tag}
             </p>

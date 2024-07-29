@@ -12,9 +12,9 @@ namespace MyFinance.Presentation.Controllers;
 [Route("[controller]")]
 [Produces("application/problem+json")]
 [SwaggerResponse(StatusCodes.Status500InternalServerError, "Backend went rogue", typeof(ProblemResponse))]
-public abstract class ApiController(IMediator mediator) : ControllerBase
+public abstract class ApiController(ISender sender) : ControllerBase
 {
-    protected readonly IMediator _mediator = mediator;
+    protected readonly ISender _sender = sender;
 
     protected ObjectResult ProcessResult<TResponse>(Result<TResponse> result, bool hasEntityBeenCreated = false)
     {

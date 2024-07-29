@@ -17,7 +17,7 @@ namespace MyFinance.Presentation.Controllers;
 
 [SwaggerTag("Management Units management")]
 [SwaggerResponse(StatusCodes.Status401Unauthorized, "Unauthorized", typeof(ProblemResponse))]
-public class ManagementUnitController(IMediator mediator) : ApiController(mediator)
+public class ManagementUnitController(ISender sender) : ApiController(sender)
 {
     private const string SPREADSHEET_CONTENT_TYPE = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
 
@@ -29,7 +29,7 @@ public class ManagementUnitController(IMediator mediator) : ApiController(mediat
         [FromBody] [SwaggerRequestBody("Management unit payload", Required = true)]
         CreateManagementUnitRequest request,
         CancellationToken cancellationToken) =>
-        ProcessResult(await _mediator.Send(ManagementUnitMapper.RTC.Map(request), cancellationToken), true);
+        ProcessResult(await _sender.Send(ManagementUnitMapper.RTC.Map(request), cancellationToken), true);
 
     [HttpGet]
     [SwaggerOperation(Summary = "Lists all Management Units with pagination")]
@@ -46,7 +46,7 @@ public class ManagementUnitController(IMediator mediator) : ApiController(mediat
         CancellationToken cancellationToken)
     {
         var query = new GetManagementUnitsQuery(pageNumber, pageSize, searchTerm);
-        return ProcessResult(await _mediator.Send(query, cancellationToken));
+        return ProcessResult(await _sender.Send(query, cancellationToken));
     }
 
     [HttpGet("{id:guid}")]
@@ -57,7 +57,7 @@ public class ManagementUnitController(IMediator mediator) : ApiController(mediat
     public async Task<IActionResult> GetManagementUnitByIdAsync(
        [FromRoute][SwaggerParameter("The Management Unit Id", Required = true)] Guid id,
        CancellationToken cancellationToken)
-        => ProcessResult(await _mediator.Send(new GetManagementUnitQuery(id), cancellationToken));
+        => ProcessResult(await _sender.Send(new GetManagementUnitQuery(id), cancellationToken));
 
     [HttpGet("{id:guid}/MonthlySummary")]
     [SwaggerOperation(Summary = "Generates a monthly summary for a Management Unit")]
@@ -79,8 +79,16 @@ public class ManagementUnitController(IMediator mediator) : ApiController(mediat
         CancellationToken cancellationToken)
     {
         var query = new GetMonthlySummaryQuery(id, year, month);
-        var result = await _mediator.Send(query, cancellationToken);
-        return ProcessSummaryResult(result, SPREADSHEET_CONTENT_TYPE);
+        var result = await _sender.Send(query, cancellationToken);
+
+        if (result.IsFailed)
+            return HandleFailureResult(result.Errors);
+
+        return File(
+            result.Value.FileContent,
+            SPREADSHEET_CONTENT_TYPE,
+            result.Value.FileName,
+            true);
     }
 
     [HttpPut]
@@ -94,7 +102,7 @@ public class ManagementUnitController(IMediator mediator) : ApiController(mediat
         [FromBody] [SwaggerRequestBody("Management Unit payload", Required = true)]
         UpdateManagementUnitRequest request,
         CancellationToken cancellationToken)
-        => ProcessResult(await _mediator.Send(ManagementUnitMapper.RTC.Map(request), cancellationToken));
+        => ProcessResult(await _sender.Send(ManagementUnitMapper.RTC.Map(request), cancellationToken));
 
     [HttpPatch("{id:guid}")]
     [SwaggerOperation(Summary = "Unarchives an existing Management Unit")]
@@ -107,7 +115,7 @@ public class ManagementUnitController(IMediator mediator) : ApiController(mediat
         [FromRoute] [SwaggerParameter("Id of the Management Unit to unarchive", Required = true)]
         Guid id,
         CancellationToken cancellationToken)
-        => ProcessResult(await _mediator.Send(new UnarchiveManagementUnitCommand(id), cancellationToken));
+        => ProcessResult(await _sender.Send(new UnarchiveManagementUnitCommand(id), cancellationToken));
 
     [HttpDelete]
     [SwaggerOperation(Summary = "Logically deletes (archives) an existing Management Unit")]
@@ -120,14 +128,5 @@ public class ManagementUnitController(IMediator mediator) : ApiController(mediat
         [FromBody] [SwaggerRequestBody("Payload to archvie a Management Unit", Required = true)]
         ArchiveManagementUnitRequest request,
         CancellationToken cancellationToken)
-        => ProcessResult(await _mediator.Send(ManagementUnitMapper.RTC.Map(request), cancellationToken));
-
-    private IActionResult ProcessSummaryResult(Result<SummaryResponse> result, string contentType)
-    {
-        if (result.IsFailed)
-            return HandleFailureResult(result.Errors);
-
-        var (fileName, fileContent) = result.Value;
-        return File(fileContent, contentType, fileName, true);
-    }
+        => ProcessResult(await _sender.Send(ManagementUnitMapper.RTC.Map(request), cancellationToken));
 }

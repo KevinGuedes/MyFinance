@@ -14,7 +14,7 @@ namespace MyFinance.Presentation.Controllers;
 
 [SwaggerTag("Transfers management")]
 [SwaggerResponse(StatusCodes.Status401Unauthorized, "Unauthorized", typeof(ProblemResponse))]
-public class TransferController(IMediator mediator) : ApiController(mediator)
+public class TransferController(ISender sender) : ApiController(sender)
 {
     [HttpGet]
     [SwaggerOperation(Summary = "Lists the Transfers retrived according to query parameters. Transfers are grouped by date")]
@@ -40,7 +40,7 @@ public class TransferController(IMediator mediator) : ApiController(mediator)
             pageNumber,
             pageSize);
 
-        return ProcessResult(await _mediator.Send(query, cancellationToken));
+        return ProcessResult(await _sender.Send(query, cancellationToken));
     }
 
     [HttpGet("PeriodBalance")]
@@ -67,7 +67,7 @@ public class TransferController(IMediator mediator) : ApiController(mediator)
             categoryId,
             accountTagId);
 
-        return ProcessResult(await _mediator.Send(query, cancellationToken));
+        return ProcessResult(await _sender.Send(query, cancellationToken));
     }
 
     [HttpGet("DiscriminatedBalance")]
@@ -84,7 +84,7 @@ public class TransferController(IMediator mediator) : ApiController(mediator)
         CancellationToken cancellationToken)
     {
         var query = new GetDiscriminatedBalanceDataQuery(managementUnitId, pastMonths, includeCurrentMonth);
-        return ProcessResult(await _mediator.Send(query, cancellationToken));
+        return ProcessResult(await _sender.Send(query, cancellationToken));
     }
 
     [HttpPost]
@@ -96,7 +96,7 @@ public class TransferController(IMediator mediator) : ApiController(mediator)
         [FromBody] [SwaggerRequestBody("Transfers' payload", Required = true)]
         RegisterTransferRequest request,
         CancellationToken cancellationToken)
-        => ProcessResult(await _mediator.Send(TransferMapper.RTC.Map(request), cancellationToken), true);
+        => ProcessResult(await _sender.Send(TransferMapper.RTC.Map(request), cancellationToken), true);
 
     [HttpPut]
     [SwaggerOperation(Summary = "Updates an existing Transfer")]
@@ -109,7 +109,7 @@ public class TransferController(IMediator mediator) : ApiController(mediator)
         [FromBody] [SwaggerRequestBody("Transfers' payload", Required = true)]
         UpdateTransferRequest request,
         CancellationToken cancellationToken)
-        => ProcessResult(await _mediator.Send(TransferMapper.RTC.Map(request), cancellationToken));
+        => ProcessResult(await _sender.Send(TransferMapper.RTC.Map(request), cancellationToken));
 
     [HttpDelete("{id:guid}")]
     [SwaggerOperation(Summary = "Deletes an existing Transfer")]
@@ -122,5 +122,5 @@ public class TransferController(IMediator mediator) : ApiController(mediator)
         [FromRoute] [SwaggerParameter("Transfer Id", Required = true)]
         Guid id,
         CancellationToken cancellationToken)
-        => ProcessResult(await _mediator.Send(new DeleteTransferCommand(id), cancellationToken));
+        => ProcessResult(await _sender.Send(new DeleteTransferCommand(id), cancellationToken));
 }

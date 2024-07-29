@@ -12,7 +12,7 @@ namespace MyFinance.Presentation.Controllers;
 
 [SwaggerTag("Account Tags management")]
 [SwaggerResponse(StatusCodes.Status401Unauthorized, "Unauthorized", typeof(ProblemResponse))]
-public class AccountTagController(IMediator mediator) : ApiController(mediator)
+public class AccountTagController(ISender sender) : ApiController(sender)
 {
     [HttpPost]
     [SwaggerOperation(Summary = "Registers a new Account Tag")]
@@ -22,7 +22,7 @@ public class AccountTagController(IMediator mediator) : ApiController(mediator)
         [FromBody] [SwaggerRequestBody("Account Tag's payload", Required = true)]
         CreateAccountTagRequest request,
         CancellationToken cancellationToken)
-        => ProcessResult(await _mediator.Send(AccountTagMapper.RTC.Map(request), cancellationToken), true);
+        => ProcessResult(await _sender.Send(AccountTagMapper.RTC.Map(request), cancellationToken), true);
 
     [HttpGet]
     [SwaggerOperation(Summary = "Lists all Account Tags with pagination")]
@@ -39,7 +39,7 @@ public class AccountTagController(IMediator mediator) : ApiController(mediator)
         CancellationToken cancellationToken)
     {
         var query = new GetAccountTagsQuery(managementUnitId, pageNumber, pageSize);
-        return ProcessResult(await _mediator.Send(query, cancellationToken));
+        return ProcessResult(await _sender.Send(query, cancellationToken));
     }
 
     [HttpPut]
@@ -53,7 +53,7 @@ public class AccountTagController(IMediator mediator) : ApiController(mediator)
         [FromBody] [SwaggerRequestBody("Account Tag payload", Required = true)]
         UpdateAccountTagRequest request,
         CancellationToken cancellationToken)
-        => ProcessResult(await _mediator.Send(AccountTagMapper.RTC.Map(request), cancellationToken));
+        => ProcessResult(await _sender.Send(AccountTagMapper.RTC.Map(request), cancellationToken));
 
     [HttpPatch("{id:guid}")]
     [SwaggerOperation(Summary = "Unarchives an existing Account Tag")]
@@ -66,7 +66,7 @@ public class AccountTagController(IMediator mediator) : ApiController(mediator)
         [FromRoute] [SwaggerParameter("Id of the Account Tag to unarchive", Required = true)]
         Guid id,
         CancellationToken cancellationToken)
-        => ProcessResult(await _mediator.Send(new UnarchiveAccountTagCommand(id), cancellationToken));
+        => ProcessResult(await _sender.Send(new UnarchiveAccountTagCommand(id), cancellationToken));
 
     [HttpDelete]
     [SwaggerOperation(Summary = "Logically deletes (archives) an existing Account Tag")]
@@ -79,5 +79,5 @@ public class AccountTagController(IMediator mediator) : ApiController(mediator)
         [FromBody] [SwaggerRequestBody("Payload to archvie a Account Tag", Required = true)]
         ArchiveAccountTagRequest request,
         CancellationToken cancellationToken)
-        => ProcessResult(await _mediator.Send(AccountTagMapper.RTC.Map(request), cancellationToken));
+        => ProcessResult(await _sender.Send(AccountTagMapper.RTC.Map(request), cancellationToken));
 }

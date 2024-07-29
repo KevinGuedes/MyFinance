@@ -12,7 +12,7 @@ namespace MyFinance.Presentation.Controllers;
 
 [SwaggerTag("Categories management")]
 [SwaggerResponse(StatusCodes.Status401Unauthorized, "Unauthorized", typeof(ProblemResponse))]
-public class CategoryController(IMediator mediator) : ApiController(mediator)
+public class CategoryController(ISender sender) : ApiController(sender)
 {
     [HttpPost]
     [SwaggerOperation(Summary = "Registers a new Category")]
@@ -22,7 +22,7 @@ public class CategoryController(IMediator mediator) : ApiController(mediator)
         [FromBody] [SwaggerRequestBody("Category's payload", Required = true)]
         CreateCategoryRequest request,
         CancellationToken cancellationToken)
-        => ProcessResult(await _mediator.Send(CategoryMapper.RTC.Map(request), cancellationToken), true);
+        => ProcessResult(await _sender.Send(CategoryMapper.RTC.Map(request), cancellationToken), true);
 
     [HttpGet]
     [SwaggerOperation(Summary = "Lists all Categories with pagination")]
@@ -39,7 +39,7 @@ public class CategoryController(IMediator mediator) : ApiController(mediator)
         CancellationToken cancellationToken)
     {
         var query = new GetCategoriesQuery(managementUnitId, pageNumber, pageSize);
-        return ProcessResult(await _mediator.Send(query, cancellationToken));
+        return ProcessResult(await _sender.Send(query, cancellationToken));
     }
 
     [HttpPut]
@@ -53,7 +53,7 @@ public class CategoryController(IMediator mediator) : ApiController(mediator)
         [FromBody] [SwaggerRequestBody("Category payload", Required = true)]
         UpdateCategoryRequest request,
         CancellationToken cancellationToken)
-        => ProcessResult(await _mediator.Send(CategoryMapper.RTC.Map(request), cancellationToken));
+        => ProcessResult(await _sender.Send(CategoryMapper.RTC.Map(request), cancellationToken));
 
     [HttpPatch("{id:guid}")]
     [SwaggerOperation(Summary = "Unarchives an existing Category")]
@@ -66,7 +66,7 @@ public class CategoryController(IMediator mediator) : ApiController(mediator)
         [FromRoute] [SwaggerParameter("Id of the Category to unarchive", Required = true)]
         Guid id,
         CancellationToken cancellationToken)
-        => ProcessResult(await _mediator.Send(new UnarchiveCategoryCommand(id), cancellationToken));
+        => ProcessResult(await _sender.Send(new UnarchiveCategoryCommand(id), cancellationToken));
 
     [HttpDelete]
     [SwaggerOperation(Summary = "Logically deletes (archives) an existing Category")]
@@ -79,5 +79,5 @@ public class CategoryController(IMediator mediator) : ApiController(mediator)
         [FromBody] [SwaggerRequestBody("Payload to archvie a Category", Required = true)]
         ArchiveCategoryRequest request,
         CancellationToken cancellationToken)
-        => ProcessResult(await _mediator.Send(CategoryMapper.RTC.Map(request), cancellationToken));
+        => ProcessResult(await _sender.Send(CategoryMapper.RTC.Map(request), cancellationToken));
 }
