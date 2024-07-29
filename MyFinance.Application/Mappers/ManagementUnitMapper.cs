@@ -1,10 +1,7 @@
 ﻿using MyFinance.Application.UseCases.ManagementUnits.Commands.ArchiveManagementUnit;
 using MyFinance.Application.UseCases.ManagementUnits.Commands.CreateManagementUnit;
 using MyFinance.Application.UseCases.ManagementUnits.Commands.UpdateManagementUnit;
-using MyFinance.Contracts.Common;
 using MyFinance.Contracts.ManagementUnit.Requests;
-using MyFinance.Contracts.ManagementUnit.Responses;
-using MyFinance.Domain.Entities;
 
 namespace MyFinance.Application.Mappers;
 

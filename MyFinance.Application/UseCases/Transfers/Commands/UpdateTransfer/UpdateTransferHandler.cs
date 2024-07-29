@@ -3,7 +3,6 @@ using Microsoft.EntityFrameworkCore;
 using MyFinance.Application.Abstractions.Persistence;
 using MyFinance.Application.Abstractions.RequestHandling.Commands;
 using MyFinance.Application.Common.Errors;
-using MyFinance.Application.Mappers;
 using MyFinance.Contracts.Transfer.Responses;
 
 namespace MyFinance.Application.UseCases.Transfers.Commands.UpdateTransfer;

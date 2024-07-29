@@ -2,10 +2,7 @@
 using MyFinance.Application.Abstractions.Persistence;
 using MyFinance.Application.Abstractions.RequestHandling.Commands;
 using MyFinance.Application.Common.Errors;
-using MyFinance.Application.Mappers;
 using MyFinance.Contracts.AccountTag.Responses;
-using MyFinance.Contracts.Category.Responses;
-using MyFinance.Domain.Entities;
 
 namespace MyFinance.Application.UseCases.AccountTags.Commands.UpdateAccountTag;
 

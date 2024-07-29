@@ -1,10 +1,6 @@
 ﻿using MyFinance.Application.UseCases.Transfers.Commands.RegisterTransfer;
 using MyFinance.Application.UseCases.Transfers.Commands.UpdateTransfer;
-using MyFinance.Contracts.Common;
 using MyFinance.Contracts.Transfer.Requests;
-using MyFinance.Contracts.Transfer.Responses;
-using MyFinance.Domain.Entities;
-using System.Globalization;
 
 namespace MyFinance.Application.Mappers;
 

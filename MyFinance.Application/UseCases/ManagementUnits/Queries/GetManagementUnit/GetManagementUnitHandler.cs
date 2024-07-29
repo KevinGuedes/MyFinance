@@ -2,7 +2,6 @@
 using MyFinance.Application.Abstractions.Persistence;
 using MyFinance.Application.Abstractions.RequestHandling.Queries;
 using MyFinance.Application.Common.Errors;
-using MyFinance.Application.Mappers;
 using MyFinance.Contracts.ManagementUnit.Responses;
 
 namespace MyFinance.Application.UseCases.ManagementUnits.Queries.GetManagementUnit;
@@ -24,7 +23,7 @@ internal sealed class GetManagementUnitHandler(IMyFinanceDbContext myFinanceDbCo
             return Result.Fail(entityNotFoundError);
         }
 
-        return Result.Ok(new ManagementUnitResponse 
+        return Result.Ok(new ManagementUnitResponse
         {
             Id = managementUnit.Id,
             Name = managementUnit.Name,
@@ -33,5 +32,5 @@ internal sealed class GetManagementUnitHandler(IMyFinanceDbContext myFinanceDbCo
             Outcome = managementUnit.Outcome,
             Balance = managementUnit.Balance,
         });
-   }
+    }
 }

@@ -1,7 +1,6 @@
 ﻿using FluentResults;
 using MyFinance.Application.Abstractions.Persistence;
 using MyFinance.Application.Abstractions.RequestHandling.Commands;
-using MyFinance.Application.Mappers;
 using MyFinance.Contracts.ManagementUnit.Responses;
 using MyFinance.Domain.Entities;
 

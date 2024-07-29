@@ -2,7 +2,6 @@
 using MyFinance.Application.Abstractions.Persistence;
 using MyFinance.Application.Abstractions.RequestHandling.Commands;
 using MyFinance.Application.Common.Errors;
-using MyFinance.Application.Mappers;
 using MyFinance.Contracts.ManagementUnit.Responses;
 
 namespace MyFinance.Application.UseCases.ManagementUnits.Commands.UpdateManagementUnit;

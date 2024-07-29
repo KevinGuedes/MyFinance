@@ -2,11 +2,8 @@
 using Microsoft.EntityFrameworkCore;
 using MyFinance.Application.Abstractions.Persistence;
 using MyFinance.Application.Abstractions.RequestHandling.Queries;
-using MyFinance.Application.Mappers;
-using MyFinance.Contracts.AccountTag.Responses;
 using MyFinance.Contracts.Category.Responses;
 using MyFinance.Contracts.Common;
-using MyFinance.Domain.Entities;
 
 namespace MyFinance.Application.UseCases.Categories.Queries.GetCategories;
 

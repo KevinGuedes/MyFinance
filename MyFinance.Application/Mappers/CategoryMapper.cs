@@ -2,9 +2,6 @@
 using MyFinance.Application.UseCases.Categories.Commands.CreateCategory;
 using MyFinance.Application.UseCases.Categories.Commands.UpdateCategory;
 using MyFinance.Contracts.Category.Requests;
-using MyFinance.Contracts.Category.Responses;
-using MyFinance.Contracts.Common;
-using MyFinance.Domain.Entities;
 
 namespace MyFinance.Application.Mappers;
 
