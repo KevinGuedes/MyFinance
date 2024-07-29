@@ -36,6 +36,7 @@ internal sealed class GetTransferGroupsHandler(IMyFinanceDbContext myFinanceDbCo
             .Skip((query.PageNumber - 1) * query.PageSize)
             .Take(query.PageSize)
             .GroupBy(transfer => transfer.SettlementDate.Day)
+            .OrderByDescending(transferGroup => transferGroup.Key)
             .Select(transferGroup => new TransferGroupResponse
             {
                 Date = new DateOnly(query.Year, query.Month, transferGroup.Key),
