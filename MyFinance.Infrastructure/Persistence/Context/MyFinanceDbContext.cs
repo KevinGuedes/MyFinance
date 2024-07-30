@@ -23,7 +23,12 @@ public sealed class MyFinanceDbContext(
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
-        ApplyGlobalFiltersForUserOwnedEntities(modelBuilder);
+
+        ApplyGlobalFilterForUserOwnedEntity<ManagementUnit>(modelBuilder);
+        ApplyGlobalFilterForUserOwnedEntity<Transfer>(modelBuilder);
+        ApplyGlobalFilterForUserOwnedEntity<AccountTag>(modelBuilder);
+        ApplyGlobalFilterForUserOwnedEntity<Category>(modelBuilder);
+
         base.OnModelCreating(modelBuilder);
     }
 
@@ -32,14 +37,6 @@ public sealed class MyFinanceDbContext(
         base.ConfigureConventions(configurationBuilder);
         configurationBuilder.Properties<DateTime>().HaveConversion<DateTimeValueConverter>();
         configurationBuilder.Properties<DateTime?>().HaveConversion<NullableDateTimeValueConverter>();
-    }
-
-    private void ApplyGlobalFiltersForUserOwnedEntities(ModelBuilder modelBuilder)
-    {
-        ApplyGlobalFilterForUserOwnedEntity<ManagementUnit>(modelBuilder);
-        ApplyGlobalFilterForUserOwnedEntity<Transfer>(modelBuilder);
-        ApplyGlobalFilterForUserOwnedEntity<AccountTag>(modelBuilder);
-        ApplyGlobalFilterForUserOwnedEntity<Category>(modelBuilder);
     }
 
     private void ApplyGlobalFilterForUserOwnedEntity<TEntity>(ModelBuilder modelBuilder)

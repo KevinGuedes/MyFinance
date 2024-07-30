@@ -16,7 +16,6 @@ internal sealed class GetManagementUnitHandler(IMyFinanceDbContext myFinanceDbCo
         CancellationToken cancellationToken)
     {
         var managementUnit = await _myFinanceDbContext.ManagementUnits
-            .AsNoTracking()
             .Where(mu => mu.Id == query.Id)
             .Select(mu => new ManagementUnitResponse
             {

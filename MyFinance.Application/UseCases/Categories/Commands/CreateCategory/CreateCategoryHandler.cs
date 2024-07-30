@@ -25,7 +25,7 @@ internal sealed class CreateCategoryHandler(IMyFinanceDbContext myFinanceDbConte
             return Result.Fail(entityNotFoundError);
         }
 
-        var category = new Category( command.Name, command.ManagementUnitId, command.CurrentUserId);
+        var category = new Category(command.Name, command.ManagementUnitId, command.CurrentUserId);
         await _myFinanceDbContext.Categories.AddAsync(category, cancellationToken);
 
         return Result.Ok(new CategoryResponse

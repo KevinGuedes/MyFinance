@@ -45,8 +45,11 @@ internal sealed class GetMonthlySummaryHandler(
             return Result.Fail(unprocessableEntityError);
         }
 
-        var (fileName, fileContent) =
-            _summaryService.GenerateMonthlySummary(managementUnit, transfers, query.Year, query.Month);
+        var (fileName, fileContent) = _summaryService.GenerateMonthlySummary(
+            managementUnit, 
+            transfers, 
+            query.Year, 
+            query.Month);
 
         return Result.Ok(new SummaryResponse
         {
