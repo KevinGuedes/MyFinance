@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using MyFinance.Domain.Entities;
 
@@ -13,4 +14,5 @@ public interface IMyFinanceDbContext
     DbSet<User> Users { get; }
     DatabaseFacade Database { get; }
     Task<int> SaveChangesAsync(CancellationToken cancellationToken);
+    ChangeTracker ChangeTracker { get; }
 }

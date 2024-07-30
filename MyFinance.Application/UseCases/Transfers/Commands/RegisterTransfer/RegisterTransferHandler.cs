@@ -1,4 +1,5 @@
 ﻿using FluentResults;
+using Microsoft.EntityFrameworkCore;
 using MyFinance.Application.Abstractions.Persistence;
 using MyFinance.Application.Abstractions.RequestHandling.Commands;
 using MyFinance.Application.Common.Errors;
@@ -25,7 +26,12 @@ internal sealed class RegisterTransferHandler(IMyFinanceDbContext myFinanceDbCon
             return Result.Fail(entityNotFoundError);
         }
 
-        var accountTag = await _myFinanceDbContext.AccountTags.FindAsync([command.AccountTagId], cancellationToken);
+        var accountTag = await _myFinanceDbContext.AccountTags
+            .AsNoTracking()
+            .Where(at => at.Id == command.AccountTagId)
+            .Select(at => new { at.Id, at.Tag })
+            .FirstOrDefaultAsync(cancellationToken);
+        
         if (accountTag is null)
         {
             var errorMessage = $"Account Tag with Id {command.AccountTagId} not found";
@@ -33,7 +39,12 @@ internal sealed class RegisterTransferHandler(IMyFinanceDbContext myFinanceDbCon
             return Result.Fail(entityNotFoundError);
         }
 
-        var category = await _myFinanceDbContext.Categories.FindAsync([command.CategoryId], cancellationToken);
+        var category = await _myFinanceDbContext.Categories
+            .AsNoTracking()
+            .Where(category => category.Id == command.CategoryId)
+            .Select(category => new { category.Id, category.Name })
+            .FirstOrDefaultAsync(cancellationToken);
+
         if (category is null)
         {
             var errorMessage = $"Category with Id {command.AccountTagId} not found";
@@ -47,10 +58,10 @@ internal sealed class RegisterTransferHandler(IMyFinanceDbContext myFinanceDbCon
             command.Description,
             command.SettlementDate,
             command.Type,
-            command.CurrentUserId,
-            managementUnit,
-            accountTag,
-            category);
+            managementUnit.Id,
+            accountTag.Id,
+            category.Id,
+            command.CurrentUserId);
 
         managementUnit.RegisterTransferValue(transfer.Value, transfer.Type);
 
