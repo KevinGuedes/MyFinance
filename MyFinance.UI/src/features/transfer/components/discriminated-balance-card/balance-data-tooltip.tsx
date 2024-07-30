@@ -39,9 +39,9 @@ export function BalanceDataTooltip({
     )
 
     return (
-      <div className="space-y-1.5 rounded-lg border bg-background p-2 shadow-md">
+      <div className="min-w-80 space-y-1.5 rounded-lg border bg-background p-2 shadow-md">
         <p className="text-base font-bold capitalize">{formattedDate}</p>
-        <div className="flex gap-3">
+        <div className="flex w-full justify-between gap-2">
           {showBalance && (
             <div className="flex flex-col">
               <p className="text-sm font-bold capitalize text-muted-foreground">
