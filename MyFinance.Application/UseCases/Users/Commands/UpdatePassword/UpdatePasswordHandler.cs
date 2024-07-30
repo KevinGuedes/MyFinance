@@ -1,5 +1,5 @@
 ﻿using FluentResults;
-using MyFinance.Application.Abstractions.Persistence.Repositories;
+using MyFinance.Application.Abstractions.Persistence;
 using MyFinance.Application.Abstractions.RequestHandling.Commands;
 using MyFinance.Application.Abstractions.Services;
 using MyFinance.Application.Common.Errors;
@@ -8,15 +8,15 @@ namespace MyFinance.Application.UseCases.Users.Commands.UpdatePassword;
 
 internal sealed class UpdatePasswordHandler(
     IPasswordManager passwordManager,
-    IUserRepository userRepository)
+    IMyFinanceDbContext myFinanceDbContext)
     : ICommandHandler<UpdatePasswordCommand>
 {
     private readonly IPasswordManager _passwordManager = passwordManager;
-    private readonly IUserRepository _userRepository = userRepository;
+    private readonly IMyFinanceDbContext _myFinanceDbContext = myFinanceDbContext;
 
     public async Task<Result> Handle(UpdatePasswordCommand command, CancellationToken cancellationToken)
     {
-        var user = await _userRepository.GetByIdAsync(command.CurrentUserId, cancellationToken);
+        var user = await _myFinanceDbContext.Users.FindAsync([command.CurrentUserId], cancellationToken);
 
         if (user is null)
             return Result.Fail(new InternalServerError());
@@ -47,6 +47,7 @@ internal sealed class UpdatePasswordHandler(
 
         var newPasswordHash = _passwordManager.HashPassword(command.PlainTextNewPassword);
         user.UpdatePasswordHash(newPasswordHash);
+        _myFinanceDbContext.Users.Update(user);
 
         return Result.Ok();
     }

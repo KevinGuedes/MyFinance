@@ -1,34 +1,37 @@
 ﻿using FluentResults;
-using MyFinance.Application.Abstractions.Persistence.Repositories;
+using Microsoft.EntityFrameworkCore;
+using MyFinance.Application.Abstractions.Persistence;
 using MyFinance.Application.Abstractions.RequestHandling.Commands;
 using MyFinance.Application.Common.Errors;
-using MyFinance.Application.Mappers;
 using MyFinance.Contracts.Category.Responses;
 using MyFinance.Domain.Entities;
 
 namespace MyFinance.Application.UseCases.Categories.Commands.CreateCategory;
 
-internal sealed class CreateCategoryHandler(
-    ICategoryRepository categoryRepository,
-    IManagementUnitRepository managementUnitRepository)
+internal sealed class CreateCategoryHandler(IMyFinanceDbContext myFinanceDbContext)
     : ICommandHandler<CreateCategoryCommand, CategoryResponse>
 {
-    private readonly ICategoryRepository _categoryRepository = categoryRepository;
-    private readonly IManagementUnitRepository _managementUnitRepository = managementUnitRepository;
+    private readonly IMyFinanceDbContext _myFinanceDbContext = myFinanceDbContext;
 
     public async Task<Result<CategoryResponse>> Handle(CreateCategoryCommand command, CancellationToken cancellationToken)
     {
-        var managementUnit = await _managementUnitRepository.GetByIdAsync(command.ManagementUnitId, cancellationToken);
-        if (managementUnit is null)
+        var isValidManagementUnit = await _myFinanceDbContext.ManagementUnits
+            .AnyAsync(mu => mu.Id == command.ManagementUnitId, cancellationToken);
+
+        if (!isValidManagementUnit)
         {
             var errorMessage = $"Management Unit with Id {command.ManagementUnitId} not found";
             var entityNotFoundError = new EntityNotFoundError(errorMessage);
             return Result.Fail(entityNotFoundError);
         }
 
-        var category = new Category(managementUnit, command.Name, command.CurrentUserId);
-        await _categoryRepository.InsertAsync(category, cancellationToken);
+        var category = new Category(command.Name, command.ManagementUnitId, command.CurrentUserId);
+        await _myFinanceDbContext.Categories.AddAsync(category, cancellationToken);
 
-        return Result.Ok(CategoryMapper.DTR.Map(category));
+        return Result.Ok(new CategoryResponse
+        {
+            Id = category.Id,
+            Name = category.Name,
+        });
     }
 }

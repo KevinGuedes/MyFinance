@@ -1,19 +1,19 @@
 ﻿using FluentResults;
-using MyFinance.Application.Abstractions.Persistence.Repositories;
+using MyFinance.Application.Abstractions.Persistence;
 using MyFinance.Application.Abstractions.RequestHandling.Commands;
 using MyFinance.Application.Common.Errors;
 
 namespace MyFinance.Application.UseCases.ManagementUnits.Commands.UnarchiveManagementUnit;
 
-public class UnarchiveManagementUnitHandler(IManagementUnitRepository managementUnitRepository)
+public class UnarchiveManagementUnitHandler(IMyFinanceDbContext myFinanceDbContext)
     : ICommandHandler<UnarchiveManagementUnitCommand>
 {
-    private readonly IManagementUnitRepository _managementUnitRepository = managementUnitRepository;
+    private readonly IMyFinanceDbContext _myFinanceDbContext = myFinanceDbContext;
 
     public async Task<Result> Handle(UnarchiveManagementUnitCommand command, CancellationToken cancellationToken)
     {
-        var managementUnit =
-            await _managementUnitRepository.GetByIdAsync(command.Id, cancellationToken);
+        var managementUnit = await _myFinanceDbContext.ManagementUnits
+            .FindAsync([command.Id], cancellationToken);
 
         if (managementUnit is null)
         {
@@ -22,7 +22,7 @@ public class UnarchiveManagementUnitHandler(IManagementUnitRepository management
         }
 
         managementUnit.Unarchive();
-        _managementUnitRepository.Update(managementUnit);
+        _myFinanceDbContext.ManagementUnits.Update(managementUnit);
 
         return Result.Ok();
     }

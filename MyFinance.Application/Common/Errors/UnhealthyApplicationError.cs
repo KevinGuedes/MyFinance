@@ -2,8 +2,8 @@
 
 namespace MyFinance.Application.Common.Errors;
 
-public sealed class UnhealthyServicesError(HealthReport healthReport)
+public sealed class UnhealthyApplicationError(HealthReport healthReport)
     : BaseError($"Application is {healthReport.Status}")
 {
-    public HealthReport HealthReport { get; } = healthReport;
+    public HealthReport HealthReport { get; init; } = healthReport;
 }

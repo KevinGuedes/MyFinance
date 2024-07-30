@@ -9,7 +9,7 @@ public sealed class Category : Entity, IUserOwnedEntity, IArchivableEntity
     {
     }
 
-    public Category(ManagementUnit managementUnit, string name, Guid userId)
+    public Category(string name, Guid managementUnitId, Guid userId)
     {
         UserId = userId;
         Name = name;
@@ -17,8 +17,7 @@ public sealed class Category : Entity, IUserOwnedEntity, IArchivableEntity
         ReasonToArchive = null;
         ArchivedOnUtc = null;
         Transfers = [];
-        ManagementUnit = managementUnit;
-        ManagementUnitId = managementUnit.Id;
+        ManagementUnitId = managementUnitId;
     }
 
     public Guid UserId { get; init; }

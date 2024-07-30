@@ -1,15 +1,16 @@
 ﻿using FluentValidation;
-using MyFinance.Application.Abstractions.Persistence.Repositories;
+using Microsoft.EntityFrameworkCore;
+using MyFinance.Application.Abstractions.Persistence;
 
 namespace MyFinance.Application.UseCases.AccountTags.Commands.CreateAccountTag;
 
 public sealed class CreateAccountTagValidator : AbstractValidator<CreateAccountTagCommand>
 {
-    private readonly IAccountTagRepository _accountTagRepository;
+    private readonly IMyFinanceDbContext _myFinanceDbContext;
 
-    public CreateAccountTagValidator(IAccountTagRepository accountTagRepository)
+    public CreateAccountTagValidator(IMyFinanceDbContext myFinanceDbContext)
     {
-        _accountTagRepository = accountTagRepository;
+        _myFinanceDbContext = myFinanceDbContext;
         ClassLevelCascadeMode = CascadeMode.Stop;
 
         RuleFor(command => command.Description)
@@ -22,7 +23,9 @@ public sealed class CreateAccountTagValidator : AbstractValidator<CreateAccountT
             .Length(2, 5).WithMessage("{PropertyName} must have between 2 and 5 characters")
             .MustAsync(async (tag, cancellationToken) =>
             {
-                var exists = await _accountTagRepository.ExistsByTagAsync(tag, cancellationToken);
+                var exists = await _myFinanceDbContext.AccountTags
+                    .AnyAsync(at => at.Tag == tag, cancellationToken);
+
                 return !exists;
             }).WithMessage("The name '{PropertyValue}' has already been taken");
     }

@@ -2,51 +2,47 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MyFinance.Application.Common.Errors;
-using MyFinance.Application.Mappers;
-using MyFinance.Application.UseCases.HealthChecks.Queries.GetHealthChecksReport;
+using MyFinance.Application.UseCases.HealthChecks.Queries.GetHealthReport;
 using MyFinance.Contracts.HealthCheck.Responses;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace MyFinance.Presentation.Controllers;
 
 [SwaggerTag("Application Health Checks")]
-public class HealthChecksController(IMediator mediator) : ApiController(mediator)
+public class HealthChecksController(ISender sender) : ApiController(sender)
 {
     [HttpGet]
     [AllowAnonymous]
     [SwaggerOperation(Summary = "Checks the health of the application")]
-    [SwaggerResponse(StatusCodes.Status200OK, "Application is Healthy or Degraded", typeof(HealthyServicesResponse))]
-    [SwaggerResponse(StatusCodes.Status503ServiceUnavailable, "Application is unhealthy", typeof(UnhealthyServicesResponse))]
+    [SwaggerResponse(StatusCodes.Status200OK, "Application is Healthy or Degraded", typeof(HealthReportResponse))]
+    [SwaggerResponse(StatusCodes.Status503ServiceUnavailable, "Application is unhealthy", typeof(UnhealthyApplicationResponse))]
     public async Task<IActionResult> GetHealthChecksReportAsync(CancellationToken cancellationToken)
     {
-        var result = await _mediator.Send(new GetHealthChecksReportQuery(), cancellationToken);
+        var result = await _sender.Send(new GetHealthReportQuery(), cancellationToken);
 
         if (result.IsSuccess)
             return Ok(result.Value);
 
         var error = result.Errors.FirstOrDefault();
 
-        if (error is UnhealthyServicesError unhealthyServicesError)
-            return BuildUnhealthyApplicationResponse(unhealthyServicesError);
+        if (error is UnhealthyApplicationError unhealthyServicesError)
+        {
+            var problemDetails = ProblemDetailsFactory.CreateProblemDetails(
+                HttpContext,
+                statusCode: StatusCodes.Status503ServiceUnavailable,
+                detail: "Service(s) currently unhealthy",
+                instance: HttpContext.Request.Path);
+
+            var unhealthyApplicationResponse = new UnhealthyApplicationResponse(
+                unhealthyServicesError.HealthReport,
+                problemDetails);
+
+            return new ObjectResult(unhealthyApplicationResponse)
+            {
+                StatusCode = problemDetails.Status
+            };
+        }
 
         return HandleFailureResult(error);
-    }
-
-    private ObjectResult BuildUnhealthyApplicationResponse(UnhealthyServicesError unhealthyServicesError)
-    {
-        var statusCode = StatusCodes.Status503ServiceUnavailable;
-
-        var problemDetails = ProblemDetailsFactory.CreateProblemDetails(
-            HttpContext,
-            statusCode: statusCode,
-            detail: "Service(s) currently unhealthy",
-            instance: HttpContext.Request.Path);
-
-        var unhealthyServicesResponse = HealthChecksMapper.ETR.Map(problemDetails, unhealthyServicesError.HealthReport);
-
-        return new(unhealthyServicesResponse)
-        {
-            StatusCode = problemDetails.Status
-        };
     }
 }

@@ -1,4 +1,4 @@
-﻿namespace MyFinance.Application.Abstractions.Persistence.UnitOfWork;
+﻿namespace MyFinance.Application.Abstractions.Persistence;
 
 public interface IUnitOfWork
 {

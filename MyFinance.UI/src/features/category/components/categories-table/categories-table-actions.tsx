@@ -1,4 +1,4 @@
-import { MoreHorizontal } from 'lucide-react'
+import { MoreVertical } from 'lucide-react'
 import { useRef, useState } from 'react'
 
 import { Button } from '@/components/ui/button'
@@ -49,7 +49,7 @@ export function CategoriesTableAction({
           ref={dropdownTriggerRef}
         >
           <span className="sr-only">Open menu</span>
-          <MoreHorizontal className="size-4" />
+          <MoreVertical className="size-4" />
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent

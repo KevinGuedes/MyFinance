@@ -1,16 +1,17 @@
 ﻿using FluentValidation;
-using MyFinance.Application.Abstractions.Persistence.Repositories;
+using Microsoft.EntityFrameworkCore;
+using MyFinance.Application.Abstractions.Persistence;
 using MyFinance.Application.Common.CustomValidators;
 
 namespace MyFinance.Application.UseCases.Users.Commands.SignUp;
 
 public sealed class SignUpValidator : AbstractValidator<SignUpCommand>
 {
-    private readonly IUserRepository _userRepository;
+    private readonly IMyFinanceDbContext _myFinanceDbContext;
 
-    public SignUpValidator(IUserRepository userRepository)
+    public SignUpValidator(IMyFinanceDbContext myFinanceDbContext)
     {
-        _userRepository = userRepository;
+        _myFinanceDbContext = myFinanceDbContext;
         ClassLevelCascadeMode = CascadeMode.Stop;
 
         RuleFor(command => command.Name)
@@ -33,7 +34,9 @@ public sealed class SignUpValidator : AbstractValidator<SignUpCommand>
             .EmailAddress().WithMessage("{PropertyName} is not valid")
             .MustAsync(async (email, cancellationToken) =>
             {
-                var exists = await _userRepository.ExistsByEmailAsync(email, cancellationToken);
+                var exists = await _myFinanceDbContext.Users
+                    .AnyAsync(user => user.Email == email, cancellationToken);
+
                 return !exists;
             }).WithMessage("The {PropertyName} {PropertyValue} has already been taken");
     }

@@ -1,20 +1,21 @@
 ﻿using FluentResults;
-using MyFinance.Application.Abstractions.Persistence.Repositories;
+using Microsoft.EntityFrameworkCore;
+using MyFinance.Application.Abstractions.Persistence;
 using MyFinance.Application.Abstractions.RequestHandling.Commands;
 using MyFinance.Application.Common.Errors;
 
 namespace MyFinance.Application.UseCases.Transfers.Commands.DeleteTransfer;
 
-internal sealed class DeleteTransferHandler(
-    IManagementUnitRepository managementUnitRepository,
-    ITransferRepository transferRepository) : ICommandHandler<DeleteTransferCommand>
+internal sealed class DeleteTransferHandler(IMyFinanceDbContext myFinanceDbContext)
+    : ICommandHandler<DeleteTransferCommand>
 {
-    private readonly IManagementUnitRepository _managementUnitRepository = managementUnitRepository;
-    private readonly ITransferRepository _transferRepository = transferRepository;
+    private readonly IMyFinanceDbContext _myFinanceDbContext = myFinanceDbContext;
 
     public async Task<Result> Handle(DeleteTransferCommand command, CancellationToken cancellationToken)
     {
-        var transfer = await _transferRepository.GetWithManagementUnitByIdAsync(command.Id, cancellationToken);
+        var transfer = await _myFinanceDbContext.Transfers
+            .Include(transfer => transfer.ManagementUnit)
+            .FirstOrDefaultAsync(transfer => transfer.Id == command.Id, cancellationToken);
 
         if (transfer is null)
         {
@@ -24,8 +25,9 @@ internal sealed class DeleteTransferHandler(
 
         var managementUnit = transfer.ManagementUnit;
         managementUnit.CancelTransferValue(transfer.Value, transfer.Type);
-        _managementUnitRepository.Update(managementUnit);
-        _transferRepository.Delete(transfer);
+
+        _myFinanceDbContext.ManagementUnits.Update(managementUnit);
+        _myFinanceDbContext.Transfers.Remove(transfer);
 
         return Result.Ok();
     }

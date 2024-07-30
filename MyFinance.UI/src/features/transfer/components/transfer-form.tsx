@@ -153,7 +153,7 @@ export function TransferForm({
                           </FormControl>
                           <FormLabel
                             htmlFor="income"
-                            className="group flex cursor-pointer flex-row-reverse items-center justify-center gap-3 rounded-md border-2 border-transparent bg-primary/10 p-1 text-base font-bold text-primary transition-all duration-150 hover:bg-primary/60 hover:text-accent-foreground peer-data-[state=checked]:border-primary peer-data-[state=checked]:bg-primary/60 peer-data-[state=checked]:text-accent-foreground [&:has([data-state=checked])]:border-primary"
+                            className="group flex cursor-pointer flex-row-reverse items-center justify-center gap-3 rounded-md border-2 border-transparent bg-primary/10 p-1 text-base font-bold text-primary ring-offset-background transition-colors duration-150 hover:bg-primary/60 hover:text-accent-foreground peer-focus-visible:outline-none peer-focus-visible:ring-2 peer-focus-visible:ring-primary peer-focus-visible:ring-offset-2 peer-data-[state=checked]:border-primary peer-data-[state=checked]:bg-primary/60 peer-data-[state=checked]:text-accent-foreground [&:has([data-state=checked])]:border-primary"
                           >
                             <TrendingUp className="mb-1 size-6" />
                             Income
@@ -169,7 +169,7 @@ export function TransferForm({
                           </FormControl>
                           <FormLabel
                             htmlFor="outcome"
-                            className="group flex cursor-pointer flex-row-reverse items-center justify-center gap-3 rounded-md border-2 border-transparent bg-destructive/25 p-1 text-base font-bold text-destructive transition-all duration-150 hover:bg-destructive/60 hover:text-accent-foreground peer-data-[state=checked]:border-2 peer-data-[state=checked]:border-destructive peer-data-[state=checked]:bg-destructive/60 peer-data-[state=checked]:text-accent-foreground [&:has([data-state=checked])]:border-destructive"
+                            className="group flex cursor-pointer flex-row-reverse items-center justify-center gap-3 rounded-md border-2 border-transparent bg-destructive/25 p-1 text-base font-bold text-destructive ring-offset-background transition-colors duration-150 hover:bg-destructive/60 hover:text-accent-foreground peer-focus-visible:outline-none peer-focus-visible:ring-2  peer-focus-visible:ring-destructive peer-focus-visible:ring-offset-2 peer-data-[state=checked]:border-2 peer-data-[state=checked]:border-destructive peer-data-[state=checked]:bg-destructive/60 peer-data-[state=checked]:text-accent-foreground [&:has([data-state=checked])]:border-destructive"
                           >
                             <TrendingDown className="group mb-1 size-6" />
                             Outcome
@@ -228,7 +228,7 @@ export function TransferForm({
                           placeholder={
                             isFetchingAccountTags
                               ? 'Loading Account Tags...'
-                              : 'Select an Account Tags'
+                              : 'Select an Account Tag'
                           }
                         />
                       </SelectTrigger>
@@ -267,7 +267,7 @@ export function TransferForm({
                           placeholder={
                             isFetchingCategories
                               ? 'Loading Categories...'
-                              : 'Select an Category'
+                              : 'Select a Category'
                           }
                         />
                       </SelectTrigger>
@@ -314,7 +314,7 @@ export function TransferForm({
           </Button>
           <Button
             type="button"
-            className="min-w-48 grow sm:grow-0"
+            className="min-w-52 grow sm:grow-0"
             variant="secondary"
             onClick={form.handleSubmit(handleRegisterAndAddMore)}
             disabled={!form.formState.isValid || form.formState.isSubmitting}
@@ -333,12 +333,12 @@ export function TransferForm({
           </Button>
           <Button
             type="submit"
-            className="min-w-36 grow sm:grow-0"
+            className="min-w-44 grow sm:grow-0"
             disabled={!form.formState.isValid || form.formState.isSubmitting}
           >
             {isRegistering ? (
               <>
-                <Loader2 className="size-5 animate-spin" />
+                <Loader2 className="mr-2 size-5 animate-spin" />
                 Registering...
               </>
             ) : (

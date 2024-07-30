@@ -1,16 +1,17 @@
 ﻿using FluentValidation;
-using MyFinance.Application.Abstractions.Persistence.Repositories;
+using Microsoft.EntityFrameworkCore;
+using MyFinance.Application.Abstractions.Persistence;
 using MyFinance.Application.Common.CustomValidators;
 
 namespace MyFinance.Application.UseCases.ManagementUnits.Commands.UpdateManagementUnit;
 
 public sealed class UpdateManagementUnitValidator : AbstractValidator<UpdateManagementUnitCommand>
 {
-    private readonly IManagementUnitRepository _managementUnitRepository;
+    private readonly IMyFinanceDbContext _myFinanceDbContext;
 
-    public UpdateManagementUnitValidator(IManagementUnitRepository managementUnitRepository)
+    public UpdateManagementUnitValidator(IMyFinanceDbContext myFinanceDbContext)
     {
-        _managementUnitRepository = managementUnitRepository;
+        _myFinanceDbContext = myFinanceDbContext;
         ClassLevelCascadeMode = CascadeMode.Stop;
 
         RuleFor(command => command.Description)
@@ -23,16 +24,17 @@ public sealed class UpdateManagementUnitValidator : AbstractValidator<UpdateMana
             .NotNull().WithMessage("{PropertyName} must not be null")
             .NotEmpty().WithMessage("{PropertyName} must not be empty")
             .MaximumLength(100).WithMessage("{PropertyName} must have a maximum of 100 characters")
-            .MustAsync(async (command, newManagementUnitName, cancellationToken) =>
+            .MustAsync(async (command, managementUnitName, cancellationToken) =>
             {
-                var existingManagementUnit = await _managementUnitRepository.GetByNameAsync(
-                    newManagementUnitName,
-                    cancellationToken);
+                var existingManagementUnitId = await _myFinanceDbContext.ManagementUnits
+                    .Where(mu => mu.Name == managementUnitName)
+                    .Select(mu => mu.Id)
+                    .FirstOrDefaultAsync(cancellationToken);
 
-                if (existingManagementUnit is null)
+                if (existingManagementUnitId == default)
                     return true;
 
-                var isValid = existingManagementUnit.Id == command.Id;
+                var isValid = existingManagementUnitId == command.Id;
                 return isValid;
             }).WithMessage("The {PropertyName} {PropertyValue} has already been taken");
     }

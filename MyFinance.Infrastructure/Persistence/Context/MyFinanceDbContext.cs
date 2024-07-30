@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using MyFinance.Application.Abstractions.Persistence;
 using MyFinance.Application.Abstractions.Services;
 using MyFinance.Domain.Abstractions;
 using MyFinance.Domain.Entities;
@@ -7,9 +8,9 @@ using System.Reflection;
 
 namespace MyFinance.Infrastructure.Persistence.Context;
 
-internal sealed class MyFinanceDbContext(
+public sealed class MyFinanceDbContext(
     DbContextOptions<MyFinanceDbContext> options,
-    ICurrentUserProvider currentUserProvider) : DbContext(options)
+    ICurrentUserProvider currentUserProvider) : DbContext(options), IMyFinanceDbContext
 {
     private readonly ICurrentUserProvider _currentUserProvider = currentUserProvider;
 
@@ -22,7 +23,12 @@ internal sealed class MyFinanceDbContext(
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
-        ApplyGlobalFiltersForUserOwnedEntities(modelBuilder);
+
+        ApplyGlobalFilterForUserOwnedEntity<ManagementUnit>(modelBuilder);
+        ApplyGlobalFilterForUserOwnedEntity<Transfer>(modelBuilder);
+        ApplyGlobalFilterForUserOwnedEntity<AccountTag>(modelBuilder);
+        ApplyGlobalFilterForUserOwnedEntity<Category>(modelBuilder);
+
         base.OnModelCreating(modelBuilder);
     }
 
@@ -31,14 +37,6 @@ internal sealed class MyFinanceDbContext(
         base.ConfigureConventions(configurationBuilder);
         configurationBuilder.Properties<DateTime>().HaveConversion<DateTimeValueConverter>();
         configurationBuilder.Properties<DateTime?>().HaveConversion<NullableDateTimeValueConverter>();
-    }
-
-    private void ApplyGlobalFiltersForUserOwnedEntities(ModelBuilder modelBuilder)
-    {
-        ApplyGlobalFilterForUserOwnedEntity<ManagementUnit>(modelBuilder);
-        ApplyGlobalFilterForUserOwnedEntity<Transfer>(modelBuilder);
-        ApplyGlobalFilterForUserOwnedEntity<AccountTag>(modelBuilder);
-        ApplyGlobalFilterForUserOwnedEntity<Category>(modelBuilder);
     }
 
     private void ApplyGlobalFilterForUserOwnedEntity<TEntity>(ModelBuilder modelBuilder)

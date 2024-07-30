@@ -2,10 +2,18 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MyFinance.Application.Common.Errors;
-using MyFinance.Application.Mappers;
+using MyFinance.Application.UseCases.Users.Commands.ConfirmRegistration;
+using MyFinance.Application.UseCases.Users.Commands.MagicSignIn;
+using MyFinance.Application.UseCases.Users.Commands.ResendConfirmRegistrationEmail;
+using MyFinance.Application.UseCases.Users.Commands.ResetPassword;
+using MyFinance.Application.UseCases.Users.Commands.SendMagicSignInEmail;
+using MyFinance.Application.UseCases.Users.Commands.SendResetPasswordEmail;
+using MyFinance.Application.UseCases.Users.Commands.SignIn;
 using MyFinance.Application.UseCases.Users.Commands.SignOut;
 using MyFinance.Application.UseCases.Users.Commands.SignOutFromAllDevices;
-using MyFinance.Application.UseCases.Users.Queries;
+using MyFinance.Application.UseCases.Users.Commands.SignUp;
+using MyFinance.Application.UseCases.Users.Commands.UpdatePassword;
+using MyFinance.Application.UseCases.Users.Queries.GetUserInfo;
 using MyFinance.Contracts.Common;
 using MyFinance.Contracts.User.Requests;
 using MyFinance.Contracts.User.Responses;
@@ -14,7 +22,7 @@ using Swashbuckle.AspNetCore.Annotations;
 namespace MyFinance.Presentation.Controllers;
 
 [SwaggerTag("User management")]
-public class UserController(IMediator mediator) : ApiController(mediator)
+public class UserController(ISender sender) : ApiController(sender)
 {
     [AllowAnonymous]
     [HttpPost]
@@ -25,7 +33,10 @@ public class UserController(IMediator mediator) : ApiController(mediator)
         [FromBody] [SwaggerRequestBody("User's payload", Required = true)]
         SignUpRequest request,
         CancellationToken cancellationToken)
-        => ProcessResult(await _mediator.Send(UserMapper.RTC.Map(request), cancellationToken));
+    {
+        var result = await _sender.Send(new SignUpCommand(request), cancellationToken);
+        return ProcessResult(result);
+    }
 
     [AllowAnonymous]
     [HttpPost("ConfirmRegistration")]
@@ -38,7 +49,10 @@ public class UserController(IMediator mediator) : ApiController(mediator)
         [FromBody][SwaggerRequestBody("Confirm registration payload", Required = true)]
         ConfirmRegistrationRequest request,
         CancellationToken cancellationToken)
-        => ProcessResult(await _mediator.Send(UserMapper.RTC.Map(request), cancellationToken));
+    {
+        var result = await _sender.Send(new ConfirmRegistrationCommand(request), cancellationToken);
+        return ProcessResult(result);
+    }
 
     [AllowAnonymous]
     [HttpPost("ResendConfirmRegistrationEmail")]
@@ -51,7 +65,10 @@ public class UserController(IMediator mediator) : ApiController(mediator)
        [FromBody][SwaggerRequestBody("Resend confirm registration email payload", Required = true)]
        ResendConfirmRegistrationEmailRequest request,
        CancellationToken cancellationToken)
-       => ProcessResult(await _mediator.Send(UserMapper.RTC.Map(request), cancellationToken));
+    {
+        var result = await _sender.Send(new ResendConfirmRegistrationEmailCommand(request), cancellationToken);
+        return ProcessResult(result);
+    }
 
     [AllowAnonymous]
     [HttpPost("SignIn")]
@@ -59,7 +76,7 @@ public class UserController(IMediator mediator) : ApiController(mediator)
         Summary = "Signs in an existing User",
         Description = "Password sign in for users who have already confirmed their email",
         Tags = ["User"])]
-    [SwaggerResponse(StatusCodes.Status200OK, "User successfully signed in", typeof(UserResponse))]
+    [SwaggerResponse(StatusCodes.Status200OK, "User successfully signed in", typeof(UserInfoResponse))]
     [SwaggerResponse(StatusCodes.Status401Unauthorized, "Invalid credentials", typeof(ProblemResponse))]
     [SwaggerResponse(StatusCodes.Status429TooManyRequests, "Too many failed sign in attempts", typeof(TooManyFailedSignInAttemptsResponse))]
     public async Task<IActionResult> SignInAsync(
@@ -67,7 +84,7 @@ public class UserController(IMediator mediator) : ApiController(mediator)
         SignInRequest request,
         CancellationToken cancellationToken)
     {
-        var result = await _mediator.Send(UserMapper.RTC.Map(request), cancellationToken);
+        var result = await _sender.Send(new SignInCommand(request), cancellationToken);
 
         if (result.IsSuccess)
             return Ok(result.Value);
@@ -75,7 +92,27 @@ public class UserController(IMediator mediator) : ApiController(mediator)
         var error = result.Errors.FirstOrDefault();
 
         if (error is TooManyFailedSignInAttemptsError tooManyFailedSignInAttemptsError)
-            return BuildTooManyFailedSignInAttemptsResponse(tooManyFailedSignInAttemptsError);
+        {
+            HttpContext.Response.Headers.RetryAfter
+                = tooManyFailedSignInAttemptsError.LockoutEndOnUtc.ToString("R");
+
+            var problemDetails = ProblemDetailsFactory.CreateProblemDetails(
+                HttpContext,
+                statusCode: StatusCodes.Status429TooManyRequests,
+                detail: "Failed sign in attempts threshold reached",
+                instance: HttpContext.Request.Path);
+
+            problemDetails.Type = "https://datatracker.ietf.org/doc/html/rfc6585#section-4";
+
+            var tooManyFailedSignInAttemptsResponse = new TooManyFailedSignInAttemptsResponse(
+                problemDetails,
+                tooManyFailedSignInAttemptsError.LockoutEndOnUtc);
+
+            return new ObjectResult(tooManyFailedSignInAttemptsResponse)
+            {
+                StatusCode = problemDetails.Status
+            };
+        }
 
         return HandleFailureResult(error);
     }
@@ -91,21 +128,27 @@ public class UserController(IMediator mediator) : ApiController(mediator)
         [FromBody] [SwaggerRequestBody("Create magic sign in token payload", Required = true)]
         SendMagicSignInEmailRequest request,
         CancellationToken cancellationToken)
-        => ProcessResult(await _mediator.Send(UserMapper.RTC.Map(request), cancellationToken));
+    {
+        var result = await _sender.Send(new SendMagicSignInEmailCommand(request), cancellationToken);
+        return ProcessResult(result);
+    }
 
     [AllowAnonymous]
     [HttpPost("MagicSignIn")]
     [SwaggerOperation(
         Summary = "Magically signs in an existing User",
         Description = "Uses the magic sign in token to sign in the user")]
-    [SwaggerResponse(StatusCodes.Status200OK, "User successfully signed in", typeof(UserResponse))]
+    [SwaggerResponse(StatusCodes.Status200OK, "User successfully signed in", typeof(UserInfoResponse))]
     [SwaggerResponse(StatusCodes.Status400BadRequest, "Invalid payload", typeof(ValidationProblemResponse))]
     [SwaggerResponse(StatusCodes.Status401Unauthorized, "Invalid token", typeof(ProblemResponse))]
     public async Task<IActionResult> MagicSignInAsync(
         [FromBody] [SwaggerRequestBody("Magic sign in payload", Required = true)]
         MagicSignInRequest request,
         CancellationToken cancellationToken)
-        => ProcessResult(await _mediator.Send(UserMapper.RTC.Map(request), cancellationToken));
+    {
+        var result = await _sender.Send(new MagicSignInCommand(request), cancellationToken);
+        return ProcessResult(result);
+    }
 
     [AllowAnonymous]
     [HttpPost("SendResetPasswordEmail")]
@@ -116,7 +159,10 @@ public class UserController(IMediator mediator) : ApiController(mediator)
         [FromBody] [SwaggerRequestBody("Send reset password email payload", Required = true)]
         SendResetPasswordEmailRequest request,
         CancellationToken cancellationToken)
-        => ProcessResult(await _mediator.Send(UserMapper.RTC.Map(request), cancellationToken));
+    {
+        var result = await _sender.Send(new SendResetPasswordEmailCommand(request), cancellationToken);
+        return ProcessResult(result);
+    }
 
     [AllowAnonymous]
     [HttpPost("ResetPassword")]
@@ -128,14 +174,21 @@ public class UserController(IMediator mediator) : ApiController(mediator)
         [FromBody][SwaggerRequestBody("Reset password payload", Required = true)]
         ResetPasswordRequest request,
         CancellationToken cancellationToken)
-        => ProcessResult(await _mediator.Send(UserMapper.RTC.Map(request), cancellationToken));
+    {
+        var result = await _sender.Send(new ResetPasswordCommand(request), cancellationToken);
+        return ProcessResult(result);
+    }
 
     [HttpGet("Info")]
     [SwaggerOperation(Summary = "Gets the current user basic information")]
-    [SwaggerResponse(StatusCodes.Status200OK, "User's basic information", typeof(UserResponse))]
+    [SwaggerResponse(StatusCodes.Status200OK, "User's basic information", typeof(UserInfoResponse))]
     [SwaggerResponse(StatusCodes.Status401Unauthorized, "User not signed in", typeof(ProblemResponse))]
     public async Task<IActionResult> GetUserInfoAsync(CancellationToken cancellationToken)
-      => ProcessResult(await _mediator.Send(new GetUserInfoQuery(), cancellationToken));
+    {
+        var query = new GetUserInfoQuery();
+        var result = await _sender.Send(query, cancellationToken);
+        return ProcessResult(result);
+    }
 
     [HttpPatch("UpdatePassword")]
     [SwaggerOperation(Summary = "Updates the User's password")]
@@ -147,43 +200,28 @@ public class UserController(IMediator mediator) : ApiController(mediator)
         [FromBody] [SwaggerRequestBody("Update password payload", Required = true)]
         UpdatePasswordRequest request,
         CancellationToken cancellationToken)
-        => ProcessResult(await _mediator.Send(UserMapper.RTC.Map(request), cancellationToken));
+    {
+        var result = await _sender.Send(new UpdatePasswordCommand(request), cancellationToken);
+        return ProcessResult(result);
+    }
 
     [HttpPost("SignOut")]
     [SwaggerOperation(Summary = "Signs out an existing User")]
     [SwaggerResponse(StatusCodes.Status204NoContent, "User successfully signed out")]
     [SwaggerResponse(StatusCodes.Status401Unauthorized, "Unauthorized", typeof(ProblemResponse))]
     public async Task<IActionResult> SignOutAsync(CancellationToken cancellationToken)
-        => ProcessResult(await _mediator.Send(new SignOutCommand(), cancellationToken));
+    {
+        var result = await _sender.Send(new SignOutCommand(), cancellationToken);
+        return ProcessResult(result);
+    }
 
     [HttpPost("SignOutFromAllDevices")]
     [SwaggerOperation(Summary = "Signs out an existing User from all devices")]
     [SwaggerResponse(StatusCodes.Status204NoContent, "User successfully signed out from all devices")]
     [SwaggerResponse(StatusCodes.Status401Unauthorized, "Unauthorized", typeof(ProblemResponse))]
     public async Task<IActionResult> SignOutFromAllDevicesAsync(CancellationToken cancellationToken)
-       => ProcessResult(await _mediator.Send(new SignOutFromAllDevicesCommand(), cancellationToken));
-
-    private ObjectResult BuildTooManyFailedSignInAttemptsResponse(TooManyFailedSignInAttemptsError tooManyFailedSignInAttemptsError)
     {
-        HttpContext.Response.Headers.RetryAfter
-            = tooManyFailedSignInAttemptsError.LockoutEndOnUtc.ToString("R");
-
-        var statusCode = StatusCodes.Status429TooManyRequests;
-
-        var problemDetails = ProblemDetailsFactory.CreateProblemDetails(
-            HttpContext,
-            statusCode: statusCode,
-            detail: "Failed sign in attempts threshold reached",
-            instance: HttpContext.Request.Path);
-
-        problemDetails.Type = "https://datatracker.ietf.org/doc/html/rfc6585#section-4";
-
-        var tooManyFailedSignInAttemptsResponse
-            = UserMapper.ETR.Map(problemDetails, tooManyFailedSignInAttemptsError);
-
-        return new(tooManyFailedSignInAttemptsResponse)
-        {
-            StatusCode = problemDetails.Status
-        };
+        var result = await _sender.Send(new SignOutFromAllDevicesCommand(), cancellationToken);
+        return ProcessResult(result);
     }
 }

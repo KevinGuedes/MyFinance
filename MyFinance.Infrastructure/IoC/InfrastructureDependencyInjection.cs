@@ -2,12 +2,10 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using MyFinance.Application.Abstractions.Persistence.Repositories;
-using MyFinance.Application.Abstractions.Persistence.UnitOfWork;
+using MyFinance.Application.Abstractions.Persistence;
 using MyFinance.Application.Abstractions.Services;
 using MyFinance.Infrastructure.Abstractions;
 using MyFinance.Infrastructure.Persistence.Context;
-using MyFinance.Infrastructure.Persistence.Repositories;
 using MyFinance.Infrastructure.Persistence.UnitOfWork;
 using MyFinance.Infrastructure.Services.CurrentUserProvider;
 using MyFinance.Infrastructure.Services.EmailSender;
@@ -54,16 +52,12 @@ public static class InfrastructureDependencyInjection
                 .UseSqlServer(configuration.GetConnectionString("Database"),
                     sqlServerOptions => sqlServerOptions
                         .UseQuerySplittingBehavior(QuerySplittingBehavior.SingleQuery)
-                        .MigrationsAssembly(Assembly.GetExecutingAssembly().FullName)));
-
-        services.AddScoped<IUnitOfWork, UnitOfWork>();
+                        .MigrationsAssembly(Assembly.GetExecutingAssembly().FullName)
+                        .EnableRetryOnFailure(10, TimeSpan.FromSeconds(15), [])));
 
         return services
-            .AddScoped<IUserRepository, UserRepository>()
-            .AddScoped<IManagementUnitRepository, ManagementUnitRepository>()
-            .AddScoped<ITransferRepository, TransferRepository>()
-            .AddScoped<IAccountTagRepository, AccountTagRepository>()
-            .AddScoped<ICategoryRepository, CategoryRepository>();
+             .AddScoped<IMyFinanceDbContext, MyFinanceDbContext>()
+             .AddScoped<IUnitOfWork, UnitOfWork>();
     }
 
     private static IServiceCollection AddHelthCheckForExternalServices(this IServiceCollection services)

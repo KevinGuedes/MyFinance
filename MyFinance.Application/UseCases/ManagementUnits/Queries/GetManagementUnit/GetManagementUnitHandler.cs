@@ -1,21 +1,32 @@
 ﻿using FluentResults;
-using MyFinance.Application.Abstractions.Persistence.Repositories;
+using Microsoft.EntityFrameworkCore;
+using MyFinance.Application.Abstractions.Persistence;
 using MyFinance.Application.Abstractions.RequestHandling.Queries;
 using MyFinance.Application.Common.Errors;
-using MyFinance.Application.Mappers;
 using MyFinance.Contracts.ManagementUnit.Responses;
 
 namespace MyFinance.Application.UseCases.ManagementUnits.Queries.GetManagementUnit;
 
-internal sealed class GetManagementUnitHandler(IManagementUnitRepository managementUnitRepository)
+internal sealed class GetManagementUnitHandler(IMyFinanceDbContext myFinanceDbContext)
     : IQueryHandler<GetManagementUnitQuery, ManagementUnitResponse>
 {
-    private readonly IManagementUnitRepository _managementUnitRepository = managementUnitRepository;
+    private readonly IMyFinanceDbContext _myFinanceDbContext = myFinanceDbContext;
 
     public async Task<Result<ManagementUnitResponse>> Handle(GetManagementUnitQuery query,
         CancellationToken cancellationToken)
     {
-        var managementUnit = await _managementUnitRepository.GetByIdAsync(query.Id, cancellationToken);
+        var managementUnit = await _myFinanceDbContext.ManagementUnits
+            .Where(mu => mu.Id == query.Id)
+            .Select(mu => new ManagementUnitResponse
+            {
+                Id = mu.Id,
+                Name = mu.Name,
+                Description = mu.Description,
+                Income = mu.Income,
+                Outcome = mu.Outcome,
+                Balance = mu.Balance
+            })
+            .FirstOrDefaultAsync(cancellationToken);
 
         if (managementUnit is null)
         {
@@ -23,6 +34,6 @@ internal sealed class GetManagementUnitHandler(IManagementUnitRepository managem
             return Result.Fail(entityNotFoundError);
         }
 
-        return Result.Ok(ManagementUnitMapper.DTR.Map(managementUnit));
+        return Result.Ok(managementUnit);
     }
 }

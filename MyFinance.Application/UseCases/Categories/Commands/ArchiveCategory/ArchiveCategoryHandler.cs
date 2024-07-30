@@ -1,18 +1,19 @@
 ﻿using FluentResults;
-using MyFinance.Application.Abstractions.Persistence.Repositories;
+using MyFinance.Application.Abstractions.Persistence;
 using MyFinance.Application.Abstractions.RequestHandling.Commands;
 using MyFinance.Application.Common.Errors;
 
 namespace MyFinance.Application.UseCases.Categories.Commands.ArchiveCategory;
 
-internal sealed class ArchiveCategoryHandler(ICategoryRepository categoryRepository)
+internal sealed class ArchiveCategoryHandler(IMyFinanceDbContext myFinanceDbContext)
     : ICommandHandler<ArchiveCategoryCommand>
 {
-    private readonly ICategoryRepository _categoryRepository = categoryRepository;
+    private readonly IMyFinanceDbContext _myFinanceDbContext = myFinanceDbContext;
 
     public async Task<Result> Handle(ArchiveCategoryCommand command, CancellationToken cancellationToken)
     {
-        var category = await _categoryRepository.GetByIdAsync(command.Id, cancellationToken);
+        var category = await _myFinanceDbContext.Categories
+            .FindAsync([command.Id], cancellationToken);
 
         if (category is null)
         {
@@ -21,7 +22,7 @@ internal sealed class ArchiveCategoryHandler(ICategoryRepository categoryReposit
         }
 
         category.Archive(command.ReasonToArchive);
-        _categoryRepository.Update(category);
+        _myFinanceDbContext.Categories.Update(category);
 
         return Result.Ok();
     }

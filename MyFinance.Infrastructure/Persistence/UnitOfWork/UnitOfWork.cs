@@ -1,13 +1,12 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using MyFinance.Application.Abstractions.Persistence.UnitOfWork;
-using MyFinance.Infrastructure.Persistence.Context;
+using MyFinance.Application.Abstractions.Persistence;
 using System.Data;
 
 namespace MyFinance.Infrastructure.Persistence.UnitOfWork;
 
-internal sealed class UnitOfWork(MyFinanceDbContext myFinanceDbContext) : IUnitOfWork
+internal sealed class UnitOfWork(IMyFinanceDbContext myFinanceDbContext) : IUnitOfWork
 {
-    private readonly MyFinanceDbContext _myFinanceDbContext = myFinanceDbContext;
+    private readonly IMyFinanceDbContext _myFinanceDbContext = myFinanceDbContext;
 
     public Task BeginTransactionAsync(CancellationToken cancellationToken)
         => _myFinanceDbContext.Database

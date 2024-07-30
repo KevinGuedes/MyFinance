@@ -1,22 +1,29 @@
 ﻿using FluentResults;
-using MyFinance.Application.Abstractions.Persistence.Repositories;
+using MyFinance.Application.Abstractions.Persistence;
 using MyFinance.Application.Abstractions.RequestHandling.Commands;
-using MyFinance.Application.Mappers;
 using MyFinance.Contracts.ManagementUnit.Responses;
 using MyFinance.Domain.Entities;
 
 namespace MyFinance.Application.UseCases.ManagementUnits.Commands.CreateManagementUnit;
 
-internal sealed class CreateManagementUnitHandler(IManagementUnitRepository managementUnitRepository)
+internal sealed class CreateManagementUnitHandler(IMyFinanceDbContext myFinanceDbContext)
     : ICommandHandler<CreateManagementUnitCommand, ManagementUnitResponse>
 {
-    private readonly IManagementUnitRepository _managementUnitRepository = managementUnitRepository;
+    private readonly IMyFinanceDbContext _myFinanceDbContext = myFinanceDbContext;
 
     public async Task<Result<ManagementUnitResponse>> Handle(CreateManagementUnitCommand command, CancellationToken cancellationToken)
     {
         var managementUnit = new ManagementUnit(command.Name, command.Description, command.CurrentUserId);
-        await _managementUnitRepository.InsertAsync(managementUnit, cancellationToken);
+        await _myFinanceDbContext.ManagementUnits.AddAsync(managementUnit, cancellationToken);
 
-        return Result.Ok(ManagementUnitMapper.DTR.Map(managementUnit));
+        return Result.Ok(new ManagementUnitResponse
+        {
+            Id = managementUnit.Id,
+            Name = managementUnit.Name,
+            Income = managementUnit.Income,
+            Outcome = managementUnit.Outcome,
+            Balance = managementUnit.Balance,
+            Description = managementUnit.Description,
+        });
     }
 }

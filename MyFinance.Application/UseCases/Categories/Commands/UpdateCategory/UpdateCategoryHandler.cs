@@ -1,21 +1,20 @@
 ﻿using FluentResults;
-using MyFinance.Application.Abstractions.Persistence.Repositories;
+using MyFinance.Application.Abstractions.Persistence;
 using MyFinance.Application.Abstractions.RequestHandling.Commands;
 using MyFinance.Application.Common.Errors;
-using MyFinance.Application.Mappers;
 using MyFinance.Contracts.Category.Responses;
 
 namespace MyFinance.Application.UseCases.Categories.Commands.UpdateCategory;
 
-internal sealed class UpdateCategoryHandler(ICategoryRepository categoryRepository)
+internal sealed class UpdateCategoryHandler(IMyFinanceDbContext myFinanceDbContext)
     : ICommandHandler<UpdateCategoryCommand, CategoryResponse>
 {
-    private readonly ICategoryRepository _categoryRepository = categoryRepository;
+    private readonly IMyFinanceDbContext _myFinanceDbContext = myFinanceDbContext;
 
     public async Task<Result<CategoryResponse>> Handle(UpdateCategoryCommand command,
         CancellationToken cancellationToken)
     {
-        var category = await _categoryRepository.GetByIdAsync(command.Id, cancellationToken);
+        var category = await _myFinanceDbContext.Categories.FindAsync([command.Id], cancellationToken);
 
         if (category is null)
         {
@@ -24,8 +23,12 @@ internal sealed class UpdateCategoryHandler(ICategoryRepository categoryReposito
         }
 
         category.Update(command.Name);
-        _categoryRepository.Update(category);
+        _myFinanceDbContext.Categories.Update(category);
 
-        return Result.Ok(CategoryMapper.DTR.Map(category));
+        return Result.Ok(new CategoryResponse
+        {
+            Id = category.Id,
+            Name = category.Name,
+        });
     }
 }
