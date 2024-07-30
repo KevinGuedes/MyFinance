@@ -314,7 +314,7 @@ export function TransferForm({
           </Button>
           <Button
             type="button"
-            className="min-w-48 grow sm:grow-0"
+            className="min-w-52 grow sm:grow-0"
             variant="secondary"
             onClick={form.handleSubmit(handleRegisterAndAddMore)}
             disabled={!form.formState.isValid || form.formState.isSubmitting}
@@ -333,12 +333,12 @@ export function TransferForm({
           </Button>
           <Button
             type="submit"
-            className="min-w-36 grow sm:grow-0"
+            className="min-w-44 grow sm:grow-0"
             disabled={!form.formState.isValid || form.formState.isSubmitting}
           >
             {isRegistering ? (
               <>
-                <Loader2 className="size-5 animate-spin" />
+                <Loader2 className="mr-2 size-5 animate-spin" />
                 Registering...
               </>
             ) : (
