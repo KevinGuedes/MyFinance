@@ -1,4 +1,5 @@
 ﻿using FluentResults;
+using Microsoft.EntityFrameworkCore;
 using MyFinance.Application.Abstractions.Persistence;
 using MyFinance.Application.Abstractions.RequestHandling.Queries;
 using MyFinance.Application.Common.Errors;
@@ -15,7 +16,18 @@ internal sealed class GetManagementUnitHandler(IMyFinanceDbContext myFinanceDbCo
         CancellationToken cancellationToken)
     {
         var managementUnit = await _myFinanceDbContext.ManagementUnits
-            .FindAsync([query.Id], cancellationToken);
+            .AsNoTracking()
+            .Where(mu => mu.Id == query.Id)
+            .Select(mu => new ManagementUnitResponse
+            {
+                Id = mu.Id,
+                Name = mu.Name,
+                Description = mu.Description,
+                Income = mu.Income,
+                Outcome = mu.Outcome,
+                Balance = mu.Balance
+            })
+            .FirstOrDefaultAsync(cancellationToken);
 
         if (managementUnit is null)
         {
@@ -23,14 +35,6 @@ internal sealed class GetManagementUnitHandler(IMyFinanceDbContext myFinanceDbCo
             return Result.Fail(entityNotFoundError);
         }
 
-        return Result.Ok(new ManagementUnitResponse
-        {
-            Id = managementUnit.Id,
-            Name = managementUnit.Name,
-            Description = managementUnit.Description,
-            Income = managementUnit.Income,
-            Outcome = managementUnit.Outcome,
-            Balance = managementUnit.Balance,
-        });
+        return Result.Ok(managementUnit);
     }
 }
