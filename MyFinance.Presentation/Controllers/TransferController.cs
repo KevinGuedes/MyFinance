@@ -1,7 +1,8 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using MyFinance.Application.Mappers;
 using MyFinance.Application.UseCases.Transfers.Commands.DeleteTransfer;
+using MyFinance.Application.UseCases.Transfers.Commands.RegisterTransfer;
+using MyFinance.Application.UseCases.Transfers.Commands.UpdateTransfer;
 using MyFinance.Application.UseCases.Transfers.Queries.GetBalanceDataFromPeriod;
 using MyFinance.Application.UseCases.Transfers.Queries.GetDiscriminatedBalanceData;
 using MyFinance.Application.UseCases.Transfers.Queries.GetTransferGroups;
@@ -40,7 +41,8 @@ public class TransferController(ISender sender) : ApiController(sender)
             pageNumber,
             pageSize);
 
-        return ProcessResult(await _sender.Send(query, cancellationToken));
+        var result = await _sender.Send(query, cancellationToken);
+        return ProcessResult(result);
     }
 
     [HttpGet("PeriodBalance")]
@@ -67,7 +69,8 @@ public class TransferController(ISender sender) : ApiController(sender)
             categoryId,
             accountTagId);
 
-        return ProcessResult(await _sender.Send(query, cancellationToken));
+        var result = await _sender.Send(query, cancellationToken);
+        return ProcessResult(result);
     }
 
     [HttpGet("DiscriminatedBalance")]
@@ -96,7 +99,10 @@ public class TransferController(ISender sender) : ApiController(sender)
         [FromBody] [SwaggerRequestBody("Transfers' payload", Required = true)]
         RegisterTransferRequest request,
         CancellationToken cancellationToken)
-        => ProcessResult(await _sender.Send(TransferMapper.RTC.Map(request), cancellationToken), true);
+    {
+        var result = await _sender.Send(new RegisterTransferCommand(request), cancellationToken);
+        return ProcessResult(result, true);
+    }
 
     [HttpPut]
     [SwaggerOperation(Summary = "Updates an existing Transfer")]
@@ -109,7 +115,10 @@ public class TransferController(ISender sender) : ApiController(sender)
         [FromBody] [SwaggerRequestBody("Transfers' payload", Required = true)]
         UpdateTransferRequest request,
         CancellationToken cancellationToken)
-        => ProcessResult(await _sender.Send(TransferMapper.RTC.Map(request), cancellationToken));
+    {
+        var result = await _sender.Send(new UpdateTransferCommand(request), cancellationToken);
+        return ProcessResult(result);
+    }
 
     [HttpDelete("{id:guid}")]
     [SwaggerOperation(Summary = "Deletes an existing Transfer")]
@@ -122,5 +131,8 @@ public class TransferController(ISender sender) : ApiController(sender)
         [FromRoute] [SwaggerParameter("Transfer Id", Required = true)]
         Guid id,
         CancellationToken cancellationToken)
-        => ProcessResult(await _sender.Send(new DeleteTransferCommand(id), cancellationToken));
+    {
+        var result = await _sender.Send(new DeleteTransferCommand(id), cancellationToken);
+        return ProcessResult(result);
+    }
 }

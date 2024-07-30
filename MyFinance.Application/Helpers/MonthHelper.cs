@@ -16,7 +16,7 @@ internal static class MonthHelper
         return months;
     }
 
-    public static (DateTime FromDate, DateTime ToDate) GetDateRangeInUTCFromPastMonths(
+    public static (DateTime StartDate, DateTime EndDate) GetDateRangeInUTCFromPastMonths(
         int pastMonths,
         bool includeCurrentMonth)
     {

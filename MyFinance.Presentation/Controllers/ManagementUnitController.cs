@@ -1,16 +1,16 @@
-﻿using FluentResults;
-using MediatR;
+﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using MyFinance.Application.Common.Errors;
-using MyFinance.Application.Mappers;
+using MyFinance.Application.UseCases.ManagementUnits.Commands.ArchiveManagementUnit;
+using MyFinance.Application.UseCases.ManagementUnits.Commands.CreateManagementUnit;
 using MyFinance.Application.UseCases.ManagementUnits.Commands.UnarchiveManagementUnit;
+using MyFinance.Application.UseCases.ManagementUnits.Commands.UpdateManagementUnit;
 using MyFinance.Application.UseCases.ManagementUnits.Queries.GetManagementUnit;
 using MyFinance.Application.UseCases.ManagementUnits.Queries.GetManagementUnits;
 using MyFinance.Application.UseCases.ManagementUnits.Queries.GetMonthlySummary;
 using MyFinance.Contracts.Common;
 using MyFinance.Contracts.ManagementUnit.Requests;
 using MyFinance.Contracts.ManagementUnit.Responses;
-using MyFinance.Contracts.Summary.Responses;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace MyFinance.Presentation.Controllers;
@@ -28,8 +28,11 @@ public class ManagementUnitController(ISender sender) : ApiController(sender)
     public async Task<IActionResult> CreateManagementUnitAsync(
         [FromBody] [SwaggerRequestBody("Management unit payload", Required = true)]
         CreateManagementUnitRequest request,
-        CancellationToken cancellationToken) =>
-        ProcessResult(await _sender.Send(ManagementUnitMapper.RTC.Map(request), cancellationToken), true);
+        CancellationToken cancellationToken)
+    {
+        var result = await _sender.Send(new CreateManagementUnitCommand(request), cancellationToken);
+        return ProcessResult(result, true);
+    }
 
     [HttpGet]
     [SwaggerOperation(Summary = "Lists all Management Units with pagination")]
@@ -46,7 +49,8 @@ public class ManagementUnitController(ISender sender) : ApiController(sender)
         CancellationToken cancellationToken)
     {
         var query = new GetManagementUnitsQuery(pageNumber, pageSize, searchTerm);
-        return ProcessResult(await _sender.Send(query, cancellationToken));
+        var result = await _sender.Send(query, cancellationToken);
+        return ProcessResult(result);
     }
 
     [HttpGet("{id:guid}")]
@@ -57,7 +61,11 @@ public class ManagementUnitController(ISender sender) : ApiController(sender)
     public async Task<IActionResult> GetManagementUnitByIdAsync(
        [FromRoute][SwaggerParameter("The Management Unit Id", Required = true)] Guid id,
        CancellationToken cancellationToken)
-        => ProcessResult(await _sender.Send(new GetManagementUnitQuery(id), cancellationToken));
+    {
+        var query = new GetManagementUnitQuery(id);
+        var result = await _sender.Send(query, cancellationToken);
+        return ProcessResult(result);
+    }
 
     [HttpGet("{id:guid}/MonthlySummary")]
     [SwaggerOperation(Summary = "Generates a monthly summary for a Management Unit")]
@@ -102,7 +110,10 @@ public class ManagementUnitController(ISender sender) : ApiController(sender)
         [FromBody] [SwaggerRequestBody("Management Unit payload", Required = true)]
         UpdateManagementUnitRequest request,
         CancellationToken cancellationToken)
-        => ProcessResult(await _sender.Send(ManagementUnitMapper.RTC.Map(request), cancellationToken));
+    {
+        var result = await _sender.Send(new UpdateManagementUnitCommand(request), cancellationToken);
+        return ProcessResult(result);
+    }
 
     [HttpPatch("{id:guid}")]
     [SwaggerOperation(Summary = "Unarchives an existing Management Unit")]
@@ -115,7 +126,10 @@ public class ManagementUnitController(ISender sender) : ApiController(sender)
         [FromRoute] [SwaggerParameter("Id of the Management Unit to unarchive", Required = true)]
         Guid id,
         CancellationToken cancellationToken)
-        => ProcessResult(await _sender.Send(new UnarchiveManagementUnitCommand(id), cancellationToken));
+    {
+        var result = await _sender.Send(new UnarchiveManagementUnitCommand(id), cancellationToken);
+        return ProcessResult(result);
+    }
 
     [HttpDelete]
     [SwaggerOperation(Summary = "Logically deletes (archives) an existing Management Unit")]
@@ -128,5 +142,8 @@ public class ManagementUnitController(ISender sender) : ApiController(sender)
         [FromBody] [SwaggerRequestBody("Payload to archvie a Management Unit", Required = true)]
         ArchiveManagementUnitRequest request,
         CancellationToken cancellationToken)
-        => ProcessResult(await _sender.Send(ManagementUnitMapper.RTC.Map(request), cancellationToken));
+    {
+        var result = await _sender.Send(new ArchiveManagementUnitCommand(request), cancellationToken);
+        return ProcessResult(result);
+    }
 }

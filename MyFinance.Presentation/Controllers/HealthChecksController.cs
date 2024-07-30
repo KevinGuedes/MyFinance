@@ -2,8 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MyFinance.Application.Common.Errors;
-using MyFinance.Application.Mappers;
-using MyFinance.Application.UseCases.HealthChecks.Queries.GetHealthChecksReport;
+using MyFinance.Application.UseCases.HealthChecks.Queries.GetHealthReport;
 using MyFinance.Contracts.HealthCheck.Responses;
 using Swashbuckle.AspNetCore.Annotations;
 
@@ -15,30 +14,30 @@ public class HealthChecksController(ISender sender) : ApiController(sender)
     [HttpGet]
     [AllowAnonymous]
     [SwaggerOperation(Summary = "Checks the health of the application")]
-    [SwaggerResponse(StatusCodes.Status200OK, "Application is Healthy or Degraded", typeof(HealthyServicesResponse))]
-    [SwaggerResponse(StatusCodes.Status503ServiceUnavailable, "Application is unhealthy", typeof(UnhealthyServicesResponse))]
+    [SwaggerResponse(StatusCodes.Status200OK, "Application is Healthy or Degraded", typeof(HealthReportResponse))]
+    [SwaggerResponse(StatusCodes.Status503ServiceUnavailable, "Application is unhealthy", typeof(UnhealthyApplicationResponse))]
     public async Task<IActionResult> GetHealthChecksReportAsync(CancellationToken cancellationToken)
     {
-        var result = await _sender.Send(new GetHealthChecksReportQuery(), cancellationToken);
+        var result = await _sender.Send(new GetHealthReportQuery(), cancellationToken);
 
         if (result.IsSuccess)
             return Ok(result.Value);
 
         var error = result.Errors.FirstOrDefault();
 
-        if (error is UnhealthyServicesError unhealthyServicesError)
+        if (error is UnhealthyApplicationError unhealthyServicesError)
         {
-            var statusCode = StatusCodes.Status503ServiceUnavailable;
-
             var problemDetails = ProblemDetailsFactory.CreateProblemDetails(
                 HttpContext,
-                statusCode: statusCode,
+                statusCode: StatusCodes.Status503ServiceUnavailable,
                 detail: "Service(s) currently unhealthy",
                 instance: HttpContext.Request.Path);
 
-            var unhealthyServicesResponse = HealthChecksMapper.ETR.Map(problemDetails, unhealthyServicesError.HealthReport);
+            var unhealthyApplicationResponse = new UnhealthyApplicationResponse(
+                unhealthyServicesError.HealthReport,
+                problemDetails);
 
-            return new ObjectResult(unhealthyServicesResponse)
+            return new ObjectResult(unhealthyApplicationResponse)
             {
                 StatusCode = problemDetails.Status
             };

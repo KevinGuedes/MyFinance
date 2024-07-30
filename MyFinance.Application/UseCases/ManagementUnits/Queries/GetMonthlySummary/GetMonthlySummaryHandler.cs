@@ -4,7 +4,6 @@ using MyFinance.Application.Abstractions.Persistence;
 using MyFinance.Application.Abstractions.RequestHandling.Queries;
 using MyFinance.Application.Abstractions.Services;
 using MyFinance.Application.Common.Errors;
-using MyFinance.Application.Mappers;
 using MyFinance.Contracts.Summary.Responses;
 
 namespace MyFinance.Application.UseCases.ManagementUnits.Queries.GetMonthlySummary;
@@ -46,8 +45,13 @@ internal sealed class GetMonthlySummaryHandler(
             return Result.Fail(unprocessableEntityError);
         }
 
-        var summaryData = _summaryService.GenerateMonthlySummary(managementUnit, transfers, query.Year, query.Month);
+        var (fileName, fileContent) =
+            _summaryService.GenerateMonthlySummary(managementUnit, transfers, query.Year, query.Month);
 
-        return Result.Ok(SummaryMapper.DTR.Map(summaryData));
+        return Result.Ok(new SummaryResponse
+        {
+            FileName = fileName,
+            FileContent = fileContent
+        });
     }
 }

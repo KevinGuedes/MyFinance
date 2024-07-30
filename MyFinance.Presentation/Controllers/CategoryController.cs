@@ -1,7 +1,9 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using MyFinance.Application.Mappers;
+using MyFinance.Application.UseCases.Categories.Commands.ArchiveCategory;
+using MyFinance.Application.UseCases.Categories.Commands.CreateCategory;
 using MyFinance.Application.UseCases.Categories.Commands.UnarchiveCategory;
+using MyFinance.Application.UseCases.Categories.Commands.UpdateCategory;
 using MyFinance.Application.UseCases.Categories.Queries.GetCategories;
 using MyFinance.Contracts.Category.Requests;
 using MyFinance.Contracts.Category.Responses;
@@ -22,7 +24,10 @@ public class CategoryController(ISender sender) : ApiController(sender)
         [FromBody] [SwaggerRequestBody("Category's payload", Required = true)]
         CreateCategoryRequest request,
         CancellationToken cancellationToken)
-        => ProcessResult(await _sender.Send(CategoryMapper.RTC.Map(request), cancellationToken), true);
+    {
+        var result = await _sender.Send(new CreateCategoryCommand(request), cancellationToken);
+        return ProcessResult(result, true);
+    }
 
     [HttpGet]
     [SwaggerOperation(Summary = "Lists all Categories with pagination")]
@@ -39,7 +44,8 @@ public class CategoryController(ISender sender) : ApiController(sender)
         CancellationToken cancellationToken)
     {
         var query = new GetCategoriesQuery(managementUnitId, pageNumber, pageSize);
-        return ProcessResult(await _sender.Send(query, cancellationToken));
+        var result = await _sender.Send(query, cancellationToken);
+        return ProcessResult(result);
     }
 
     [HttpPut]
@@ -53,7 +59,10 @@ public class CategoryController(ISender sender) : ApiController(sender)
         [FromBody] [SwaggerRequestBody("Category payload", Required = true)]
         UpdateCategoryRequest request,
         CancellationToken cancellationToken)
-        => ProcessResult(await _sender.Send(CategoryMapper.RTC.Map(request), cancellationToken));
+    {
+        var result = await _sender.Send(new UpdateCategoryCommand(request), cancellationToken);
+        return ProcessResult(result);
+    }
 
     [HttpPatch("{id:guid}")]
     [SwaggerOperation(Summary = "Unarchives an existing Category")]
@@ -66,7 +75,10 @@ public class CategoryController(ISender sender) : ApiController(sender)
         [FromRoute] [SwaggerParameter("Id of the Category to unarchive", Required = true)]
         Guid id,
         CancellationToken cancellationToken)
-        => ProcessResult(await _sender.Send(new UnarchiveCategoryCommand(id), cancellationToken));
+    {
+        var result = await _sender.Send(new UnarchiveCategoryCommand(id), cancellationToken);
+        return ProcessResult(result);
+    }
 
     [HttpDelete]
     [SwaggerOperation(Summary = "Logically deletes (archives) an existing Category")]
@@ -79,5 +91,8 @@ public class CategoryController(ISender sender) : ApiController(sender)
         [FromBody] [SwaggerRequestBody("Payload to archvie a Category", Required = true)]
         ArchiveCategoryRequest request,
         CancellationToken cancellationToken)
-        => ProcessResult(await _sender.Send(CategoryMapper.RTC.Map(request), cancellationToken));
+    {
+        var result = await _sender.Send(new ArchiveCategoryCommand(request), cancellationToken);
+        return ProcessResult(result);
+    }
 }
