@@ -32,31 +32,41 @@ internal sealed class UpdateTransferHandler(IMyFinanceDbContext myFinanceDbConte
         var hasAccountTagChanged = transfer.AccountTagId != command.AccountTagId;
         if (hasAccountTagChanged)
         {
-            var accountTag = await _myFinanceDbContext.AccountTags.FindAsync([command.AccountTagId], cancellationToken);
+            var accountTagId = await _myFinanceDbContext.AccountTags
+                .Where(at =>
+                    at.Id == command.AccountTagId &&
+                    at.ManagementUnitId == managementUnit.Id)
+                .Select(at => at.Id)
+                .FirstOrDefaultAsync(cancellationToken);
 
-            if (accountTag is null)
+            if (accountTagId == default)
             {
                 var errorMessage = $"Account Tag with Id {command.AccountTagId} not found";
                 var entityNotFoundError = new EntityNotFoundError(errorMessage);
                 return Result.Fail(entityNotFoundError);
             }
 
-            transfer.UpdateAccountTag(accountTag);
+            transfer.UpdateAccountTag(accountTagId);
         }
 
         var hasCategoryChanged = transfer.CategoryId != command.CategoryId;
         if (hasCategoryChanged)
         {
-            var category = await _myFinanceDbContext.Categories.FindAsync([command.CategoryId], cancellationToken);
+            var categoryId = await _myFinanceDbContext.Categories
+                .Where(category =>
+                    category.Id == command.CategoryId &&
+                    category.Id == managementUnit.Id)
+                .Select(category => category.Id)
+                .FirstOrDefaultAsync(cancellationToken);
 
-            if (category is null)
+            if (categoryId == default)
             {
                 var errorMessage = $"Category with Id {command.AccountTagId} not found";
                 var entityNotFoundError = new EntityNotFoundError(errorMessage);
                 return Result.Fail(entityNotFoundError);
             }
 
-            transfer.UpdateCategory(category);
+            transfer.UpdateCategory(categoryId);
         }
 
         transfer.Update(

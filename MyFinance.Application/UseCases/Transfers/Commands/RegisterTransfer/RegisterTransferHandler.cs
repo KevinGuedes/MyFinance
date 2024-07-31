@@ -28,10 +28,12 @@ internal sealed class RegisterTransferHandler(IMyFinanceDbContext myFinanceDbCon
 
         var accountTag = await _myFinanceDbContext.AccountTags
             .AsNoTracking()
-            .Where(at => at.Id == command.AccountTagId)
+            .Where(at =>
+                at.Id == command.AccountTagId &&
+                at.ManagementUnitId == command.ManagementUnitId)
             .Select(at => new { at.Id, at.Tag })
             .FirstOrDefaultAsync(cancellationToken);
-        
+
         if (accountTag is null)
         {
             var errorMessage = $"Account Tag with Id {command.AccountTagId} not found";
@@ -41,7 +43,9 @@ internal sealed class RegisterTransferHandler(IMyFinanceDbContext myFinanceDbCon
 
         var category = await _myFinanceDbContext.Categories
             .AsNoTracking()
-            .Where(category => category.Id == command.CategoryId)
+            .Where(category =>
+                category.Id == command.CategoryId &&
+                category.ManagementUnitId == command.ManagementUnitId)
             .Select(category => new { category.Id, category.Name })
             .FirstOrDefaultAsync(cancellationToken);
 

@@ -12,7 +12,8 @@ internal sealed class UnarchiveAccountTagHandler(IMyFinanceDbContext myFinanceDb
 
     public async Task<Result> Handle(UnarchiveAccountTagCommand command, CancellationToken cancellationToken)
     {
-        var accountTag = await _myFinanceDbContext.AccountTags.FindAsync([command.Id], cancellationToken);
+        var accountTag = await _myFinanceDbContext.AccountTags
+            .FindAsync([command.Id], cancellationToken);
 
         if (accountTag is null)
         {

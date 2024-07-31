@@ -19,7 +19,6 @@ internal sealed class GetCategoriesHandler(IMyFinanceDbContext myFinanceDbContex
             .LongCountAsync(category => category.ManagementUnitId == query.ManagementUnitId, cancellationToken);
 
         var categories = await _myFinanceDbContext.Categories
-            .AsNoTracking()
             .Where(category => category.ManagementUnitId == query.ManagementUnitId)
             .OrderBy(category => category.Name)
             .Skip((query.PageNumber - 1) * query.PageSize)

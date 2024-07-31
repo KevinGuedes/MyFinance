@@ -21,7 +21,6 @@ internal sealed class GetManagementUnitsHandler(IMyFinanceDbContext myFinanceDbC
                 .LongCountAsync(cancellationToken);
 
             var managementUnits = await _myFinanceDbContext.ManagementUnits
-                .AsNoTracking()
                 .OrderBy(mu => mu.Name)
                 .Skip((query.PageNumber - 1) * query.PageSize)
                 .Take(query.PageSize)

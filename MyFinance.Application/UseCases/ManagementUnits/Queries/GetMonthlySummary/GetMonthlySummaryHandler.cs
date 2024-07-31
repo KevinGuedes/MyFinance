@@ -19,7 +19,7 @@ internal sealed class GetMonthlySummaryHandler(
     public async Task<Result<SummaryResponse>> Handle(GetMonthlySummaryQuery query,
         CancellationToken cancellationToken)
     {
-        //Revisar
+        //Revisar (tracked entities e projeções)
         var managementUnit = await _myFinanceDbContext.ManagementUnits
             .FindAsync([query.Id], cancellationToken);
 
@@ -47,9 +47,9 @@ internal sealed class GetMonthlySummaryHandler(
         }
 
         var (fileName, fileContent) = _summaryService.GenerateMonthlySummary(
-            managementUnit, 
-            transfers, 
-            query.Year, 
+            managementUnit,
+            transfers,
+            query.Year,
             query.Month);
 
         return Result.Ok(new SummaryResponse

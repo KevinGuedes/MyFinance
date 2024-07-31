@@ -19,7 +19,6 @@ internal sealed class GetUserInfoHandler(
     public async Task<Result<UserInfoResponse>> Handle(GetUserInfoQuery query, CancellationToken cancellationToken)
     {
         var user = await _myFinanceDbContext.Users
-            .AsNoTracking()
             .Where(user => user.Id == query.CurrentUserId)
             .Select(user => new
             {

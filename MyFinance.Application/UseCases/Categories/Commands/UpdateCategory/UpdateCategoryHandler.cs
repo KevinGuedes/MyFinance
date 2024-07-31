@@ -14,7 +14,8 @@ internal sealed class UpdateCategoryHandler(IMyFinanceDbContext myFinanceDbConte
     public async Task<Result<CategoryResponse>> Handle(UpdateCategoryCommand command,
         CancellationToken cancellationToken)
     {
-        var category = await _myFinanceDbContext.Categories.FindAsync([command.Id], cancellationToken);
+        var category = await _myFinanceDbContext.Categories
+            .FindAsync([command.Id], cancellationToken);
 
         if (category is null)
         {

@@ -19,7 +19,6 @@ internal sealed class GetAccountTagsHandler(IMyFinanceDbContext myFinanceDbConte
             .LongCountAsync(at => at.ManagementUnitId == query.ManagementUnitId, cancellationToken);
 
         var accountTags = await _myFinanceDbContext.AccountTags
-            .AsNoTracking()
             .Where(at => at.ManagementUnitId == query.ManagementUnitId)
             .OrderBy(at => at.Tag)
             .Skip((query.PageNumber - 1) * query.PageSize)
@@ -31,7 +30,6 @@ internal sealed class GetAccountTagsHandler(IMyFinanceDbContext myFinanceDbConte
                 Description = at.Description,
             })
             .ToListAsync(cancellationToken);
-
 
         return Result.Ok(new Paginated<AccountTagResponse>
         {

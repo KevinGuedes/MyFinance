@@ -14,7 +14,7 @@ internal sealed class GetPeriodBalanceHandler(IMyFinanceDbContext myFinanceDbCon
 
     public async Task<Result<PeriodBalanceDataResponse>> Handle(GetBalanceDataFromPeriodQuery query, CancellationToken cancellationToken)
     {
-        //check if everythign ok with db
+        //check if everythign ok with db (entries and projections)
         var transfers = _myFinanceDbContext.Transfers
             .AsNoTracking()
             .Where(transfer => transfer.ManagementUnitId == query.ManagementUnitId);

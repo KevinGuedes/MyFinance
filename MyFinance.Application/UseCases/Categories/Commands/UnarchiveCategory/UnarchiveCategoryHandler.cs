@@ -12,7 +12,8 @@ internal sealed class UnarchiveCategoryHandler(IMyFinanceDbContext myFinanceDbCo
 
     public async Task<Result> Handle(UnarchiveCategoryCommand command, CancellationToken cancellationToken)
     {
-        var category = await _myFinanceDbContext.Categories.FindAsync([command.Id], cancellationToken);
+        var category = await _myFinanceDbContext.Categories
+            .FindAsync([command.Id], cancellationToken);
 
         if (category is null)
         {

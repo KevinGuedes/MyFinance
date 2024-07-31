@@ -45,20 +45,16 @@ public sealed class Transfer : Entity, IUserOwnedEntity
     public Guid CategoryId { get; private set; }
     public Category Category { get; private set; } = null!;
 
-    public void UpdateCategory(Category category)
+    public void UpdateCategory(Guid categoryId)
     {
         SetUpdateOnToUtcNow();
-
-        Category = category;
-        CategoryId = category.Id;
+        CategoryId = categoryId;
     }
 
-    public void UpdateAccountTag(AccountTag accountTag)
+    public void UpdateAccountTag(Guid accountTagId)
     {
         SetUpdateOnToUtcNow();
-
-        AccountTag = accountTag;
-        AccountTagId = accountTag.Id;
+        AccountTagId = accountTagId;
     }
 
     public void Update(
@@ -69,7 +65,6 @@ public sealed class Transfer : Entity, IUserOwnedEntity
         TransferType type)
     {
         SetUpdateOnToUtcNow();
-
         Value = value;
         RelatedTo = relatedTo;
         Description = description;

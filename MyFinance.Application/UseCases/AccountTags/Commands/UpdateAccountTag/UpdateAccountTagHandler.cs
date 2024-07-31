@@ -14,7 +14,8 @@ internal sealed class UpdateAccountTagHandler(IMyFinanceDbContext myFinanceDbCon
     public async Task<Result<AccountTagResponse>> Handle(UpdateAccountTagCommand command,
         CancellationToken cancellationToken)
     {
-        var accountTag = await _myFinanceDbContext.AccountTags.FindAsync([command.Id], cancellationToken);
+        var accountTag = await _myFinanceDbContext.AccountTags
+            .FindAsync([command.Id], cancellationToken);
 
         if (accountTag is null)
         {
