@@ -14,14 +14,14 @@ internal sealed class ExceptionHandlerBehavior<TRequest, TResponse, TException>(
     where TResponse : ResultBase, new()
     where TException : Exception
 {
-    private const int DEADLOCK_ERROR_CODE = 1205;
+    private const int SQL_DEADLOCK_ERROR_CODE = 1205;
     private readonly ILogger<ExceptionHandlerBehavior<TRequest, TResponse, TException>> _logger = logger;
 
     public Task Handle(TRequest request, TException exception, RequestExceptionHandlerState<TResponse> state, CancellationToken cancellationToken)
     {
         var isConcurrencyException =
             exception.InnerException?.InnerException is SqlException sqlException &&
-            sqlException.Number == DEADLOCK_ERROR_CODE;
+            sqlException.Number == SQL_DEADLOCK_ERROR_CODE;
 
         var errorResult = isConcurrencyException ?
             BuildConflictErrorResult(exception) :
