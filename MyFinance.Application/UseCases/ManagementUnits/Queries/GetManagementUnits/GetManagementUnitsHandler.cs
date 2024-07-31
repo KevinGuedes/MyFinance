@@ -31,8 +31,7 @@ internal sealed class GetManagementUnitsHandler(IMyFinanceDbContext myFinanceDbC
                     Name = mu.Name,
                     Description = mu.Description,
                     Income = mu.Income,
-                    Outcome = mu.Outcome,
-                    Balance = mu.Balance
+                    Outcome = mu.Outcome
                 })
                 .ToListAsync(cancellationToken);
 
@@ -63,7 +62,6 @@ internal sealed class GetManagementUnitsHandler(IMyFinanceDbContext myFinanceDbC
                     Description = mu.Description,
                     Income = mu.Income,
                     Outcome = mu.Outcome,
-                    Balance = mu.Balance
                 })
                 .ToListAsync(cancellationToken);
 

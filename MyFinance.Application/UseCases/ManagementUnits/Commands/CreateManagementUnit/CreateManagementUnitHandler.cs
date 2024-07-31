@@ -22,7 +22,6 @@ internal sealed class CreateManagementUnitHandler(IMyFinanceDbContext myFinanceD
             Name = managementUnit.Name,
             Income = managementUnit.Income,
             Outcome = managementUnit.Outcome,
-            Balance = managementUnit.Balance,
             Description = managementUnit.Description,
         });
     }

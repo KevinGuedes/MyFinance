@@ -23,8 +23,7 @@ internal sealed class GetManagementUnitHandler(IMyFinanceDbContext myFinanceDbCo
                 Name = mu.Name,
                 Description = mu.Description,
                 Income = mu.Income,
-                Outcome = mu.Outcome,
-                Balance = mu.Balance
+                Outcome = mu.Outcome
             })
             .FirstOrDefaultAsync(cancellationToken);
 

@@ -28,7 +28,7 @@ export function TransferGroupsList({ tranferGroups }: TransferGroupList) {
           </div>
         </ScrollArea>
       ) : (
-        <div className="flex h-[65vh] grow flex-col items-center justify-center gap-2 px-4 lg:min-h-[350px]">
+        <div className="flex h-[65vh] grow flex-col items-center justify-center gap-2 px-4 lg:max-h-[350px]">
           <p className="text-center text-sm text-muted-foreground">
             You don&apos;t have{' '}
             <strong className="font-medium">Transfers</strong> registered on{' '}

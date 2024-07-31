@@ -52,8 +52,7 @@ public static class InfrastructureDependencyInjection
                 .UseSqlServer(configuration.GetConnectionString("Database"),
                     sqlServerOptions => sqlServerOptions
                         .UseQuerySplittingBehavior(QuerySplittingBehavior.SingleQuery)
-                        .MigrationsAssembly(Assembly.GetExecutingAssembly().FullName)
-                        .EnableRetryOnFailure(10, TimeSpan.FromSeconds(15), [])));
+                        .MigrationsAssembly(Assembly.GetExecutingAssembly().FullName)));
 
         return services
              .AddScoped<IMyFinanceDbContext, MyFinanceDbContext>()

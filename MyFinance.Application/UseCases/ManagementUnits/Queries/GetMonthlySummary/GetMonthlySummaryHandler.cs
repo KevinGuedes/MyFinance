@@ -19,6 +19,7 @@ internal sealed class GetMonthlySummaryHandler(
     public async Task<Result<SummaryResponse>> Handle(GetMonthlySummaryQuery query,
         CancellationToken cancellationToken)
     {
+        //Revisar
         var managementUnit = await _myFinanceDbContext.ManagementUnits
             .FindAsync([query.Id], cancellationToken);
 

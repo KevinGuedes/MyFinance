@@ -6,6 +6,6 @@ public sealed class ManagementUnitResponse
     public required string Name { get; init; }
     public required decimal Income { get; init; }
     public required decimal Outcome { get; init; }
-    public required decimal Balance { get; init; }
+    public decimal Balance => Income - Outcome;
     public required string? Description { get; init; }
 }
