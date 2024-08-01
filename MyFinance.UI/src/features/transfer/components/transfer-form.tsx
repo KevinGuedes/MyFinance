@@ -242,8 +242,7 @@ export function TransferForm({
                     </SelectContent>
                   </Select>
                   <FormDescription>
-                    Select the account you&apos;ve used to send or receive this
-                    transfer.
+                    Account used to receive or send the value
                   </FormDescription>
                   <FormMessage />
                 </FormItem>
@@ -292,8 +291,8 @@ export function TransferForm({
                   <FormControl>
                     <Textarea
                       {...field}
-                      className="resize-none"
-                      maxLength={300}
+                      className="min-h-[100px] resize-none"
+                      maxLength={150}
                     />
                   </FormControl>
                   <FormMessage />
