@@ -32,7 +32,6 @@ const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
   ) => {
     const { toast } = useToast()
     const [isRecording, setIsRecording] = React.useState(false)
-    const [content, setContent] = React.useState(value || '')
 
     function handleStartRecording() {
       setIsRecording(true)
@@ -44,34 +43,35 @@ const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
 
       speechRecognition.onresult = (event) => {
         const transcription = Array.from(event.results).reduce(
-          (text, result) => {
-            return text.concat(result[0].transcript)
+          (transcription, result) => {
+            return transcription.concat(result[0].transcript)
           },
           '',
         )
 
-        setContent((prevContent) => {
-          const isContentEmpty = prevContent === ''
+        const transcriptionStartingWithUpperCaseLetter =
+          transcription.charAt(0).toUpperCase() + transcription.slice(1)
 
-          if (isContentEmpty) {
-            const newContent =
-              transcription.charAt(0).toUpperCase() + transcription.slice(1)
-            onChange?.(newContent)
-            return newContent
-          }
+        if (value === '' || value === undefined) {
+          onChange?.(transcriptionStartingWithUpperCaseLetter)
+          return
+        }
 
-          const hasEmptySpaceInTheEnd = prevContent.toString().endsWith(' ')
+        const normalizedValue = value!.toString().trim()
 
-          if (hasEmptySpaceInTheEnd) {
-            const newContent = prevContent + transcription
-            onChange?.(newContent)
-            return newContent
-          } else {
-            const newContent = prevContent + ' ' + transcription
-            onChange?.(newContent)
-            return newContent
-          }
-        })
+        if (normalizedValue.endsWith('.')) {
+          const newValue =
+            normalizedValue + ' ' + transcriptionStartingWithUpperCaseLetter
+          onChange?.(newValue)
+          return
+        }
+
+        const transcriptionStartingWithLowerCaseLetter =
+          transcription.charAt(0).toLowerCase() + transcription.slice(1)
+
+        const newValue =
+          normalizedValue + ' ' + transcriptionStartingWithLowerCaseLetter
+        onChange?.(newValue)
       }
 
       speechRecognition.onend = () => {
@@ -100,7 +100,7 @@ const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
     }
 
     function handleChange(event: React.ChangeEvent<HTMLTextAreaElement>) {
-      setContent(event.target.value)
+      console.log('in')
       onChange?.(event.target.value)
     }
 
@@ -116,7 +116,7 @@ const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
             className,
           )}
           ref={ref}
-          value={content}
+          value={value}
           {...props}
           onChange={handleChange}
         />
