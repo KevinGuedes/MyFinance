@@ -91,7 +91,7 @@ export function CategoriesTable({ managementUnitId }: CategoriesTableProps) {
     <ScrollArea
       type="always"
       ref={parentRef}
-      className="h-[350px] grow pr-4"
+      className="h-[65vh] grow pr-4 lg:h-[350px]"
       onScroll={(e) => fetchMoreOnBottomReached(e.target as HTMLDivElement)}
     >
       <ScrollBar />
@@ -178,7 +178,7 @@ export function CategoriesTable({ managementUnitId }: CategoriesTableProps) {
       )}
     </ScrollArea>
   ) : (
-    <div className="flex min-h-[350px] grow flex-col items-center justify-center gap-4 px-4">
+    <div className="flex h-[65vh] grow flex-col items-center justify-center gap-4 px-4 lg:h-[350px]">
       <p className="text-center text-sm text-muted-foreground">
         You don&apos;t have <strong className="font-medium">Categories</strong>{' '}
         registered yet.
