@@ -32,7 +32,10 @@ export function TransferGroupsList({ tranferGroups }: TransferGroupList) {
           <p className="text-center text-sm text-muted-foreground">
             You don&apos;t have{' '}
             <strong className="font-medium">Transfers</strong> registered on{' '}
-            {format(new Date(), 'MMMM, yyyy')}.
+            <strong className="font-medium">
+              {format(new Date(), 'MMMM, yyyy')}
+            </strong>
+            .
           </p>
           <ClipboardList className="size-10 text-muted-foreground" />
         </div>

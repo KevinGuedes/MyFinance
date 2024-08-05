@@ -7,4 +7,6 @@ export interface Transfer {
   description: string
   categoryName: string
   tag: string
+  accountTagId: string
+  categoryId: string
 }
