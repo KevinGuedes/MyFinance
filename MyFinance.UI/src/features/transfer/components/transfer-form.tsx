@@ -57,6 +57,7 @@ const transferFormSchema = z.object({
 export type TransferFormSchema = z.infer<typeof transferFormSchema>
 
 type TransferFormProps = {
+  mode: 'create' | 'update'
   managementUnitId: string
   defaultValues?: TransferFormSchema
   onSubmit: (
