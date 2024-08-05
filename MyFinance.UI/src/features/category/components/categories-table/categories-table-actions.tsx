@@ -17,7 +17,7 @@ type CategoriesTableActionProps = {
   category: Category
 }
 
-export function CategoriesTableAction({
+export function CategoriesTableActions({
   category,
 }: CategoriesTableActionProps) {
   const [dropdownOpen, setDropdownOpen] = useState(false)

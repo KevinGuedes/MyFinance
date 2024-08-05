@@ -1,7 +1,7 @@
 import { ColumnDef } from '@tanstack/react-table'
 
 import { Category } from '../../models/category'
-import { CategoriesTableAction } from './categories-table-actions'
+import { CategoriesTableActions } from './categories-table-actions'
 
 export const categoriesTableColumns: ColumnDef<Category>[] = [
   {
@@ -18,7 +18,7 @@ export const categoriesTableColumns: ColumnDef<Category>[] = [
     size: 80,
     cell: ({ row }) => {
       const category = row.original
-      return <CategoriesTableAction category={category} />
+      return <CategoriesTableActions category={category} />
     },
   },
 ]
