@@ -2,7 +2,7 @@ import { useQuery } from '@tanstack/react-query'
 
 import { userApi } from '../../common/api'
 
-type UserResponse = {
+type UserInfoResponse = {
   shouldUpdatePassword: boolean
   name: string
 }
@@ -13,7 +13,7 @@ export const useGetUserInfo = () => {
     enabled: false,
     retry: false,
     queryFn: async () => {
-      const { data: userResponse } = await userApi.get<UserResponse>('info')
+      const { data: userResponse } = await userApi.get<UserInfoResponse>('info')
       return userResponse
     },
   })
