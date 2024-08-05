@@ -112,7 +112,7 @@ function ManagementUnitDashboard() {
             )}
           </div>
         </div>
-        <div className="flex grow flex-col rounded-lg border bg-background p-4 lg:w-2/5">
+        <div className="flex grow flex-col rounded-lg border bg-card p-4 lg:w-2/5">
           <Tabs defaultValue="transfers" className="flex grow flex-col gap-2">
             <TabsList className="self-start bg-muted/40">
               <TabsTrigger value="transfers" disabled={isLoading}>
