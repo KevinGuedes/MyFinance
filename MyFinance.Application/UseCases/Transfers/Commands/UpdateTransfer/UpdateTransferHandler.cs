@@ -89,7 +89,9 @@ internal sealed class UpdateTransferHandler(IMyFinanceDbContext myFinanceDbConte
             SettlementDate = transfer.SettlementDate,
             Type = transfer.Type,
             Value = transfer.Value,
+            AccountTagId = transfer.AccountTagId,
             Tag = transfer.AccountTag?.Tag!,
+            CategoryId = transfer.CategoryId,
             CategoryName = transfer.Category?.Name!
         });
     }

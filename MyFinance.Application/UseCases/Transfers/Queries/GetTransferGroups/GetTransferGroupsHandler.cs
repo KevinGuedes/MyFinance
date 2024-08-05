@@ -53,8 +53,10 @@ internal sealed class GetTransferGroupsHandler(IMyFinanceDbContext myFinanceDbCo
                         Description = transfer.Description,
                         SettlementDate = transfer.SettlementDate,
                         Type = transfer.Type,
-                        CategoryName = transfer.Category.Name,
+                        AccountTagId = transfer.AccountTag.Id,
                         Tag = transfer.AccountTag.Tag,
+                        CategoryId = transfer.Category.Id,
+                        CategoryName = transfer.Category.Name,
                     })
                     .ToList()
                     .AsReadOnly()
