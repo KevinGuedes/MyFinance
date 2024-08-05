@@ -36,6 +36,9 @@ export function TransferGroupsList({ tranferGroups }: TransferGroupList) {
               {format(new Date(), 'MMMM, yyyy')}
             </strong>
             .
+            <br />
+            Click on the button below to register a new{' '}
+            <strong className="font-medium">Transfer</strong>!
           </p>
           <ClipboardList className="size-10 text-muted-foreground" />
         </div>
