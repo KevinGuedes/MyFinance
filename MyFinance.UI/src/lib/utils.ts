@@ -9,9 +9,9 @@ export function toMoney(number: number, useCompactMode = false) {
   return new Intl.NumberFormat('pt-BR', {
     style: 'currency',
     currency: 'BRL',
-
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
     ...(useCompactMode && {
-      minimumFractionDigits: 2,
       currencyDisplay: 'narrowSymbol',
       notation: 'compact',
     }),
