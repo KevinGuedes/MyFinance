@@ -71,7 +71,6 @@ export const maskValues = (
 }
 
 export interface ICurrencyMaskProps {
-  defaultValue?: number | string
   value?: number | string
   max?: number
   currency?: string
@@ -104,7 +103,6 @@ export const CurrencyInput2 = forwardRef<HTMLInputElement, ICurrencyMaskProps>(
   (
     {
       value,
-      defaultValue,
       hideSymbol = false,
       currency = 'BRL',
       locale = 'pt-BR',
@@ -119,7 +117,7 @@ export const CurrencyInput2 = forwardRef<HTMLInputElement, ICurrencyMaskProps>(
     ref,
   ) => {
     const [maskedValue, setMaskedValue] = useState<number | string>(() => {
-      if (!value) return '0'
+      if (!value) return 0
 
       const [, calculatedMaskedValue] = maskValues(
         locale,
@@ -177,7 +175,7 @@ export const CurrencyInput2 = forwardRef<HTMLInputElement, ICurrencyMaskProps>(
     }
 
     useEffect(() => {
-      const currentValue = value || defaultValue || undefined
+      const currentValue = value || undefined
       const [, maskedValue] = maskValues(
         locale,
         currentValue,
@@ -186,18 +184,23 @@ export const CurrencyInput2 = forwardRef<HTMLInputElement, ICurrencyMaskProps>(
       )
 
       setMaskedValue(maskedValue)
-    }, [currency, defaultValue, hideSymbol, value, locale])
+    }, [currency, hideSymbol, value, locale])
 
     return (
-      <Input
-        {...otherProps}
-        ref={ref}
-        value={maskedValue}
-        onChange={handleChange}
-        onBlur={handleBlur}
-        onFocus={handleFocus}
-        onKeyUp={handleKeyUp}
-      />
+      <div className="flex items-center gap-2">
+        <p className="text-base text-muted-foreground">R$</p>
+        <Input
+          placeholder="0,00"
+          inputMode="numeric"
+          ref={ref}
+          {...otherProps}
+          value={maskedValue}
+          onChange={handleChange}
+          onBlur={handleBlur}
+          onFocus={handleFocus}
+          onKeyUp={handleKeyUp}
+        />
+      </div>
     )
   },
 )
