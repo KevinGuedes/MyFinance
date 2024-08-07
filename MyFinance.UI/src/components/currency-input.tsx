@@ -70,14 +70,17 @@ export const maskValues = (
   return [value, maskedValue]
 }
 
-export interface ICurrencyMaskProps {
+export interface ICurrencyMaskProps
+  extends Omit<
+    React.InputHTMLAttributes<HTMLInputElement>,
+    'onChange' | 'onFocus' | 'onBlur' | 'onKeyPress'
+  > {
   value?: number | string
-  max?: number
   currency?: string
   locale?: string
   hideSymbol?: boolean
   autoSelect?: boolean
-  onChangeValue: (
+  onChange: (
     event: ChangeEvent<HTMLInputElement>,
     originalValue: number | string,
     maskedValue: number | string,
@@ -106,9 +109,8 @@ export const CurrencyInput2 = forwardRef<HTMLInputElement, ICurrencyMaskProps>(
       hideSymbol = false,
       currency = 'BRL',
       locale = 'pt-BR',
-      max,
       autoSelect,
-      onChangeValue,
+      onChange,
       onBlur,
       onFocus,
       onKeyPress,
@@ -119,14 +121,9 @@ export const CurrencyInput2 = forwardRef<HTMLInputElement, ICurrencyMaskProps>(
     const [maskedValue, setMaskedValue] = useState<number | string>(() => {
       if (!value) return 0
 
-      const [, calculatedMaskedValue] = maskValues(
-        locale,
-        value,
-        currency,
-        hideSymbol,
-      )
+      const [, maskedValue] = maskValues(locale, value, currency, hideSymbol)
 
-      return calculatedMaskedValue
+      return maskedValue
     })
 
     function updateValues(originalValue: string | number) {
@@ -137,18 +134,14 @@ export const CurrencyInput2 = forwardRef<HTMLInputElement, ICurrencyMaskProps>(
         hideSymbol,
       )
 
-      if (!max || calculatedValue <= max) {
-        setMaskedValue(calculatedMaskedValue)
+      setMaskedValue(calculatedMaskedValue)
 
-        return [calculatedValue, calculatedMaskedValue]
-      }
-
-      return [normalizeValue(maskedValue), maskedValue]
+      return [calculatedValue, calculatedMaskedValue]
     }
 
     function handleChange(event: ChangeEvent<HTMLInputElement>) {
       const [originalValue, maskedValue] = updateValues(event.target.value)
-      onChangeValue(event, originalValue, maskedValue)
+      onChange(event, originalValue, maskedValue)
     }
 
     function handleBlur(event: FocusEvent<HTMLInputElement, Element>) {
@@ -187,20 +180,17 @@ export const CurrencyInput2 = forwardRef<HTMLInputElement, ICurrencyMaskProps>(
     }, [currency, hideSymbol, value, locale])
 
     return (
-      <div className="flex items-center gap-2">
-        <p className="text-base text-muted-foreground">R$</p>
-        <Input
-          placeholder="0,00"
-          inputMode="numeric"
-          ref={ref}
-          {...otherProps}
-          value={maskedValue}
-          onChange={handleChange}
-          onBlur={handleBlur}
-          onFocus={handleFocus}
-          onKeyUp={handleKeyUp}
-        />
-      </div>
+      <Input
+        placeholder="R$ 0,00"
+        inputMode="numeric"
+        ref={ref}
+        {...otherProps}
+        value={maskedValue}
+        onChange={handleChange}
+        onBlur={handleBlur}
+        onFocus={handleFocus}
+        onKeyUp={handleKeyUp}
+      />
     )
   },
 )
