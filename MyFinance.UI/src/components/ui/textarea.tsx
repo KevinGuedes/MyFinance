@@ -53,7 +53,7 @@ const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
           transcription.charAt(0).toUpperCase() + transcription.slice(1)
 
         if (value === '' || value === undefined) {
-          onChange?.(transcriptionStartingWithUpperCaseLetter)
+          onChange(transcriptionStartingWithUpperCaseLetter)
           return
         }
 
@@ -62,7 +62,7 @@ const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
         if (normalizedValue.endsWith('.')) {
           const newValue =
             normalizedValue + ' ' + transcriptionStartingWithUpperCaseLetter
-          onChange?.(newValue)
+          onChange(newValue)
           return
         }
 
@@ -71,7 +71,7 @@ const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
 
         const newValue =
           normalizedValue + ' ' + transcriptionStartingWithLowerCaseLetter
-        onChange?.(newValue)
+        onChange(newValue)
       }
 
       speechRecognition.onend = () => {
@@ -100,8 +100,7 @@ const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
     }
 
     function handleChange(event: React.ChangeEvent<HTMLTextAreaElement>) {
-      console.log('in')
-      onChange?.(event.target.value)
+      onChange(event.target.value)
     }
 
     const isSpeechRecognitionApiAvailable =

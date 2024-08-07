@@ -4,6 +4,7 @@ import { useMemo, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 
+import { CurrencyInput } from '@/components/currency-input'
 import { Button } from '@/components/ui/button'
 import { DatePicker } from '@/components/ui/date-picker'
 import {
@@ -16,7 +17,6 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
-import { MoneyInput } from '@/components/ui/money-input'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import {
   Select,
@@ -32,9 +32,7 @@ import { TransferType } from '@/features/transfer/models/transfer-type'
 import { getEnumKeys, isValidEnumKey } from '@/lib/utils'
 
 const transferFormSchema = z.object({
-  value: z
-    .number({ message: 'Value is required' })
-    .positive({ message: 'Value is required' }),
+  value: z.number({ message: 'Value is required' }).max(30),
   relatedTo: z.string().min(1, { message: 'Related to is required' }),
   description: z.string().min(1, { message: 'Description is required' }),
   settlementDate: z
@@ -84,6 +82,7 @@ export function TransferForm({
   const form = useForm<TransferFormSchema>({
     resolver: zodResolver(transferFormSchema),
     defaultValues,
+    mode: 'onBlur',
   })
 
   async function handleSubmit(values: TransferFormSchema) {
@@ -124,7 +123,12 @@ export function TransferForm({
                 <FormItem>
                   <FormLabel>Value</FormLabel>
                   <FormControl>
-                    <MoneyInput {...field} />
+                    <CurrencyInput
+                      {...field}
+                      onChange={(_, originalValue) =>
+                        field.onChange(originalValue)
+                      }
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

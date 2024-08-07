@@ -102,7 +102,7 @@ export interface ICurrencyMaskProps
   ) => void
 }
 
-export const CurrencyInput2 = forwardRef<HTMLInputElement, ICurrencyMaskProps>(
+export const CurrencyInput = forwardRef<HTMLInputElement, ICurrencyMaskProps>(
   (
     {
       value,
@@ -194,4 +194,4 @@ export const CurrencyInput2 = forwardRef<HTMLInputElement, ICurrencyMaskProps>(
     )
   },
 )
-CurrencyInput2.displayName = 'CurrencyInput2'
+CurrencyInput.displayName = 'CurrencyInput'
