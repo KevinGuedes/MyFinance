@@ -65,6 +65,7 @@ export function RegisterTransferDialog() {
           </DialogDescription>
         </DialogHeader>
         <TransferForm
+          mode="register"
           onSubmit={onSubmit}
           onCancel={onCancel}
           managementUnitId={managementUnitId!}
