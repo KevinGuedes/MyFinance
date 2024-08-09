@@ -64,7 +64,7 @@ export function UpdateTransferDialog({
           }}
         >
           <Pencil className="mr-2 size-5" />
-          Edit Transger
+          Edit Transfer
         </DropdownMenuItem>
       </DialogTrigger>
       <DialogContent className="max-w-3xl">

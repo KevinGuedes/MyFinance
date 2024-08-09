@@ -52,7 +52,7 @@ export function RegisterTransferDialog() {
   return (
     <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
       <DialogTrigger asChild>
-        <Button variant="outline" size="sm">
+        <Button variant="outline">
           <PlusCircle className="mr-2 size-5" />
           Register Transfer
         </Button>

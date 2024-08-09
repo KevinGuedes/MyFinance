@@ -81,9 +81,9 @@ internal sealed class RegisterTransferHandler(IMyFinanceDbContext myFinanceDbCon
             Type = transfer.Type,
             Value = transfer.Value,
             AccountTagId = transfer.AccountTagId,
-            Tag = transfer.AccountTag?.Tag!,
+            Tag = accountTag.Tag,
             CategoryId = transfer.CategoryId,
-            CategoryName = transfer.Category?.Name!
+            CategoryName = category.Name
         });
     }
 }

@@ -1,5 +1,11 @@
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Loader2, PlusCircle, TrendingDown, TrendingUp } from 'lucide-react'
+import {
+  Loader2,
+  Pencil,
+  PlusCircle,
+  TrendingDown,
+  TrendingUp,
+} from 'lucide-react'
 import { useMemo, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
@@ -66,6 +72,7 @@ type TransferFormProps = {
 }
 
 export function TransferForm({
+  mode,
   managementUnitId,
   defaultValues,
   onSubmit,
@@ -82,7 +89,6 @@ export function TransferForm({
   const form = useForm<TransferFormSchema>({
     resolver: zodResolver(transferFormSchema),
     defaultValues,
-    mode: 'onBlur',
   })
 
   async function handleSubmit(values: TransferFormSchema) {
@@ -316,42 +322,64 @@ export function TransferForm({
           >
             Cancel
           </Button>
-          <Button
-            type="button"
-            className="min-w-52 grow sm:grow-0"
-            variant="secondary"
-            onClick={form.handleSubmit(handleRegisterAndAddMore)}
-            disabled={!form.formState.isValid || form.formState.isSubmitting}
-          >
-            {isRegisteringAndAddingMore ? (
-              <>
-                <Loader2 className="mr-2 size-5 animate-spin" />
-                Registering...
-              </>
-            ) : (
-              <>
-                <PlusCircle className="mr-2 size-5" />
-                Register and Add More
-              </>
-            )}
-          </Button>
-          <Button
-            type="submit"
-            className="min-w-44 grow sm:grow-0"
-            disabled={!form.formState.isValid || form.formState.isSubmitting}
-          >
-            {isRegistering ? (
-              <>
-                <Loader2 className="mr-2 size-5 animate-spin" />
-                Registering...
-              </>
-            ) : (
-              <>
-                <PlusCircle className="mr-2 size-5" />
-                Register Transfer
-              </>
-            )}
-          </Button>
+          {mode === 'register' ? (
+            <>
+              <Button
+                type="button"
+                className="min-w-52 grow sm:grow-0"
+                variant="secondary"
+                onClick={form.handleSubmit(handleRegisterAndAddMore)}
+                disabled={
+                  !form.formState.isValid || form.formState.isSubmitting
+                }
+              >
+                {isRegisteringAndAddingMore ? (
+                  <>
+                    <Loader2 className="mr-2 size-5 animate-spin" />
+                    Registering...
+                  </>
+                ) : (
+                  <>
+                    <PlusCircle className="mr-2 size-5" />
+                    Register and Add More
+                  </>
+                )}
+              </Button>
+              <Button
+                type="submit"
+                className="min-w-44 grow sm:grow-0"
+                disabled={
+                  !form.formState.isValid || form.formState.isSubmitting
+                }
+              >
+                {isRegistering ? (
+                  <>
+                    <Loader2 className="mr-2 size-5 animate-spin" />
+                    Registering...
+                  </>
+                ) : (
+                  <>
+                    <PlusCircle className="mr-2 size-5" />
+                    Register Transfer
+                  </>
+                )}
+              </Button>
+            </>
+          ) : (
+            <Button type="submit" className="min-w-40 grow sm:grow-0">
+              {form.formState.isSubmitting ? (
+                <>
+                  <Loader2 className="mr-2 size-4 animate-spin" />
+                  Updating...
+                </>
+              ) : (
+                <>
+                  <Pencil className="mr-2 size-4" />
+                  Update Transfer
+                </>
+              )}
+            </Button>
+          )}
         </div>
       </form>
     </Form>

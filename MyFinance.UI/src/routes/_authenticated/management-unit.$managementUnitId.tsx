@@ -14,11 +14,9 @@ import { SummaryCardsSkeleton } from '@/features/management-unit/components/summ
 import { UpdateManagementUnitDialog } from '@/features/management-unit/components/update-management-unit-dialog'
 import { useDiscriminatedBalanceChartSettings } from '@/features/management-unit/store/discriminated-balance-chart-settings-store'
 import { useGetDiscriminatedBalance } from '@/features/transfer/api/use-get-discriminated-balance'
-import { useGetTransferGroups } from '@/features/transfer/api/use-get-transfer-groups'
 import { DiscriminatedBalanceCard } from '@/features/transfer/components/discriminated-balance-card/discriminated-balance-card'
 import { DiscriminatedBalanceCardSkeleton } from '@/features/transfer/components/discriminated-balance-card/discriminated-balance-card-skeleton'
 import { TransferGroupsList } from '@/features/transfer/components/transfer-groups-list/transfer-groups-list'
-import { TransferGroupsListSkeleton } from '@/features/transfer/components/transfer-groups-list/transfer-groups-list-skeleton'
 
 export const Route = createFileRoute(
   '/_authenticated/management-unit/$managementUnitId',
@@ -30,18 +28,11 @@ export const Route = createFileRoute(
 })
 
 function ManagementUnitDashboard() {
-  const today = new Date()
   const managementUnitId = Route.useParams().managementUnitId
   const managementUnitQuery = useGetManagementUnit(managementUnitId)
   const { pastMonths, includeCurrentMonth } =
     useDiscriminatedBalanceChartSettings()
-  const transferGroupsQuery = useGetTransferGroups(
-    today.getMonth() + 1,
-    today.getFullYear(),
-    managementUnitId,
-    1,
-    50,
-  )
+
   const discriminatedBalanceQuery = useGetDiscriminatedBalance(
     managementUnitId,
     pastMonths,
@@ -49,9 +40,7 @@ function ManagementUnitDashboard() {
   )
 
   const isLoading =
-    managementUnitQuery.isLoading &&
-    discriminatedBalanceQuery.isLoading &&
-    transferGroupsQuery.isLoading
+    managementUnitQuery.isLoading && discriminatedBalanceQuery.isLoading
 
   return (
     <Page>
@@ -132,17 +121,7 @@ function ManagementUnitDashboard() {
               value="transfers"
               className="flex grow flex-col justify-between gap-2 rounded-lg data-[state=inactive]:hidden"
             >
-              {transferGroupsQuery.isLoading ? (
-                <TransferGroupsListSkeleton />
-              ) : (
-                <>
-                  {transferGroupsQuery.data && (
-                    <TransferGroupsList
-                      tranferGroups={transferGroupsQuery.data.items}
-                    />
-                  )}
-                </>
-              )}
+              <TransferGroupsList />
             </TabsContent>
             <TabsContent
               value="account-tags"

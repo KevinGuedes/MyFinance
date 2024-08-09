@@ -76,10 +76,7 @@ function AuthenticatedLayout() {
   } else {
     return (
       <main className="flex grow items-center justify-center">
-        <div className="flex flex-col items-center gap-2" role="status">
-          <Loader2 size={112} className="animate-spin text-muted-foreground" />
-          <p className="text-muted-foreground">Loading application...</p>
-        </div>
+        <Loader2 className="size-32 animate-spin text-muted-foreground" />
       </main>
     )
   }

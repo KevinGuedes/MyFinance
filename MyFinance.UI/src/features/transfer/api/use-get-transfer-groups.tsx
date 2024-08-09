@@ -1,4 +1,4 @@
-import { keepPreviousData, useQuery } from '@tanstack/react-query'
+import { keepPreviousData, useInfiniteQuery } from '@tanstack/react-query'
 
 import { transferApi } from '../../common/api'
 import { Paginated } from '../../common/paginated'
@@ -8,27 +8,30 @@ export const useGetTransferGroups = (
   month: number,
   year: number,
   managementUnitId: string,
-  pageNumber: number,
   pageSize: number,
 ) => {
-  const query = useQuery({
-    queryKey: [
-      'transfers',
-      { pageNumber, pageSize, managementUnitId, month, year },
-    ],
+  const query = useInfiniteQuery<Paginated<TransferGroup>>({
+    queryKey: ['transfers', { pageSize, managementUnitId, month, year }],
     staleTime: Infinity,
     placeholderData: keepPreviousData,
+    initialPageParam: 1,
     retry: 2,
-    queryFn: async () => {
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
+    getNextPageParam: (previousFetchedPage) =>
+      previousFetchedPage.hasNextPage
+        ? previousFetchedPage.pageNumber + 1
+        : undefined,
+    queryFn: async ({ pageParam }) => {
       const { data: paginatedTransferGroups } = await transferApi.get<
         Paginated<TransferGroup>
       >('', {
         params: {
           month,
           year,
-          pageNumber,
           pageSize,
           managementUnitId,
+          pageNumber: pageParam,
         },
       })
 
@@ -41,11 +44,7 @@ export const useGetTransferGroups = (
 
           return {
             ...group,
-            date: new Date(
-              formattedTransfers[0].settlementDate.getFullYear(),
-              formattedTransfers[0].settlementDate.getMonth(),
-              formattedTransfers[0].settlementDate.getDate(),
-            ),
+            date: formattedTransfers[0].settlementDate,
             transfers: formattedTransfers,
           }
         },
@@ -53,8 +52,6 @@ export const useGetTransferGroups = (
 
       return { ...paginatedTransferGroups, items: formattedTransferGroups }
     },
-    refetchOnWindowFocus: false,
-    refetchOnMount: false,
   })
 
   return query
