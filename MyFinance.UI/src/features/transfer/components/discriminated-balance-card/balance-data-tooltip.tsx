@@ -21,9 +21,10 @@ export function BalanceDataTooltip({
     useDiscriminatedBalanceChartSettings()
 
   if (active && payload && payload.length) {
+    console.log(payload)
     const formattedDate = new Date(
       payload[0].payload.year,
-      payload[0].payload.month,
+      payload[0].payload.month - 1,
     ).toLocaleDateString('en-US', { year: 'numeric', month: 'long' })
 
     const balance = Number(

@@ -43,7 +43,7 @@ export function TransferItemActions({ transfer }: TransferItemActionsProps) {
       <DropdownMenuTrigger asChild>
         <Button
           variant="ghost"
-          className="size-7 rounded-full p-0.5"
+          className="size-7 shrink-0 rounded-full p-0.5"
           size="icon"
           ref={dropdownTriggerRef}
         >

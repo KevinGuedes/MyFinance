@@ -4,12 +4,9 @@ import { accountTagApi } from '../../common/api'
 import { Paginated } from '../../common/paginated'
 import { AccountTag } from '../models/account-tag'
 
-export const useGetAccountTags = (
-  managementUnitId: string,
-  pageSize: number,
-) => {
+export const useGetAccountTags = (managementUnitId: string) => {
   const infiniteQuery = useInfiniteQuery<Paginated<AccountTag>>({
-    queryKey: ['account-tags', { pageSize, managementUnitId }],
+    queryKey: ['account-tags', { managementUnitId }],
     staleTime: Infinity,
     retry: 2,
     queryFn: async ({ pageParam }) => {
@@ -18,7 +15,7 @@ export const useGetAccountTags = (
       >('', {
         params: {
           pageNumber: pageParam,
-          pageSize,
+          pageSize: 50,
           managementUnitId,
         },
       })

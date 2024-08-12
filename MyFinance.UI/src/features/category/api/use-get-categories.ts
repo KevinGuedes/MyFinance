@@ -4,13 +4,11 @@ import { categoryApi } from '../../common/api'
 import { Paginated } from '../../common/paginated'
 import { Category } from '../models/category'
 
-export const useGetCategories = (
-  managementUnitId: string,
-  pageSize: number,
-) => {
+export const useGetCategories = (managementUnitId: string) => {
   const infiniteQuery = useInfiniteQuery<Paginated<Category>>({
-    queryKey: ['categories', { pageSize, managementUnitId }],
+    queryKey: ['categories', { managementUnitId }],
     staleTime: Infinity,
+    gcTime: Infinity,
     retry: 2,
     queryFn: async ({ pageParam }) => {
       const { data: paginatedCategories } = await categoryApi.get<
@@ -18,7 +16,7 @@ export const useGetCategories = (
       >('', {
         params: {
           pageNumber: pageParam,
-          pageSize,
+          pageSize: 50,
           managementUnitId,
         },
       })

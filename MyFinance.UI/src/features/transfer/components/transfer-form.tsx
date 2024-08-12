@@ -79,9 +79,9 @@ export function TransferForm({
   onCancel,
 }: TransferFormProps) {
   const { data: categoriesData, isFetching: isFetchingCategories } =
-    useGetCategories(managementUnitId, 50)
+    useGetCategories(managementUnitId)
   const { data: accountTagsData, isFetching: isFetchingAccountTags } =
-    useGetAccountTags(managementUnitId, 50)
+    useGetAccountTags(managementUnitId)
 
   const [isRegistering, setIsRegistering] = useState(false)
   const [isRegisteringAndAddingMore, setIsRegisteringAndAddingMore] =

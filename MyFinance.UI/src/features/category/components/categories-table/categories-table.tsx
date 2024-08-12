@@ -37,7 +37,7 @@ export function CategoriesTable({ managementUnitId }: CategoriesTableProps) {
     isPending,
     isFetchingNextPage,
     hasNextPage,
-  } = useGetCategories(managementUnitId, 50)
+  } = useGetCategories(managementUnitId)
 
   const categories = useMemo(
     () => data?.pages?.flatMap((page) => page.items) ?? [],

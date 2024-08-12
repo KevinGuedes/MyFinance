@@ -4,10 +4,8 @@ import {
   endOfYear,
   format,
   isEqual,
-  isFuture,
   parse,
   startOfMonth,
-  startOfToday,
 } from 'date-fns'
 import { CalendarIcon, ChevronLeft, ChevronRight } from 'lucide-react'
 import * as React from 'react'
@@ -23,11 +21,13 @@ import { Button } from './ui/button'
 interface MonthPickerProps {
   value?: Date
   onChange?: (newMonth: Date) => void
+  disabled?: boolean
 }
 
 export function MonthPicker({
   value = new Date(),
   onChange,
+  disabled = false,
 }: MonthPickerProps) {
   const [isMonthPickerOpen, setIsMonthPickerOpen] = React.useState(false)
   const [currentYear, setCurrentYear] = React.useState(() =>
@@ -41,20 +41,25 @@ export function MonthPicker({
     end: endOfYear(firstDayCurrentYear),
   })
 
-  function previousYear() {
+  function goTreviousYear() {
     const firstDayNextYear = add(firstDayCurrentYear, { years: -1 })
     setCurrentYear(format(firstDayNextYear, 'yyyy'))
   }
 
-  function nextYear() {
+  function goToNextYear() {
     const firstDayNextYear = add(firstDayCurrentYear, { years: 1 })
     setCurrentYear(format(firstDayNextYear, 'yyyy'))
+  }
+
+  function handleMonthSelection(month: Date) {
+    setIsMonthPickerOpen(false)
+    onChange?.(month)
   }
 
   return (
     <Popover open={isMonthPickerOpen} onOpenChange={setIsMonthPickerOpen}>
       <PopoverTrigger asChild>
-        <Button variant="outline" size="icon">
+        <Button variant="outline" size="icon" disabled={disabled}>
           <CalendarIcon className="size-4" />
         </Button>
       </PopoverTrigger>
@@ -76,7 +81,7 @@ export function MonthPicker({
               variant="outline"
               type="button"
               className="absolute left-1 size-7"
-              onClick={previousYear}
+              onClick={goTreviousYear}
             >
               <ChevronLeft className="size-4" />
             </Button>
@@ -87,7 +92,7 @@ export function MonthPicker({
               variant="outline"
               type="button"
               className="absolute right-1 size-7"
-              onClick={nextYear}
+              onClick={goToNextYear}
             >
               <ChevronRight className="size-4" />
             </Button>
@@ -105,14 +110,12 @@ export function MonthPicker({
               role="gridcell"
               tabIndex={-1}
               variant={
-                isEqual(month, startOfMonth(startOfToday()))
-                  ? 'default'
-                  : 'ghost'
+                isEqual(month, startOfMonth(value)) ? 'default' : 'ghost'
               }
               type="button"
               size="sm"
               className="font-normal"
-              onClick={() => onChange?.(month)}
+              onClick={() => handleMonthSelection(month)}
             >
               <time dateTime={format(month, 'yyyy-MM')}>
                 {format(month, 'MMM')}

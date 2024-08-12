@@ -37,7 +37,7 @@ export function AccountTagsTable({ managementUnitId }: AccountTagsTableProps) {
     fetchNextPage,
     isPending,
     hasNextPage,
-  } = useGetAccountTags(managementUnitId, 50)
+  } = useGetAccountTags(managementUnitId)
 
   const accountTags = useMemo(
     () => data?.pages?.flatMap((page) => page.items) ?? [],
