@@ -7,7 +7,7 @@ import {
   parse,
   startOfMonth,
 } from 'date-fns'
-import { CalendarIcon, ChevronLeft, ChevronRight } from 'lucide-react'
+import { CalendarIcon, ChevronLeft, ChevronRight, Loader2 } from 'lucide-react'
 import * as React from 'react'
 
 import {
@@ -22,12 +22,14 @@ interface MonthPickerProps {
   value?: Date
   onChange?: (newMonth: Date) => void
   disabled?: boolean
+  isLoading?: boolean
 }
 
 export function MonthPicker({
   value = new Date(),
   onChange,
   disabled = false,
+  isLoading = false,
 }: MonthPickerProps) {
   const [isMonthPickerOpen, setIsMonthPickerOpen] = React.useState(false)
   const [currentYear, setCurrentYear] = React.useState(() =>
@@ -64,7 +66,11 @@ export function MonthPicker({
           disabled={disabled}
           className="flex min-w-32 items-center justify-between"
         >
-          <CalendarIcon className="mr-1 size-4" />
+          {isLoading ? (
+            <Loader2 className="mr-1 size-4 animate-spin" />
+          ) : (
+            <CalendarIcon className="mr-1 size-4" />
+          )}
           {format(value, 'MMM, yyyy')}
         </Button>
       </PopoverTrigger>

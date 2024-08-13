@@ -21,13 +21,13 @@ export function TransferGroupsList() {
     isFetching,
     fetchNextPage,
     isLoading,
-    isRefetching,
+    isFetchingNextPage,
     hasNextPage,
+    isPending,
   } = useGetTransferGroups(
     selectedDate.getMonth() + 1,
     selectedDate.getFullYear(),
     managementUnitId!,
-    1,
   )
 
   const observerRef = useCallback(
@@ -64,7 +64,7 @@ export function TransferGroupsList() {
       {isLoading ? (
         <TransferGroupsListSkeleton />
       ) : (
-        <div className="pb-2">
+        <>
           {transferGroups.length > 0 ? (
             <ScrollArea
               // tricky solution to make scroll reset to top when changing selected month
@@ -109,10 +109,15 @@ export function TransferGroupsList() {
               <ClipboardList className="size-10 text-muted-foreground" />
             </div>
           )}
-        </div>
+        </>
       )}
       <div className="flex items-center justify-between gap-4">
-        <MonthPicker value={selectedDate} onChange={handleSelectedDate} />
+        <MonthPicker
+          value={selectedDate}
+          disabled={isFetching && !isFetchingNextPage}
+          isLoading={isFetching && !isFetchingNextPage && !isPending}
+          onChange={handleSelectedDate}
+        />
         <RegisterTransferDialog />
       </div>
     </div>

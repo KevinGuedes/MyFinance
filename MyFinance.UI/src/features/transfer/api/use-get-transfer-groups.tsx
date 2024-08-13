@@ -8,10 +8,9 @@ export const useGetTransferGroups = (
   month: number,
   year: number,
   managementUnitId: string,
-  pageSize: number,
-) => {
+  ) => {
   const query = useInfiniteQuery<Paginated<TransferGroup>>({
-    queryKey: ['transfers', { pageSize, managementUnitId, month, year }],
+    queryKey: ['transfers', { managementUnitId, month, year }],
     staleTime: 10 * 1000 * 60,
     placeholderData: keepPreviousData,
     initialPageParam: 1,
@@ -30,7 +29,7 @@ export const useGetTransferGroups = (
         params: {
           month,
           year,
-          pageSize,
+          pageSize: 3,
           managementUnitId,
           pageNumber: pageParam,
         },
