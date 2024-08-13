@@ -1,5 +1,6 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import {
+  CopyPlus,
   Loader2,
   Pencil,
   PlusCircle,
@@ -38,7 +39,7 @@ import { TransferType } from '@/features/transfer/models/transfer-type'
 import { getEnumKeys, isValidEnumKey } from '@/lib/utils'
 
 const transferFormSchema = z.object({
-  value: z.number({ message: 'Value is required' }).max(30),
+  value: z.number({ message: 'Value is required' }),
   relatedTo: z.string().min(1, { message: 'Related to is required' }),
   description: z.string().min(1, { message: 'Description is required' }),
   settlementDate: z
@@ -340,7 +341,7 @@ export function TransferForm({
                   </>
                 ) : (
                   <>
-                    <PlusCircle className="mr-2 size-5" />
+                    <CopyPlus className="mr-2 size-5" />
                     Register and Add More
                   </>
                 )}
