@@ -67,7 +67,7 @@ export function TransferGroupsList() {
         <>
           {transferGroups.length > 0 ? (
             <ScrollArea
-              // tricky solution to make scroll reset to top when changing selected month
+              // Tricky solution to make scroll reset to top when changing selected month.The key will change only after fetching the data, avoiding a scroll to top before loading the data.
               key={transferGroups[0].date.toString()}
               ref={scrollArea}
               className="h-[65vh] grow pr-2 lg:h-[350px]"

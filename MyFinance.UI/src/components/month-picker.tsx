@@ -5,6 +5,7 @@ import {
   format,
   isEqual,
   parse,
+  startOfDay,
   startOfMonth,
 } from 'date-fns'
 import { CalendarIcon, ChevronLeft, ChevronRight, Loader2 } from 'lucide-react'
@@ -15,6 +16,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover'
+import { cn } from '@/lib/utils'
 
 import { Button } from './ui/button'
 
@@ -125,7 +127,12 @@ export function MonthPicker({
               }
               type="button"
               size="sm"
-              className="font-normal"
+              className={cn(
+                'font-normal',
+                isEqual(month, startOfMonth(startOfDay(new Date()))) &&
+                  !isEqual(month, startOfMonth(value)) &&
+                  'bg-accent text-accent-foreground',
+              )}
               onClick={() => handleMonthSelection(month)}
             >
               <time dateTime={format(month, 'yyyy-MM')}>
