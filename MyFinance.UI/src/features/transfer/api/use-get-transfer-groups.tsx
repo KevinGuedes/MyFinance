@@ -12,12 +12,13 @@ export const useGetTransferGroups = (
 ) => {
   const query = useInfiniteQuery<Paginated<TransferGroup>>({
     queryKey: ['transfers', { pageSize, managementUnitId, month, year }],
-    staleTime: Infinity,
+    staleTime: 10 * 1000 * 60,
     placeholderData: keepPreviousData,
     initialPageParam: 1,
     retry: 2,
     refetchOnWindowFocus: false,
     refetchOnMount: false,
+    retryDelay: 1000,
     getNextPageParam: (previousFetchedPage) =>
       previousFetchedPage.hasNextPage
         ? previousFetchedPage.pageNumber + 1

@@ -26,15 +26,15 @@ internal sealed class GetTransferGroupsHandler(IMyFinanceDbContext myFinanceDbCo
                 transfer.SettlementDate >= startDate &&
                 transfer.SettlementDate <= endDate);
 
-        var totalCount = await transfers.LongCountAsync(cancellationToken);
+        var totalCount = await transfers
+            .GroupBy(transfer => transfer.SettlementDate.Day)
+            .LongCountAsync(cancellationToken);
 
         var transferGroups = await transfers
             .Include(transfer => transfer.Category)
             .Include(transfer => transfer.AccountTag)
             .OrderByDescending(transfer => transfer.SettlementDate)
             .ThenBy(transfer => transfer.RelatedTo)
-            .Skip((query.PageNumber - 1) * query.PageSize)
-            .Take(query.PageSize)
             .GroupBy(transfer => transfer.SettlementDate.Day)
             .OrderByDescending(transferGroup => transferGroup.Key)
             .Select(transferGroup => new TransferGroupResponse
@@ -61,6 +61,8 @@ internal sealed class GetTransferGroupsHandler(IMyFinanceDbContext myFinanceDbCo
                     .ToList()
                     .AsReadOnly()
             })
+            .Skip((query.PageNumber - 1) * query.PageSize)
+            .Take(query.PageSize)
             .ToListAsync(cancellationToken);
 
         return Result.Ok(new Paginated<TransferGroupResponse>

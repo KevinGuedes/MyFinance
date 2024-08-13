@@ -59,8 +59,13 @@ export function MonthPicker({
   return (
     <Popover open={isMonthPickerOpen} onOpenChange={setIsMonthPickerOpen}>
       <PopoverTrigger asChild>
-        <Button variant="outline" size="icon" disabled={disabled}>
-          <CalendarIcon className="size-4" />
+        <Button
+          variant="outline"
+          disabled={disabled}
+          className="flex min-w-32 items-center justify-between"
+        >
+          <CalendarIcon className="mr-1 size-4" />
+          {format(value, 'MMM, yyyy')}
         </Button>
       </PopoverTrigger>
       <PopoverContent className="flex w-auto flex-col space-y-4 p-5">
