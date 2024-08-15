@@ -69,9 +69,9 @@ export function MonthPicker({
           className="flex min-w-32 items-center justify-between"
         >
           {isLoading ? (
-            <Loader2 className="mr-1 size-4 animate-spin" />
+            <Loader2 className="mr-2 size-4 animate-spin" />
           ) : (
-            <CalendarIcon className="mr-1 size-4" />
+            <CalendarIcon className="mr-2 size-4" />
           )}
           {format(value, 'MMM, yyyy')}
         </Button>

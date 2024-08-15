@@ -6,24 +6,19 @@ import { ApiError } from '@/features/common/api-error'
 import { handleError } from '@/features/common/handle-error'
 import { handleValidationErrors } from '@/features/common/handle-validation-errors'
 
-import { Transfer } from '../models/transfer'
-
-type UpdateTransferRequest = Omit<Transfer, 'categoryName' | 'tag'> & {
+type DeleteTransferRequest = {
   managementUnitId: string
+  id: string
 }
 
-export function useUpdateTransfer() {
+export function useDeleteTransfer() {
   const queryClient = useQueryClient()
   const { toast } = useToast()
 
-  const mutation = useMutation<Transfer, ApiError, UpdateTransferRequest>({
-    mutationFn: async (updateTransferRequest) => {
-      const { data: updatedTransfer } = await transferApi.put<Transfer>(
-        '',
-        updateTransferRequest,
-      )
-
-      return updatedTransfer
+  const mutation = useMutation<void, ApiError, DeleteTransferRequest>({
+    mutationFn: async (deleteTransferRequest) => {
+      await new Promise((resolve) => setTimeout(resolve, 1000))
+      await transferApi.delete(deleteTransferRequest.id)
     },
     onSuccess: (_, { managementUnitId }) => {
       queryClient.invalidateQueries({
@@ -39,7 +34,7 @@ export function useUpdateTransfer() {
       })
 
       toast({
-        title: 'Transfer successfully updated!',
+        title: 'Transfer successfully deleted!',
       })
     },
     onError: (error) => {
@@ -49,7 +44,7 @@ export function useUpdateTransfer() {
         handleValidationErrors(validationErrors, (_, description) => {
           toast({
             variant: 'destructive',
-            title: 'Failed to update Transfer',
+            title: 'Failed to delete Transfer',
             description,
           })
         })

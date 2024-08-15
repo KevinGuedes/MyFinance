@@ -11,16 +11,17 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog'
 import { DropdownMenuItem } from '@/components/ui/dropdown-menu'
-import { getKeyByEnumValue } from '@/lib/utils'
+import { getEnumValueByKey, getKeyByEnumValue } from '@/lib/utils'
 
+import { useUpdateTransfer } from '../../api/use-update-transfer'
 import { Transfer } from '../../models/transfer'
 import { TransferType } from '../../models/transfer-type'
 import { TransferForm, TransferFormSchema } from '../transfer-form'
 
 type UpdateTransferDialogProps = {
   transfer: Transfer
-  onSelect?: (event?: Event) => void
-  onOpenChange?: (isOpen: boolean) => void
+  onSelect: () => void
+  onOpenChange: (isOpen: boolean) => void
 }
 
 export function UpdateTransferDialog({
@@ -28,30 +29,46 @@ export function UpdateTransferDialog({
   onSelect,
   onOpenChange,
 }: UpdateTransferDialogProps) {
+  const updateCategoryMutation = useUpdateTransfer()
   const [isDialogOpen, setIsDialogOpen] = useState(false)
   const { managementUnitId } = useParams({ strict: false })
 
   async function onSubmit(values: TransferFormSchema) {
-    console.log(values)
-    // await updateCategoryMutation.mutateAsync(
-    //   { ...values, id: category.id },
-    //   {
-    //     onSuccess: () => {
-    //       setIsDialogOpen(false)
-    //       onOpenChange?.(false)
-    //     },
-    //   },
-    // )
+    await updateCategoryMutation.mutateAsync(
+      {
+        ...formatValues(values),
+        managementUnitId: managementUnitId!,
+        id: transfer.id,
+        settlementDate: transfer.settlementDate,
+      },
+      {
+        onSuccess: () => {
+          setIsDialogOpen(false)
+          onOpenChange(false)
+        },
+      },
+    )
   }
 
   function onCancel() {
     setIsDialogOpen(false)
-    onOpenChange?.(false)
+    onOpenChange(false)
   }
 
   function handleOnOpenChange(isDialogOpen: boolean) {
     setIsDialogOpen(isDialogOpen)
-    onOpenChange?.(isDialogOpen)
+    onOpenChange(isDialogOpen)
+  }
+
+  function formatValues(values: TransferFormSchema) {
+    const type = getEnumValueByKey(TransferType, values.type)
+    const settlementDate = values.settlementDate?.toISOString()
+
+    return {
+      ...values,
+      type,
+      settlementDate,
+    }
   }
 
   return (
@@ -60,7 +77,7 @@ export function UpdateTransferDialog({
         <DropdownMenuItem
           onSelect={(event) => {
             event.preventDefault()
-            onSelect && onSelect()
+            onSelect()
           }}
         >
           <Pencil className="mr-2 size-5" />
