@@ -73,7 +73,7 @@ export function TransferItemActions({ transfer }: TransferItemActionsProps) {
         />
 
         <DeleteTransferAlert
-          transfer={transfer}
+          transferId={transfer.id}
           onSelect={handleDialogItemSelect}
           onOpenChange={handleDialogItemOpenChange}
         />
