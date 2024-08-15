@@ -55,7 +55,7 @@ internal sealed class UpdateTransferHandler(IMyFinanceDbContext myFinanceDbConte
             var categoryId = await _myFinanceDbContext.Categories
                 .Where(category =>
                     category.Id == command.CategoryId &&
-                    category.Id == managementUnit.Id)
+                    category.ManagementUnitId == managementUnit.Id)
                 .Select(category => category.Id)
                 .FirstOrDefaultAsync(cancellationToken);
 
