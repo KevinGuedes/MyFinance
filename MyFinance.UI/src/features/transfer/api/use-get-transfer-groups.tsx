@@ -42,9 +42,13 @@ export const useGetTransferGroups = (
             settlementDate: new Date(transfer.settlementDate),
           }))
 
+          const year = formattedTransfers[0].settlementDate.getFullYear()
+          const month = formattedTransfers[0].settlementDate.getMonth()
+          const day = formattedTransfers[0].settlementDate.getDate()
+
           return {
             ...group,
-            date: formattedTransfers[0].settlementDate,
+            date: new Date(year, month, day),
             transfers: formattedTransfers,
           }
         },
