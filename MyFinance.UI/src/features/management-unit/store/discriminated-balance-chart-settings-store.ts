@@ -29,7 +29,7 @@ export const useDiscriminatedBalanceChartSettings =
     persist(
       (set) => ({
         includeCurrentMonth: true,
-        pastMonths: 12,
+        pastMonths: 3,
         showYAxis: false,
         showLegend: false,
         showBalance: true,

@@ -119,7 +119,7 @@ export function PageHeader({
             <nav className="grid gap-6 text-lg font-medium">
               <Link
                 to="/"
-                className="flex items-center gap-4 px-2.5"
+                className="flex items-center gap-4"
                 inactiveProps={{
                   className: 'text-muted-foreground hover:text-foreground',
                 }}

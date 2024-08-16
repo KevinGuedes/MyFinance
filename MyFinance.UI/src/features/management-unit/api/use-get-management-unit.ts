@@ -9,14 +9,14 @@ export const useGetManagementUnit = (managementUnitId: string) => {
     queryKey: ['management-unit', { managementUnitId }],
     staleTime: Infinity,
     retry: 2,
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
     queryFn: async () => {
       const { data: managemenUnit } =
         await managementUnitApi.get<ManagementUnit>(managementUnitId)
 
       return managemenUnit
     },
-    refetchOnWindowFocus: false,
-    refetchOnMount: false,
   })
 
   return query
