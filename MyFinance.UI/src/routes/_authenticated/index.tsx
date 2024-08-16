@@ -143,6 +143,7 @@ function Home() {
               onChange={handleSearchTermChange}
               placeholder="Search Management Unit..."
               className="pl-8"
+              id="search"
             />
           </div>
           <div className="md:col-start-2 xl:col-start-3">
