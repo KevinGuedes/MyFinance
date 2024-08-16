@@ -55,7 +55,7 @@ export function SignInForm() {
             <FormItem>
               <FormLabel>Email</FormLabel>
               <FormControl>
-                <Input type="email" {...field} />
+                <Input type="email" {...field} autoComplete="email" />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -78,7 +78,7 @@ export function SignInForm() {
                 </Button>
               </div>
               <FormControl>
-                <PasswordInput {...field} />
+                <PasswordInput {...field} id="password" />
               </FormControl>
               <FormMessage />
             </FormItem>
