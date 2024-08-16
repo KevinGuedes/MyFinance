@@ -10,10 +10,7 @@ type TransferItemProps = {
 
 export function TransferItem({ transfer }: TransferItemProps) {
   return (
-    <li
-      key={transfer.id}
-      className="flex justify-between gap-2 py-2 last-of-type:pb-0"
-    >
+    <li key={transfer.id} className="flex justify-between gap-2 py-2">
       <div className="flex w-full flex-col gap-1">
         <div className="flex items-center justify-between gap-2">
           <p className="line-clamp-1 font-medium">{transfer.relatedTo}</p>

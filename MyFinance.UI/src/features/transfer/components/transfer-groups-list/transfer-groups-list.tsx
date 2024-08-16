@@ -73,7 +73,7 @@ export function TransferGroupsList() {
               className="h-[65vh] grow pr-2 lg:h-[350px]"
               type="always"
             >
-              <div className="grow space-y-4">
+              <div className="grow space-y-2">
                 {transferGroups.map((transferGroup) => (
                   <TransferGroupSection
                     transferGroup={transferGroup}
