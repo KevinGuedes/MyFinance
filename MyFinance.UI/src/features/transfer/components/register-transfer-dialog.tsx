@@ -11,8 +11,6 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog'
-import { TransferType } from '@/features/transfer/models/transfer-type'
-import { getEnumValueByKey } from '@/lib/utils'
 
 import { useRegisterTransfer } from '../api/use-register-transfer'
 import { TransferForm, TransferFormSchema } from './transfer-form'
@@ -26,27 +24,21 @@ export function RegisterTransferDialog() {
     values: TransferFormSchema,
     shouldCloseDialog: boolean = true,
   ) {
-    await registerTransferMutation.mutateAsync({
-      ...formatValues(values),
-      managementUnitId: managementUnitId!,
-    })
-
-    setIsDialogOpen(!shouldCloseDialog)
+    await registerTransferMutation.mutateAsync(
+      {
+        ...values,
+        managementUnitId: managementUnitId!,
+      },
+      {
+        onSuccess: () => {
+          setIsDialogOpen(!shouldCloseDialog)
+        },
+      },
+    )
   }
 
   function onCancel() {
     setIsDialogOpen(false)
-  }
-
-  function formatValues(values: TransferFormSchema) {
-    const type = getEnumValueByKey(TransferType, values.type)
-    const settlementDate = values.settlementDate?.toISOString()
-
-    return {
-      ...values,
-      type,
-      settlementDate,
-    }
   }
 
   return (
