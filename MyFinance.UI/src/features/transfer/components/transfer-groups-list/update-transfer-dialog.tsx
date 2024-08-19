@@ -11,11 +11,9 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog'
 import { DropdownMenuItem } from '@/components/ui/dropdown-menu'
-import { getKeyByEnumValue } from '@/lib/utils'
 
 import { useUpdateTransfer } from '../../api/use-update-transfer'
 import { Transfer } from '../../models/transfer'
-import { TransferType } from '../../models/transfer-type'
 import { TransferForm, TransferFormSchema } from '../transfer-form'
 
 type UpdateTransferDialogProps = {
@@ -37,9 +35,9 @@ export function UpdateTransferDialog({
     await updateCategoryMutation.mutateAsync(
       {
         ...values,
-        managementUnitId: managementUnitId!,
         id: transfer.id,
-        settlementDate: transfer.settlementDate,
+        managementUnitId: managementUnitId!,
+        type: values.type!,
       },
       {
         onSuccess: () => {
@@ -92,7 +90,7 @@ export function UpdateTransferDialog({
             settlementDate: transfer.settlementDate,
             categoryId: transfer.categoryId,
             accountTagId: transfer.accountTagId,
-            type: getKeyByEnumValue(TransferType, transfer.type),
+            type: transfer.type,
           }}
         />
       </DialogContent>

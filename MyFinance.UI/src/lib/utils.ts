@@ -55,6 +55,10 @@ export function getKeyByEnumValue<T>(
   return key
 }
 
+export function isValidEnumValue<T>(enumType: { [key: string]: T }, value: T) {
+  return Object.values(enumType).includes(value)
+}
+
 export function buildPagination(
   currentPage: number,
   totalPages: number,

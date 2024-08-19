@@ -28,6 +28,7 @@ export function RegisterTransferDialog() {
       {
         ...values,
         managementUnitId: managementUnitId!,
+        type: values.type!,
       },
       {
         onSuccess: () => {
@@ -68,7 +69,7 @@ export function RegisterTransferDialog() {
             settlementDate: new Date(),
             categoryId: '',
             accountTagId: '',
-            type: '',
+            type: undefined,
           }}
         />
       </DialogContent>

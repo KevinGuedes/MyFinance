@@ -5,18 +5,11 @@ import { transferApi } from '@/features/common/api'
 import { ApiError } from '@/features/common/api-error'
 import { handleError } from '@/features/common/handle-error'
 import { handleValidationErrors } from '@/features/common/handle-validation-errors'
-import { getEnumValueByKey } from '@/lib/utils'
 
 import { Transfer } from '../models/transfer'
-import { TransferType } from '../models/transfer-type'
 
-type UpdateTransferRequest = Omit<
-  Transfer,
-  'categoryName' | 'tag' | 'settlementDate' | 'type'
-> & {
-  settlementDate: Date
+type UpdateTransferRequest = Omit<Transfer, 'categoryName' | 'tag'> & {
   managementUnitId: string
-  type: string
 }
 
 export function useUpdateTransfer() {
@@ -27,7 +20,6 @@ export function useUpdateTransfer() {
     mutationFn: async (updateTransferRequest) => {
       const { data: updatedTransfer } = await transferApi.put<Transfer>('', {
         ...updateTransferRequest,
-        type: getEnumValueByKey(TransferType, updateTransferRequest.type),
         settlementDate: updateTransferRequest.settlementDate.toISOString(),
       })
 

@@ -36,27 +36,32 @@ import { Textarea } from '@/components/ui/textarea'
 import { useGetAccountTags } from '@/features/account-tag/api/use-get-account-tags'
 import { useGetCategories } from '@/features/category/api/use-get-categories'
 import { TransferType } from '@/features/transfer/models/transfer-type'
-import { getEnumKeys, isValidEnumKey } from '@/lib/utils'
+import { isValidEnumValue } from '@/lib/utils'
 
 const transferFormSchema = z.object({
-  value: z.number({ message: 'Value is required' }),
+  value: z.number({ message: 'Value is required' }).gt(0, {
+    message: 'Transfer Value must be greater than 0',
+  }),
   relatedTo: z.string().min(1, { message: 'Related to is required' }),
   description: z.string().min(1, { message: 'Description is required' }),
-  settlementDate: z
-    .date()
-    .optional()
-    .refine((settlementDate) => settlementDate !== undefined, {
-      message: 'Settlement Date is required',
-    }),
+  settlementDate: z.date(),
+
   categoryId: z.string().min(1, { message: 'Category  is required' }),
   accountTagId: z.string().min(1, { message: 'Account Tag is required' }),
-  type: z
-    .enum(getEnumKeys(TransferType), {
-      message: 'Transfer type is required',
-    })
-    .refine((type) => isValidEnumKey(TransferType, type), {
-      message: 'Transfer type is required',
-    }),
+  type: z.coerce.string().transform((type, ctx) => {
+    if (
+      type === '' ||
+      type === undefined ||
+      !isValidEnumValue(TransferType, parseInt(type))
+    ) {
+      ctx.addIssue({
+        message: 'Type is required',
+        code: z.ZodIssueCode.custom,
+      })
+    }
+
+    return parseInt(type!) as TransferType | undefined
+  }),
 })
 
 export type TransferFormSchema = z.infer<typeof transferFormSchema>
@@ -148,25 +153,26 @@ export function TransferForm({
                 name="type"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Type</FormLabel>
+                    <FormLabel htmlFor="type">Type</FormLabel>
                     <FormControl>
                       <RadioGroup
+                        name="type"
                         onValueChange={field.onChange}
-                        value={field.value}
+                        value={
+                          field.value === undefined
+                            ? ''
+                            : field.value.toString()
+                        }
                         className="grid grid-cols-2 gap-4"
                       >
                         <FormItem className="space-y-0">
                           <FormControl>
                             <RadioGroupItem
-                              value="Income"
-                              id="income"
+                              value={TransferType.Income.toString()}
                               className="peer sr-only"
                             />
                           </FormControl>
-                          <FormLabel
-                            htmlFor="income"
-                            className="group flex cursor-pointer flex-row-reverse items-center justify-center gap-3 rounded-md border-2 border-transparent bg-primary/10 p-1 text-base font-bold text-primary ring-offset-background transition-colors duration-150 hover:bg-primary/60 hover:text-accent-foreground peer-focus-visible:outline-none peer-focus-visible:ring-2 peer-focus-visible:ring-primary peer-focus-visible:ring-offset-2 peer-data-[state=checked]:border-primary peer-data-[state=checked]:bg-primary/60 peer-data-[state=checked]:text-accent-foreground [&:has([data-state=checked])]:border-primary"
-                          >
+                          <FormLabel className="group flex cursor-pointer flex-row-reverse items-center justify-center gap-3 rounded-md border-2 border-transparent bg-primary/10 p-1 text-base font-bold text-primary ring-offset-background transition-colors duration-150 hover:bg-primary/60 hover:text-accent-foreground peer-focus-visible:outline-none peer-focus-visible:ring-2 peer-focus-visible:ring-primary peer-focus-visible:ring-offset-2 peer-data-[state=checked]:border-primary peer-data-[state=checked]:bg-primary/60 peer-data-[state=checked]:text-accent-foreground [&:has([data-state=checked])]:border-primary">
                             <TrendingUp className="mb-1 size-6" />
                             Income
                           </FormLabel>
@@ -174,15 +180,11 @@ export function TransferForm({
                         <FormItem className="space-y-0">
                           <FormControl>
                             <RadioGroupItem
-                              value="Outcome"
-                              id="outcome"
+                              value={TransferType.Outcome.toString()}
                               className="peer sr-only"
                             />
                           </FormControl>
-                          <FormLabel
-                            htmlFor="outcome"
-                            className="group flex cursor-pointer flex-row-reverse items-center justify-center gap-3 rounded-md border-2 border-transparent bg-destructive/25 p-1 text-base font-bold text-destructive ring-offset-background transition-colors duration-150 hover:bg-destructive/60 hover:text-accent-foreground peer-focus-visible:outline-none peer-focus-visible:ring-2  peer-focus-visible:ring-destructive peer-focus-visible:ring-offset-2 peer-data-[state=checked]:border-2 peer-data-[state=checked]:border-destructive peer-data-[state=checked]:bg-destructive/60 peer-data-[state=checked]:text-accent-foreground [&:has([data-state=checked])]:border-destructive"
-                          >
+                          <FormLabel className="group flex cursor-pointer flex-row-reverse items-center justify-center gap-3 rounded-md border-2 border-transparent bg-destructive/25 p-1 text-base font-bold text-destructive ring-offset-background transition-colors duration-150 hover:bg-destructive/60 hover:text-accent-foreground peer-focus-visible:outline-none peer-focus-visible:ring-2  peer-focus-visible:ring-destructive peer-focus-visible:ring-offset-2 peer-data-[state=checked]:border-2 peer-data-[state=checked]:border-destructive peer-data-[state=checked]:bg-destructive/60 peer-data-[state=checked]:text-accent-foreground [&:has([data-state=checked])]:border-destructive">
                             <TrendingDown className="group mb-1 size-6" />
                             Outcome
                           </FormLabel>
@@ -233,6 +235,7 @@ export function TransferForm({
                     onValueChange={field.onChange}
                     value={field.value}
                     disabled={isFetchingAccountTags}
+                    name="accountTagId"
                   >
                     <FormControl>
                       <SelectTrigger className="disabled:cursor-progress">
@@ -271,6 +274,7 @@ export function TransferForm({
                     onValueChange={field.onChange}
                     value={field.value}
                     disabled={isFetchingCategories}
+                    name="categoryId"
                   >
                     <FormControl>
                       <SelectTrigger className="disabled:cursor-progress">
@@ -294,6 +298,7 @@ export function TransferForm({
                 </FormItem>
               )}
             />
+
             <FormField
               control={form.control}
               name="description"
@@ -367,7 +372,11 @@ export function TransferForm({
               </Button>
             </>
           ) : (
-            <Button type="submit" className="min-w-40 grow sm:grow-0">
+            <Button
+              type="submit"
+              className="min-w-40 grow sm:grow-0"
+              disabled={!form.formState.isValid || form.formState.isSubmitting}
+            >
               {form.formState.isSubmitting ? (
                 <>
                   <Loader2 className="mr-2 size-4 animate-spin" />

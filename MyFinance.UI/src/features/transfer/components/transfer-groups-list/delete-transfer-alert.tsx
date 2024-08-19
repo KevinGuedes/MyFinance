@@ -59,13 +59,13 @@ export function DeleteTransferAlert({
     onOpenChange(false)
   }
 
-  function handleOnOpenChange(isDialogOpen: boolean) {
+  function handleOpenChange(isDialogOpen: boolean) {
     setIsDialogOpen(isDialogOpen)
     onOpenChange(isDialogOpen)
   }
 
   return (
-    <AlertDialog open={isDialogOpen} onOpenChange={handleOnOpenChange}>
+    <AlertDialog open={isDialogOpen} onOpenChange={handleOpenChange}>
       <AlertDialogTrigger asChild>
         <DropdownMenuItem
           onSelect={(event) => {

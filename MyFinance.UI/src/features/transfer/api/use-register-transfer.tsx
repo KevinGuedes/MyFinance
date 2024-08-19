@@ -5,20 +5,17 @@ import { transferApi } from '@/features/common/api'
 import { ApiError } from '@/features/common/api-error'
 import { handleError } from '@/features/common/handle-error'
 import { handleValidationErrors } from '@/features/common/handle-validation-errors'
-import { getEnumValueByKey } from '@/lib/utils'
 
 import { Transfer } from '../models/transfer'
-import { TransferType } from '../models/transfer-type'
 
 type RegisterTransferRequest = Pick<
   Transfer,
-  'value' | 'relatedTo' | 'description'
+  'value' | 'relatedTo' | 'description' | 'type'
 > & {
   settlementDate: Date
   managementUnitId: string
   accountTagId: string
   categoryId: string
-  type: string
 }
 
 export function useRegisterTransfer() {
@@ -29,7 +26,6 @@ export function useRegisterTransfer() {
     mutationFn: async (registerTransferRequest) => {
       const { data: createdTransfer } = await transferApi.post<Transfer>('', {
         ...registerTransferRequest,
-        type: getEnumValueByKey(TransferType, registerTransferRequest.type),
         settlementDate: registerTransferRequest.settlementDate.toISOString(),
       })
 
