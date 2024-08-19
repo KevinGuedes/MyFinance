@@ -137,9 +137,7 @@ export function TransferForm({
                   <FormControl>
                     <CurrencyInput
                       {...field}
-                      onChange={(_, originalValue) =>
-                        field.onChange(originalValue)
-                      }
+                      onChange={(_, value) => field.onChange(value)}
                     />
                   </FormControl>
                   <FormMessage />

@@ -56,7 +56,7 @@ export const normalizeValue = (value: string | number) => {
   return clearNumber(safeNumber) / 10 ** MAXIMUM_FRACTION_DIGITS
 }
 
-export const maskValues = (
+export const maskValue = (
   locale: string,
   inputFieldValue: string | number | undefined,
   currency: string,
@@ -82,52 +82,53 @@ export interface ICurrencyMaskProps
   autoSelect?: boolean
   onChange: (
     event: ChangeEvent<HTMLInputElement>,
-    originalValue: number | string,
+    value: number | string,
     maskedValue: number | string,
   ) => void
   onBlur?: (
     event: FocusEvent<HTMLInputElement, Element>,
-    originalValue: number | string,
+    value: number | string,
     maskedValue: number | string,
   ) => void
   onFocus?: (
     event: FocusEvent<HTMLInputElement, Element>,
-    originalValue: number | string,
+    value: number | string,
     maskedValue: number | string,
   ) => void
   onKeyPress?: (
     event: KeyboardEvent<HTMLInputElement>,
-    originalValue: number | string,
+    value: number | string,
     maskedValue: string,
   ) => void
 }
 
+// https://github.com/leoreisdias/react-currency-mask
 export const CurrencyInput = forwardRef<HTMLInputElement, ICurrencyMaskProps>(
   (
     {
-      value,
-      hideSymbol = false,
       currency = 'BRL',
       locale = 'pt-BR',
-      autoSelect,
+      hideSymbol = false,
+      autoSelect = false,
+      value,
       onChange,
       onBlur,
       onFocus,
       onKeyPress,
-      ...otherProps
+      ...props
     },
     ref,
   ) => {
     const [maskedValue, setMaskedValue] = useState<number | string>(() => {
       if (!value) return 0
 
-      const [, maskedValue] = maskValues(locale, value, currency, hideSymbol)
+      const [, maskedValue] = maskValue(locale, value, currency, hideSymbol)
 
       return maskedValue
     })
 
     function updateValues(originalValue: string | number) {
-      const [calculatedValue, calculatedMaskedValue] = maskValues(
+      const [calculatedValue, calculatedMaskedValue] = maskValue(
         locale,
         originalValue,
         currency,
@@ -169,7 +170,7 @@ export const CurrencyInput = forwardRef<HTMLInputElement, ICurrencyMaskProps>(
 
     useEffect(() => {
       const currentValue = value || undefined
-      const [, maskedValue] = maskValues(
+      const [, maskedValue] = maskValue(
         locale,
         currentValue,
         currency,
@@ -184,7 +185,7 @@ export const CurrencyInput = forwardRef<HTMLInputElement, ICurrencyMaskProps>(
         placeholder="R$ 0,00"
         inputMode="numeric"
         ref={ref}
-        {...otherProps}
+        {...props}
         value={maskedValue}
         onChange={handleChange}
         onBlur={handleBlur}
