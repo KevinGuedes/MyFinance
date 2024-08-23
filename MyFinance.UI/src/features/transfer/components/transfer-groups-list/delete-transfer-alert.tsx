@@ -13,21 +13,15 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog'
-import { DropdownMenuItem } from '@/components/ui/dropdown-menu'
+import { Button } from '@/components/ui/button'
 
 import { useDeleteTransfer } from '../../api/use-delete-transfer'
 
 type DeleteTransferAlertProps = {
   transferId: string
-  onSelect: (event?: Event) => void
-  onOpenChange: (isOpen: boolean) => void
 }
 
-export function DeleteTransferAlert({
-  onSelect,
-  onOpenChange,
-  transferId,
-}: DeleteTransferAlertProps) {
+export function DeleteTransferAlert({ transferId }: DeleteTransferAlertProps) {
   const [isDialogOpen, setIsDialogOpen] = useState(false)
   const deleteTransferMutation = useDeleteTransfer()
   const { managementUnitId } = useParams({ strict: false })
@@ -45,7 +39,6 @@ export function DeleteTransferAlert({
       {
         onSuccess: () => {
           setIsDialogOpen(false)
-          onOpenChange(false)
         },
         onSettled: () => {
           setIsDeleting(false)
@@ -56,26 +49,23 @@ export function DeleteTransferAlert({
 
   function handleCancel() {
     setIsDialogOpen(false)
-    onOpenChange(false)
   }
 
   function handleOpenChange(isDialogOpen: boolean) {
     setIsDialogOpen(isDialogOpen)
-    onOpenChange(isDialogOpen)
   }
 
   return (
     <AlertDialog open={isDialogOpen} onOpenChange={handleOpenChange}>
       <AlertDialogTrigger asChild>
-        <DropdownMenuItem
-          onSelect={(event) => {
-            event.preventDefault()
-            onSelect()
-          }}
+        <Button
+          variant="ghost"
+          className="size-7 rounded-full p-0.5 hover:bg-destructive/25"
+          size="icon"
         >
-          <Trash2 className="mr-2 size-5 text-destructive" />
-          Delete Transfer
-        </DropdownMenuItem>
+          <span className="sr-only">Delete Transfer</span>
+          <Trash2 className="size-4 stroke-2 text-destructive" />
+        </Button>
       </AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader>

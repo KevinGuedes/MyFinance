@@ -2,6 +2,7 @@ import { useParams } from '@tanstack/react-router'
 import { Pencil } from 'lucide-react'
 import { useState } from 'react'
 
+import { Button } from '@/components/ui/button'
 import {
   Dialog,
   DialogContent,
@@ -10,7 +11,6 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog'
-import { DropdownMenuItem } from '@/components/ui/dropdown-menu'
 
 import { useUpdateTransfer } from '../../api/use-update-transfer'
 import { Transfer } from '../../models/transfer'
@@ -18,15 +18,9 @@ import { TransferForm, TransferFormSchema } from '../transfer-form'
 
 type UpdateTransferDialogProps = {
   transfer: Transfer
-  onSelect: () => void
-  onOpenChange: (isOpen: boolean) => void
 }
 
-export function UpdateTransferDialog({
-  transfer,
-  onSelect,
-  onOpenChange,
-}: UpdateTransferDialogProps) {
+export function UpdateTransferDialog({ transfer }: UpdateTransferDialogProps) {
   const updateCategoryMutation = useUpdateTransfer()
   const [isDialogOpen, setIsDialogOpen] = useState(false)
   const { managementUnitId } = useParams({ strict: false })
@@ -42,7 +36,6 @@ export function UpdateTransferDialog({
       {
         onSuccess: () => {
           setIsDialogOpen(false)
-          onOpenChange(false)
         },
       },
     )
@@ -50,26 +43,23 @@ export function UpdateTransferDialog({
 
   function onCancel() {
     setIsDialogOpen(false)
-    onOpenChange(false)
   }
 
   function handleOnOpenChange(isDialogOpen: boolean) {
     setIsDialogOpen(isDialogOpen)
-    onOpenChange(isDialogOpen)
   }
 
   return (
     <Dialog open={isDialogOpen} onOpenChange={handleOnOpenChange}>
       <DialogTrigger asChild>
-        <DropdownMenuItem
-          onSelect={(event) => {
-            event.preventDefault()
-            onSelect()
-          }}
+        <Button
+          variant="ghost"
+          className="size-7 shrink-0 rounded-full p-0.5"
+          size="icon"
         >
-          <Pencil className="mr-2 size-5" />
-          Edit Transfer
-        </DropdownMenuItem>
+          <span className="sr-only">Edit Transfer</span>
+          <Pencil className="size-4 stroke-2" />
+        </Button>
       </DialogTrigger>
       <DialogContent className="max-w-3xl">
         <DialogHeader>

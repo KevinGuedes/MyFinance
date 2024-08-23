@@ -1,11 +1,14 @@
 import { motion } from 'framer-motion'
-import { Edit2, MoreVertical, Trash2 } from 'lucide-react'
+import { MoreVertical, Trash2 } from 'lucide-react'
 import { useState } from 'react'
 
 import { Button } from '@/components/ui/button'
 import { Transfer } from '@/features/transfer/models/transfer'
 import { TransferType } from '@/features/transfer/models/transfer-type'
 import { toMoney } from '@/lib/utils'
+
+import { DeleteTransferAlert } from './delete-transfer-alert'
+import { UpdateTransferDialog } from './update-transfer-dialog'
 
 type TransferItemProps = {
   transfer: Transfer
@@ -65,14 +68,7 @@ export function TransferItem({ transfer }: TransferItemProps) {
               initial={{ opacity: 0.2 }}
               transition={{ ease: 'easeOut', duration: 0.3 }}
             >
-              <Button
-                variant="ghost"
-                className="size-7 shrink-0 rounded-full p-0.5"
-                size="icon"
-              >
-                <span className="sr-only">Open menu</span>
-                <Edit2 className="size-4 stroke-2" />
-              </Button>
+              <UpdateTransferDialog transfer={transfer} />
             </motion.div>
           ) : (
             <Button
@@ -81,7 +77,7 @@ export function TransferItem({ transfer }: TransferItemProps) {
               size="icon"
               onClick={handleShowActionsClick}
             >
-              <span className="sr-only">Open menu</span>
+              <span className="sr-only">Open Transfer menu</span>
               <MoreVertical className="size-4" />
             </Button>
           )}
@@ -106,14 +102,7 @@ export function TransferItem({ transfer }: TransferItemProps) {
               initial={{ opacity: 0.2 }}
               transition={{ ease: 'easeInOut', duration: 0.3 }}
             >
-              <Button
-                variant="ghost"
-                className="size-7 rounded-full p-0.5 hover:bg-destructive/25"
-                size="icon"
-              >
-                <span className="sr-only">Open menu</span>
-                <Trash2 className="size-4 stroke-2 text-destructive" />
-              </Button>
+              <DeleteTransferAlert transferId={transfer.id} />
             </motion.div>
           ) : (
             <div className="size-7"></div>
