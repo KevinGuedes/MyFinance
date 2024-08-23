@@ -11,13 +11,11 @@ type TransferGroupProps = {
 }
 
 export function TransferGroupSection({ transferGroup }: TransferGroupProps) {
-  const formattedGroupDate = format(transferGroup.date, 'EEEE dd, MMMM yyyy')
-
   return (
     <article className="space-y-2 pr-2">
       <div className="sticky top-0 bg-background">
         <h3 className="mb-2 line-clamp-1 rounded-md bg-muted/40 px-4 py-2 font-medium">
-          {formattedGroupDate}
+          {format(transferGroup.date, 'EEEE dd, MMMM yyyy')}
         </h3>
       </div>
       <header className="space-y-2 px-1">
@@ -58,8 +56,8 @@ export function TransferGroupSection({ transferGroup }: TransferGroupProps) {
           </div>
         </div>
       </header>
-      <section className="px-1">
-        <ul className="list-none divide-y-[1px] first:border-t">
+      <section>
+        <ul className="list-none divide-y-[1px] border-t">
           {transferGroup.transfers.map((transfer) => (
             <TransferItem key={transfer.id} transfer={transfer} />
           ))}

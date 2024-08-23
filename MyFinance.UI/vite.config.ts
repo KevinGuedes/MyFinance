@@ -43,6 +43,7 @@ export default defineConfig({
     },
   },
   server: {
+    open: true,
     proxy: {
       '/user': {
         target: 'https://localhost:7286',
