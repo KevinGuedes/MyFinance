@@ -25,6 +25,7 @@ interface MonthPickerProps {
   onChange?: (newMonth: Date) => void
   disabled?: boolean
   isLoading?: boolean
+  closeOnPick?: boolean
 }
 
 export function MonthPicker({
@@ -32,6 +33,7 @@ export function MonthPicker({
   onChange,
   disabled = false,
   isLoading = false,
+  closeOnPick = true,
 }: MonthPickerProps) {
   const [isMonthPickerOpen, setIsMonthPickerOpen] = React.useState(false)
   const [currentYear, setCurrentYear] = React.useState(() =>
@@ -56,7 +58,7 @@ export function MonthPicker({
   }
 
   function handleMonthSelection(month: Date) {
-    setIsMonthPickerOpen(false)
+    closeOnPick && setIsMonthPickerOpen(false)
     onChange?.(month)
   }
 
@@ -119,14 +121,14 @@ export function MonthPicker({
           {months.map((month) => (
             <Button
               key={month.toString()}
-              name="day"
               role="gridcell"
-              tabIndex={0}
+              tabIndex={isEqual(month, startOfMonth(value)) ? 0 : -1}
               variant={
                 isEqual(month, startOfMonth(value)) ? 'default' : 'ghost'
               }
               type="button"
               size="sm"
+              name="month"
               className={cn(
                 'font-normal',
                 isEqual(month, startOfMonth(startOfDay(new Date()))) &&
