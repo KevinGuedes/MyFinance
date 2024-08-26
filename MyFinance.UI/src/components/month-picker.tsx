@@ -121,7 +121,7 @@ export function MonthPicker({
               key={month.toString()}
               name="day"
               role="gridcell"
-              tabIndex={-1}
+              tabIndex={0}
               variant={
                 isEqual(month, startOfMonth(value)) ? 'default' : 'ghost'
               }
