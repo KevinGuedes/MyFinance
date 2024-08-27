@@ -93,12 +93,12 @@ export function SignInForm() {
           >
             {form.formState.isSubmitting ? (
               <>
-                <Loader2 className="mr-2 size-4 animate-spin" />
+                <Loader2 className="mr-2 size-5 animate-spin" />
                 Signing In...
               </>
             ) : (
               <>
-                <LogIn className="mr-2 size-4" />
+                <LogIn className="mr-2 size-5" />
                 Sign In
               </>
             )}
