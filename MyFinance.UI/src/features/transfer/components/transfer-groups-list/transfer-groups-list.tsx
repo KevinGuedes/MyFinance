@@ -1,7 +1,7 @@
 import { useParams } from '@tanstack/react-router'
 import { format } from 'date-fns'
 import { ClipboardList, Loader2 } from 'lucide-react'
-import { useCallback, useMemo, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 
 import { MonthPicker } from '@/components/month-picker'
 import { ScrollArea } from '@/components/ui/scroll-area'
@@ -30,6 +30,10 @@ export function TransferGroupsList() {
     managementUnitId!,
   )
 
+  function handleSelectedDate(selectedDate: Date) {
+    setSelectedDate(selectedDate)
+  }
+
   const observerRef = useCallback(
     (element: HTMLElement | null) => {
       if (isLoading) return
@@ -55,9 +59,17 @@ export function TransferGroupsList() {
     [data],
   )
 
-  function handleSelectedDate(selectedDate: Date) {
-    setSelectedDate(selectedDate)
-  }
+  const reference = transferGroups[0]
+    ? format(transferGroups[0].date, 'MMyy')
+    : null
+
+  // Another solution would be to have a  key={transferGroups[0].date.toString()} in the ScrollArea
+  // This wouldn't preserve the scroll position when inserting a new group which would be the first on the list
+  // Maybe the key should be format(transferGroups[0].date, 'MMyy'), so that the month and year are always the same for the given month
+  // However, using a key doesn't explicityly show the intent of scrolling to the top of the list, also, it is probably less performant because it will re-render the whole list. Said that, I think the useEffect is the best solution here.
+  useEffect(() => {
+    if (scrollArea.current) scrollArea.current.scrollTop = 0
+  }, [reference])
 
   return (
     <div className="flex grow flex-col justify-between gap-4">
@@ -67,8 +79,6 @@ export function TransferGroupsList() {
         <>
           {transferGroups.length > 0 ? (
             <ScrollArea
-              // Tricky solution to make scroll reset to top when changing selected month.The key will change only after fetching the data, avoiding a scroll to top before loading the data.
-              key={transferGroups[0].date.toString()}
               ref={scrollArea}
               className="h-[65vh] grow pr-2 lg:h-[350px]"
               type="always"
