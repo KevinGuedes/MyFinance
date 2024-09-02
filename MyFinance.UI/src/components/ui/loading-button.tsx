@@ -20,6 +20,10 @@ const getIconSize = (size?: keyof typeof buttonVariants.variants.size) => {
 }
 
 // https://www.totaltypescript.com/pass-component-as-prop-react
+// shows how pass a comp which has a className? prop
+// Also has a implementation of how to pass a comp and infer its props
+// Whith that, the wrapper comp can recevive another comp and determine the value of the props which will be passed to it
+
 interface LoadingButtonProps
   extends Omit<React.ComponentProps<typeof Button>, 'asChild'> {
   label?: string
