@@ -8,7 +8,7 @@ import {
   startOfDay,
   startOfMonth,
 } from 'date-fns'
-import { CalendarIcon, ChevronLeft, ChevronRight, Loader2 } from 'lucide-react'
+import { CalendarIcon, ChevronLeft, ChevronRight } from 'lucide-react'
 import * as React from 'react'
 
 import {
@@ -19,6 +19,7 @@ import {
 import { cn } from '@/lib/utils'
 
 import { Button } from './ui/button'
+import { LoadingButton } from './ui/loading-button'
 
 interface MonthPickerProps {
   value?: Date
@@ -65,18 +66,14 @@ export function MonthPicker({
   return (
     <Popover open={isMonthPickerOpen} onOpenChange={setIsMonthPickerOpen}>
       <PopoverTrigger asChild>
-        <Button
+        <LoadingButton
           variant="outline"
+          label={format(value, 'MMM, yyyy')}
           disabled={disabled}
+          isLoading={isLoading}
           className="flex min-w-32 items-center justify-between"
-        >
-          {isLoading ? (
-            <Loader2 className="mr-2 size-4 animate-spin" />
-          ) : (
-            <CalendarIcon className="mr-2 size-4" />
-          )}
-          {format(value, 'MMM, yyyy')}
-        </Button>
+          icon={CalendarIcon}
+        />
       </PopoverTrigger>
       <PopoverContent className="flex w-auto flex-col space-y-4 p-5">
         <div className="relative flex items-center justify-center pt-1">

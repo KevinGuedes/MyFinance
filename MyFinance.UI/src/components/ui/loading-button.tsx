@@ -49,7 +49,7 @@ const LoadingButton = React.forwardRef<HTMLButtonElement, LoadingButtonProps>(
   ) => {
     const iconSize = getIconSize(size)
     const showLabels = size !== 'icon'
-    const showLoadingLabel = showLabels && loadingLabel
+    const showLoadingLabel = showLabels && (loadingLabel || label)
     const showLabel = showLabels && label
 
     return (
@@ -62,7 +62,7 @@ const LoadingButton = React.forwardRef<HTMLButtonElement, LoadingButtonProps>(
               <Loader2 className={cn(iconSize, 'mr-2 animate-spin')} />
             )}
 
-            {showLoadingLabel && loadingLabel}
+            {showLoadingLabel && (loadingLabel || label)}
           </>
         ) : (
           <>

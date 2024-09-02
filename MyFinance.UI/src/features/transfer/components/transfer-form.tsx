@@ -1,7 +1,6 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import {
   CopyPlus,
-  Loader2,
   Pencil,
   PlusCircle,
   TrendingDown,
@@ -24,6 +23,7 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
+import { LoadingButton } from '@/components/ui/loading-button'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import {
   Select,
@@ -119,6 +119,8 @@ export function TransferForm({
     () => accountTagsData?.pages?.flatMap((page) => page.items) ?? [],
     [accountTagsData],
   )
+
+  const { isValid, isDirty, isSubmitting } = form.formState
 
   return (
     <Form {...form}>
@@ -328,65 +330,37 @@ export function TransferForm({
           </Button>
           {mode === 'register' ? (
             <>
-              <Button
+              <LoadingButton
                 type="button"
                 className="min-w-52 grow sm:grow-0"
                 variant="secondary"
+                icon={CopyPlus}
+                label="Register and Add More"
+                loadingLabel="Registering..."
                 onClick={form.handleSubmit(handleRegisterAndAddMore)}
-                disabled={
-                  !form.formState.isValid || form.formState.isSubmitting
-                }
-              >
-                {isRegisteringAndAddingMore ? (
-                  <>
-                    <Loader2 className="mr-2 size-5 animate-spin" />
-                    Registering...
-                  </>
-                ) : (
-                  <>
-                    <CopyPlus className="mr-2 size-5" />
-                    Register and Add More
-                  </>
-                )}
-              </Button>
-              <Button
+                isLoading={isRegisteringAndAddingMore}
+                disabled={!isValid || isSubmitting}
+              />
+              <LoadingButton
                 type="submit"
                 className="min-w-44 grow sm:grow-0"
-                disabled={
-                  !form.formState.isValid || form.formState.isSubmitting
-                }
-              >
-                {isRegistering ? (
-                  <>
-                    <Loader2 className="mr-2 size-5 animate-spin" />
-                    Registering...
-                  </>
-                ) : (
-                  <>
-                    <PlusCircle className="mr-2 size-5" />
-                    Register Transfer
-                  </>
-                )}
-              </Button>
+                icon={PlusCircle}
+                label="Register Transfer"
+                loadingLabel="Registering..."
+                isLoading={isRegistering}
+                disabled={!isValid || isSubmitting}
+              />
             </>
           ) : (
-            <Button
+            <LoadingButton
               type="submit"
-              className="min-w-40 grow sm:grow-0"
-              disabled={!form.formState.isValid || form.formState.isSubmitting}
-            >
-              {form.formState.isSubmitting ? (
-                <>
-                  <Loader2 className="mr-2 size-4 animate-spin" />
-                  Updating...
-                </>
-              ) : (
-                <>
-                  <Pencil className="mr-2 size-4" />
-                  Update Transfer
-                </>
-              )}
-            </Button>
+              className="min-w-44 grow sm:grow-0"
+              icon={Pencil}
+              label="Update Transfer"
+              loadingLabel="Updating..."
+              isLoading={isRegistering}
+              disabled={!isValid || !isDirty || isSubmitting}
+            />
           )}
         </div>
       </form>
