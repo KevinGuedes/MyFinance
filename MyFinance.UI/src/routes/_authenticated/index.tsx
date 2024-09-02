@@ -131,7 +131,10 @@ function Home() {
       <PageHeader pageName="Management Units" />
       <PageContent>
         <header className="grid items-center gap-4 md:grid-cols-2 xl:grid-cols-3">
-          <div className="relative">
+          <div>
+            <CreateManagementUnitDialog />
+          </div>
+          <div className="relative md:col-start-2 xl:col-start-3">
             {shouldShowSearchSpinner ? (
               <Loader2 className="absolute left-2.5 top-3 size-4 animate-spin text-muted-foreground" />
             ) : (
@@ -145,9 +148,6 @@ function Home() {
               className="pl-8"
               id="search"
             />
-          </div>
-          <div className="md:col-start-2 xl:col-start-3">
-            <CreateManagementUnitDialog />
           </div>
         </header>
         <>
