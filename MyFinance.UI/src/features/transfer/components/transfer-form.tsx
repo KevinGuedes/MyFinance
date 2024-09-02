@@ -257,7 +257,7 @@ export function TransferForm({
                     </SelectContent>
                   </Select>
                   <FormDescription>
-                    Account used to receive or send the value
+                    Account used to receive or send the transfer
                   </FormDescription>
                   <FormMessage />
                 </FormItem>

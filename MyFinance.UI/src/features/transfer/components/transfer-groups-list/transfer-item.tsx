@@ -83,7 +83,7 @@ export function TransferItem({ transfer }: TransferItemProps) {
           )}
         </div>
       </div>
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between gap-4">
         <p className="line-clamp-1 shrink text-sm text-muted-foreground">
           {transfer.description}
         </p>
