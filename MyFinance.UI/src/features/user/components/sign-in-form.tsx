@@ -1,6 +1,6 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Link } from '@tanstack/react-router'
-import { Loader2, LogIn } from 'lucide-react'
+import { LogIn } from 'lucide-react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 
@@ -14,6 +14,7 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
+import { LoadingButton } from '@/components/ui/loading-button'
 import { PasswordInput } from '@/components/ui/password-input'
 
 import { useSignIn } from '../api/use-sign-in'
@@ -85,24 +86,16 @@ export function SignInForm() {
           )}
         />
 
-        <div className="flex grow items-end">
-          <Button
+        <div className="flex grow flex-col items-end gap-4">
+          <LoadingButton
+            label="Sign In"
+            icon={LogIn}
+            loadingLabel="Signing In..."
             type="submit"
             className="w-full"
+            isLoading={form.formState.isSubmitting}
             disabled={form.formState.isSubmitting || !form.formState.isValid}
-          >
-            {form.formState.isSubmitting ? (
-              <>
-                <Loader2 className="mr-2 size-5 animate-spin" />
-                Signing In...
-              </>
-            ) : (
-              <>
-                <LogIn className="mr-2 size-5" />
-                Sign In
-              </>
-            )}
-          </Button>
+          />
         </div>
       </form>
     </Form>
