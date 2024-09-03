@@ -48,20 +48,23 @@ const transferFormSchema = z.object({
 
   categoryId: z.string().min(1, { message: 'Category  is required' }),
   accountTagId: z.string().min(1, { message: 'Account Tag is required' }),
-  type: z.coerce.string().transform((type, ctx) => {
-    if (
-      type === '' ||
-      type === undefined ||
-      !isValidEnumValue(TransferType, parseInt(type))
-    ) {
-      ctx.addIssue({
-        message: 'Type is required',
-        code: z.ZodIssueCode.custom,
-      })
-    }
+  type: z.coerce
+    .string()
+    .optional()
+    .transform((type, ctx) => {
+      if (
+        type === '' ||
+        type === undefined ||
+        !isValidEnumValue(TransferType, parseInt(type))
+      ) {
+        ctx.addIssue({
+          message: 'Type is required',
+          code: z.ZodIssueCode.custom,
+        })
+      }
 
-    return parseInt(type!) as TransferType | undefined
-  }),
+      return parseInt(type!) as TransferType | undefined
+    }),
 })
 
 export type TransferFormSchema = z.infer<typeof transferFormSchema>

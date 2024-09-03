@@ -62,7 +62,7 @@ export function isValidEnumValue<T>(enumType: { [key: string]: T }, value: T) {
 export function buildPagination(
   currentPage: number,
   totalPages: number,
-  adjacentPages: number,
+  siblingPages: number,
 ) {
   const pages = new Set<number>()
   pages.add(1)
@@ -77,7 +77,7 @@ export function buildPagination(
     pages.add(totalPages - 1)
   }
 
-  for (let i = 1; i <= adjacentPages; i++) {
+  for (let i = 1; i <= siblingPages; i++) {
     if (currentPage - i > 1) {
       pages.add(currentPage - i)
     }

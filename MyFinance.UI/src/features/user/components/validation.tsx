@@ -11,12 +11,12 @@ export function Validation({ isValid, label }: ValidationProps) {
       {isValid ? (
         <>
           <CheckCircle className="size-4 text-primary" />
-          <span className="text-sm text-muted-foreground">{label}</span>
+          <p className="text-sm text-muted-foreground">{label}</p>
         </>
       ) : (
         <>
           <XCircle className="size-4 text-muted-foreground" />
-          <span className="text-sm text-muted-foreground">{label}</span>
+          <p className="text-sm text-muted-foreground">{label}</p>
         </>
       )}
     </>
