@@ -1,9 +1,8 @@
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Loader2 } from 'lucide-react'
+import { UserPlus } from 'lucide-react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 
-import { Button } from '@/components/ui/button'
 import {
   Form,
   FormControl,
@@ -13,6 +12,7 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
+import { LoadingButton } from '@/components/ui/loading-button'
 
 import { PasswordInput } from '../../../components/ui/password-input'
 import { PasswordConfirmationValidation } from './password-confirmation-validation'
@@ -75,6 +75,7 @@ export function SignUpForm() {
 
   const password = form.watch('plainTextPassword')
   const passwordConfirmation = form.watch('plainTextPasswordConfirmation')
+  const { isSubmitting, isValid } = form.formState
 
   // https://stackoverflow.com/questions/15738259/disabling-chrome-autofill
   return (
@@ -136,7 +137,11 @@ export function SignUpForm() {
             <FormItem>
               <FormLabel>Password Confirmation</FormLabel>
               <FormControl>
-                <PasswordInput {...field} autoComplete="one-time-code" />
+                <PasswordInput
+                  onPaste={(event) => event.preventDefault()}
+                  {...field}
+                  autoComplete="one-time-code"
+                />
               </FormControl>
               <PasswordConfirmationValidation
                 password={password}
@@ -147,16 +152,15 @@ export function SignUpForm() {
           )}
         />
 
-        <Button
+        <LoadingButton
           type="submit"
           className="w-full"
-          disabled={!form.formState.isValid || form.formState.isSubmitting}
-        >
-          {form.formState.isSubmitting && (
-            <Loader2 className="mr-2 size-4 animate-spin" />
-          )}
-          Sign Up
-        </Button>
+          label="Sign Up"
+          loadingLabel="Signing Up..."
+          icon={UserPlus}
+          isLoading={isSubmitting}
+          disabled={!isValid || isSubmitting}
+        />
       </form>
     </Form>
   )
