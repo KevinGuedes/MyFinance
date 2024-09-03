@@ -85,6 +85,7 @@ export function DeleteTransferAlert({ transferId }: DeleteTransferAlertProps) {
           <AlertDialogAction
             onClick={(e) => handleDelete(e)}
             variant="destructive"
+            disabled={isDeleting}
             className="min-w-[11.25rem]"
           >
             {isDeleting ? (
