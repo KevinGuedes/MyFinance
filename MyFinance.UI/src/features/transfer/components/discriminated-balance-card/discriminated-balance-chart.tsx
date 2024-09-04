@@ -10,10 +10,10 @@ import {
   YAxis,
 } from 'recharts'
 
+import { useTheme } from '@/components/ui/theme-provider'
+import { useDiscriminatedBalanceChartSettings } from '@/features/management-unit/store/discriminated-balance-chart-settings-store'
 import { MonthlyBalanceData } from '@/features/transfer/models/monthly-balance-data'
 
-import { useTheme } from '../../../../components/ui/theme-provider'
-import { useDiscriminatedBalanceChartSettings } from '../../../management-unit/store/discriminated-balance-chart-settings-store'
 import { BalanceDataTooltip } from './balance-data-tooltip'
 import { LineChartLabel } from './line-chart-label'
 

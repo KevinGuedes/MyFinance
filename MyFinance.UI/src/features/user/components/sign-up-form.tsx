@@ -13,8 +13,8 @@ import {
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { LoadingButton } from '@/components/ui/loading-button'
+import { PasswordInput } from '@/components/ui/password-input'
 
-import { PasswordInput } from '../../../components/ui/password-input'
 import { PasswordConfirmationValidation } from './password-confirmation-validation'
 import { PasswordValidation } from './password-validation'
 

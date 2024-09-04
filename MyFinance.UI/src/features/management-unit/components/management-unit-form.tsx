@@ -1,9 +1,9 @@
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Loader2, Pencil, PlusCircle } from 'lucide-react'
+import { Pencil, PlusCircle } from 'lucide-react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 
-import { Button } from '../../../components/ui/button'
+import { Button } from '@/components/ui/button'
 import {
   Form,
   FormControl,
@@ -11,9 +11,10 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from '../../../components/ui/form'
-import { Input } from '../../../components/ui/input'
-import { Textarea } from '../../../components/ui/textarea'
+} from '@/components/ui/form'
+import { Input } from '@/components/ui/input'
+import { LoadingButton } from '@/components/ui/loading-button'
+import { Textarea } from '@/components/ui/textarea'
 
 const managementUnitFormSchema = z.object({
   name: z.string().min(1, { message: 'Name is required' }).max(100, {
@@ -51,10 +52,7 @@ export function ManagementUnitForm({
     await onSubmit(values)
   }
 
-  const isSubmitButtonDisabled =
-    mode === 'create'
-      ? !form.formState.isValid || form.formState.isSubmitting
-      : !form.formState.isDirty || form.formState.isSubmitting
+  const { isValid, isDirty, isSubmitting } = form.formState
 
   return (
     <Form {...form}>
@@ -104,48 +102,33 @@ export function ManagementUnitForm({
             type="button"
             variant="outline"
             onClick={onCancel}
-            disabled={form.formState.isSubmitting}
+            disabled={isSubmitting}
             className="grow sm:grow-0"
           >
             Cancel
           </Button>
-          <Button
-            type="submit"
-            className="min-w-56 grow"
-            disabled={isSubmitButtonDisabled}
-          >
-            {mode === 'create' && (
-              <>
-                {form.formState.isSubmitting ? (
-                  <>
-                    <Loader2 className="mr-2 size-4 animate-spin" />
-                    Creating...
-                  </>
-                ) : (
-                  <>
-                    <PlusCircle className="mr-2 size-4" />
-                    Create Management Unit
-                  </>
-                )}
-              </>
-            )}
 
-            {mode === 'update' && (
-              <>
-                {form.formState.isSubmitting ? (
-                  <>
-                    <Loader2 className="mr-2 size-4 animate-spin" />
-                    Updating...
-                  </>
-                ) : (
-                  <>
-                    <Pencil className="mr-2 size-4" />
-                    Update Management Unit
-                  </>
-                )}
-              </>
-            )}
-          </Button>
+          {mode === 'create' ? (
+            <LoadingButton
+              type="submit"
+              className="min-w-56 grow sm:grow-0"
+              label="Create Management Unit"
+              loadingLabel="Creating..."
+              icon={PlusCircle}
+              disabled={!isValid || isSubmitting}
+              isLoading={isSubmitting}
+            />
+          ) : (
+            <LoadingButton
+              type="submit"
+              className="min-w-56 grow sm:grow-0"
+              label="Update Management Unit"
+              loadingLabel="Updating..."
+              icon={Pencil}
+              disabled={!isValid || !isDirty || isSubmitting}
+              isLoading={isSubmitting}
+            />
+          )}
         </div>
       </form>
     </Form>

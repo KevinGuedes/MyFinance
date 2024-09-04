@@ -44,8 +44,8 @@ export function DiscriminatedBalanceChartSettingsDialog() {
           <DialogDescription>
             Select the settings according to your preferences.{' '}
             <strong>
-              These settings will be applied for all Discriminated Balance
-              Charts.
+              These settings will be applied to the Discriminated Balance Charts
+              of all your Management Units.
             </strong>
           </DialogDescription>
         </DialogHeader>
