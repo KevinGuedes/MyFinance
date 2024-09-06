@@ -5,7 +5,6 @@ import {
   format,
   isEqual,
   parse,
-  startOfDay,
   startOfMonth,
 } from 'date-fns'
 import { CalendarIcon, ChevronLeft, ChevronRight } from 'lucide-react'
@@ -115,30 +114,33 @@ export function MonthPicker({
           role="grid"
           aria-labelledby="month-picker"
         >
-          {months.map((month) => (
-            <Button
-              key={month.toString()}
-              role="gridcell"
-              tabIndex={isEqual(month, startOfMonth(value)) ? 0 : -1}
-              variant={
-                isEqual(month, startOfMonth(value)) ? 'default' : 'ghost'
-              }
-              type="button"
-              size="sm"
-              name="month"
-              className={cn(
-                'font-normal',
-                isEqual(month, startOfMonth(startOfDay(new Date()))) &&
-                  !isEqual(month, startOfMonth(value)) &&
-                  'bg-accent text-accent-foreground',
-              )}
-              onClick={() => handleMonthSelection(month)}
-            >
-              <time dateTime={format(month, 'yyyy-MM')}>
-                {format(month, 'MMM')}
-              </time>
-            </Button>
-          ))}
+          {months.map((month) => {
+            const isSelectedMonth = isEqual(month, startOfMonth(value))
+            const isCurrentDate = isEqual(month, startOfMonth(new Date()))
+            const dateTime = format(month, 'yyyy-MM')
+            const label = format(month, 'MMM')
+
+            return (
+              <Button
+                role="gridcell"
+                type="button"
+                name="month"
+                key={dateTime}
+                tabIndex={isSelectedMonth ? 0 : -1}
+                onClick={() => handleMonthSelection(month)}
+                variant={isSelectedMonth ? 'default' : 'ghost'}
+                className={cn(
+                  isSelectedMonth && 'hover:bg-primary',
+                  isCurrentDate &&
+                    !isSelectedMonth &&
+                    'bg-accent text-accent-foreground',
+                  'font-normal',
+                )}
+              >
+                <time dateTime={dateTime}>{label}</time>
+              </Button>
+            )
+          })}
         </div>
       </PopoverContent>
     </Popover>
