@@ -86,8 +86,9 @@ export function MonthPicker({
           </p>
           <div className="flex items-center">
             <Button
+              rel="prev"
               name="previous-year"
-              aria-label="Go to previous year"
+              aria-label="Previous Year"
               size="icon"
               variant="outline"
               type="button"
@@ -97,8 +98,9 @@ export function MonthPicker({
               <ChevronLeft className="size-4" />
             </Button>
             <Button
+              rel="next"
               name="next-year"
-              aria-label="Go to next year"
+              aria-label="Next Year"
               size="icon"
               variant="outline"
               type="button"
@@ -116,7 +118,7 @@ export function MonthPicker({
         >
           {months.map((month) => {
             const isSelectedMonth = isEqual(month, startOfMonth(value))
-            const isCurrentDate = isEqual(month, startOfMonth(new Date()))
+            const isCurrentMonth = isEqual(month, startOfMonth(new Date()))
             const dateTime = format(month, 'yyyy-MM')
             const label = format(month, 'MMM')
 
@@ -125,13 +127,14 @@ export function MonthPicker({
                 role="gridcell"
                 type="button"
                 name="month"
+                size="sm"
                 key={dateTime}
                 tabIndex={isSelectedMonth ? 0 : -1}
                 onClick={() => handleMonthSelection(month)}
                 variant={isSelectedMonth ? 'default' : 'ghost'}
                 className={cn(
                   isSelectedMonth && 'hover:bg-primary',
-                  isCurrentDate &&
+                  isCurrentMonth &&
                     !isSelectedMonth &&
                     'bg-accent text-accent-foreground',
                   'font-normal',
