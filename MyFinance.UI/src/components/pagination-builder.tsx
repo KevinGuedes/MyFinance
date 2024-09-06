@@ -9,8 +9,8 @@ import {
   PaginationContent,
   PaginationEllipsis,
   PaginationItem,
-  PaginationLink,
   PaginationNext,
+  PaginationPage,
   PaginationPrevious,
 } from './ui/pagination'
 
@@ -52,7 +52,7 @@ export function PaginationBuilder({
   }, [data])
 
   return (
-    <div className="flex w-full flex-col-reverse flex-wrap content-center items-center justify-center gap-1 lg:flex-row lg:flex-nowrap lg:items-end">
+    <div className="flex w-full flex-col-reverse flex-wrap content-center items-center justify-center gap-4 md:flex-row md:flex-nowrap md:items-end">
       {paginationInfo && (
         <p className="shrink-0 text-sm text-muted-foreground">
           Showing{' '}
@@ -62,7 +62,7 @@ export function PaginationBuilder({
           of <strong>{paginationInfo.total}</strong> Management Unit(s)
         </p>
       )}
-      <Pagination className="justify-center lg:justify-end">
+      <Pagination className="justify-center md:justify-end">
         <PaginationContent>
           <PaginationItem>
             <PaginationPrevious
@@ -84,19 +84,18 @@ export function PaginationBuilder({
 
                 return (
                   <PaginationItem key={index}>
-                    <PaginationLink
+                    <PaginationPage
                       onClick={() => onPageClick(page)}
                       isActive={data.pageNumber === page}
                       disabled={isPageDisabled}
                       isLoading={isLoadingPage && currentRoutePage === page}
-                    >
-                      {page}
-                    </PaginationLink>
+                      page={page}
+                    />
                   </PaginationItem>
                 )
               })
             ) : (
-              <Loader2 className="size-4 min-w-32 animate-spin text-muted-foreground" />
+              <Loader2 className="size-4 min-w-[84px] animate-spin text-muted-foreground" />
             )}
           </div>
           <PaginationItem>

@@ -39,84 +39,6 @@ const PaginationItem = React.forwardRef<
 ))
 PaginationItem.displayName = 'PaginationItem'
 
-type PaginationLinkProps = {
-  isActive?: boolean
-  isLoading?: boolean
-  isPageOnlyLink?: boolean
-} & ButtonProps
-
-const PaginationLink = ({
-  className,
-  isActive,
-  size = 'icon',
-  isPageOnlyLink = true,
-  isLoading = false,
-  ...props
-}: PaginationLinkProps) => (
-  <Button
-    aria-current={isActive ? 'page' : undefined}
-    variant={isActive ? 'outline' : 'ghost'}
-    size={size}
-    className={cn(className, 'transition-none')}
-    {...props}
-  >
-    {isPageOnlyLink && isLoading ? (
-      <Loader2 className="size-4 animate-spin" />
-    ) : (
-      props.children
-    )}
-  </Button>
-)
-PaginationLink.displayName = 'PaginationLink'
-
-const PaginationPrevious = ({
-  className,
-  isLoading = false,
-  disabled,
-  ...props
-}: React.ComponentProps<typeof PaginationLink>) => (
-  <PaginationLink
-    aria-label="Go to previous page"
-    size="default"
-    disabled={disabled}
-    className={cn('gap-2', className)}
-    isPageOnlyLink={false}
-    {...props}
-  >
-    {isLoading ? (
-      <Loader2 className="size-4 animate-spin" />
-    ) : (
-      <ChevronLeft className="size-4" />
-    )}
-    <span>Previous</span>
-  </PaginationLink>
-)
-PaginationPrevious.displayName = 'PaginationPrevious'
-
-const PaginationNext = ({
-  className,
-  isLoading = false,
-  disabled,
-  ...props
-}: React.ComponentProps<typeof PaginationLink>) => (
-  <PaginationLink
-    aria-label="Go to next page"
-    size="default"
-    disabled={disabled}
-    className={cn('gap-2', className)}
-    isPageOnlyLink={false}
-    {...props}
-  >
-    <span>Next</span>
-    {isLoading ? (
-      <Loader2 className="size-4 animate-spin" />
-    ) : (
-      <ChevronRight className="size-4" />
-    )}
-  </PaginationLink>
-)
-PaginationNext.displayName = 'PaginationNext'
-
 const PaginationEllipsis = ({
   className,
   ...props
@@ -132,12 +54,108 @@ const PaginationEllipsis = ({
 )
 PaginationEllipsis.displayName = 'PaginationEllipsis'
 
+type PaginationLinkProps = {
+  isActive?: boolean
+  isLoading?: boolean
+} & ButtonProps
+
+const PaginationLink = ({
+  className,
+  isActive,
+  size = 'icon',
+  ...props
+}: PaginationLinkProps) => (
+  <Button
+    aria-current={isActive ? 'page' : undefined}
+    variant={isActive ? 'outline' : 'ghost'}
+    size={size}
+    className={cn(className, 'transition-none')}
+    {...props}
+  />
+)
+PaginationLink.displayName = 'PaginationLink'
+
+interface PaginationPageProps
+  extends Omit<
+    React.ComponentProps<typeof PaginationLink>,
+    'size' | 'children'
+  > {
+  page: number
+}
+
+const PaginationPage = ({
+  className,
+  isActive,
+  page,
+  isLoading,
+  disabled,
+  ...props
+}: PaginationPageProps) => (
+  <Button
+    size="icon"
+    aria-current={isActive ? 'page' : undefined}
+    variant={isActive ? 'outline' : 'ghost'}
+    disabled={disabled || isLoading}
+    className={cn(className, 'transition-none')}
+    {...props}
+  >
+    {isLoading ? <Loader2 className="size-5 animate-spin" /> : page}
+  </Button>
+)
+PaginationPage.displayName = 'PaginationPage'
+
+const PaginationPrevious = ({
+  isLoading,
+  disabled,
+  ...props
+}: React.ComponentProps<typeof PaginationLink>) => (
+  <PaginationLink
+    rel="prev"
+    aria-label="Previous Page"
+    size="default"
+    variant="outline"
+    disabled={disabled || isLoading}
+    {...props}
+  >
+    {isLoading ? (
+      <Loader2 className="mr-2 size-5 animate-spin" />
+    ) : (
+      <ChevronLeft className="mr-2 size-5" />
+    )}
+    Previous
+  </PaginationLink>
+)
+PaginationPrevious.displayName = 'PaginationPrevious'
+
+const PaginationNext = ({
+  isLoading,
+  disabled,
+  ...props
+}: React.ComponentProps<typeof PaginationLink>) => (
+  <PaginationLink
+    rel="next"
+    aria-label="Next Page"
+    size="default"
+    variant="outline"
+    disabled={disabled || isLoading}
+    {...props}
+  >
+    Next
+    {isLoading ? (
+      <Loader2 className="ml-2 size-5 animate-spin" />
+    ) : (
+      <ChevronRight className="ml-2 size-5" />
+    )}
+  </PaginationLink>
+)
+PaginationNext.displayName = 'PaginationNext'
+
 export {
   Pagination,
   PaginationContent,
   PaginationEllipsis,
   PaginationItem,
-  PaginationLink,
   PaginationNext,
+  PaginationPage,
   PaginationPrevious,
 }
