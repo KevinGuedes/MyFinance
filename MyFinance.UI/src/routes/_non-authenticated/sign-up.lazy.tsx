@@ -27,7 +27,7 @@ function SignUp() {
         <SignUpForm />
         <div className="text-center text-sm">
           <p className="mr-1 inline">Already have an account?</p>
-          <Button asChild variant="link" className="h-auto p-0">
+          <Button asChild variant="link" className="h-auto p-0 px-0.5">
             <Link to="/">Sign In</Link>
           </Button>
         </div>

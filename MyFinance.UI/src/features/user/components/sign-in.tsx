@@ -24,7 +24,7 @@ export function SignIn() {
         <SignInForm />
         <div className="text-center text-sm">
           <p className="mr-1 inline">Don&apos;t have an account?</p>
-          <Button asChild variant="link" className="h-auto p-0">
+          <Button asChild variant="link" className="h-auto p-0 px-0.5">
             <Link to="/sign-up">Sign Up</Link>
           </Button>
         </div>
