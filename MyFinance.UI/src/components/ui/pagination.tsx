@@ -1,9 +1,4 @@
-import {
-  ChevronLeft,
-  ChevronRight,
-  Loader2,
-  MoreHorizontal,
-} from 'lucide-react'
+import { ChevronLeft, ChevronRight, MoreHorizontal } from 'lucide-react'
 import * as React from 'react'
 
 import { Button, ButtonProps } from '@/components/ui/button'
@@ -56,7 +51,6 @@ PaginationEllipsis.displayName = 'PaginationEllipsis'
 
 type PaginationLinkProps = {
   isActive?: boolean
-  isLoading?: boolean
 } & ButtonProps
 
 const PaginationLink = ({
@@ -76,37 +70,23 @@ const PaginationLink = ({
 PaginationLink.displayName = 'PaginationLink'
 
 interface PaginationPageProps
-  extends Omit<
-    React.ComponentProps<typeof PaginationLink>,
-    'size' | 'children'
-  > {
+  extends Omit<React.ComponentProps<typeof PaginationLink>, 'children'> {
   page: number
 }
 
-const PaginationPage = ({
-  className,
-  isActive,
-  page,
-  isLoading,
-  disabled,
-  ...props
-}: PaginationPageProps) => (
-  <Button
-    size="icon"
+const PaginationPage = ({ isActive, page, ...props }: PaginationPageProps) => (
+  <PaginationLink
     aria-current={isActive ? 'page' : undefined}
+    aria-label={`Page ${page}`}
     variant={isActive ? 'outline' : 'ghost'}
-    disabled={disabled || isLoading}
-    className={cn(className, 'transition-none')}
+    preserveLabelWhenLoading={false}
+    label={String(page)}
     {...props}
-  >
-    {isLoading ? <Loader2 className="size-5 animate-spin" /> : page}
-  </Button>
+  />
 )
 PaginationPage.displayName = 'PaginationPage'
 
 const PaginationPrevious = ({
-  isLoading,
-  disabled,
   ...props
 }: React.ComponentProps<typeof PaginationLink>) => (
   <PaginationLink
@@ -114,39 +94,26 @@ const PaginationPrevious = ({
     aria-label="Previous Page"
     size="default"
     variant="outline"
-    disabled={disabled || isLoading}
+    label="Previous"
+    icon={ChevronLeft}
     {...props}
-  >
-    {isLoading ? (
-      <Loader2 className="mr-2 size-5 animate-spin" />
-    ) : (
-      <ChevronLeft className="mr-2 size-5" />
-    )}
-    Previous
-  </PaginationLink>
+  />
 )
 PaginationPrevious.displayName = 'PaginationPrevious'
 
 const PaginationNext = ({
-  isLoading,
-  disabled,
   ...props
 }: React.ComponentProps<typeof PaginationLink>) => (
   <PaginationLink
     rel="next"
     aria-label="Next Page"
+    iconLocation="right"
     size="default"
     variant="outline"
-    disabled={disabled || isLoading}
+    label="Next"
+    icon={ChevronRight}
     {...props}
-  >
-    Next
-    {isLoading ? (
-      <Loader2 className="ml-2 size-5 animate-spin" />
-    ) : (
-      <ChevronRight className="ml-2 size-5" />
-    )}
-  </PaginationLink>
+  />
 )
 PaginationNext.displayName = 'PaginationNext'
 

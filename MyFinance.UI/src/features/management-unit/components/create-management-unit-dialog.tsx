@@ -1,4 +1,4 @@
-import { PlusCircle } from 'lucide-react'
+import { Plus, PlusCircle } from 'lucide-react'
 import { useState } from 'react'
 
 import { Button } from '@/components/ui/button'
@@ -36,11 +36,12 @@ export function CreateManagementUnitDialog() {
   return (
     <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
       <DialogTrigger asChild>
-        <Button variant="outline" className="w-full">
-          <PlusCircle className="mr-2 size-5" />
-          Create Management Unit
-          <span className="sr-only">Create Management Unit</span>
-        </Button>
+        <Button
+          variant="outline"
+          className="w-full"
+          icon={PlusCircle}
+          label="Create Management Unit"
+        />
       </DialogTrigger>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>

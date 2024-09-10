@@ -73,13 +73,12 @@ export function TransferItem({ transfer }: TransferItemProps) {
           ) : (
             <Button
               variant="ghost"
-              className="size-7 shrink-0 rounded-full p-0.5"
-              size="icon"
+              className="rounded-full"
+              size="icon-sm"
               onClick={handleShowActionsClick}
-            >
-              <span className="sr-only">Open Transfer menu</span>
-              <MoreVertical className="size-4" />
-            </Button>
+              icon={MoreVertical}
+              screenReaderLabel="Show Transfer Menu"
+            />
           )}
         </div>
       </div>

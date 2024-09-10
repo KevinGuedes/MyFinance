@@ -60,12 +60,12 @@ export function DeleteTransferAlert({ transferId }: DeleteTransferAlertProps) {
       <AlertDialogTrigger asChild>
         <Button
           variant="ghost"
-          className="size-7 rounded-full p-0.5 hover:bg-destructive/25"
-          size="icon"
-        >
-          <span className="sr-only">Delete Transfer</span>
-          <Trash2 className="size-4 stroke-2 text-destructive" />
-        </Button>
+          className="rounded-full p-0.5 text-destructive hover:bg-destructive/25 hover:text-destructive"
+          size="icon-sm"
+          screenReaderLabel="Delete Transfer"
+          icon={Trash2}
+          aria-label="Delete Transfer"
+        />
       </AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader>

@@ -74,6 +74,7 @@ export function DiscriminatedBalanceChartSettingsForm({
   })
 
   const isShowLegendEnabled = form.watch('showLegend')
+  const { isValid, isSubmitting, isDirty } = form.formState
 
   return (
     <Form {...form}>
@@ -251,17 +252,16 @@ export function DiscriminatedBalanceChartSettingsForm({
             variant="outline"
             className="grow"
             onClick={onCancel}
-          >
-            Cancel
-          </Button>
+            label="Cancel"
+          />
+
           <Button
             type="submit"
             className="grow"
-            disabled={!form.formState.isValid || !form.formState.isDirty}
-          >
-            <Settings2 className="mr-2 size-4" />
-            Save and Apply
-          </Button>
+            disabled={!isValid || !isDirty || isSubmitting}
+            icon={Settings2}
+            label="Save and Apply"
+          />
         </div>
       </form>
     </Form>

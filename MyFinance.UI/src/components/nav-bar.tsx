@@ -34,9 +34,8 @@ export function NavBar() {
                 variant="default"
                 size="icon"
                 className="group overflow-hidden rounded-full"
-              >
-                {initials}
-              </Button>
+                label={initials!}
+              />
             </DropdownMenuTrigger>
             <DropdownMenuContent align="start">
               <DropdownMenuLabel>My Account</DropdownMenuLabel>

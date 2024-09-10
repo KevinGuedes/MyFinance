@@ -40,10 +40,13 @@ export const accountTagsTableColumns: ColumnDef<AccountTag>[] = [
       return (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="ml-auto size-8 p-0">
-              <span className="sr-only">Open menu</span>
-              <MoreVertical className="size-4" />
-            </Button>
+            <Button
+              variant="ghost"
+              className="ml-auto rounded-full"
+              size="icon-md"
+              icon={MoreVertical}
+              screenReaderLabel="Oepn Account Tag Menu"
+            />
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>

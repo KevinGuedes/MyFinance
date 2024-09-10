@@ -42,10 +42,11 @@ export function CreateAccountTagDialog({
   return (
     <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
       <DialogTrigger asChild>
-        <Button variant="outline">
-          <PlusCircle className="mr-2 size-5" />
-          Create Account Tag
-        </Button>
+        <Button
+          variant="outline"
+          icon={PlusCircle}
+          label="Create Account Tag"
+        />
       </DialogTrigger>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>

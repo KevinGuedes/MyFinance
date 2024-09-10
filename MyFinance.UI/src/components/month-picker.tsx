@@ -18,7 +18,6 @@ import {
 import { cn } from '@/lib/utils'
 
 import { Button } from './ui/button'
-import { LoadingButton } from './ui/loading-button'
 
 interface MonthPickerProps {
   value?: Date
@@ -65,7 +64,7 @@ export function MonthPicker({
   return (
     <Popover open={isMonthPickerOpen} onOpenChange={setIsMonthPickerOpen}>
       <PopoverTrigger asChild>
-        <LoadingButton
+        <Button
           variant="outline"
           label={format(value, 'MMM, yyyy')}
           disabled={disabled}
@@ -89,26 +88,24 @@ export function MonthPicker({
               rel="prev"
               name="previous-year"
               aria-label="Previous Year"
-              size="icon"
+              size="icon-sm"
               variant="outline"
+              icon={ChevronLeft}
               type="button"
-              className="absolute left-1 size-7"
+              className="absolute left-1 size-7 text-muted-foreground"
               onClick={goTreviousYear}
-            >
-              <ChevronLeft className="size-4" />
-            </Button>
+            />
             <Button
               rel="next"
               name="next-year"
               aria-label="Next Year"
-              size="icon"
+              size="icon-sm"
               variant="outline"
+              icon={ChevronRight}
               type="button"
-              className="absolute right-1 size-7"
+              className="absolute right-1 size-7 text-muted-foreground"
               onClick={goToNextYear}
-            >
-              <ChevronRight className="size-4" />
-            </Button>
+            />
           </div>
         </div>
         <div

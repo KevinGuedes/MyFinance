@@ -61,10 +61,9 @@ export function UpdateManagementUnitDialog({
               variant="outline"
               size="icon"
               className="size-9 rounded-full border-none"
-            >
-              <Pencil className="size-5" />
-              <span className="sr-only">Update Management Unit</span>
-            </Button>
+              icon={Pencil}
+              screenReaderLabel="Update Management Unit"
+            />
           </TooltipTrigger>
         </DialogTrigger>
         <TooltipContent side="bottom" align="end">

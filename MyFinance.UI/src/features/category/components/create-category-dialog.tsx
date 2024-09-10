@@ -42,10 +42,7 @@ export function CreateCategoryDialog({
   return (
     <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
       <DialogTrigger asChild>
-        <Button variant="outline">
-          <PlusCircle className="mr-2 size-5" />
-          Create Category
-        </Button>
+        <Button variant="outline" icon={PlusCircle} label="Create Category" />
       </DialogTrigger>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>

@@ -45,12 +45,12 @@ export function CategoriesTableActions({
       <DropdownMenuTrigger asChild>
         <Button
           variant="ghost"
-          className="ml-auto size-8 p-0"
+          className="ml-auto rounded-full"
+          size="icon-md"
           ref={dropdownTriggerRef}
-        >
-          <span className="sr-only">Open menu</span>
-          <MoreVertical className="size-4" />
-        </Button>
+          icon={MoreVertical}
+          screenReaderLabel="Oepn Category Menu"
+        />
       </DropdownMenuTrigger>
       <DropdownMenuContent
         className="data-[state=closed]:duration-0"

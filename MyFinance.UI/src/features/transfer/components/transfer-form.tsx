@@ -23,7 +23,6 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
-import { LoadingButton } from '@/components/ui/loading-button'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import {
   Select,
@@ -326,14 +325,13 @@ export function TransferForm({
           <Button
             type="button"
             variant="outline"
+            label="Cancel"
             className="grow sm:grow-0"
             onClick={onCancel}
-          >
-            Cancel
-          </Button>
+          />
           {mode === 'register' ? (
             <>
-              <LoadingButton
+              <Button
                 type="button"
                 className="min-w-52 grow sm:grow-0"
                 variant="secondary"
@@ -344,7 +342,7 @@ export function TransferForm({
                 isLoading={isRegisteringAndAddingMore}
                 disabled={!isValid || isSubmitting}
               />
-              <LoadingButton
+              <Button
                 type="submit"
                 className="min-w-44 grow sm:grow-0"
                 icon={PlusCircle}
@@ -355,7 +353,7 @@ export function TransferForm({
               />
             </>
           ) : (
-            <LoadingButton
+            <Button
               type="submit"
               className="min-w-44 grow sm:grow-0"
               icon={Pencil}

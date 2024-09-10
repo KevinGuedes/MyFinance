@@ -14,7 +14,6 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
-import { LoadingButton } from '@/components/ui/loading-button'
 
 const categoryFormSchema = z.object({
   name: z.string().min(3, { message: 'Name is required' }).max(50, {
@@ -84,12 +83,11 @@ export function CategoryForm({
             className="grow sm:grow-0"
             onClick={onCancel}
             disabled={isSubmitting}
-          >
-            Cancel
-          </Button>
+            label="Cancel"
+          />
 
           {mode === 'create' ? (
-            <LoadingButton
+            <Button
               type="submit"
               className="min-w-[10.5rem] grow sm:grow-0"
               label="Create Category"
@@ -99,7 +97,7 @@ export function CategoryForm({
               isLoading={isSubmitting}
             />
           ) : (
-            <LoadingButton
+            <Button
               type="submit"
               className="min-w-[10.5rem] grow sm:grow-0"
               label="Update Category"

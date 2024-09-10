@@ -14,7 +14,6 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
-import { LoadingButton } from '@/components/ui/loading-button'
 import { Textarea } from '@/components/ui/textarea'
 
 const accountTagFormSchema = z.object({
@@ -109,12 +108,11 @@ export function AccountTagForm({
             variant="outline"
             onClick={onCancel}
             disabled={isSubmitting}
-          >
-            Cancel
-          </Button>
+            label="Cancel"
+          />
 
           {mode === 'create' ? (
-            <LoadingButton
+            <Button
               type="submit"
               className="min-w-[11.5rem] grow sm:grow-0"
               label="Create Account Tag"
@@ -124,7 +122,7 @@ export function AccountTagForm({
               isLoading={isSubmitting}
             />
           ) : (
-            <LoadingButton
+            <Button
               type="submit"
               className="min-w-[11.5rem] grow sm:grow-0"
               label="Update Account Tag"

@@ -45,10 +45,12 @@ export function RegisterTransferDialog() {
   return (
     <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
       <DialogTrigger asChild>
-        <Button variant="outline" className="w-full">
-          <PlusCircle className="mr-2 size-5" />
-          Register Transfer
-        </Button>
+        <Button
+          variant="outline"
+          className="w-full"
+          label="Register Transfer"
+          icon={PlusCircle}
+        />
       </DialogTrigger>
       <DialogContent className="max-w-3xl">
         <DialogHeader>

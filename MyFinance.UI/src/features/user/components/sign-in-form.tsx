@@ -14,7 +14,6 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
-import { LoadingButton } from '@/components/ui/loading-button'
 import { PasswordInput } from '@/components/ui/password-input'
 
 import { useSignIn } from '../api/use-sign-in'
@@ -42,6 +41,8 @@ export function SignInForm() {
   async function handleSubmit(values: SignInFormSchema) {
     await signInMutation.mutateAsync(values)
   }
+
+  const { isValid, isSubmitting } = form.formState
 
   return (
     <Form {...form}>
@@ -87,14 +88,14 @@ export function SignInForm() {
         />
 
         <div className="flex grow flex-col items-end gap-4">
-          <LoadingButton
+          <Button
             label="Sign In"
             icon={LogIn}
             loadingLabel="Signing In..."
             type="submit"
             className="w-full"
-            isLoading={form.formState.isSubmitting}
-            disabled={form.formState.isSubmitting || !form.formState.isValid}
+            isLoading={isSubmitting}
+            disabled={isSubmitting || !isValid}
           />
         </div>
       </form>

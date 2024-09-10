@@ -55,11 +55,10 @@ export function UpdateTransferDialog({ transfer }: UpdateTransferDialogProps) {
         <Button
           variant="ghost"
           className="size-7 shrink-0 rounded-full p-0.5"
-          size="icon"
-        >
-          <span className="sr-only">Edit Transfer</span>
-          <Pencil className="size-4 stroke-2" />
-        </Button>
+          size="icon-sm"
+          screenReaderLabel="Edit Transfer"
+          icon={Pencil}
+        />
       </DialogTrigger>
       <DialogContent className="max-w-3xl">
         <DialogHeader>

@@ -3,6 +3,7 @@ import { UserPlus } from 'lucide-react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 
+import { Button } from '@/components/ui/button'
 import {
   Form,
   FormControl,
@@ -12,7 +13,6 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
-import { LoadingButton } from '@/components/ui/loading-button'
 import { PasswordInput } from '@/components/ui/password-input'
 
 import { PasswordConfirmationValidation } from './password-confirmation-validation'
@@ -152,7 +152,7 @@ export function SignUpForm() {
           )}
         />
 
-        <LoadingButton
+        <Button
           type="submit"
           className="w-full"
           label="Sign Up"

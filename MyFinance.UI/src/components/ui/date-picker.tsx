@@ -47,19 +47,14 @@ export const DatePicker = React.forwardRef<
       <PopoverTrigger asChild>
         <Button
           variant="outline"
+          icon={CalendarIcon}
+          label={value ? format(value, 'PPP') : 'Select a date'}
           disabled={disabled}
           className={cn(
             'w-full justify-start text-left font-normal',
             !value && 'text-muted-foreground',
           )}
-        >
-          <CalendarIcon className="mr-2 h-4 w-4" />
-          {value ? (
-            format(value, 'PPP')
-          ) : (
-            <span className="text-muted-foreground">Select a date</span>
-          )}
-        </Button>
+        />
       </PopoverTrigger>
       <PopoverContent className="flex w-auto flex-col space-y-2 p-2" ref={ref}>
         {showPresetDates ? (

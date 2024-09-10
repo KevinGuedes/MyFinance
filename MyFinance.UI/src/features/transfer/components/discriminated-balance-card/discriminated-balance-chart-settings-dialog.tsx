@@ -33,10 +33,13 @@ export function DiscriminatedBalanceChartSettingsDialog() {
   return (
     <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
       <DialogTrigger asChild>
-        <Button variant="ghost" size="icon" className="rounded-full">
-          <Settings className="size-5" />
-          <span className="sr-only">Settings</span>
-        </Button>
+        <Button
+          variant="ghost"
+          size="icon"
+          className="rounded-full"
+          icon={Settings}
+          screenReaderLabel="Discriminated Balance Chart Settings"
+        />
       </DialogTrigger>
       <DialogContent className="max-w-3xl">
         <DialogHeader>

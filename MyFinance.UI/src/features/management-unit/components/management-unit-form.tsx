@@ -13,7 +13,6 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
-import { LoadingButton } from '@/components/ui/loading-button'
 import { Textarea } from '@/components/ui/textarea'
 
 const managementUnitFormSchema = z.object({
@@ -104,12 +103,11 @@ export function ManagementUnitForm({
             onClick={onCancel}
             disabled={isSubmitting}
             className="grow sm:grow-0"
-          >
-            Cancel
-          </Button>
+            label="Cancel"
+          />
 
           {mode === 'create' ? (
-            <LoadingButton
+            <Button
               type="submit"
               className="min-w-56 grow sm:grow-0"
               label="Create Management Unit"
@@ -119,7 +117,7 @@ export function ManagementUnitForm({
               isLoading={isSubmitting}
             />
           ) : (
-            <LoadingButton
+            <Button
               type="submit"
               className="min-w-56 grow sm:grow-0"
               label="Update Management Unit"

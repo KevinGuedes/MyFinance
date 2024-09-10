@@ -62,8 +62,7 @@ function AuthenticatedLayout() {
           <div className="flex flex-col items-center px-4 text-center">
             <p className="text-muted-foreground">
               Uh oh! My Finance seems to be offline now, please try again later.
-            </p>
-            <p className="text-muted-foreground">
+              <br />
               Sorry for the inconvenience!
             </p>
           </div>
