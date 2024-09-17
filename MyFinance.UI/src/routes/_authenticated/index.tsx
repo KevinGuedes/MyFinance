@@ -107,6 +107,7 @@ function Home() {
     setAreaInUse('page')
     navigate({
       search: (prev: SearchManagementUnitsSchema) => {
+        if (page === 1) return { ...prev, pageNumber: undefined }
         return { ...prev, pageNumber: page }
       },
     })

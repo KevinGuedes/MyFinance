@@ -60,6 +60,7 @@ const PaginationLink = ({
   ...props
 }: PaginationLinkProps) => (
   <Button
+    role="link"
     aria-current={isActive ? 'page' : undefined}
     variant={isActive ? 'outline' : 'ghost'}
     size={size}
@@ -78,7 +79,7 @@ const PaginationPage = ({ isActive, page, ...props }: PaginationPageProps) => (
   <PaginationLink
     aria-current={isActive ? 'page' : undefined}
     aria-label={`Page ${page}`}
-    variant={isActive ? 'outline' : 'ghost'}
+    variant={isActive ? 'default' : 'outline'}
     preserveLabelWhenLoading={false}
     label={String(page)}
     {...props}
@@ -92,9 +93,8 @@ const PaginationPrevious = ({
   <PaginationLink
     rel="prev"
     aria-label="Previous Page"
-    size="default"
+    size="icon"
     variant="outline"
-    label="Previous"
     icon={ChevronLeft}
     {...props}
   />
@@ -108,9 +108,8 @@ const PaginationNext = ({
     rel="next"
     aria-label="Next Page"
     iconLocation="right"
-    size="default"
+    size="icon"
     variant="outline"
-    label="Next"
     icon={ChevronRight}
     {...props}
   />
