@@ -16,7 +16,7 @@ public class PresentationTests : BaseTest
             .And()
             .AreClasses()
             .Should()
-            .HaveNameEndingWith(ControllerSuffix)
+            .HaveNameEndingWith(ControllersSuffix)
             .GetResult();
 
         result.IsSuccessful.Should().BeTrue();
