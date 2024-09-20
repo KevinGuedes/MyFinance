@@ -2,7 +2,7 @@
 
 namespace MyFinance.Application.Abstractions.Services;
 
-public interface ISummaryService
+public interface ISummaryGenerator
 {
     (string FileName, byte[] FileContent) GenerateMonthlySummary(
         ManagementUnit managementUnit,

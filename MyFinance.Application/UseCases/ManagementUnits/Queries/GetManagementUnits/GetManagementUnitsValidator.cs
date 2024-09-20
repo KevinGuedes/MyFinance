@@ -3,7 +3,7 @@ using MyFinance.Application.Common.CustomValidators;
 
 namespace MyFinance.Application.UseCases.ManagementUnits.Queries.GetManagementUnits;
 
-public class GetManagementUnitsValidator : AbstractValidator<GetManagementUnitsQuery>
+public sealed class GetManagementUnitsValidator : AbstractValidator<GetManagementUnitsQuery>
 {
     public GetManagementUnitsValidator()
     {

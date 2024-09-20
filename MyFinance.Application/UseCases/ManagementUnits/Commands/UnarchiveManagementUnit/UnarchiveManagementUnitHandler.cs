@@ -5,7 +5,7 @@ using MyFinance.Application.Common.Errors;
 
 namespace MyFinance.Application.UseCases.ManagementUnits.Commands.UnarchiveManagementUnit;
 
-public class UnarchiveManagementUnitHandler(IMyFinanceDbContext myFinanceDbContext)
+public sealed class UnarchiveManagementUnitHandler(IMyFinanceDbContext myFinanceDbContext)
     : ICommandHandler<UnarchiveManagementUnitCommand>
 {
     private readonly IMyFinanceDbContext _myFinanceDbContext = myFinanceDbContext;

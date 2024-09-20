@@ -12,7 +12,7 @@ using MyFinance.Infrastructure.Services.EmailSender;
 using MyFinance.Infrastructure.Services.LockoutManager;
 using MyFinance.Infrastructure.Services.PasswordManager;
 using MyFinance.Infrastructure.Services.SignInManager;
-using MyFinance.Infrastructure.Services.Summary;
+using MyFinance.Infrastructure.Services.SummaryGenerator;
 using MyFinance.Infrastructure.Services.TokenProvider;
 using System.Reflection;
 
@@ -80,7 +80,7 @@ public static class InfrastructureDependencyInjection
             .BindOptionsWithValidationOnStart<PasswordOptions>(configuration);
 
         return services
-            .AddScoped<ISummaryService, SummaryService>()
+            .AddScoped<ISummaryGenerator, SummaryGenerator>()
             .AddScoped<ITokenProvider, TokenProvider>()
             .AddScoped<IPasswordManager, PasswordManager>()
             .AddScoped<ILockoutManager, LockoutManager>()

@@ -2,7 +2,7 @@
 
 namespace MyFinance.Application.UseCases.Users.Commands.SendResetPasswordEmail;
 
-public class SendResetPasswordEmailValidator : AbstractValidator<SendResetPasswordEmailCommand>
+public sealed class SendResetPasswordEmailValidator : AbstractValidator<SendResetPasswordEmailCommand>
 {
     public SendResetPasswordEmailValidator()
     {

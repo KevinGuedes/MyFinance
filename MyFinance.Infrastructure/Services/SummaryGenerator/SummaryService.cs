@@ -3,9 +3,9 @@ using MyFinance.Application.Abstractions.Services;
 using MyFinance.Domain.Entities;
 using MyFinance.Domain.Enums;
 
-namespace MyFinance.Infrastructure.Services.Summary;
+namespace MyFinance.Infrastructure.Services.SummaryGenerator;
 
-internal sealed class SummaryService : ISummaryService
+internal sealed class SummaryGenerator : ISummaryGenerator
 {
     private const int initalRowForBalanceData = 3;
     private const int inititalRowForGenerationData = 1;
