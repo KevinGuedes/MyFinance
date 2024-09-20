@@ -2,7 +2,7 @@
 
 namespace MyFinance.ArchitectureTests.Common;
 
-public abstract class BaseTest
+public abstract class BaseArchitectureTest
 {
     protected static readonly string InterfacesPrefix = "I";
 

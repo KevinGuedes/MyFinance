@@ -5,7 +5,7 @@ using System.Runtime.CompilerServices;
 
 namespace MyFinance.ArchitectureTests.Domain;
 
-public class DomainTests : BaseTest
+public class DomainTests : BaseArchitectureTest
 {
     [Fact]
     public void DomainEntities_Should_BeSealed()

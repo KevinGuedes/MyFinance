@@ -2,7 +2,7 @@
 
 namespace MyFinance.ArchitectureTests.Infrastructure;
 
-public class InfrastructureTests : BaseTest
+public class InfrastructureTests : BaseArchitectureTest
 {
     [Fact]
     public void Services_Should_BeSealed()

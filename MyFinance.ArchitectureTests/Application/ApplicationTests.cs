@@ -6,7 +6,7 @@ using MyFinance.ArchitectureTests.Common;
 
 namespace MyFinance.ArchitectureTests.Application;
 
-public class ApplicationTests : BaseTest
+public class ApplicationTests : BaseArchitectureTest
 {
     [Fact]
     public void CommandHandlers_Should_HaveHandlersSuffix()

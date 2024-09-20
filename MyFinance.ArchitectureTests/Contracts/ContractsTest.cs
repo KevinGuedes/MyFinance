@@ -2,7 +2,7 @@
 
 namespace MyFinance.ArchitectureTests.Contracts;
 
-public class ContractsTest : BaseTest
+public class ContractsTest : BaseArchitectureTest
 {
     [Fact]
     public void Responses_Should_HaveResponsesSuffix()

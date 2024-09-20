@@ -2,7 +2,7 @@
 
 namespace MyFinance.ArchitectureTests.Layer;
 
-public class LayerTests : BaseTest
+public class LayerTests : BaseArchitectureTest
 {
     [Fact]
     public void DomainLayer_Should_HaveAppropriateDependencies()

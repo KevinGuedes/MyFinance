@@ -5,7 +5,7 @@ using Swashbuckle.AspNetCore.Annotations;
 
 namespace MyFinance.ArchitectureTests.Presentation;
 
-public class PresentationTests : BaseTest
+public class PresentationTests : BaseArchitectureTest
 {
     [Fact]
     public void Controllers_Should_HaveControllersSuffix()
