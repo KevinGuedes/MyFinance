@@ -7,6 +7,9 @@ namespace MyFinance.ArchitectureTests.Presentation;
 
 public class PresentationTests : BaseArchitectureTest
 {
+    private const string ControllersSuffix = "Controller";
+    private const string ControllersNamespace = "MyFinance.Presentation.Controllers";
+
     [Fact]
     public void Controllers_Should_HaveControllersSuffix()
     {

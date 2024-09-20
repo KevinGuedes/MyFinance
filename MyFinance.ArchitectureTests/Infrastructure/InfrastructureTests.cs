@@ -4,6 +4,9 @@ namespace MyFinance.ArchitectureTests.Infrastructure;
 
 public class InfrastructureTests : BaseArchitectureTest
 {
+   private const string InfrastructureServicesNamespace = "MyFinance.Infrastructure.Services";
+   private const string InfrastructureAbstractionsNamespace = "MyFinance.Infrastructure.Abstractions";
+
     [Fact]
     public void Services_Should_BeSealed()
     {

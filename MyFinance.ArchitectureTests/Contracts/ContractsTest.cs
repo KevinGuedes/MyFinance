@@ -4,6 +4,9 @@ namespace MyFinance.ArchitectureTests.Contracts;
 
 public class ContractsTest : BaseArchitectureTest
 {
+   private const string RequestsSuffix = "Request";
+   private const string ResponsesSuffix = "Response";
+
     [Fact]
     public void Responses_Should_HaveResponsesSuffix()
     {

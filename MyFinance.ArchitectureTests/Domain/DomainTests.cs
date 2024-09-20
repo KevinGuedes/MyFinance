@@ -7,6 +7,9 @@ namespace MyFinance.ArchitectureTests.Domain;
 
 public class DomainTests : BaseArchitectureTest
 {
+    private const string EntitiesNamespace = "MyFinance.Domain.Entities";
+    private const string DomainAbstractionsNamespace = "MyFinance.Domain.Abstractions";
+
     [Fact]
     public void DomainEntities_Should_BeSealed()
     {

@@ -8,6 +8,16 @@ namespace MyFinance.ArchitectureTests.Application;
 
 public class ApplicationTests : BaseArchitectureTest
 {
+    private const string HandlersSuffix = "Handler";
+    private const string QueriesSuffix = "Query";
+    private const string CommandsSuffix = "Command";
+    private const string ErrorsSuffix = "Error";
+    private const string ValidatorsSuffix = "Validator";
+    private const string ApplicationsErrorsNamespace = "MyFinance.Application.Common.Errors";
+    private const string ApplicationCustomValidatorsNamespace = "MyFinance.Application.Common.CustomValidators";
+    private const string ApplicationUseCasesNamespace = "MyFinance.Application.UseCases";
+    private const string ApplicationAbstractionsNamespace = "MyFinance.Application.Abstractions";
+
     [Fact]
     public void CommandHandlers_Should_HaveHandlersSuffix()
     {
