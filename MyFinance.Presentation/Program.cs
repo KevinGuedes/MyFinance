@@ -1,4 +1,5 @@
 using MyFinance.Application.IoC;
+using MyFinance.Infrastructure.Extensions;
 using MyFinance.Infrastructure.IoC;
 using MyFinance.Presentation.IoC;
 
@@ -18,6 +19,7 @@ var app = builder.Build();
 
     if (!app.Environment.IsProduction())
     {
+        app.ApplyDatabaseMigrations();
         app
             .UseSwagger()
             .UseSwaggerUI(options =>
