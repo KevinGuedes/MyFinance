@@ -19,7 +19,7 @@ var app = builder.Build();
 
     if (!app.Environment.IsProduction())
     {
-        app.ApplyDatabaseMigrations();
+        //app.ApplyDatabaseMigrations();
         app
             .UseSwagger()
             .UseSwaggerUI(options =>
@@ -38,3 +38,6 @@ var app = builder.Build();
     app.MapFallbackToFile("/index.html");
     app.Run();
 }
+
+
+public partial class Program { }

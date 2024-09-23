@@ -27,4 +27,7 @@
         <ProjectReference Include="..\MyFinance.Domain\MyFinance.Domain.csproj" />
     </ItemGroup>
 
+	<ItemGroup>
+		<InternalsVisibleTo Include="MyFinance.IntegrationTests" />
+	</ItemGroup>
 </Project>
