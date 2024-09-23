@@ -3,13 +3,11 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using MyFinance.Application.Abstractions.Services;
 using MyFinance.Infrastructure.Persistence.Context;
-using MyFinance.Infrastructure.Services.CurrentUserProvider;
-using MyFinance.IntegrationTests.MockServices;
 using MyFinance.TestCommon.Factories;
 using System.Text.Encodings.Web;
 using Testcontainers.MsSql;
@@ -29,15 +27,19 @@ public class ApplicationFactory : WebApplicationFactory<Program>, IAsyncLifetime
 
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
+        builder.ConfigureAppConfiguration((context, conf) => 
+            conf.AddInMemoryCollection(new Dictionary<string, string?>
+            {
+                { "EmailSettings:EnableEmailNotifications", "false" },
+            })
+        );
+
         builder.ConfigureTestServices(services =>
         {
             var dbContextDescriptior = services
                 .SingleOrDefault(service => service.ServiceType == typeof(DbContextOptions<MyFinanceDbContext>));
-            var currentUserProviderDescriptor = services
-                .SingleOrDefault(service => service.ServiceType == typeof(CurrentUserProvider));
 
             if (dbContextDescriptior is not null) services.Remove(dbContextDescriptior);
-            if (currentUserProviderDescriptor is not null) services.Remove(currentUserProviderDescriptor);
 
             services.AddDbContext<MyFinanceDbContext>(options =>
                 options.UseSqlServer(_dbContainer.GetConnectionString()));
@@ -48,13 +50,7 @@ public class ApplicationFactory : WebApplicationFactory<Program>, IAsyncLifetime
             var myFinanceDbContext = scope.ServiceProvider.GetRequiredService<MyFinanceDbContext>();
             myFinanceDbContext.Database.Migrate();
             myFinanceDbContext.Database.EnsureCreated();
-
-            var userId = SeedTestUser(myFinanceDbContext);
-
-            services.AddScoped<ICurrentUserProvider>(sp =>
-            {
-                return new MockCurrentUserProvider(userId);
-            });
+            var defaultTestUserId = SeedUsersData(myFinanceDbContext);
 
             services
                .AddAuthentication(TestAuthenticationHandler.TestSchemeName)
@@ -64,27 +60,34 @@ public class ApplicationFactory : WebApplicationFactory<Program>, IAsyncLifetime
                );
 
             var authHandlerDescriptor = services
-                .First(s => s.ImplementationType == typeof(TestAuthenticationHandler));
+                .First(service => service.ImplementationType == typeof(TestAuthenticationHandler));
 
             if (authHandlerDescriptor is not null) services.Remove(authHandlerDescriptor);
 
-            services.AddTransient(sp =>
+            services.AddTransient(implementationFactory =>
             {
-                var optionsMonitos = sp.GetRequiredService<IOptionsMonitor<AuthenticationSchemeOptions>>();
-                var loggerFactory = sp.GetRequiredService<ILoggerFactory>();
-                var urlEncoder = sp.GetRequiredService<UrlEncoder>();
+                var optionsMonitor = implementationFactory.GetRequiredService<IOptionsMonitor<AuthenticationSchemeOptions>>();
+                var loggerFactory = implementationFactory.GetRequiredService<ILoggerFactory>();
+                var urlEncoder = implementationFactory.GetRequiredService<UrlEncoder>();
 
-                return new TestAuthenticationHandler(optionsMonitos, loggerFactory, urlEncoder, userId);
+                return new TestAuthenticationHandler(optionsMonitor, loggerFactory, urlEncoder, defaultTestUserId);
             });
         });
     }
 
-    private static Guid SeedTestUser(MyFinanceDbContext myFinanceDbContext)
+    private static Guid SeedUsersData(MyFinanceDbContext myFinanceDbContext)
     {
         myFinanceDbContext.Users.RemoveRange(myFinanceDbContext.Users);
-        var user = myFinanceDbContext.Users.Add(UserFactory.CreateUser());
-        myFinanceDbContext.SaveChanges();
+        
+        var user = myFinanceDbContext.Users.Add(UserFactory.DefaultTestUser);
 
+        var userWithOldPassword = UserFactory.UserWithOldPassword;
+        var lastPasswordUpdate = DateTime.UtcNow.AddMonths(-6).AddSeconds(-1);
+        myFinanceDbContext.Database.ExecuteSql($@"INSERT INTO 
+            Users (Id, Name, Email, PasswordHash, FailedSignInAttempts, IsEmailVerified, LockoutEndOnUtc, LastPasswordUpdateOnUtc, SecurityStamp, CreatedOnUtc, UpdatedOnUtc)
+            VALUES ({Guid.NewGuid()}, {userWithOldPassword.Name}, {userWithOldPassword.Email}, {userWithOldPassword.PasswordHash}, 0, 1, NULL, {lastPasswordUpdate}, {userWithOldPassword.SecurityStamp}, {DateTime.UtcNow}, NULL)");
+        
+        myFinanceDbContext.SaveChanges();
         return user.Entity.Id;
     } 
 }

@@ -1,23 +1,18 @@
-﻿using MyFinance.Application.UseCases.ManagementUnits.Commands.CreateManagementUnit;
-using MyFinance.Application.UseCases.ManagementUnits.Queries.GetManagementUnit;
-using MyFinance.Contracts.ManagementUnit.Requests;
+﻿using MyFinance.Contracts.ManagementUnit.Requests;
 using MyFinance.Contracts.ManagementUnit.Responses;
 using MyFinance.IntegrationTests.Common;
-using System.Net.Http.Json;
-using System.Text.Json;
 
 namespace MyFinance.IntegrationTests.ManagementUnits;
 
-public class CreateManagementUnitTest(ApplicationFactory factory) : BaseIntegrationTest(factory)
+public class CreateManagementUnitTest(ApplicationFactory applicationFactory) 
+    : BaseIntegrationTest(applicationFactory, "/managementunit")
 {
-    private const string _baseUrl = "/managementunit";
-
     [Fact]
-    public async Task CreateManagementUnitHandle_Should_CreateManagementUnit()
+    public async Task CreateManagementUnitFlow_Should_ReturnAManagementUnitWithDefaultValues()
     {
         var request = new CreateManagementUnitRequest("Test MU", Description: "Test Description");
        
-        var (response, managementUnit) = await PostAsync<CreateManagementUnitRequest, ManagementUnitResponse>(_baseUrl, request);
+        var (response, managementUnit) = await PostAsync<CreateManagementUnitRequest, ManagementUnitResponse>(request);
        
         response.EnsureSuccessStatusCode();
         Assert.NotNull(managementUnit);
@@ -27,10 +22,5 @@ public class CreateManagementUnitTest(ApplicationFactory factory) : BaseIntegrat
         Assert.Equal(0, managementUnit.Income);
         Assert.Equal(0, managementUnit.Outcome);
         Assert.Equal(0, managementUnit.Balance);
-
-        //var getRequests = new GetManagementUnitQuery(managementUnit.Id);
-        //var getResponse = await Sender.Send(getRequests);
-        //getResponse.IsSuccess.Should().BeTrue();
-        //Assert.NotNull(getResponse.Value);
     }
 }

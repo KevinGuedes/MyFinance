@@ -4,10 +4,19 @@ namespace MyFinance.TestCommon.Factories;
 
 public static class UserFactory
 {
-    //password = plainTextPassword123456#%
-    public static User CreateUser(
-        string name = "Test User",
-        string email = "test-user@test.com",
-        string passwordHash = "$2a$12$BYcm.gY761I81JaGU0AXYe0ltLzRC6okZKw78MDV6EjsoaKZuo4zi")
-        => new(name, email, passwordHash);
+    private const string _userName = "Test User";
+    private const string _password = "plainTextPassword123456#%";
+    private const string _defaultEmail = "test-user@test.com";
+    private const string _oldPasswordUserEmail = "password-to-update@gmail.com";
+    private const string _passwordHash = "$2a$12$ZyHujEZLxkwOepxba1SLBOQFZrs/NlocNmqTnbHNYMe7osIbsUPdG";
+
+    public static User DefaultTestUser
+        => new(_userName, _defaultEmail, _passwordHash);
+
+    public static (string, string) DefaultTestUserCredentials => (_defaultEmail, _password);
+
+    public static User UserWithOldPassword
+        => new(_userName, _oldPasswordUserEmail, _passwordHash);
+
+    public static (string, string) UserWithOldPasswordCredentials => (_oldPasswordUserEmail, _password);
 }
