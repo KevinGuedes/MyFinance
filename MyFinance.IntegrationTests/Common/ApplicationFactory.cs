@@ -27,10 +27,10 @@ public class ApplicationFactory : WebApplicationFactory<Program>, IAsyncLifetime
 
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
-        builder.ConfigureAppConfiguration((context, conf) => 
-            conf.AddInMemoryCollection(new Dictionary<string, string?>
+        builder.ConfigureAppConfiguration((context, config) => 
+            config.AddInMemoryCollection(new Dictionary<string, string?>
             {
-                { "EmailSettings:EnableEmailNotifications", "false" },
+                { "EmailSenderOptions:UseEmailConfirmation", "false" }
             })
         );
 
