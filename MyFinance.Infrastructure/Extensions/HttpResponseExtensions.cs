@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace MyFinance.Infrastructure.Extensions;
 
-public static class HttpResponseExtension
+public static class HttpResponseExtensions
 {
     public static Task WriteAsProblemPlusJsonAsync(
         this HttpResponse httpResponse,
