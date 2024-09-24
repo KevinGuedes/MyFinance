@@ -28,6 +28,7 @@
     </ItemGroup>
 
 	<ItemGroup>
+		<InternalsVisibleTo Include="MyFinance.ArchitectureTests" />
 		<InternalsVisibleTo Include="MyFinance.IntegrationTests" />
 	</ItemGroup>
 </Project>
