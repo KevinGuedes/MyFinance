@@ -77,7 +77,8 @@ public static class InfrastructureDependencyInjection
 
         services
             .BindOptionsWithValidationOnStart<TokenOptions>(configuration)
-            .BindOptionsWithValidationOnStart<PasswordOptions>(configuration);
+            .BindOptionsWithValidationOnStart<PasswordOptions>(configuration)
+            .BindOptionsWithValidationOnStart<EmailSenderOptions>(configuration);
 
         return services
             .AddScoped<ISummaryGenerator, SummaryGenerator>()

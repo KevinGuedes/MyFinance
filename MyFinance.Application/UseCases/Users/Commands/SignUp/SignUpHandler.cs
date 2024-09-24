@@ -25,13 +25,16 @@ internal sealed class SignUpHandler(
 
         await _myFinanceDbContext.Users.AddAsync(user, cancellationToken);
 
-        var urlSafeConfirmRegistrationToken
-            = _tokenProvider.CreateUrlSafeConfirmRegistrationToken(user.Id);
+        if(_emailSender.IsEmailConfirmationEnabled)
+        {
+            var urlSafeConfirmRegistrationToken
+                = _tokenProvider.CreateUrlSafeConfirmRegistrationToken(user.Id);
 
-        await _emailSender.SendConfirmRegistrationEmailAsync(
-            user.Email,
-            urlSafeConfirmRegistrationToken,
-            cancellationToken);
+            await _emailSender.SendConfirmRegistrationEmailAsync(
+                user.Email,
+                urlSafeConfirmRegistrationToken,
+                cancellationToken);
+        }
 
         return Result.Ok();
     }

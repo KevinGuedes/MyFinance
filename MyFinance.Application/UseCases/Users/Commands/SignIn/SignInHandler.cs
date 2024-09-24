@@ -30,7 +30,7 @@ internal sealed class SignInHandler(
         if (user is null)
             return HandleInvalidCredentials();
 
-        if (!user.IsEmailVerified)
+        if (_emailSender.IsEmailConfirmationEnabled && !user.IsEmailVerified)
             return HandleInvalidCredentials();
 
         if (!_lockoutManager.CanSignIn(user.LockoutEndOnUtc))
@@ -102,6 +102,6 @@ internal sealed class SignInHandler(
     private static Result HandleInvalidCredentials()
         => Result.Fail(new UnauthorizedError(
             "Invalid credentials. " +
-            "Your account may be blocked for excessive attempts. " +
-            "Also, please check your email to make sure you have verified your account."));
+            "Your account may be blocked for excessive attempts or" +
+            "you haven't verified your email yet"));
 }

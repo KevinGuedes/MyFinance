@@ -70,7 +70,11 @@ public class ApplicationFactory : WebApplicationFactory<Program>, IAsyncLifetime
                 var loggerFactory = implementationFactory.GetRequiredService<ILoggerFactory>();
                 var urlEncoder = implementationFactory.GetRequiredService<UrlEncoder>();
 
-                return new TestAuthenticationHandler(optionsMonitor, loggerFactory, urlEncoder, defaultTestUserId);
+                return new TestAuthenticationHandler(
+                    optionsMonitor,
+                    loggerFactory,
+                    urlEncoder,
+                    defaultTestUserId);
             });
         });
     }

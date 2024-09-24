@@ -2,6 +2,7 @@
 
 public interface IEmailSender
 {
+    bool IsEmailConfirmationEnabled { get; }
     Task<(bool HasEmailBeenSent, Exception? Exception)> SendConfirmRegistrationEmailAsync(
         string email,
         string urlSafeConfirmRegistrationToken,
