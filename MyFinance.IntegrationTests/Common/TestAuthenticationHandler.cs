@@ -7,7 +7,7 @@ using System.Text.Encodings.Web;
 
 namespace MyFinance.IntegrationTests.Common;
 
-internal class TestAuthenticationHandler(
+internal sealed class TestAuthenticationHandler(
     IOptionsMonitor<AuthenticationSchemeOptions> options,
     ILoggerFactory logger,
     UrlEncoder encoder,

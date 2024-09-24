@@ -4,7 +4,7 @@ using MyFinance.IntegrationTests.Common;
 
 namespace MyFinance.IntegrationTests.ManagementUnits;
 
-public class CreateManagementUnitTest(ApplicationFactory applicationFactory) 
+public sealed class CreateManagementUnitTest(ApplicationFactory applicationFactory) 
     : BaseIntegrationTest(applicationFactory, "/managementunit")
 {
     [Fact]

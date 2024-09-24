@@ -14,7 +14,7 @@ using Testcontainers.MsSql;
 
 namespace MyFinance.IntegrationTests.Common;
 
-public class ApplicationFactory : WebApplicationFactory<Program>, IAsyncLifetime
+public sealed class ApplicationFactory : WebApplicationFactory<Program>, IAsyncLifetime
 {
     private readonly MsSqlContainer _dbContainer = new MsSqlBuilder()
         .WithImage("mcr.microsoft.com/mssql/server:2022-latest")

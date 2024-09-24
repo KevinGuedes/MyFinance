@@ -1,4 +1,4 @@
-﻿using MyFinance.Domain.Entities;
+﻿using MyFinance.TestCommon.Extensions;
 
 namespace MyFinance.TestCommon.Factories;
 
@@ -19,4 +19,24 @@ public static class UserFactory
         => new(_userName, _oldPasswordUserEmail, _passwordHash);
 
     public static (string, string) UserWithOldPasswordCredentials => (_oldPasswordUserEmail, _password);
+
+    //Use builder pattern
+    //Now that i have an id, can in sert int he database directly and save the id?
+    public static User CreateUser(
+        Guid? id = null,
+        string? name = null,
+        string? email = null,
+        string? passwordHash = null,
+        Guid? securityStamp = null)
+    {
+        var user = new Faker<User>()
+            .UsePrivateConstructor()
+            .RuleFor(user => user.Id, faker => id ?? faker.Random.Guid())
+            .RuleFor(user => user.Name, faker => name ?? faker.Person.FullName)
+            .RuleFor(user => user.Email, faker => email ?? faker.Person.Email)
+            .RuleFor(user => user.PasswordHash, faker => passwordHash ?? faker.Internet.Password());
+
+        //make notes using reflection
+        return user;
+    }
 }
