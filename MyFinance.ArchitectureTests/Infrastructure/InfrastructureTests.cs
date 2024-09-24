@@ -3,7 +3,7 @@ using MyFinance.Infrastructure.Abstractions;
 
 namespace MyFinance.ArchitectureTests.Infrastructure;
 
-public class InfrastructureTests : BaseArchitectureTest
+public sealed class InfrastructureTests : BaseArchitectureTest
 {
     private const string InfrastructureServicesNamespace = "MyFinance.Infrastructure.Services";
     private const string InfrastructureAbstractionsNamespace = "MyFinance.Infrastructure.Abstractions";

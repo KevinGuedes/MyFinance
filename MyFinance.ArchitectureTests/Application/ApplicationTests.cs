@@ -6,7 +6,7 @@ using MyFinance.ArchitectureTests.Common;
 
 namespace MyFinance.ArchitectureTests.Application;
 
-public class ApplicationTests : BaseArchitectureTest
+public sealed class ApplicationTests : BaseArchitectureTest
 {
     private const string HandlersSuffix = "Handler";
     private const string QueriesSuffix = "Query";

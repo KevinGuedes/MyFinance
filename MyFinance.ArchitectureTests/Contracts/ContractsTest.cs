@@ -2,7 +2,7 @@
 
 namespace MyFinance.ArchitectureTests.Contracts;
 
-public class ContractsTest : BaseArchitectureTest
+public sealed class ContractsTest : BaseArchitectureTest
 {
    private const string RequestsSuffix = "Request";
    private const string ResponsesSuffix = "Response";

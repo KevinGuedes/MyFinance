@@ -5,7 +5,7 @@ using System.Runtime.CompilerServices;
 
 namespace MyFinance.ArchitectureTests.Domain;
 
-public class DomainTests : BaseArchitectureTest
+public sealed class DomainTests : BaseArchitectureTest
 {
     private const string EntitiesNamespace = "MyFinance.Domain.Entities";
     private const string DomainAbstractionsNamespace = "MyFinance.Domain.Abstractions";
@@ -109,8 +109,8 @@ public class DomainTests : BaseArchitectureTest
     {
         var setMethods = typeof(Entity)
             .GetProperties(BindingFlags.Public | BindingFlags.Instance)
-             .Select(property => property.GetSetMethod(true))
-             .Where(setMethod => setMethod is not null &&
+            .Select(property => property.GetSetMethod(true))
+            .Where(setMethod => setMethod is not null &&
                  !setMethod.ReturnParameter.GetRequiredCustomModifiers().Contains(typeof(IsExternalInit)));
         
         setMethods.Should().OnlyContain(setMethod => setMethod!.IsPrivate);

@@ -5,7 +5,7 @@ using Swashbuckle.AspNetCore.Annotations;
 
 namespace MyFinance.ArchitectureTests.Presentation;
 
-public class PresentationTests : BaseArchitectureTest
+public sealed class PresentationTests : BaseArchitectureTest
 {
     private const string ControllersSuffix = "Controller";
     private const string ControllersNamespace = "MyFinance.Presentation.Controllers";
