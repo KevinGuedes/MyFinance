@@ -31,5 +31,6 @@
 
 	<ItemGroup>
 		<InternalsVisibleTo Include="MyFinance.ArchitectureTests" />
+		<InternalsVisibleTo Include="MyFinance.UnitTests" />
 	</ItemGroup>
 </Project>
