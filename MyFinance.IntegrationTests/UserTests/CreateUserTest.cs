@@ -2,6 +2,7 @@
 using MyFinance.Contracts.User.Responses;
 using MyFinance.IntegrationTests.Common;
 using MyFinance.TestCommon.Factories;
+using System.Net;
 
 namespace MyFinance.IntegrationTests.UserTests;
 
@@ -30,7 +31,7 @@ public class CreateUserTest(ApplicationFactory applicationFactory)
 
         var (response, userInfo) = await PostAsync<SignInRequest, UserInfoResponse>(request, "signin");
 
-        response.EnsureSuccessStatusCode();
+        await VerifyResponseAsync(response, HttpStatusCode.OK);
         Assert.NotNull(userInfo);
         response.Headers.Contains("Set-Cookie").Should().BeTrue();
         userInfo.ShouldUpdatePassword.Should().BeFalse();

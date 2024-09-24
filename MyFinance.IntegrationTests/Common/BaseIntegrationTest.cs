@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using MyFinance.Infrastructure.Persistence.Context;
+using System.Net;
 using System.Net.Http.Json;
 using System.Text.Json;
 using System.Text.Json.Serialization;
@@ -51,6 +52,28 @@ public abstract class BaseIntegrationTest : IClassFixture<ApplicationFactory>, I
         var response = await _httpClient.PostAsJsonAsync(endpoint, request);
 
         return response;
+    }
+
+    protected static async Task VerifyResponseAsync(
+        HttpResponseMessage response, 
+        HttpStatusCode expectedStatusCode)
+    {
+        Assert.Equal(expectedStatusCode, response.StatusCode);
+
+        if(response.Content.Headers.ContentLength is not 0)
+        {
+            var responseContent = await response.Content.ReadAsStringAsync();
+
+            DerivePathInfo((_, projectDirectory, type, method) =>
+            {
+                return new PathInfo(
+                    Path.Combine(projectDirectory, "ResponseSnapshots", type.Name),
+                    type.Name,
+                    method.Name);
+            });
+
+            await VerifyJson(responseContent).UseStrictJson();
+        }
     }
 
     public void Dispose()
