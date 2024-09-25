@@ -4,11 +4,7 @@ namespace MyFinance.Domain.Common;
 
 public abstract class Entity : IAuditableEntity
 {
-    private protected Entity()
-    {
-    }
-
-    public Guid Id { get; private set; }
+    public Guid Id { get; private init; }
     public DateTime CreatedOnUtc { get; private set; } = DateTime.UtcNow;
     public DateTime? UpdatedOnUtc { get; private set; }
 

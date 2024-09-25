@@ -8,7 +8,7 @@ using System.Reflection;
 
 namespace MyFinance.Infrastructure.Persistence.Context;
 
-public sealed class MyFinanceDbContext(
+internal sealed class MyFinanceDbContext(
     DbContextOptions<MyFinanceDbContext> options,
     ICurrentUserProvider currentUserProvider) : DbContext(options), IMyFinanceDbContext
 {
