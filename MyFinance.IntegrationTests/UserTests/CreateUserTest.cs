@@ -1,12 +1,12 @@
 ﻿using MyFinance.Contracts.User.Requests;
 using MyFinance.Contracts.User.Responses;
 using MyFinance.IntegrationTests.Common;
-using MyFinance.TestCommon.Factories;
+using MyFinance.TestCommon.Builders.Users;
 using System.Net;
 
 namespace MyFinance.IntegrationTests.UserTests;
 
-public class CreateUserTest(ApplicationFactory applicationFactory)
+public sealed class CreateUserTest(ApplicationFactory applicationFactory)
     : BaseIntegrationTest(applicationFactory, "/user")
 {
     [Fact]
@@ -26,10 +26,11 @@ public class CreateUserTest(ApplicationFactory applicationFactory)
     [Fact]
     public async Task SingInFlow_Should_ReturnAppropriateData()
     {
-        var (email, password) = UserFactory.DefaultTestUserCredentials;
+        var (email, password) = UserDirector.CreateDefaultTestUser().Credentials;
         var request = new SignInRequest(email, password);
 
-        var (response, userInfo) = await PostAsync<SignInRequest, UserInfoResponse>(request, "signin");
+        var (response, userInfo)
+            = await PostAsync<SignInRequest, UserInfoResponse>(request, "signin");
 
         await VerifyResponseAsync(response, HttpStatusCode.OK);
         Assert.NotNull(userInfo);
@@ -40,7 +41,7 @@ public class CreateUserTest(ApplicationFactory applicationFactory)
     [Fact]
     public async Task SingInFlow_WhenPasswordIsOld_Should_ReturnFlagToUpdatePassword()
     {
-        var (email, password) = UserFactory.UserWithOldPasswordCredentials;
+        var (email, password) = UserDirector.CreateUserWithOldPassword().Credentials;
         var request = new SignInRequest(email, password);
 
         var (response, userInfo) = await PostAsync<SignInRequest, UserInfoResponse>(request, "signin");

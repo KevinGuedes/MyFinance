@@ -10,8 +10,8 @@ public sealed class LayerTests : BaseArchitectureTest
         var result = Types.InAssembly(DomainAssembly)
             .ShouldNot()
             .HaveDependencyOnAny(
-                ApplicationAssemblyName, 
-                ContractsAssemblyName, 
+                ApplicationAssemblyName,
+                ContractsAssemblyName,
                 PresentationAssemblyName,
                 InfrastructureAssemblyName)
             .GetResult();

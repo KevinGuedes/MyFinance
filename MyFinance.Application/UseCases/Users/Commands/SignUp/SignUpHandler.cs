@@ -25,7 +25,7 @@ internal sealed class SignUpHandler(
 
         await _myFinanceDbContext.Users.AddAsync(user, cancellationToken);
 
-        if(_emailSender.IsEmailConfirmationEnabled)
+        if (_emailSender.IsEmailConfirmationEnabled)
         {
             var urlSafeConfirmRegistrationToken
                 = _tokenProvider.CreateUrlSafeConfirmRegistrationToken(user.Id);

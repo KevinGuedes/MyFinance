@@ -4,16 +4,16 @@ using MyFinance.IntegrationTests.Common;
 
 namespace MyFinance.IntegrationTests.ManagementUnits;
 
-public sealed class CreateManagementUnitTest(ApplicationFactory applicationFactory) 
+public sealed class CreateManagementUnitTest(ApplicationFactory applicationFactory)
     : BaseIntegrationTest(applicationFactory, "/managementunit")
 {
     [Fact]
     public async Task CreateManagementUnitFlow_Should_ReturnAManagementUnitWithDefaultValues()
     {
         var request = new CreateManagementUnitRequest("Test MU", Description: "Test Description");
-       
+
         var (response, managementUnit) = await PostAsync<CreateManagementUnitRequest, ManagementUnitResponse>(request);
-       
+
         response.EnsureSuccessStatusCode();
         Assert.NotNull(managementUnit);
         Assert.NotEqual(Guid.Empty, managementUnit.Id);

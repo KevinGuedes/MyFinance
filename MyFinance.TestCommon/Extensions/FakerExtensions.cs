@@ -12,7 +12,7 @@ public static class FakerExtensions
     public static Faker<T> UsePrivateConstructor<T>(this Faker<T> faker) where T : class
         => faker.CustomInstantiator(_ =>
         {
-            var instance = Activator.CreateInstance(typeof(T), nonPublic: true);
+            var instance = Activator.CreateInstance(typeof(T), true);
             return (instance as T)!;
         });
 }

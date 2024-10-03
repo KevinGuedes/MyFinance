@@ -40,7 +40,7 @@ public abstract class BaseIntegrationTest : IClassFixture<ApplicationFactory>, I
 
         var responseDataAsString = await response.Content.ReadAsStringAsync();
         var responseData = JsonSerializer.Deserialize<TResponse>(responseDataAsString, _jsonSerializerOptions);
-        
+
         return (response, responseData);
     }
 
@@ -55,12 +55,12 @@ public abstract class BaseIntegrationTest : IClassFixture<ApplicationFactory>, I
     }
 
     protected static async Task VerifyResponseAsync(
-        HttpResponseMessage response, 
+        HttpResponseMessage response,
         HttpStatusCode expectedStatusCode)
     {
         Assert.Equal(expectedStatusCode, response.StatusCode);
 
-        if(response.Content.Headers.ContentLength is not 0)
+        if (response.Content.Headers.ContentLength is not 0)
         {
             var responseContent = await response.Content.ReadAsStringAsync();
 

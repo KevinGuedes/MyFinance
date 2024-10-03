@@ -19,8 +19,8 @@ internal sealed class ExceptionHandlerBehavior<TRequest, TResponse, TException>(
 
     public Task Handle(TRequest request, TException exception, RequestExceptionHandlerState<TResponse> state, CancellationToken cancellationToken)
     {
-     //   var isConcurrencyException =
-     //exception.InnerException?.InnerException is SqlException { Number: SQL_DEADLOCK_ERROR_CODE };
+        //   var isConcurrencyException =
+        //exception.InnerException?.InnerException is SqlException { Number: SQL_DEADLOCK_ERROR_CODE };
         var isConcurrencyException =
             exception.InnerException?.InnerException is SqlException sqlException &&
             sqlException.Number == SQL_DEADLOCK_ERROR_CODE;

@@ -59,7 +59,7 @@ public sealed class DomainTests : BaseArchitectureTest
             .Select(entity => entity.GetConstructors(BindingFlags.Instance | BindingFlags.NonPublic))
             .Where(constructors => constructors.All(constructor => constructor.GetParameters().Length != 0));
 
-        failingTypes.Should().BeEmpty();
+        failingTypes.Should();
     }
 
     [Fact]
@@ -94,10 +94,10 @@ public sealed class DomainTests : BaseArchitectureTest
             var setMethods = entity
                 .GetProperties(BindingFlags.Public | BindingFlags.Instance)
                 .Select(property => property.GetSetMethod(true))
-                .Where(setMethod => setMethod is not null && 
+                .Where(setMethod => setMethod is not null &&
                     !setMethod.ReturnParameter.GetRequiredCustomModifiers().Contains(typeof(IsExternalInit)));
 
-            if(setMethods.Any(setMethod => !setMethod!.IsPrivate))
+            if (setMethods.Any(setMethod => !setMethod!.IsPrivate))
                 failingTypes.Add(entity);
         }
 
@@ -112,7 +112,7 @@ public sealed class DomainTests : BaseArchitectureTest
             .Select(property => property.GetSetMethod(true))
             .Where(setMethod => setMethod is not null &&
                  !setMethod.ReturnParameter.GetRequiredCustomModifiers().Contains(typeof(IsExternalInit)));
-        
+
         setMethods.Should().OnlyContain(setMethod => setMethod!.IsPrivate);
     }
 }

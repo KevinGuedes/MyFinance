@@ -1,10 +1,8 @@
-﻿using MyFinance.Domain.Common;
-using System.Reflection;
-using BC = BCrypt.Net.BCrypt;
+﻿using MyFinance.TestCommon.Common;
 
 namespace MyFinance.TestCommon.Builders.Users;
 
-public class UserBuilder : BaseEntityBuilder<User>
+public class UserBuilder : EntityBuilder<User>
 {
     private Guid? _id;
     private DateTime? _createdOnUtc;
@@ -90,156 +88,23 @@ public class UserBuilder : BaseEntityBuilder<User>
         return this;
     }
 
-    //public User Build()
-    //{
-    //    var user = new Faker<User>()
-    //       .UsePrivateConstructor()
-    //       .RuleFor(user => user.Id, faker => _id ?? faker.Random.Guid())
-    //       .RuleFor(user => user.CreatedOnUtc, faker => _createdOnUtc ?? DateTime.UtcNow)
-    //       .RuleFor(user => user.UpdatedOnUtc, faker => _updatedOnUtc)
-    //       .RuleFor(user => user.Name, faker => _name ?? faker.Person.FullName)
-    //       .RuleFor(user => user.Email, faker => _email ?? faker.Person.Email)
-    //       .RuleFor(user => user.PasswordHash, faker => _passwordHash ?? faker.Internet.Password())
-    //       .RuleFor(user => user.FailedSignInAttempts, faker => _failedSignInAttempts ?? 0)
-    //       .RuleFor(user => user.IsEmailVerified, faker => _isEmailVerified ?? false)
-    //       .RuleFor(user => user.LastPasswordUpdateOnUtc, faker => _lastPasswordUpdateOnUtc)
-    //       .RuleFor(user => user.LockoutEndOnUtc, faker => _lockoutEndOnUtc)
-    //       .RuleFor(user => user.SecurityStamp, faker => _securityStamp ?? Guid.NewGuid());
-
-    //    return user;
-    //}
-
-    //public User Build()
-    //{
-    //    _id = Guid.NewGuid();
-    //    _createdOnUtc = DateTime.UtcNow;
-    //    _updatedOnUtc = DateTime.UtcNow;
-    //    _name = "Test";
-    //    _email = "t@gmail.com";
-    //    _failedSignInAttempts = 22;
-    //    _isEmailVerified = true;
-
-    //    var userInstance = Activator.CreateInstance(typeof(User), true);
-
-    //    //private props?
-    //    var userProps = typeof(User).GetProperties();
-
-    //    var builderProps = GetType()
-    //        .GetProperties(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
-
-    //    foreach (var builderProp in builderProps)
-    //    {
-    //        var builderValue = builderProp.GetValue(this);
-
-    //        if(builderValue is null)
-    //            continue;
-
-    //        var builderPropName = builderProp.Name;
-    //        var builderPropNameCleaned = builderPropName.Replace("_", string.Empty);
-    //        var builderPropNameNormalized 
-    //            = char.ToUpper(builderPropNameCleaned[0]) + builderPropNameCleaned[1..];
-
-    //        var userProp = userProps
-    //            .FirstOrDefault(prop => prop.Name == builderPropNameNormalized);
-
-    //        if (userProp is null)
-    //            continue;
-
-    //        var declaringType = userProp?.DeclaringType;
-
-    //        if (declaringType == typeof(User))
-    //        {
-    //            userProp!.SetValue(userInstance, builderValue);
-    //        }
-    //        {
-    //            var originalPropInfo = declaringType!.GetProperty(userProp!.Name);
-    //            originalPropInfo!.SetValue(userInstance, builderValue);
-    //        }
-
-    //    }
-
-    //    return (userInstance as User)!;
-    //}
-
-    public User Build(bool applyConsistentValuesForEmptyProperties = true)
+    public override User Build()
     {
-        if (applyConsistentValuesForEmptyProperties)
+        var values = new
         {
-            var randomizer = new Randomizer();
-            var personDataGenerator = new Person();
-            var internetDataGenerator = new Internet();
-            var dateGenerator = new Date();
+            Id = _id,
+            CreatedOnUtc = _createdOnUtc,
+            UpdatedOnUtc = _updatedOnUtc,
+            Name = _name,
+            Email = _email,
+            PasswordHash = _passwordHash,
+            FailedSignInAttempts = _failedSignInAttempts,
+            IsEmailVerified = _isEmailVerified,
+            LastPasswordUpdateOnUtc = _lastPasswordUpdateOnUtc,
+            LockoutEndOnUtc = _lockoutEndOnUtc,
+            SecurityStamp = _securityStamp
+        };
 
-            _id ??= randomizer.Guid();
-            _createdOnUtc ??= dateGenerator.Past(3);
-            _updatedOnUtc ??= dateGenerator.Past(1);
-            _name ??= personDataGenerator.FullName;
-            _email ??= personDataGenerator.Email;
-            _passwordHash ??= BC.EnhancedHashPassword(internetDataGenerator.Password(), 9);
-            _isEmailVerified ??= true;
-            _lastPasswordUpdateOnUtc ??= dateGenerator.Recent(80);
-            _failedSignInAttempts ??= 0;
-            _lockoutEndOnUtc ??= null;
-            _securityStamp ??= randomizer.Guid();
-        }
-        
-        var user = BuildEntity();
-
-        return user;
-    }
-}
-
-public abstract class BaseEntityBuilder<TEntity>() where TEntity : Entity
-{
-    protected TEntity BuildEntity()
-    {
-        var builderFields = GetType()
-            .GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
-
-        var instance = Activator.CreateInstance(typeof(TEntity), true) ?? 
-            throw new InvalidOperationException("Could not create an instance of the entity.");
-
-        var instanceProps = instance.GetType()
-            .GetProperties(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
-
-        var entityProps = typeof(Entity).GetProperties();
-        var createdOnUtcProp = entityProps.FirstOrDefault(prop => prop.Name == nameof(Entity.CreatedOnUtc));
-        createdOnUtcProp!.SetValue(instance, null);
-
-        foreach (var field in builderFields)
-        {
-            var fieldValue = field.GetValue(this);
-
-            if (fieldValue is null || fieldValue == default)
-                continue;
-
-            var fieldName = field.Name;
-            var fieldNameCleaned = fieldName.Replace("_", string.Empty);
-            var fieldNameNormalized
-                = char.ToUpper(fieldNameCleaned[0]) + fieldNameCleaned[1..];
-
-            var instanceProp = instanceProps
-                .FirstOrDefault(prop => prop.Name == fieldNameNormalized);
-
-            if (instanceProp is null)
-                continue;
-
-            var declaringType = instanceProp.DeclaringType;
-
-            if (declaringType == typeof(TEntity))
-            {
-                instanceProp.SetValue(instance, fieldValue);
-            }
-            {
-                var originalPropInfo = declaringType!.GetProperty(instanceProp.Name);
-
-                if (originalPropInfo is null)
-                    continue;
-
-                originalPropInfo.SetValue(instance, fieldValue);
-            }
-        }
-
-        return (instance as TEntity)!;
+        return BuildEntity(values);
     }
 }

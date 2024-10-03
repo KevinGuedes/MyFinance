@@ -14,7 +14,7 @@ public abstract class BaseArchitectureTest
 
     protected static readonly string ApplicationAssemblyName = "MyFinance.Application";
     protected static readonly Assembly ApplicationAssembly = Assembly.Load(ApplicationAssemblyName);
-    
+
     protected static readonly string InfrastructureAssemblyName = "MyFinance.Infrastructure";
     protected static readonly Assembly InfrastructureAssembly = Assembly.Load(InfrastructureAssemblyName);
 
