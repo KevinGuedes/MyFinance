@@ -44,18 +44,24 @@ public sealed class ApplicationFactory : WebApplicationFactory<Program>, IAsyncL
             services.AddDbContext<MyFinanceDbContext>(options =>
                 options.UseSqlServer(_dbContainer.GetConnectionString()));
 
-            SeedDatabase(services);
+            using var scope = services.BuildServiceProvider().CreateScope();
+            var myFinanceDbContext = scope.ServiceProvider.GetRequiredService<MyFinanceDbContext>();
+
+            EnsureDatabaseCreation(myFinanceDbContext);
+            SeedDatabase(myFinanceDbContext);
+            
             SetupTestAuthentication(services);
         });
     }
 
-    private static void SeedDatabase(IServiceCollection services)
+    private static void EnsureDatabaseCreation(MyFinanceDbContext myFinanceDbContext)
     {
-        using var scope = services.BuildServiceProvider().CreateScope();
-        var myFinanceDbContext = scope.ServiceProvider.GetRequiredService<MyFinanceDbContext>();
         myFinanceDbContext.Database.Migrate();
         myFinanceDbContext.Database.EnsureCreated();
+    }
 
+    private static void SeedDatabase(MyFinanceDbContext myFinanceDbContext)
+    {
         myFinanceDbContext.Users.Add(UserDirector.CreateDefaultTestUser().User);
         myFinanceDbContext.Users.Add(UserDirector.CreateUserWithOldPassword().User);
         myFinanceDbContext.SaveChanges();
