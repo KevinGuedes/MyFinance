@@ -18,6 +18,7 @@ public sealed class ApplicationFactory : WebApplicationFactory<Program>, IAsyncL
 {
     private readonly MsSqlContainer _dbContainer = new MsSqlBuilder()
         .WithImage("mcr.microsoft.com/mssql/server:2022-latest")
+        .WithName("sqlserver-my-finance-integration-tests")
         .Build();
 
     public Task InitializeAsync() => _dbContainer.StartAsync();

@@ -21,6 +21,8 @@ public sealed class ManagementUnit : Entity, IUserOwnedEntity, IArchivableEntity
         ArchivedOnUtc = null;
         UserId = userId;
         Transfers = [];
+        AccountTags = [];
+        Categories = [];
     }
 
     public Guid UserId { get; init; }
