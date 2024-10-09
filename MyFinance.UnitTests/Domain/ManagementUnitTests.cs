@@ -86,8 +86,8 @@ public sealed class ManagementUnitTests
     {
         var faker = DataGenerator.CreateFaker();
         var userId = faker.Random.Guid();
-        var income = 1000m;
-        var outcome = 500m;
+        var income = faker.Finance.Amount(0, 1_000_000);
+        var outcome = faker.Finance.Amount(0, 1_000_000);
         var managementUnitName = faker.Company.CompanyName() + " " + faker.Commerce.Department();
         var managementUnit = ManagementUnitBuilder.With()
             .Name(managementUnitName)
@@ -105,9 +105,9 @@ public sealed class ManagementUnitTests
     {
         var faker = DataGenerator.CreateFaker();
         var userId = faker.Random.Guid();
-        var income = 1000m;
-        var outcome = 500m;
-        var transferValue = 200m;
+        var income = faker.Finance.Amount(0, 1_000_000);
+        var outcome = faker.Finance.Amount(0, 1_000_000);
+        var transferValue = faker.Finance.Amount();
         var transferType = TransferType.Profit;
         var managementUnitName = faker.Company.CompanyName() + " " + faker.Commerce.Department();
         var managementUnit = ManagementUnitBuilder.With()
@@ -126,9 +126,9 @@ public sealed class ManagementUnitTests
     {
         var faker = DataGenerator.CreateFaker();
         var userId = faker.Random.Guid();
-        var income = 1000m;
-        var outcome = 500m;
-        var transferValue = 200m;
+        var income = faker.Finance.Amount(0, 1_000_000);
+        var outcome = faker.Finance.Amount(0, 1_000_000);
+        var transferValue = faker.Finance.Amount();
         var transferType = TransferType.Expense;
         var managementUnitName = faker.Company.CompanyName() + " " + faker.Commerce.Department();
         var managementUnit = ManagementUnitBuilder.With()
@@ -147,9 +147,9 @@ public sealed class ManagementUnitTests
     {
         var faker = DataGenerator.CreateFaker();
         var userId = faker.Random.Guid();
-        var income = 1000m;
-        var outcome = 500m;
-        var transferValue = 200m;
+        var income = faker.Finance.Amount(0, 1_000_000);
+        var outcome = faker.Finance.Amount(0, 1_000_000);
+        var transferValue = faker.Finance.Amount();
         var transferType = TransferType.Profit;
         var managementUnitName = faker.Company.CompanyName() + " " + faker.Commerce.Department();
         var managementUnit = ManagementUnitBuilder.With()
@@ -168,9 +168,9 @@ public sealed class ManagementUnitTests
     {
         var faker = DataGenerator.CreateFaker();
         var userId = faker.Random.Guid();
-        var income = 1000m;
-        var outcome = 500m;
-        var transferValue = 200m;
+        var income = faker.Finance.Amount(0, 1_000_000);
+        var outcome = faker.Finance.Amount(0, 1_000_000);
+        var transferValue = faker.Finance.Amount();
         var transferType = TransferType.Expense;
         var managementUnitName = faker.Company.CompanyName() + " " + faker.Commerce.Department();
         var managementUnit = ManagementUnitBuilder.With()
