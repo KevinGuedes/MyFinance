@@ -8,7 +8,7 @@
 5. Following acessibility best practices and semantic
 
 ### Backend
-1. .NET 6
+1. .NET Latest Stable Version
 2. MS SQL Database
 3. The project will be built following Clean Architecture's good practices, patterns and structure 
 4. Mediatr (CQRS - Command Query Responsibility Segregation)
