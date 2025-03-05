@@ -20,7 +20,7 @@ internal sealed class ValidationBehavior<TRequest, TResponse>(
     public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next,
         CancellationToken cancellationToken)
     {
-        if (_validators.Count() is 0)
+        if (!_validators.Any())
         {
             _logger.LogWarning("No validators found for {RequestName}", request.GetType().Name);
             return await next();
