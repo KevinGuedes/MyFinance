@@ -1,13 +1,20 @@
 ﻿using MyFinance.ArchitectureTests.Common;
+using System.Reflection;
 
 namespace MyFinance.ArchitectureTests.Layer;
 
 public sealed class LayerTests : BaseArchitectureTest
 {
+    private readonly Assembly _domainAssembly = Assembly.Load(DomainAssemblyName);
+    private readonly Assembly _infrastructureAssembly = Assembly.Load(InfrastructureAssemblyName);
+    private readonly Assembly _applicationAssembly = Assembly.Load(ApplicationAssemblyName);
+    private readonly Assembly _contractsAssembly = Assembly.Load(ContractsAssemblyName);
+    private readonly Assembly _presentationAssembly = Assembly.Load(PresentationAssemblyName);
+
     [Fact]
     public void DomainLayer_Should_HaveAppropriateDependencies()
     {
-        var result = Types.InAssembly(DomainAssembly)
+        var result = Types.InAssembly(_domainAssembly)
             .ShouldNot()
             .HaveDependencyOnAny(
                 ApplicationAssemblyName,
@@ -22,7 +29,7 @@ public sealed class LayerTests : BaseArchitectureTest
     [Fact]
     public void ApplicationLayer_Should_HaveAppropriateDependencies()
     {
-        var result = Types.InAssembly(ApplicationAssembly)
+        var result = Types.InAssembly(_applicationAssembly)
             .ShouldNot()
             .HaveDependencyOnAny(
                 PresentationAssemblyName,
@@ -35,7 +42,7 @@ public sealed class LayerTests : BaseArchitectureTest
     [Fact]
     public void PresentationLayer_Should_HaveAppropriateDependencies()
     {
-        var result = Types.InAssembly(PresentationAssembly)
+        var result = Types.InAssembly(_presentationAssembly)
           .ShouldNot()
           .HaveDependencyOnAny(DomainAssemblyName)
           .GetResult();
@@ -46,7 +53,7 @@ public sealed class LayerTests : BaseArchitectureTest
     [Fact]
     public void ContractsLayer_Should_HaveAppropriateDependencies()
     {
-        var result = Types.InAssembly(ContractsAssembly)
+        var result = Types.InAssembly(_contractsAssembly)
             .ShouldNot()
             .HaveDependencyOnAny(
                 ApplicationAssemblyName,
@@ -60,7 +67,7 @@ public sealed class LayerTests : BaseArchitectureTest
     [Fact]
     public void Infrastructure_Should_HaveAppropriateDependencies()
     {
-        var result = Types.InAssembly(InfrastructureAssembly)
+        var result = Types.InAssembly(_infrastructureAssembly)
             .ShouldNot()
             .HaveDependencyOnAny(PresentationAssemblyName)
             .GetResult();

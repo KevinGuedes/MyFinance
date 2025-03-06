@@ -1,5 +1,6 @@
 ﻿using MyFinance.ArchitectureTests.Common;
 using MyFinance.Infrastructure.Abstractions;
+using System.Reflection;
 
 namespace MyFinance.ArchitectureTests.Infrastructure;
 
@@ -8,6 +9,7 @@ public sealed class InfrastructureTests : BaseArchitectureTest
     private const string InfrastructureServicesNamespace = "MyFinance.Infrastructure.Services";
     private const string InfrastructureAbstractionsNamespace = "MyFinance.Infrastructure.Abstractions";
     private const string OptionsSuffix = "Options";
+    private readonly Assembly _infrastructureAssembly = Assembly.Load(InfrastructureAssemblyName);
 
     [Fact]
     public void Services_Should_BeSealed()
@@ -23,7 +25,7 @@ public sealed class InfrastructureTests : BaseArchitectureTest
     [Fact]
     public void ServiceOptions_Should_ResideInServicesNamespace()
     {
-        var result = Types.InAssembly(InfrastructureAssembly)
+        var result = Types.InAssembly(_infrastructureAssembly)
             .That()
             .HaveNameEndingWith(OptionsSuffix)
             .And()
@@ -38,7 +40,7 @@ public sealed class InfrastructureTests : BaseArchitectureTest
     [Fact]
     public void ServiceOptions_Should_BeSealed()
     {
-        var result = Types.InAssembly(InfrastructureAssembly)
+        var result = Types.InAssembly(_infrastructureAssembly)
             .That()
             .HaveNameEndingWith(OptionsSuffix)
             .And()

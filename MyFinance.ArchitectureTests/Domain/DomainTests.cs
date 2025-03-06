@@ -9,11 +9,12 @@ public sealed class DomainTests : BaseArchitectureTest
 {
     private const string EntitiesNamespace = "MyFinance.Domain.Entities";
     private const string DomainAbstractionsNamespace = "MyFinance.Domain.Abstractions";
+    private readonly Assembly _domainAssembly = Assembly.Load(DomainAssemblyName);
 
     [Fact]
     public void DomainEntities_Should_BeSealed()
     {
-        var result = Types.InAssembly(DomainAssembly)
+        var result = Types.InAssembly(_domainAssembly)
             .That()
             .Inherit(typeof(Entity))
             .Should()
@@ -26,11 +27,11 @@ public sealed class DomainTests : BaseArchitectureTest
     [Fact]
     public void DomainEntities_Should_ResideInEntitiesNamespace()
     {
-        var result = Types.InAssembly(DomainAssembly)
+        var result = Types.InAssembly(_domainAssembly)
             .That()
             .Inherit(typeof(Entity))
             .Should()
-            .ResideInNamespaceContaining(EntitiesNamespace)
+            .ResideInNamespace(EntitiesNamespace)
             .GetResult();
 
         result.IsSuccessful.Should().BeTrue();
@@ -50,7 +51,7 @@ public sealed class DomainTests : BaseArchitectureTest
     [Fact]
     public void DomainEntities_Should_HavePrivateParameterlessConstructor()
     {
-        var entities = Types.InAssembly(DomainAssembly)
+        var entities = Types.InAssembly(_domainAssembly)
             .That()
             .Inherit(typeof(Entity))
             .GetTypes();
@@ -59,19 +60,19 @@ public sealed class DomainTests : BaseArchitectureTest
             .Select(entity => entity.GetConstructors(BindingFlags.Instance | BindingFlags.NonPublic))
             .Where(constructors => constructors.All(constructor => constructor.GetParameters().Length != 0));
 
-        failingTypes.Should();
+        failingTypes.Should().BeEmpty();
     }
 
     [Fact]
     public void DomainInterfaces_Should_HaveInterfacesPrefix()
     {
-        var startsWithInterfacePrefix = Types.InNamespace(DomainAbstractionsNamespace)
-            .Should()
+        var types = Types.InNamespace(DomainAbstractionsNamespace);
+
+        var startsWithInterfacePrefix = types.Should()
             .HaveNameStartingWith(InterfacesPrefix)
             .GetResult();
 
-        var areInterfaces = Types.InNamespace(DomainAbstractionsNamespace)
-            .Should()
+        var areInterfaces = types.Should()
             .BeInterfaces()
             .GetResult();
 
@@ -80,9 +81,9 @@ public sealed class DomainTests : BaseArchitectureTest
     }
 
     [Fact]
-    public void DomainEntities_Should_HavePrivateSetters()
+    public void DomainEntities_Should_HaveOnlyPrivateOrInitSetters()
     {
-        var entities = Types.InAssembly(DomainAssembly)
+        var entities = Types.InAssembly(_domainAssembly)
             .That()
             .Inherit(typeof(Entity))
             .GetTypes();

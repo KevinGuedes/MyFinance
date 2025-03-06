@@ -3,6 +3,7 @@ using MyFinance.Application.Abstractions.RequestHandling.Commands;
 using MyFinance.Application.Abstractions.RequestHandling.Queries;
 using MyFinance.Application.Common.Errors;
 using MyFinance.ArchitectureTests.Common;
+using System.Reflection;
 
 namespace MyFinance.ArchitectureTests.Application;
 
@@ -13,15 +14,16 @@ public sealed class ApplicationTests : BaseArchitectureTest
     private const string CommandsSuffix = "Command";
     private const string ErrorsSuffix = "Error";
     private const string ValidatorsSuffix = "Validator";
-    private const string ApplicationsErrorsNamespace = "MyFinance.Application.Common.Errors";
-    private const string ApplicationCustomValidatorsNamespace = "MyFinance.Application.Common.CustomValidators";
+    private const string ApplicationErrorsNamespace = "MyFinance.Application.Common.Errors";
     private const string ApplicationUseCasesNamespace = "MyFinance.Application.UseCases";
+    private const string ApplicationCustomValidatorsNamespace = "MyFinance.Application.Common.CustomValidators";
     private const string ApplicationAbstractionsNamespace = "MyFinance.Application.Abstractions";
+    private readonly Assembly _applicationAssembly = Assembly.Load(ApplicationAssemblyName);
 
     [Fact]
     public void CommandHandlers_Should_HaveHandlersSuffix()
     {
-        var result = Types.InAssembly(ApplicationAssembly)
+        var result = Types.InAssembly(_applicationAssembly)
             .That()
             .ImplementInterface(typeof(ICommandHandler<,>))
             .Or()
@@ -36,7 +38,7 @@ public sealed class ApplicationTests : BaseArchitectureTest
     [Fact]
     public void CommandHandlers_Should_BeSealed()
     {
-        var result = Types.InAssembly(ApplicationAssembly)
+        var result = Types.InAssembly(_applicationAssembly)
             .That()
             .ImplementInterface(typeof(ICommandHandler<,>))
             .Or()
@@ -51,7 +53,7 @@ public sealed class ApplicationTests : BaseArchitectureTest
     [Fact]
     public void QueryHandlers_Should_HaveHandlersSuffix()
     {
-        var result = Types.InAssembly(ApplicationAssembly)
+        var result = Types.InAssembly(_applicationAssembly)
             .That()
             .ImplementInterface(typeof(IQueryHandler<,>))
             .Should()
@@ -64,7 +66,7 @@ public sealed class ApplicationTests : BaseArchitectureTest
     [Fact]
     public void QueryHandlers_Should_BeSealed()
     {
-        var result = Types.InAssembly(ApplicationAssembly)
+        var result = Types.InAssembly(_applicationAssembly)
             .That()
             .ImplementInterface(typeof(IQuery<>))
             .Should()
@@ -77,11 +79,11 @@ public sealed class ApplicationTests : BaseArchitectureTest
     [Fact]
     public void Commands_Should_HaveCommandsSuffix()
     {
-        var result = Types.InAssembly(ApplicationAssembly)
+        var result = Types.InAssembly(_applicationAssembly)
             .That()
-            .ImplementInterface(typeof(ICommand<>))
-            .Or()
             .ImplementInterface(typeof(ICommand))
+            .Or()
+            .ImplementInterface(typeof(ICommand<>))
             .Should()
             .HaveNameEndingWith(CommandsSuffix)
             .GetResult();
@@ -92,7 +94,7 @@ public sealed class ApplicationTests : BaseArchitectureTest
     [Fact]
     public void Commands_Should_BeSealed()
     {
-        var result = Types.InAssembly(ApplicationAssembly)
+        var result = Types.InAssembly(_applicationAssembly)
             .That()
             .ImplementInterface(typeof(ICommand<>))
             .Or()
@@ -107,7 +109,7 @@ public sealed class ApplicationTests : BaseArchitectureTest
     [Fact]
     public void Queries_Should_HaveQueriesSuffix()
     {
-        var result = Types.InAssembly(ApplicationAssembly)
+        var result = Types.InAssembly(_applicationAssembly)
             .That()
             .ImplementInterface(typeof(IQuery<>))
             .Should()
@@ -120,7 +122,7 @@ public sealed class ApplicationTests : BaseArchitectureTest
     [Fact]
     public void Queries_Should_BeSealed()
     {
-        var result = Types.InAssembly(ApplicationAssembly)
+        var result = Types.InAssembly(_applicationAssembly)
             .That()
             .ImplementInterface(typeof(IQuery<>))
             .Should()
@@ -159,12 +161,14 @@ public sealed class ApplicationTests : BaseArchitectureTest
     [Fact]
     public void ApplicationInterfaces_Should_HaveInterfacePrefix()
     {
-        var startsWithInterfacePrefix = Types.InNamespace(ApplicationAbstractionsNamespace)
+        var types = Types.InNamespace(ApplicationAbstractionsNamespace);
+
+        var startsWithInterfacePrefix = types
             .Should()
             .HaveNameStartingWith(InterfacesPrefix)
             .GetResult();
 
-        var areInterfaces = Types.InNamespace(ApplicationAbstractionsNamespace)
+        var areInterfaces = types
             .Should()
             .BeInterfaces()
             .GetResult();
@@ -176,8 +180,10 @@ public sealed class ApplicationTests : BaseArchitectureTest
     [Fact]
     public void Errors_Should_BeSealed()
     {
-        var result = Types.InAssembly(ApplicationAssembly)
+        var result = Types.InAssembly(_applicationAssembly)
             .That()
+            .ResideInNamespace(ApplicationErrorsNamespace)
+            .And()
             .Inherit(typeof(BaseError))
             .Should()
             .BeSealed()
@@ -189,7 +195,7 @@ public sealed class ApplicationTests : BaseArchitectureTest
     [Fact]
     public void Errors_Should_HaveErrorsSuffix()
     {
-        var result = Types.InAssembly(ApplicationAssembly)
+        var result = Types.InAssembly(_applicationAssembly)
             .That()
             .Inherit(typeof(BaseError))
             .Should()

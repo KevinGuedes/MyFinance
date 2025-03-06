@@ -2,6 +2,7 @@
 using MyFinance.ArchitectureTests.Common;
 using MyFinance.Presentation.Controllers;
 using Swashbuckle.AspNetCore.Annotations;
+using System.Reflection;
 
 namespace MyFinance.ArchitectureTests.Presentation;
 
@@ -9,11 +10,12 @@ public sealed class PresentationTests : BaseArchitectureTest
 {
     private const string ControllersSuffix = "Controller";
     private const string ControllersNamespace = "MyFinance.Presentation.Controllers";
+    private readonly Assembly _presentationAssembly = Assembly.Load(PresentationAssemblyName);
 
     [Fact]
     public void Controllers_Should_HaveControllersSuffix()
     {
-        var result = Types.InAssembly(PresentationAssembly)
+        var result = Types.InAssembly(_presentationAssembly)
             .That()
             .Inherit(typeof(ControllerBase))
             .And()
@@ -28,7 +30,7 @@ public sealed class PresentationTests : BaseArchitectureTest
     [Fact]
     public void Controllers_Should_ResideInCorrectNamespace()
     {
-        var result = Types.InAssembly(PresentationAssembly)
+        var result = Types.InAssembly(_presentationAssembly)
             .That()
             .Inherit(typeof(ControllerBase))
             .And()
@@ -43,7 +45,7 @@ public sealed class PresentationTests : BaseArchitectureTest
     [Fact]
     public void Controllers_Should_HaveASwaggerTag()
     {
-        var result = Types.InAssembly(PresentationAssembly)
+        var result = Types.InAssembly(_presentationAssembly)
             .That()
             .Inherit(typeof(ApiController))
             .Should()

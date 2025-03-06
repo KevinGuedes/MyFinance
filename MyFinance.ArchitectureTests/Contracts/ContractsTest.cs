@@ -1,4 +1,5 @@
 ﻿using MyFinance.ArchitectureTests.Common;
+using System.Reflection;
 
 namespace MyFinance.ArchitectureTests.Contracts;
 
@@ -6,11 +7,12 @@ public sealed class ContractsTest : BaseArchitectureTest
 {
     private const string RequestsSuffix = "Request";
     private const string ResponsesSuffix = "Response";
+    private readonly Assembly _contractsAssembly = Assembly.Load(ContractsAssemblyName);
 
     [Fact]
     public void Responses_Should_HaveResponsesSuffix()
     {
-        var result = Types.InAssembly(ContractsAssembly)
+        var result = Types.InAssembly(_contractsAssembly)
             .That()
             .ResideInNamespaceEndingWith(ResponsesSuffix)
             .Should()
@@ -23,7 +25,7 @@ public sealed class ContractsTest : BaseArchitectureTest
     [Fact]
     public void Requests_Should_HaveRequestsSuffix()
     {
-        var result = Types.InAssembly(ContractsAssembly)
+        var result = Types.InAssembly(_contractsAssembly)
             .That()
             .ResideInNamespaceEndingWith(RequestsSuffix)
             .Should()
@@ -36,7 +38,7 @@ public sealed class ContractsTest : BaseArchitectureTest
     [Fact]
     public void RequestsAndResponses_Should_BeSealed()
     {
-        var result = Types.InAssembly(ContractsAssembly)
+        var result = Types.InAssembly(_contractsAssembly)
             .That()
             .ResideInNamespaceEndingWith(ResponsesSuffix)
             .Or()
