@@ -9,6 +9,14 @@ public sealed class UserTests
     [Fact]
     public void User_ShouldHaveDefaultValues_WhenCreated()
     {
+        var wow = UserDirector.CreateDefaultTestUser();
+        var wwwwww = wow.User;
+
+        var wo2 = UserDirector.CreateDefaultTestUser();
+        var wwwwww2 = wo2.User;
+
+        var result = wwwwww.CreatedOnUtc == wwwwww2.CreatedOnUtc;
+
         var faker = DataGenerator.CreateFaker();
         var passwordHash = BC.EnhancedHashPassword(faker.Internet.Password(), 9);
         var name = faker.Person.FullName;

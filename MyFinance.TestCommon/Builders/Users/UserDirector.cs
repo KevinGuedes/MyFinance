@@ -1,4 +1,7 @@
-﻿using BC = BCrypt.Net.BCrypt;
+﻿using MyFinance.TestCommon.Common;
+using MyFinance.TestCommon.Extensions;
+using System.Globalization;
+using BC = BCrypt.Net.BCrypt;
 
 namespace MyFinance.TestCommon.Builders.Users;
 
@@ -9,14 +12,20 @@ public static class UserDirector
 
     public static (User User, (string Email, string Password) Credentials) CreateDefaultTestUser()
     {
-        var (randomizer, person, date, internet) = GetUserDataGenerators(DefaultTestUserSeed);
-        var refDate = DateTime.UtcNow;
+        var faker = DataGenerator.CreateFaker(DefaultTestUserSeed);
+        var randomizer = faker.Random;
+        var person = faker.Person;
+        var date = faker.Date;
+        var internet = faker.Internet;
+
+        var refDate = DateTime.ParseExact("05/24/2024", "MM/dd/yyyy", CultureInfo.InvariantCulture);
+
         var password = internet.Password();
 
         var user = UserBuilder.With()
             .Id(randomizer.Guid())
-            .CreatedOnUtc(date.Past(3, refDate))
-            .UpdatedOnUtc(date.Past(1, refDate))
+            .CreatedOnUtc(date.Past(3))
+            .UpdatedOnUtc(date.Past(1))
             .Name(person.FullName)
             .Email(person.Email)
             .PasswordHash(BC.EnhancedHashPassword(password))
@@ -73,22 +82,14 @@ public static class UserDirector
 
     private static (Randomizer Randomizer, Person Person, Date Date, Internet Internet) GetUserDataGenerators(int? seed = null)
     {
-        if (seed is null)
-            return new(new Randomizer(), new Person(), new Date(), new Internet());
+        var faker = new Faker();
+
+        if(seed is null)
+            return (faker.Random, faker.Person, faker.Date, faker.Internet);
 
         var randomizer = new Randomizer(seed.Value);
-        var person = new Person("en", seed);
+        faker.Random = randomizer;
 
-        var internet = new Internet
-        {
-            Random = randomizer
-        };
-
-        var date = new Date
-        {
-            Random = randomizer
-        };
-
-        return new(randomizer, person, date, internet);
+        return (randomizer, faker.Person, faker.Date, faker.Internet);
     }
 }
